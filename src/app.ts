@@ -8,6 +8,7 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: "game",
   backgroundColor: "#18216D",
   scene: GameScene,
+  seed: ["consistent", "physics", "thanks"],
   physics: {
     default: "arcade",
     arcade: {

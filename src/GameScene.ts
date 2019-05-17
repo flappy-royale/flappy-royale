@@ -1,7 +1,8 @@
+import {data} from "./examples"
+
 import * as Phaser from "phaser";
 import * as Seed from "seed-random"
-
-const pipeCenters = []
+import * as _ from 'lodash'
 
 interface SceneSettings {
   seed: string
@@ -14,11 +15,15 @@ interface PlayerEvent {
 
 export class GameScene extends Phaser.Scene {
   bird: Phaser.Physics.Arcade.Sprite
+
+  ghostBirds: Phaser.Physics.Arcade.Sprite[]
+  
   pipes: Phaser.Physics.Arcade.Group
   newPipeTimer: Phaser.Time.TimerEvent
 
   timestampOffset: number
   userInput: PlayerEvent[]
+  recordedInput: typeof import("./examples").data
 
   seed: string
   rng: () => number
@@ -29,27 +34,69 @@ export class GameScene extends Phaser.Scene {
     });
     
     this.seed = (opts && opts.seed) || "12345"
-    this.resetRNG()
+    this.resetGame()
     this.userInput = []
+    this.ghostBirds = []
+    this.timestampOffset = 0
   }
   
   preload() { 
     this.load.image('bird', 'assets/bluebird-upflap.png'); 
+    this.load.image('bird2', 'assets/bluebird-midflap.png'); 
+    this.load.image('bird3', 'assets/bluebird-downflap.png');         
+    this.load.image('ghostbird', 'assets/redbird-upflap.png');     
+    this.load.image('ghostbird2', 'assets/redbird-midflap.png');     
+    this.load.image('ghostbird3', 'assets/redbird-downflap.png');           
     this.load.image('pipe', 'assets/pipebase.png');
   }
 
  create() { 
+    this.anims.create({
+      key: 'flap',
+      frames: [
+          { key: 'bird', frame: 0 },
+          { key: 'bird2', frame: 1 },
+          { key: 'bird3', frame: 2 }
+      ],
+      frameRate: .8,
+      repeat: -1
+    })
+
+    this.anims.create({
+      key: 'ghostFlap',
+      frames: [
+          { key: 'ghostbird', frame: 0 },
+          { key: 'ghostbird2', frame: 1 },
+          { key: 'ghostbird3', frame: 2 }
+      ],
+      frameRate: 8,
+      repeat: -1
+    })
+
     this.bird = this.physics.add.sprite(100, 245, 'bird');
+    this.bird.play('flap')
+
+    this.recordedInput = _.cloneDeep(data)
+   
+    this.ghostBirds = []
+
+    this.recordedInput.forEach(_ => {
+      const ghost = this.physics.add.sprite(100, 245, 'ghostbird');
+      ghost.play('ghostFlap')
+      this.ghostBirds.push(ghost)
+    });
+
     this.pipes = this.physics.add.group(); 
 
-    this.timestampOffset = 0
     
     // On spacebar bounce the bird
     var keyObj = this.input.keyboard.addKey('SPACE')
     const body = this.bird.body as Phaser.Physics.Arcade.Body
-    keyObj.on('down', function(_event: KeyboardEvent) { 
-      body.setVelocityY(-400)
-      // console.log(this.time.time)
+    const inputs = this.userInput
+    
+    keyObj.on('down', (_event: KeyboardEvent) => { 
+      this.flap(body)
+      inputs.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
     });
 
     this.time.addEvent({
@@ -66,9 +113,12 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.world.setBoundsCollision(true, false, false, false)
     this.physics.world.on('worldbounds', (body: Phaser.Physics.Arcade.Body) => {
-      console.log(body, "DESTROYING")
       body.gameObject.destroy()
     })
+  }
+
+  flap(body: Phaser.Physics.Arcade.Body) {
+    body.setVelocityY(-400)
   }
 
   addRowOfPipes() {
@@ -92,9 +142,6 @@ export class GameScene extends Phaser.Scene {
     // Add the pipe to our previously created group
     this.pipes.add(pipe);
 
-    // Enable physics on the pipe 
-    // this.physics.enable(pipe);
-
     // Add velocity to the pipe to make it move left
     pipe.body.velocity.x = -200; 
     
@@ -102,18 +149,24 @@ export class GameScene extends Phaser.Scene {
     body.setAllowGravity(false)
 
     // Automatically kill the pipe when it's no longer visible 
-    // pipe.body.checkWorldBounds = true;
     body.setCollideWorldBounds(true);
     body.onWorldBounds = true
-
-    // Supposedly SO said this was slow, probably isn't for this case thought
-    // this.scene.restart()
   }
 
   update(timestamp: number) {
     const adjustedTime = timestamp - this.timestampOffset
-    console.log("Adjusted", this.timestampOffset, adjustedTime)
+    // console.log(this.timestampOffset)
+    // console.log(adjustedTime, this.recordedInput[0] && this.recordedInput[0].actions[0].timestamp   )
 
+    this.recordedInput.forEach((input, index) => {
+      while(input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
+        // Right now, the only action is "flap"
+        const action = input.actions.shift()
+        console.log("flapping")
+        this.flap(this.ghostBirds[index].body as Phaser.Physics.Arcade.Body)
+      }
+    });
+    
     // If the bird is out of the screen (too high or too low)
       // Call the 'restartGame' function
 
@@ -125,14 +178,16 @@ export class GameScene extends Phaser.Scene {
     this.physics.overlap(this.bird, this.pipes, this.restartTheGame, null, this);
   }
 
-  resetRNG() {
+  resetGame() {
     this.rng = Seed(this.seed)
+    this.userInput = []
   }
 
   restartTheGame() {
-  console.log("New offset", this.time.now)
+    // console.clear()
+    // console.log(JSON.stringify(this.userInput, null, 2))
     this.timestampOffset = this.time.now
-    this.resetRNG()
+    this.resetGame()
     this.scene.restart()
   }
 }
