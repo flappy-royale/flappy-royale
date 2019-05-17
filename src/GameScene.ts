@@ -1,8 +1,8 @@
-// import {data} from "./examples"
-
 import * as Phaser from "phaser";
 import * as Seed from "seed-random"
 import * as _ from 'lodash'
+import * as constants from "./constants"
+
 import { PlayerEvent, FirebaseDataStore, PlayerData } from "./firebase";
 
 interface SceneSettings {
@@ -10,26 +10,41 @@ interface SceneSettings {
 }
 
 export class GameScene extends Phaser.Scene {
+  // Used for determining what opponents to grab
   apiVersion: string = "1"
   
+  /** Your sprite  */
   bird: Phaser.Physics.Arcade.Sprite
 
+  /** opponent */
   ghostBirds: Phaser.Physics.Arcade.Sprite[]
   
+  /**  Every piece of a pipe */
   pipes: Phaser.Physics.Arcade.Group
+  /** A timer for generating new pipes */
   newPipeTimer: Phaser.Time.TimerEvent
 
+  /* So the scene can be re-used but time offsets can always be accurate */
   timestampOffset: number
+  
+  /** Keeping track of events from the user, sent up later */ 
   userInput: PlayerEvent[]
+  /** Other players input events */
   recordedInput: PlayerData[] = []
 
+  /** A place to grab user data from */
   dataStore: FirebaseDataStore
 
-  // Number of MS to record the latest y-position
-  syncInterval: number = 400
-  lastSyncedTimestamp: number = 0
+  /**  Number of MS to record the latest y-position */
+  syncInterval = 400
 
+  /** When we last stored the timestamp */
+  lastSyncedTimestamp = 0
+
+  /** A seed for the RNG function */
   seed: string
+  
+  /** The RNG function for this current run, and all ghosts*/
   rng: () => number
 
   constructor(opts: SceneSettings) {
@@ -46,8 +61,6 @@ export class GameScene extends Phaser.Scene {
     window.addEventListener('touchstart', () => {
       this.flap(this.bird.body as Phaser.Physics.Arcade.Body)
     })
-
-    this.scene
   }
   
   configureDataStore(dataStore: FirebaseDataStore) {
@@ -59,14 +72,14 @@ export class GameScene extends Phaser.Scene {
 
   preload() { 
     this.load.image('bird', 'assets/Bird1.png'); 
-    this.load.image('bird-old', 'assets/old/bluebird-upflap.png'); 
     this.load.image('bird2', 'assets/old/bluebird-midflap.png'); 
-    this.load.image('bird3', 'assets/old/bluebird-downflap.png');         
+    this.load.image('bird3', 'assets/old/bluebird-downflap.png'); 
     this.load.image('ghostbird', 'assets/old/redbird-upflap.png');     
     this.load.image('ghostbird2', 'assets/old/redbird-midflap.png');     
     this.load.image('ghostbird3', 'assets/old/redbird-downflap.png');           
     this.load.image('pipe', 'assets/old/pipebase.png');
     this.load.image('pipe-top', 'assets/PipeTop.png');
+    this.load.image('pipe-body', 'assets/PipeLength.png');
     this.load.image('pipe-bottom', 'assets/PipeBottom.png');
   }
 
@@ -93,7 +106,12 @@ export class GameScene extends Phaser.Scene {
       repeat: -1
     })
 
-    this.bird = this.physics.add.sprite(30, 140, 'bird');
+    // Setup your bird's initial position
+    this.bird = this.physics.add.sprite(constants.birdXPosition, 80, 'bird');
+    this.bird.setData("tAngle", 0)
+    this.bird.setOrigin(0.2,0.5)
+    // this.bird.setTint(Math.random() * 16000000);
+
     // this.bird.play('flap')
 
     if (this.dataStore && this.dataStore.data) {
@@ -103,8 +121,10 @@ export class GameScene extends Phaser.Scene {
     this.ghostBirds = []
 
     this.recordedInput.forEach(_ => {
-      const ghost = this.physics.add.sprite(100, 245, 'ghostbird');
-      ghost.play('ghostFlap')
+      const ghost = this.physics.add.sprite(constants.birdXPosition, 80, 'bird');
+      // ghost.setTint(Math.random() * 16000000);
+      ghost.setAlpha(0.3)
+
       this.ghostBirds.push(ghost)
     });
 
@@ -121,25 +141,62 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.time.addEvent({
-      delay: 1500,
-      callback: () => {
-        this.addRowOfPipes()
-      },
-
+      delay: constants.pipeTime, // We want 60px difference
+      callback: () => this.addRowOfPipes(),
       callbackScope: this,
       loop: true
   });
 
     this.addRowOfPipes()
 
+    // When anything reaches the edge of the world (e.g. the pipes, destroy them)
     this.physics.world.setBoundsCollision(true, false, false, false)
     this.physics.world.on('worldbounds', (body: Phaser.Physics.Arcade.Body) => {
-      body.gameObject.destroy()
+      if (this.pipes.contains(body.gameObject)) {
+        this.pipes.remove(body.gameObject, true, true)
+      }
     })
   }
 
   flap(body: Phaser.Physics.Arcade.Body) {
-    body.setVelocityY(-200)
+    body.setVelocityY(-1 * constants.flapStrength)
+  }
+
+  rotateSprite(sprite: Phaser.Physics.Arcade.Sprite) {
+    let lastAngle: number = sprite.getData("tAngle")
+    let newAngle: number = 0;
+    //later make bird always looking up until it falls enough that it's velocity down is like -50 and then rotate it
+    /*let newAngle: number = 0;
+    if(sprite.body.velocity.y > 0)
+    {
+      newAngle = -35
+    }
+    else
+    {*/
+      newAngle = this.remapClamped(sprite.body.velocity.y*-1, 0, 250, 0, 90)
+    //}
+
+    
+    if(newAngle > lastAngle) {
+      if(newAngle > 0)
+        newAngle = lastAngle + (newAngle - lastAngle)/15
+      else
+        newAngle = lastAngle + (newAngle - lastAngle)/15
+    } 
+
+    sprite.setAngle(newAngle)
+    sprite.setData("tAngle", newAngle)
+  }
+
+  remapClamped(value:number, fromA: number, fromB: number, toA: number, toB: number)
+  {
+    value = (value - fromA) / (toA - fromA) * (toB - fromB) + fromB;
+    if(value < toA)
+      value = toA
+    if(value > toB)
+      value = toB
+
+    return value
   }
 
   addRowOfPipes() {
@@ -152,39 +209,36 @@ export class GameScene extends Phaser.Scene {
     // const windowHeight = this.game.canvas.height
     
     // Distance from the top / bottom
-    const pipeEdgeBuffer = 60
-    // How big the gap is for the birds
-    const distanceBetweenPipes = 52
-    
-    const pipeIntervals = (windowHeight - (pipeEdgeBuffer/2) - (distanceBetweenPipes /2)) / slots
+    const pipeEdgeBuffer = 170
+
+    // get the distance between each potential intervak
+    const pipeIntervals = (windowHeight - (pipeEdgeBuffer/2) - (constants.gapHeight /2)) / slots
     
     const holeSlot = Math.floor(this.rng() * 5) + 1;
-    const holeTop = (pipeIntervals * holeSlot) + (pipeEdgeBuffer/2) - (distanceBetweenPipes/2)
-    const holeBottom = (pipeIntervals * holeSlot) + (pipeEdgeBuffer/2) + (distanceBetweenPipes/2)
+    const holeTop = (pipeIntervals * holeSlot) + (pipeEdgeBuffer/2) - (constants.gapHeight/2)
+    const holeBottom = (pipeIntervals * holeSlot) + (pipeEdgeBuffer/2) + (constants.gapHeight/2)
     
-    this.addOnePipe(400, holeTop, 'pipe-top')
-    this.addOnePipe(400, holeBottom, 'pipe-bottom')
-    
+    const pipeTop = this.physics.add.sprite(180, holeTop, 'pipe-top')
+    const pipeBottom = this.physics.add.sprite(180, holeBottom, 'pipe-bottom')
+    this.addPipeSprite(pipeTop)
+    this.addPipeSprite(pipeBottom)
 
-    // const bottomOfTop = 12 //  windowHeight 
+    const pipeTopBody = this.physics.add.sprite(180, holeTop - 5, "pipe-body");
+    pipeTopBody.setScale(1, 4000)
+    this.addPipeSprite(pipeTopBody)
 
-    // Add the 6 pipes 
-    // With one big hole at position 'hole' and 'hole + 1' 
-    // for (var i = 0; i < 8; i++) {
-    //   if (i != hole && i != hole + 1) 
-    //     this.addOnePipe(400, i * 10 + 10);
-    // }
+    const pipeBottomBody = this.physics.add.sprite(180, windowHeight, "pipe-body");
+    pipeBottomBody.setScale(1, windowHeight - holeBottom - 5)
+    this.addPipeSprite(pipeBottomBody)
   }
 
-  addOnePipe(x: number, y:number, sprite: string) {
-    // Create a pipe at the position x and y
-    var pipe = this.physics.add.sprite(x, y, sprite);
+  addPipeSprite(pipe: Phaser.Physics.Arcade.Sprite) {
 
     // Add the pipe to our previously created group
     this.pipes.add(pipe);
 
     // Add velocity to the pipe to make it move left
-    pipe.body.velocity.x = -100; 
+    pipe.body.velocity.x = -1 * constants.pipeSpeed; 
     
     const body = pipe.body as Phaser.Physics.Arcade.Body
     body.setAllowGravity(false)
@@ -213,7 +267,6 @@ export class GameScene extends Phaser.Scene {
       while(input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
         const action = input.actions.shift()
         if (action.action === "flap") {
-          console.log("flapping")
           this.flap(this.ghostBirds[index].body as Phaser.Physics.Arcade.Body)  
         } else if (action.action === "sync" && action.value !== undefined) {
           this.ghostBirds[index].body.position.y = action.value
@@ -221,15 +274,15 @@ export class GameScene extends Phaser.Scene {
       }
     });
     
-    // If the bird is out of the screen (too high or too low)
-      // Call the 'restartGame' function
-
-    if (this.bird.y < 0 || this.bird.y > 490) {
+    // If the bird hits the floor 
+    if (this.bird.y > 240 + 20) {
       this.restartTheGame()
     }
 
     // The collision of your bird and the pipes
     this.physics.overlap(this.bird, this.pipes, this.restartTheGame, null, this);
+
+    this.rotateSprite(this.bird)
   }
 
   resetGame() {
@@ -238,9 +291,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   restartTheGame() {
-    // console.clear()
+    console.clear()
     console.log(JSON.stringify(this.userInput, null, 2))
-
 
     if (window.location.hash !== "" && this.userInput.length > 4) {
       const name = window.location.hash.slice(1)

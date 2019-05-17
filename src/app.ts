@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import { GameScene } from "./GameScene"
 import { FirebaseDataStore } from "./firebase";
+import * as constants from "./constants"
 
 const config: Phaser.Types.Core.GameConfig = {
   title: "Flappy",
@@ -12,21 +13,26 @@ const config: Phaser.Types.Core.GameConfig = {
   seed: ["consistent", "physics", "thanks"],
   scale: {
     // mode: Phaser.DOM
-    mode: Phaser.Scale.ENVELOP,
+    mode: Phaser.Scale.FIT,
     parent: 'game',
-    // width: 160,
-    // height: 240,
-    zoom: Phaser.Scale.MAX_ZOOM
-
-  },
+    width: 180,
+    height: 240,
+    // zoom: Phaser.Scale.MAX_ZOOM
+    zoom: 4
+  },  
+  type: Phaser.CANVAS,
   physics: {
     default: "arcade",
     arcade: {
       debug: false,
       gravity: { 
-        y: 300
+        y: constants.gravity
       }
     }
+  },
+  render: {
+    pixelArt: true,
+    antialias: false,
   },
 };
 
