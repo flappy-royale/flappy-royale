@@ -1,0 +1,31 @@
+{
+  "name": "flappy-battle",
+  "version": "1.0.0",
+  "description": "Battling birds",
+  "main": "index.js",
+  "author": "Orta + Zach",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack --watch & live-server --port=8085"
+  },
+  "dependencies": {
+    "phaser": "^3.17.0"
+  },
+  "prettier": {
+    "requirePragma": true,
+    "singleQuote": false,
+    "trailingComma": "all",
+    "printWidth": 120,
+    "semi": false
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1",
+    "prettier": "^1.17.1",
+    "ts-loader": "^6.0.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2"
+  }
+}
