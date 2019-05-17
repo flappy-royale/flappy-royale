@@ -11,6 +11,7 @@
     "start": "webpack --watch & live-server --port=8085"
   },
   "dependencies": {
+    "firebase": "^6.0.2",
     "lodash.clonedeep": "^4.5.0",
     "phaser": "^3.17.0",
     "seed-random": "^2.2.0"
@@ -23,6 +24,7 @@
     "semi": false
   },
   "devDependencies": {
+    "@types/firebase": "^3.2.1",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/seed-random": "^2.2.0",
     "live-server": "^1.2.1",

@@ -1,110 +1,167 @@
-export const data = [
+import { PlayerData } from "./firebase";
+
+export const data: PlayerData[] = [
 {
   "name": "Em",
+  "apiVersion": "1",
   "actions": [
     {
-      "action": "flap",
-      "timestamp": 283.22499999922
+      "action": "sync",
+      "timestamp": 641.8999999950756,
+      "value": 233.27777777777777
+    },
+    {
+      "action": "sync",
+      "timestamp": 1043.134999999893,
+      "value": 316.3333333333333
     },
     {
       "action": "flap",
-      "timestamp": 1066.9899999993504
+      "timestamp": 1075.489999995625
     },
     {
       "action": "flap",
-      "timestamp": 1249.2649999985588
+      "timestamp": 1342.4999999988358
+    },
+    {
+      "action": "sync",
+      "timestamp": 1458.569999995234,
+      "value": 222.7222222222223
     },
     {
       "action": "flap",
-      "timestamp": 2283.8950000004843
+      "timestamp": 1775.2699999982724
+    },
+    {
+      "action": "sync",
+      "timestamp": 1859.969999997702,
+      "value": 156.61111111111126
+    },
+    {
+      "action": "sync",
+      "timestamp": 2275.385000000824,
+      "value": 114.94444444444466
+    },
+    {
+      "action": "sync",
+      "timestamp": 2692.60999999824,
+      "value": 246.88888888888914
     },
     {
       "action": "flap",
-      "timestamp": 2949.1350000025705
+      "timestamp": 2876.445000001695
+    },
+    {
+      "action": "sync",
+      "timestamp": 3108.8549999985844,
+      "value": 295.7777777777781
     },
     {
       "action": "flap",
-      "timestamp": 3733.0999999976484
+      "timestamp": 3459.2499999998836
+    },
+    {
+      "action": "sync",
+      "timestamp": 3525.150000001304,
+      "value": 277.72222222222257
+    },
+    {
+      "action": "sync",
+      "timestamp": 3926.6199999983655,
+      "value": 227.72222222222257
     },
     {
       "action": "flap",
-      "timestamp": 4366.829999999027
+      "timestamp": 4242.754999999306
+    },
+    {
+      "action": "sync",
+      "timestamp": 4326.645000001008,
+      "value": 272.4444444444448
+    },
+    {
+      "action": "sync",
+      "timestamp": 4743.109999995795,
+      "value": 230.7777777777781
     },
     {
       "action": "flap",
-      "timestamp": 5350.299999998242
+      "timestamp": 4859.214999996766
+    },
+    {
+      "action": "sync",
+      "timestamp": 5160.074999999779,
+      "value": 177.72222222222254
+    },
+    {
+      "action": "sync",
+      "timestamp": 5576.430000000983,
+      "value": 226.3333333333337
     },
     {
       "action": "flap",
-      "timestamp": 6166.595000002417
+      "timestamp": 5976.024999996298
+    },
+    {
+      "action": "sync",
+      "timestamp": 5992.31499999587,
+      "value": 429.9444444444449
+    },
+    {
+      "action": "sync",
+      "timestamp": 6392.579999999725,
+      "value": 359.94444444444497
     },
     {
       "action": "flap",
-      "timestamp": 6916.355000001204
+      "timestamp": 6492.655000001832
+    },
+    {
+      "action": "sync",
+      "timestamp": 6792.795000001206,
+      "value": 294.94444444444497
+    },
+    {
+      "action": "sync",
+      "timestamp": 7209.810000000289,
+      "value": 343.5555555555561
     },
     {
       "action": "flap",
-      "timestamp": 7717.459999999846
+      "timestamp": 7292.8649999958
+    },
+    {
+      "action": "sync",
+      "timestamp": 7626.449999996112,
+      "value": 299.1111111111117
     },
     {
       "action": "flap",
-      "timestamp": 8499.035000000731
+      "timestamp": 8008.999999998196
+    },
+    {
+      "action": "sync",
+      "timestamp": 8026.539999998931,
+      "value": 343.83333333333394
+    },
+    {
+      "action": "sync",
+      "timestamp": 8442.64999999723,
+      "value": 274.38888888888954
     },
     {
       "action": "flap",
-      "timestamp": 9049.169999998412
+      "timestamp": 8792.339999999967
     },
     {
-      "action": "flap",
-      "timestamp": 10048.965000001772
+      "action": "sync",
+      "timestamp": 8859.06999999861,
+      "value": 326.333333333334
     },
     {
-      "action": "flap",
-      "timestamp": 10832.229999999981
-    },
-    {
-      "action": "flap",
-      "timestamp": 11632.205000001704
-    },
-    {
-      "action": "flap",
-      "timestamp": 12398.744999998598
-    },
-    {
-      "action": "flap",
-      "timestamp": 12548.790000000736
-    },
-    {
-      "action": "flap",
-      "timestamp": 12682.984999999462
-    },
-    {
-      "action": "flap",
-      "timestamp": 12815.689999995811
-    },
-    {
-      "action": "flap",
-      "timestamp": 12949.195000001055
-    },
-    {
-      "action": "flap",
-      "timestamp": 13082.92000000074
-    },
-    {
-      "action": "flap",
-      "timestamp": 13216.415000002598
-    },
-    {
-      "action": "flap",
-      "timestamp": 14348.704999996698
-    },
-    {
-      "action": "flap",
-      "timestamp": 14549.534999998286
-    },
-    {
-      "action": "flap",
-      "timestamp": 15433.429999997315
+      "action": "sync",
+      "timestamp": 9276.18000000075,
+      "value": 277.72222222222285
     }
   ]
 },
