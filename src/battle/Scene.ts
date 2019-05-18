@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import * as constants from "../constants"
 
 import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase";
-import { preloadBackgroundSprites, createBehindPipeBackgroundSprites, createAfterPipeBackgroundSprites } from "./Background";
+import { preloadBackgroundSprites, createBehindPipeBackgroundSprites, createAfterPipeBackgroundSprites, bgUpdateTick } from "./Background";
 import { addRowOfPipes } from "./PipeManager";
 
 
@@ -201,6 +201,8 @@ export class BattleScene extends Phaser.Scene {
   }
 
   update(timestamp: number) {
+    bgUpdateTick()
+    
     const adjustedTime = timestamp - this.timestampOffset
     if (adjustedTime - this.lastSyncedTimestamp >= this.syncInterval) {
       this.userInput.push({
@@ -225,7 +227,7 @@ export class BattleScene extends Phaser.Scene {
     
     // If the bird hits the floor 
     if (this.bird.y > 160 + 20) {
-      this.restartTheGame()
+      // this.restartTheGame()
     }
 
     // The collision of your bird and the pipes
