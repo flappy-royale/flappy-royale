@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { GameScene } from "./GameScene"
+import { BattleScene } from "./battle/Scene"
 import { FirebaseDataStore } from "./firebase";
 import * as constants from "./constants"
 
@@ -9,7 +9,7 @@ const config: Phaser.Types.Core.GameConfig = {
   height: 240,
   parent: "game",
   backgroundColor: "#18216D",
-  scene: GameScene,
+  scene: BattleScene,
   seed: ["consistent", "physics", "thanks"],
   scale: {
     // mode: Phaser.DOM
@@ -47,6 +47,6 @@ window.onload = async () => {
 
   const firebase = new FirebaseDataStore("2")
   firebase.fetch().then(() => {
-    (game.scene.getScene('GameScene') as GameScene).configureDataStore(firebase)
+    (game.scene.getScene('GameScene') as BattleScene).configureDataStore(firebase)
   })
 };

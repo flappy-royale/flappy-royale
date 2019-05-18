@@ -1,15 +1,18 @@
 import * as Phaser from "phaser";
 import * as Seed from "seed-random"
 import * as _ from 'lodash'
-import * as constants from "./constants"
+import * as constants from "../constants"
 
-import { PlayerEvent, FirebaseDataStore, PlayerData } from "./firebase";
+import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase";
+import { preloadBackgroundSprites, createBackgroundSprites } from "./Background";
+
+
 
 interface SceneSettings {
   seed: string
 }
 
-export class GameScene extends Phaser.Scene {
+export class BattleScene extends Phaser.Scene {
   // Used for determining what opponents to grab
   apiVersion: string = "1"
   
@@ -80,10 +83,17 @@ export class GameScene extends Phaser.Scene {
     this.load.image('pipe', 'assets/old/pipebase.png');
     this.load.image('pipe-top', 'assets/PipeTop.png');
     this.load.image('pipe-body', 'assets/PipeLength.png');
-    this.load.image('pipe-bottom', 'assets/PipeBottom.png');
+    this.load.image('pipe-bottom', 'assets/PipeBottom.png')
+    preloadBackgroundSprites(this)
   }
 
  create() { 
+
+  // setup bg
+createBackgroundSprites(this)
+
+
+
     this.anims.create({
       key: 'flap',
       frames: [
@@ -211,7 +221,7 @@ export class GameScene extends Phaser.Scene {
     // Distance from the top / bottom
     const pipeEdgeBuffer = 170
 
-    // get the distance between each potential intervak
+    // get the distance between each potential interval
     const pipeIntervals = (windowHeight - (pipeEdgeBuffer/2) - (constants.gapHeight /2)) / slots
     
     const holeSlot = Math.floor(this.rng() * 5) + 1;
@@ -250,9 +260,6 @@ export class GameScene extends Phaser.Scene {
 
   update(timestamp: number) {
     const adjustedTime = timestamp - this.timestampOffset
-    // console.log(this.timestampOffset)
-    // console.log(adjustedTime, this.recordedInput[0] && this.recordedInput[0].actions[0].timestamp   )
-
     if (adjustedTime - this.lastSyncedTimestamp >= this.syncInterval) {
       this.userInput.push({
         action: "sync",
