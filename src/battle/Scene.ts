@@ -63,7 +63,7 @@ export class BattleScene extends Phaser.Scene {
     this.timestampOffset = 0
 
     window.addEventListener('touchstart', () => {
-      this.flap(this.bird.body as Phaser.Physics.Arcade.Body)
+      this.flap(this.bird as Phaser.Physics.Arcade.Sprite)
     })
   }
   
@@ -75,9 +75,9 @@ export class BattleScene extends Phaser.Scene {
   }
 
   preload() { 
-    this.load.image('bird', 'assets/Bird1.png'); 
-    this.load.image('bird2', 'assets/old/bluebird-midflap.png'); 
-    this.load.image('bird3', 'assets/old/bluebird-downflap.png'); 
+    this.load.image('bird1', 'assets/Bird1.png'); 
+    this.load.image('bird2', 'assets/Bird2.png'); 
+    this.load.image('bird3', 'assets/Bird3.png'); 
     this.load.image('ghostbird', 'assets/old/redbird-upflap.png');     
     this.load.image('ghostbird2', 'assets/old/redbird-midflap.png');     
     this.load.image('ghostbird3', 'assets/old/redbird-downflap.png');           
@@ -96,11 +96,21 @@ export class BattleScene extends Phaser.Scene {
     this.anims.create({
       key: 'flap',
       frames: [
-          { key: 'bird', frame: 0 },
+          { key: 'bird1', frame: 0 },
           { key: 'bird2', frame: 1 },
-          { key: 'bird3', frame: 2 }
+          { key: 'bird3', frame: 2 },
+          { key: 'bird2', frame: 3 }
       ],
-      frameRate: .8,
+      frameRate: 18,
+      repeat: -1
+    })
+
+    this.anims.create({
+      key: 'dive',
+      frames: [
+          { key: 'bird2', frame: 0 },
+      ],
+      frameRate: 0,
       repeat: -1
     })
 
@@ -116,7 +126,7 @@ export class BattleScene extends Phaser.Scene {
     })
 
     // Setup your bird's initial position
-    this.bird = this.physics.add.sprite(constants.birdXPosition, 80, 'bird');
+    this.bird = this.physics.add.sprite(constants.birdXPosition, 80, 'bird1');
     this.bird.setOrigin(0.13,0.5)
     // this.bird.setTint(Math.random() * 16000000);
 
@@ -129,22 +139,19 @@ export class BattleScene extends Phaser.Scene {
     this.ghostBirds = []
 
     this.recordedInput.forEach(_ => {
-      const ghost = this.physics.add.sprite(constants.birdXPosition, 80, 'bird');
+      const ghost = this.physics.add.sprite(constants.birdXPosition, 80, 'bird1');
       // ghost.setTint(Math.random() * 16000000);
       ghost.setAlpha(0.3)
 
       this.ghostBirds.push(ghost)
     });
-
-    
     
     // On spacebar bounce the bird
     var keyObj = this.input.keyboard.addKey('SPACE')
-    const body = this.bird.body as Phaser.Physics.Arcade.Body
     const inputs = this.userInput
     
     keyObj.on('down', (_event: KeyboardEvent) => { 
-      this.flap(body)
+      this.flap(this.bird)
       inputs.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
     });
 
@@ -170,11 +177,15 @@ export class BattleScene extends Phaser.Scene {
     createAfterPipeBackgroundSprites(this)
   }
 
-  flap(body: Phaser.Physics.Arcade.Body) {
+  flap(sprite: Phaser.Physics.Arcade.Sprite) {
+    const body = sprite.body as Phaser.Physics.Arcade.Body
     body.setVelocityY(-1 * constants.flapStrength)
+    sprite.play('flap')
   }
 
   rotateSprite(sprite: Phaser.Physics.Arcade.Sprite) {
+    if(sprite.body.velocity.y >= 100)
+      sprite.play('dive')
     let newAngle = this.remapClamped(sprite.body.velocity.y, 105, 200, -15, 90)
 
     sprite.setAngle(newAngle)
@@ -205,7 +216,7 @@ export class BattleScene extends Phaser.Scene {
       while(input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
         const action = input.actions.shift()
         if (action.action === "flap") {
-          this.flap(this.ghostBirds[index].body as Phaser.Physics.Arcade.Body)  
+          this.flap(this.ghostBirds[index] as Phaser.Physics.Arcade.Sprite)  
         } else if (action.action === "sync" && action.value !== undefined) {
           this.ghostBirds[index].body.position.y = action.value
         }
