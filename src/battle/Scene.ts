@@ -222,6 +222,7 @@ export class BattleScene extends Phaser.Scene {
         } else if (action.action === "sync" && action.value !== undefined) {
           this.ghostBirds[index].body.position.y = action.value
         }
+        this.rotateSprite(this.ghostBirds[index] as Phaser.Physics.Arcade.Sprite)
       }
     });
     
