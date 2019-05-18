@@ -4,7 +4,8 @@ import * as _ from 'lodash'
 import * as constants from "../constants"
 
 import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase";
-import { preloadBackgroundSprites, createBackgroundSprites } from "./Background";
+import { preloadBackgroundSprites, createBehindPipeBackgroundSprites, createAfterPipeBackgroundSprites } from "./Background";
+import { addRowOfPipes } from "./PipeManager";
 
 
 
@@ -90,9 +91,7 @@ export class BattleScene extends Phaser.Scene {
  create() { 
 
   // setup bg
-createBackgroundSprites(this)
-
-
+    createBehindPipeBackgroundSprites(this)
 
     this.anims.create({
       key: 'flap',
@@ -138,7 +137,7 @@ createBackgroundSprites(this)
       this.ghostBirds.push(ghost)
     });
 
-    this.pipes = this.physics.add.group(); 
+    
     
     // On spacebar bounce the bird
     var keyObj = this.input.keyboard.addKey('SPACE')
@@ -152,12 +151,14 @@ createBackgroundSprites(this)
 
     this.time.addEvent({
       delay: constants.pipeTime, // We want 60px difference
-      callback: () => this.addRowOfPipes(),
+      callback: () => {
+        addRowOfPipes(this)
+      },
       callbackScope: this,
       loop: true
   });
 
-    this.addRowOfPipes()
+  this.pipes = addRowOfPipes(this)
 
     // When anything reaches the edge of the world (e.g. the pipes, destroy them)
     this.physics.world.setBoundsCollision(true, false, false, false)
@@ -166,6 +167,8 @@ createBackgroundSprites(this)
         this.pipes.remove(body.gameObject, true, true)
       }
     })
+
+    createAfterPipeBackgroundSprites(this)
   }
 
   flap(body: Phaser.Physics.Arcade.Body) {
@@ -187,7 +190,7 @@ createBackgroundSprites(this)
     //}
 
     
-    if(newAngle > lastAngle) {
+    if (newAngle > lastAngle) {
       if(newAngle > 0)
         newAngle = lastAngle + (newAngle - lastAngle)/15
       else
@@ -207,55 +210,6 @@ createBackgroundSprites(this)
       value = toB
 
     return value
-  }
-
-  addRowOfPipes() {
-    // Randomly pick a number between 1 and 7
-    // This will be the hole positioning
-    const slots = 7
-    
-    // we have a height of 240 to work with ATM
-    const windowHeight = 240
-    // const windowHeight = this.game.canvas.height
-    
-    // Distance from the top / bottom
-    const pipeEdgeBuffer = 170
-
-    // get the distance between each potential interval
-    const pipeIntervals = (windowHeight - (pipeEdgeBuffer/2) - (constants.gapHeight /2)) / slots
-    
-    const holeSlot = Math.floor(this.rng() * 5) + 1;
-    const holeTop = (pipeIntervals * holeSlot) + (pipeEdgeBuffer/2) - (constants.gapHeight/2)
-    const holeBottom = (pipeIntervals * holeSlot) + (pipeEdgeBuffer/2) + (constants.gapHeight/2)
-    
-    const pipeTop = this.physics.add.sprite(180, holeTop, 'pipe-top')
-    const pipeBottom = this.physics.add.sprite(180, holeBottom, 'pipe-bottom')
-    this.addPipeSprite(pipeTop)
-    this.addPipeSprite(pipeBottom)
-
-    const pipeTopBody = this.physics.add.sprite(180, holeTop - 5, "pipe-body");
-    pipeTopBody.setScale(1, 4000)
-    this.addPipeSprite(pipeTopBody)
-
-    const pipeBottomBody = this.physics.add.sprite(180, windowHeight, "pipe-body");
-    pipeBottomBody.setScale(1, windowHeight - holeBottom - 5)
-    this.addPipeSprite(pipeBottomBody)
-  }
-
-  addPipeSprite(pipe: Phaser.Physics.Arcade.Sprite) {
-
-    // Add the pipe to our previously created group
-    this.pipes.add(pipe);
-
-    // Add velocity to the pipe to make it move left
-    pipe.body.velocity.x = -1 * constants.pipeSpeed; 
-    
-    const body = pipe.body as Phaser.Physics.Arcade.Body
-    body.setAllowGravity(false)
-
-    // Automatically kill the pipe when it's no longer visible 
-    body.setCollideWorldBounds(true);
-    body.onWorldBounds = true
   }
 
   update(timestamp: number) {
@@ -282,7 +236,7 @@ createBackgroundSprites(this)
     });
     
     // If the bird hits the floor 
-    if (this.bird.y > 240 + 20) {
+    if (this.bird.y > 160 + 20) {
       this.restartTheGame()
     }
 

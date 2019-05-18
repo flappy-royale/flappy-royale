@@ -5,17 +5,17 @@ import * as constants from "./constants"
 
 const config: Phaser.Types.Core.GameConfig = {
   title: "Flappy",
-  width: 180,
+  width: 1,
   height: 240,
   parent: "game",
-  backgroundColor: "#18216D",
+  backgroundColor: "#62CBE0",
   scene: BattleScene,
   seed: ["consistent", "physics", "thanks"],
   scale: {
     // mode: Phaser.DOM
     mode: Phaser.Scale.FIT,
     parent: 'game',
-    width: 180,
+    width: 160,
     height: 240,
     // zoom: Phaser.Scale.MAX_ZOOM
     zoom: 4

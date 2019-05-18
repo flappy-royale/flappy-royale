@@ -23,25 +23,25 @@ export const addRowOfPipes = (scene: BattleScene): Phaser.Physics.Arcade.Group =
     
     const pipeTop = createSprite(180, holeTop, 'pipe-top', scene)
     const pipeBottom = createSprite(180, holeBottom, 'pipe-bottom', scene)
-    configurePipeSprite(pipeTop)
-    configurePipeSprite(pipeBottom)
 
     const pipeTopBody = createSprite(180, holeTop - 5, "pipe-body", scene);
     pipeTopBody.setScale(1, 4000)
-    configurePipeSprite(pipeTopBody)
 
     const pipeBottomBody = createSprite(180, windowHeight, "pipe-body", scene);
     pipeBottomBody.setScale(1, windowHeight - holeBottom - 5)
-    configurePipeSprite(pipeBottomBody)
+
+    const pipes = [pipeTop, pipeTopBody, pipeBottom, pipeBottomBody]
    
     const group = new Phaser.Physics.Arcade.Group(
       scene.physics.world, 
       scene, 
-      [pipeTop, pipeTopBody, pipeBottom, pipeBottomBody],
+      pipes,
       {}
     )
 
-    this.sys.updateList.add(group)
+    scene.sys.updateList.add(group as any)
+
+    pipes.forEach(configurePipeSprite)
 
     return group
 }
