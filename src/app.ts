@@ -1,7 +1,7 @@
-import * as Phaser from "phaser";
-import { BattleScene } from "./battle/Scene";
-import { FirebaseDataStore } from "./firebase";
-import * as constants from "./constants";
+import * as Phaser from "phaser"
+import { BattleScene } from "./battle/Scene"
+import { FirebaseDataStore } from "./firebase"
+import * as constants from "./constants"
 
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy",
@@ -34,19 +34,19 @@ const config: Phaser.Types.Core.GameConfig = {
         pixelArt: true,
         antialias: false
     }
-};
+}
 
 export class FlappyGame extends Phaser.Game {
     constructor(config: Phaser.Types.Core.GameConfig) {
-        super(config);
+        super(config)
     }
 }
 
 window.onload = async () => {
-    const game = new FlappyGame(config);
+    const game = new FlappyGame(config)
 
-    const firebase = new FirebaseDataStore("3");
+    const firebase = new FirebaseDataStore("3")
     firebase.fetch().then(() => {
-        (game.scene.getScene("GameScene") as BattleScene).configureDataStore(firebase);
-    });
-};
+        ;(game.scene.getScene("GameScene") as BattleScene).configureDataStore(firebase)
+    })
+}
