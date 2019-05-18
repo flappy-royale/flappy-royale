@@ -2,7 +2,7 @@ import * as firebase from "firebase"
 
 export interface PlayerEvent {
     timestamp: number
-    action: "flap" | "sync"
+    action: "flap" | "sync" | "died"
     value?: number
 }
 

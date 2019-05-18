@@ -33,24 +33,35 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
 }
 
 export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
+    body: Phaser.Physics.Arcade.Body
+    isPlayer: boolean = false
+
     constructor(scene: Scene, x: number, y: number, texture: any, frame: any) {
         super(scene, x, y, texture, frame)
+        this.setOrigin(0.13, 0.5)
+
         // NOOP for now, but this is where customization can occur
         scene.add.existing(this)
     }
 
     flap() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        body.setVelocityY(-1 * constants.flapStrength)
-        this.play("flap")
+        this.body.setVelocityY(-1 * constants.flapStrength)
+        // this.play("flap")
     }
 
     rotateSprite() {
-        const body = this.body as Phaser.Physics.Arcade.Body
-        if (body.velocity.y >= 100) this.play("dive")
-        let newAngle = remapClamped(body.velocity.y, 105, 200, -15, 90)
+        if (this.body.velocity.y >= 100) this.play("dive")
+        let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
 
         this.setAngle(newAngle)
+    }
+
+    die() {
+        if (this.isPlayer) {
+        } else {
+            // move with the pipes
+            this.body.velocity.x = -1 * constants.pipeSpeed
+        }
     }
 
     preUpdate(_time: number, _delta: number) {

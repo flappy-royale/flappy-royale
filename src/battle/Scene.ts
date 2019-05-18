@@ -16,7 +16,9 @@ const devSettings = {
     // Allows flying through pipes
     skipPipeCollision: false,
     // Allows falling off the bottom
-    skipBottomCollision: false
+    skipBottomCollision: true,
+    // Events + info
+    debugMessages: true
 }
 
 export class BattleScene extends Phaser.Scene {
@@ -65,11 +67,11 @@ export class BattleScene extends Phaser.Scene {
             key: "GameScene"
         })
 
-        this.seed = (opts && opts.seed) || "12345"
+        this.seed = (opts && opts.seed) || "123456"
         this.resetGame()
 
         window.addEventListener("touchstart", () => {
-            this.bird.flap()
+            this.userFlap()
         })
     }
 
@@ -86,6 +88,11 @@ export class BattleScene extends Phaser.Scene {
         preloadBackgroundSprites(this)
     }
 
+    userFlap() {
+        this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
+        this.bird.flap()
+    }
+
     create() {
         // setup bg + animations
         createBackgroundSprites(this)
@@ -93,12 +100,13 @@ export class BattleScene extends Phaser.Scene {
 
         // Setup your bird's initial position
         this.bird = addBirdToScene(constants.birdXPosition, 80, this)
-        this.bird.setOrigin(0.13, 0.5)
 
+        // If there's a datastore of recorded inputs, then make a fresh clone of those
         if (this.dataStore && this.dataStore.data) {
             this.recordedInput = _.cloneDeep(this.dataStore.data[this.seed] || [])
         }
 
+        // Set up the competitor birds
         this.recordedInput.forEach(_ => {
             const ghost = addBirdToScene(constants.birdXPosition, 80, this)
             ghost.setAlpha(0.3)
@@ -108,12 +116,7 @@ export class BattleScene extends Phaser.Scene {
 
         // On spacebar bounce the bird
         var keyObj = this.input.keyboard.addKey("SPACE")
-        const inputs = this.userInput
-
-        keyObj.on("down", (_event: KeyboardEvent) => {
-            inputs.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
-            this.bird.flap()
-        })
+        keyObj.on("down", this.userFlap, this)
 
         this.time.addEvent({
             delay: constants.pipeTime, // We want 60px difference
@@ -150,25 +153,48 @@ export class BattleScene extends Phaser.Scene {
 
             while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
                 const action = input.actions.shift()
+                const ghostBird = this.ghostBirds[index]
                 if (action.action === "flap") {
-                    this.ghostBirds[index].flap()
+                    ghostBird.flap()
                 } else if (action.action === "sync" && action.value !== undefined) {
-                    this.ghostBirds[index].body.position.y = action.value
+                    ghostBird.body.position.y = action.value
+                } else if (action.action === "died") {
+                    ghostBird.die()
                 }
             }
         })
 
         // If the bird hits the floor
         if (!devSettings.skipBottomCollision && this.bird.y > 160 + 20) {
-            this.restartTheGame()
+            this.userDied()
         }
 
         // The collision of your bird and the pipes
         if (!devSettings.skipPipeCollision) {
-            this.physics.overlap(this.bird, this.pipes, this.restartTheGame, null, this)
+            this.physics.overlap(this.bird, this.pipes, this.userDied, null, this)
         }
 
         pipeOutOfBoundsCheck(this.pipes)
+    }
+
+    userDied() {
+        // in the future we'll want to show the death animation etc
+        this.userInput.push({
+            action: "died",
+            timestamp: this.time.now - this.timestampOffset
+        })
+
+        if (canRecordScore() && window.location.hash !== "" && this.userInput.length > 4) {
+            const name = window.location.hash.slice(1)
+            this.dataStore.storeForSeed(this.seed, {
+                name: name,
+                apiVersion: this.apiVersion,
+                actions: this.userInput
+            })
+        }
+
+        console.log(JSON.stringify(this.userInput, null, 2))
+        this.restartTheGame()
     }
 
     resetGame() {
@@ -179,23 +205,15 @@ export class BattleScene extends Phaser.Scene {
     }
 
     restartTheGame() {
-        // console.clear()
-        // console.log(JSON.stringify(this.userInput, null, 2))
-
-        if (window.location.hash !== "" && this.userInput.length > 4) {
-            const name = window.location.hash.slice(1)
-            this.dataStore.storeForSeed(this.seed, {
-                name: name,
-                apiVersion: this.apiVersion,
-                actions: this.userInput
-            })
-        }
-
         this.timestampOffset = this.time.now
         this.time.update(0, 0)
         this.resetGame()
         this.scene.restart()
     }
+}
+
+const canRecordScore = () => {
+    return !devSettings.skipBottomCollision && !devSettings.skipPipeCollision
 }
 
 const stringFromDevSettings = () => {
