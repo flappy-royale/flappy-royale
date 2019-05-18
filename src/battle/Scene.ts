@@ -16,7 +16,7 @@ const devSettings = {
     // Allows flying through pipes
     skipPipeCollision: false,
     // Allows falling off the bottom
-    skipBottomCollision: true,
+    skipBottomCollision: false,
     // Events + info
     debugMessages: true
 }
@@ -70,6 +70,10 @@ export class BattleScene extends Phaser.Scene {
         this.seed = (opts && opts.seed) || "123456"
         this.resetGame()
 
+        if (!canRecordScore()) {
+            // debug("Not recoding inputs, because a dev option is set")
+        }
+
         window.addEventListener("touchstart", () => {
             this.userFlap()
         })
@@ -98,9 +102,6 @@ export class BattleScene extends Phaser.Scene {
         createBackgroundSprites(this)
         setupBirdAnimations(this)
 
-        // Setup your bird's initial position
-        this.bird = addBirdToScene(constants.birdXPosition, 80, this)
-
         // If there's a datastore of recorded inputs, then make a fresh clone of those
         if (this.dataStore && this.dataStore.data) {
             this.recordedInput = _.cloneDeep(this.dataStore.data[this.seed] || [])
@@ -114,15 +115,16 @@ export class BattleScene extends Phaser.Scene {
             this.ghostBirds.push(ghost)
         })
 
+        // Setup your bird's initial position
+        this.bird = addBirdToScene(constants.birdXPosition, 80, this)
+
         // On spacebar bounce the bird
         var keyObj = this.input.keyboard.addKey("SPACE")
         keyObj.on("down", this.userFlap, this)
 
         this.time.addEvent({
             delay: constants.pipeTime, // We want 60px difference
-            callback: () => {
-                this.pipes.push(addRowOfPipes(this))
-            },
+            callback: () => this.pipes.push(addRowOfPipes(this)),
             callbackScope: this,
             loop: true
         })

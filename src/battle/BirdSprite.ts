@@ -16,9 +16,9 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
         key: "flap",
         frames: [
             { key: "bird1", frame: 0 },
-            { key: "bird2", frame: 1 },
-            { key: "bird3", frame: 2 },
-            { key: "bird2", frame: 3 }
+            { key: "bird2", frame: 0 },
+            { key: "bird3", frame: 0 },
+            { key: "bird2", frame: 0 }
         ],
         frameRate: 18,
         repeat: -1
@@ -46,7 +46,7 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
 
     flap() {
         this.body.setVelocityY(-1 * constants.flapStrength)
-        // this.play("flap")
+        this.play("flap")
     }
 
     rotateSprite() {
