@@ -5,7 +5,7 @@ import * as constants from "./constants"
 
 const config: Phaser.Types.Core.GameConfig = {
   title: "Flappy",
-  width: 1,
+  width: 160,
   height: 240,
   parent: "game",
   backgroundColor: "#62CBE0",
@@ -45,7 +45,7 @@ export class FlappyGame extends Phaser.Game {
 window.onload = async () => {
   const game = new FlappyGame(config);
 
-  const firebase = new FirebaseDataStore("2")
+  const firebase = new FirebaseDataStore("3")
   firebase.fetch().then(() => {
     (game.scene.getScene('GameScene') as BattleScene).configureDataStore(firebase)
   })
