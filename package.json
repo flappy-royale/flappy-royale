@@ -16,13 +16,6 @@
     "phaser": "^3.17.0",
     "seed-random": "^2.2.0"
   },
-  "prettier": {
-    "requirePragma": true,
-    "singleQuote": false,
-    "trailingComma": "all",
-    "printWidth": 120,
-    "semi": false
-  },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
     "@types/lodash.clonedeep": "^4.5.6",
