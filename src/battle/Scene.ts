@@ -117,8 +117,7 @@ export class BattleScene extends Phaser.Scene {
 
     // Setup your bird's initial position
     this.bird = this.physics.add.sprite(constants.birdXPosition, 80, 'bird');
-    this.bird.setData("tAngle", 0)
-    this.bird.setOrigin(0.2,0.5)
+    this.bird.setOrigin(0.13,0.5)
     // this.bird.setTint(Math.random() * 16000000);
 
     // this.bird.play('flap')
@@ -176,38 +175,16 @@ export class BattleScene extends Phaser.Scene {
   }
 
   rotateSprite(sprite: Phaser.Physics.Arcade.Sprite) {
-    let lastAngle: number = sprite.getData("tAngle")
-    let newAngle: number = 0;
-    //later make bird always looking up until it falls enough that it's velocity down is like -50 and then rotate it
-    /*let newAngle: number = 0;
-    if(sprite.body.velocity.y > 0)
-    {
-      newAngle = -35
-    }
-    else
-    {*/
-      newAngle = this.remapClamped(sprite.body.velocity.y*-1, 0, 250, 0, 90)
-    //}
-
-    
-    if (newAngle > lastAngle) {
-      if(newAngle > 0)
-        newAngle = lastAngle + (newAngle - lastAngle)/15
-      else
-        newAngle = lastAngle + (newAngle - lastAngle)/15
-    } 
+    let newAngle = this.remapClamped(sprite.body.velocity.y, 105, 200, -15, 90)
 
     sprite.setAngle(newAngle)
-    sprite.setData("tAngle", newAngle)
   }
 
   remapClamped(value:number, fromA: number, fromB: number, toA: number, toB: number)
   {
-    value = (value - fromA) / (toA - fromA) * (toB - fromB) + fromB;
-    if(value < toA)
-      value = toA
-    if(value > toB)
-      value = toB
+    
+    value = Math.min(Math.max(value, fromA), fromB)
+    value = toA + (toB - toA) * ((value - fromA) / (fromB - fromA))
 
     return value
   }
