@@ -4,17 +4,19 @@ import * as _ from "lodash"
 import * as constants from "../constants"
 
 import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase"
-import {
-    preloadBackgroundSprites,
-    createBehindPipeBackgroundSprites,
-    createAfterPipeBackgroundSprites,
-    bgUpdateTick
-} from "./Background"
-import { addRowOfPipes } from "./PipeManager"
-import { addBirdToScene, BirdSprite } from "./BirdSprite"
+import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
+import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck } from "./PipeManager"
+import { addBirdToScene, BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 
 interface SceneSettings {
     seed: string
+}
+
+const devSettings = {
+    // Allows flying through pipes
+    skipPipeCollision: false,
+    // Allows falling off the bottom
+    skipBottomCollision: false
 }
 
 export class BattleScene extends Phaser.Scene {
@@ -27,8 +29,8 @@ export class BattleScene extends Phaser.Scene {
     /** opponent */
     ghostBirds: BirdSprite[] = []
 
-    /**  Every piece of a pipe */
-    pipes: Phaser.Physics.Arcade.Group
+    /**  Every pipe is a set of physics objects */
+    pipes: Phaser.Physics.Arcade.Group[]
 
     /** A timer for generating new pipes */
     newPipeTimer: Phaser.Time.TimerEvent
@@ -79,53 +81,26 @@ export class BattleScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("bird1", "assets/Bird1.png")
-        this.load.image("bird2", "assets/Bird2.png")
-        this.load.image("bird3", "assets/Bird3.png")
-        this.load.image("pipe-top", "assets/PipeTop.png")
-        this.load.image("pipe-body", "assets/PipeLength.png")
-        this.load.image("pipe-bottom", "assets/PipeBottom.png")
+        preloadPipeSprites(this)
+        preloadBirdSprites(this)
         preloadBackgroundSprites(this)
     }
 
     create() {
-        // setup bg
-        createBehindPipeBackgroundSprites(this)
-
-        this.anims.create({
-            key: "flap",
-            frames: [
-                { key: "bird1", frame: 0 },
-                { key: "bird2", frame: 1 },
-                { key: "bird3", frame: 2 },
-                { key: "bird2", frame: 3 }
-            ],
-            frameRate: 18,
-            repeat: -1
-        })
-
-        this.anims.create({
-            key: "dive",
-            frames: [{ key: "bird2", frame: 0 }],
-            frameRate: 0,
-            repeat: -1
-        })
+        // setup bg + animations
+        createBackgroundSprites(this)
+        setupBirdAnimations(this)
 
         // Setup your bird's initial position
-        this.bird = addBirdToScene(constants.birdXPosition, 80, "bird1", this)
+        this.bird = addBirdToScene(constants.birdXPosition, 80, this)
         this.bird.setOrigin(0.13, 0.5)
-
-        // this.bird.play('flap')
 
         if (this.dataStore && this.dataStore.data) {
             this.recordedInput = _.cloneDeep(this.dataStore.data[this.seed] || [])
         }
 
-        this.ghostBirds = []
-
         this.recordedInput.forEach(_ => {
-            const ghost = addBirdToScene(constants.birdXPosition, 80, "bird1", this)
-            // ghost.setTint(Math.random() * 16000000);
+            const ghost = addBirdToScene(constants.birdXPosition, 80, this)
             ghost.setAlpha(0.3)
 
             this.ghostBirds.push(ghost)
@@ -136,33 +111,24 @@ export class BattleScene extends Phaser.Scene {
         const inputs = this.userInput
 
         keyObj.on("down", (_event: KeyboardEvent) => {
-            this.bird.flap()
             inputs.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
+            this.bird.flap()
         })
 
         this.time.addEvent({
             delay: constants.pipeTime, // We want 60px difference
             callback: () => {
-                addRowOfPipes(this)
+                this.pipes.push(addRowOfPipes(this))
             },
             callbackScope: this,
             loop: true
         })
 
-        this.pipes = addRowOfPipes(this)
-
-        // When anything reaches the edge of the world (e.g. the pipes, destroy them)
-        this.physics.world.setBoundsCollision(true, false, false, false)
-        this.physics.world.on("worldbounds", (body: Phaser.Physics.Arcade.Body) => {
-            if (this.pipes.contains(body.gameObject)) {
-                this.pipes.remove(body.gameObject, true, true)
-            }
-        })
-
-        createAfterPipeBackgroundSprites(this)
+        this.pipes.push(addRowOfPipes(this))
     }
 
     update(timestamp: number) {
+        // Parallax stuff, and moves the ground to the front
         bgUpdateTick()
 
         const adjustedTime = timestamp - this.timestampOffset
@@ -193,22 +159,28 @@ export class BattleScene extends Phaser.Scene {
         })
 
         // If the bird hits the floor
-        if (this.bird.y > 160 + 20) {
+        if (!devSettings.skipBottomCollision && this.bird.y > 160 + 20) {
             this.restartTheGame()
         }
 
         // The collision of your bird and the pipes
-        this.physics.overlap(this.bird, this.pipes, this.restartTheGame, null, this)
+        if (!devSettings.skipPipeCollision) {
+            this.physics.overlap(this.bird, this.pipes, this.restartTheGame, null, this)
+        }
+
+        pipeOutOfBoundsCheck(this.pipes)
     }
 
     resetGame() {
         this.rng = Seed(this.seed)
         this.userInput = []
+        this.ghostBirds = []
+        this.pipes = []
     }
 
     restartTheGame() {
-        console.clear()
-        console.log(JSON.stringify(this.userInput, null, 2))
+        // console.clear()
+        // console.log(JSON.stringify(this.userInput, null, 2))
 
         if (window.location.hash !== "" && this.userInput.length > 4) {
             const name = window.location.hash.slice(1)
@@ -219,9 +191,13 @@ export class BattleScene extends Phaser.Scene {
             })
         }
 
-        // this.timestampOffset = this.time.now
+        this.timestampOffset = this.time.now
         this.time.update(0, 0)
         this.resetGame()
         this.scene.restart()
     }
+}
+
+const stringFromDevSettings = () => {
+    return `walls: ${devSettings.skipBottomCollision}, floor: ${devSettings.skipBottomCollision}`
 }

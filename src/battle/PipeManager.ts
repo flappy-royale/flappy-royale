@@ -50,23 +50,20 @@ const configurePipeSprite = (pipe: Phaser.Physics.Arcade.Sprite) => {
 
     const body = pipe.body as Phaser.Physics.Arcade.Body
     body.setAllowGravity(false)
-
-    // Automatically kill the pipe when it's no longer visible
-    body.setCollideWorldBounds(true)
-    body.onWorldBounds = true
 }
 
-export const addPipeSprite = (scene: BattleScene, pipe: Phaser.Physics.Arcade.Sprite) => {
-    // Add the pipe to our previously created group
-    scene.pipes.add(pipe)
+export const pipeOutOfBoundsCheck = (pipes: Phaser.Physics.Arcade.Group[]) => {
+    pipes.forEach(pipeGroup => {
+        const obj = pipeGroup.getChildren()[0].body as Phaser.Physics.Arcade.Body
+        if (obj.x < -60) {
+            pipes.shift()
+            pipeGroup.destroy()
+        }
+    })
+}
 
-    // Add velocity to the pipe to make it move left
-    pipe.body.velocity.x = -1 * constants.pipeSpeed
-
-    const body = pipe.body as Phaser.Physics.Arcade.Body
-    body.setAllowGravity(false)
-
-    // Automatically kill the pipe when it's no longer visible
-    body.setCollideWorldBounds(true)
-    body.onWorldBounds = true
+export const preloadPipeSprites = (scene: Phaser.Scene) => {
+    scene.load.image("pipe-top", "assets/PipeTop.png")
+    scene.load.image("pipe-body", "assets/PipeLength.png")
+    scene.load.image("pipe-bottom", "assets/PipeBottom.png")
 }

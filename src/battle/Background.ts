@@ -15,7 +15,7 @@ var clouds: Phaser.GameObjects.TileSprite,
     bushes2: Phaser.GameObjects.TileSprite,
     ground: Phaser.GameObjects.Sprite
 
-export const createBehindPipeBackgroundSprites = (scene: BattleScene) => {
+export const createBackgroundSprites = (scene: BattleScene) => {
     // 148 px wide
     clouds = scene.add.tileSprite(74, 164, 164, 0, "clouds")
     clouds2 = scene.add.tileSprite(74 + 148, 164, 160, 0, "clouds")
@@ -25,9 +25,7 @@ export const createBehindPipeBackgroundSprites = (scene: BattleScene) => {
     // 147 px
     bushes = scene.add.tileSprite(74, 176, 0, 0, "bushes")
     bushes2 = scene.add.tileSprite(74 + 147, 176, 0, 0, "bushes")
-}
 
-export const createAfterPipeBackgroundSprites = (scene: BattleScene) => {
     ground = scene.add.sprite(80, 230, "ground")
 }
 
