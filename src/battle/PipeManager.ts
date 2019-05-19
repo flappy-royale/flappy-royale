@@ -36,9 +36,8 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
 
     const pipes = [pipeTop, pipeTopBody, pipeBottom, pipeBottomBody]
 
-    const group = new Phaser.Physics.Arcade.Group(scene.physics.world, scene, pipes, {})
-
-    scene.sys.updateList.add(group as any)
+    const group = scene.physics.add.group(pipes)
+    group.setVelocityX(-1 * constants.pipeSpeed)
 
     pipes.forEach(configurePipeSprite)
 
@@ -46,8 +45,6 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
 }
 
 const configurePipeSprite = (pipe: Phaser.Physics.Arcade.Sprite) => {
-    pipe.body.velocity.x = -1 * constants.pipeSpeed
-
     const body = pipe.body as Phaser.Physics.Arcade.Body
     body.setAllowGravity(false)
 }
@@ -59,6 +56,15 @@ export const pipeOutOfBoundsCheck = (pipes: Phaser.Physics.Arcade.Group[]) => {
             pipes.shift()
             pipeGroup.destroy()
         }
+    })
+}
+
+export const nudgePipesOntoPixelGrid = (pipes: Phaser.Physics.Arcade.Group[]) => {
+    pipes.forEach(pipeGroup => {
+        pipeGroup.getChildren().forEach(p => {
+            const body = p.body as Phaser.Physics.Arcade.Body
+            body.position.x = Math.floor(body.position.x)
+        })
     })
 }
 
