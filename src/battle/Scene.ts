@@ -8,14 +8,17 @@ import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from 
 import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
-import { enablePhysicsLogging } from "./utils/enablePhysicsLogging"
+import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed } from "./utils/createBus"
+import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 
 interface SceneSettings {
     seed: string
 }
 
 const devSettings = {
+    // Turn off for release builds
+    developer: true,
     // Allows flying through pipes
     skipPipeCollision: false,
     // Allows falling off the bottom
@@ -33,7 +36,7 @@ export class BattleScene extends Phaser.Scene {
     /** The starting bus */
     bus: Phaser.Physics.Arcade.Image
 
-    /** Your sprite  */
+    /** Your sprite */
     bird: BirdSprite
 
     /** opponent */
@@ -78,6 +81,9 @@ export class BattleScene extends Phaser.Scene {
     /** Track spacebar keypresses to flap */
     spacebar: Phaser.Input.Keyboard.Key
 
+    // See debugging/keyboardShortcuts.ts
+    devKeys: object
+
     constructor(opts: SceneSettings) {
         super({
             key: "GameScene"
@@ -87,7 +93,7 @@ export class BattleScene extends Phaser.Scene {
         this.resetGame()
 
         if (!canRecordScore()) {
-            this.debug("Not recording inputs, because a dev option is set")
+            console.log("Not recording inputs, because a dev option is set")
         }
 
         window.addEventListener("touchstart", () => {
@@ -155,6 +161,10 @@ export class BattleScene extends Phaser.Scene {
 
         // On spacebar bounce the bird
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+
+        if (devSettings.developer) {
+            this.devKeys = setupDeveloperKeyboardShortcuts(this)
+        }
     }
 
     addPipe() {
@@ -195,8 +205,9 @@ export class BattleScene extends Phaser.Scene {
             while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
                 const event = input.actions.shift()
                 const ghostBird = this.ghostBirds[index]
+                console.log(event.action)
                 if (event.action === "flap") {
-                    ghostBird.flap()
+                    // ghostBird.flap()
                 } else if (event.action === "sync" && event.value !== undefined) {
                     ghostBird.position.y = event.value
                 } else if (event.action === "died") {
@@ -262,6 +273,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     restartTheGame() {
+        this.lastSyncedTimestamp = this.time.now
         this.timestampOffset = this.time.now
         this.time.update(0, 0)
         this.resetGame()
