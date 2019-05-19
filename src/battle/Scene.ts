@@ -212,9 +212,8 @@ export class BattleScene extends Phaser.Scene {
             while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
                 const event = input.actions.shift()
                 const ghostBird = this.ghostBirds[index]
-                console.log(event.action)
                 if (event.action === "flap") {
-                    // ghostBird.flap()
+                    ghostBird.flap()
                 } else if (event.action === "sync" && event.value !== undefined) {
                     ghostBird.position.y = event.value
                 } else if (event.action === "died") {
