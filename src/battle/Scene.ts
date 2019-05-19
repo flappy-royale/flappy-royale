@@ -5,7 +5,7 @@ import * as constants from "../constants"
 
 import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
-import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck } from "./PipeManager"
+import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
@@ -178,6 +178,11 @@ export class BattleScene extends Phaser.Scene {
 
         // Parallax stuff, and moves the ground to the front
         bgUpdateTick()
+
+        // Just applying velocity, pipes have non-integer X values, which causes them to jiggle
+        // Naively rounding their x-values down to the nearest int seeems to work,
+        // although could cause unexpected issues?
+        nudgePipesOntoPixelGrid(this.pipes)
 
         // The time from the start of a run
         const adjustedTime = Math.round(timestamp - this.timestampOffset)
