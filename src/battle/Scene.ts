@@ -75,6 +75,9 @@ export class BattleScene extends Phaser.Scene {
     /** The RNG function for this current run, and all ghosts*/
     rng: () => number
 
+    /** Track spacebar keypresses to flap */
+    spacebar: Phaser.Input.Keyboard.Key
+
     constructor(opts: SceneSettings) {
         super({
             key: "GameScene"
@@ -144,10 +147,6 @@ export class BattleScene extends Phaser.Scene {
         // Setup your bird's initial position
         this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition)
 
-        // On spacebar bounce the bird
-        var keyObj = this.input.keyboard.addKey("SPACE")
-        keyObj.on("down", this.userFlap, this)
-
         this.time.addEvent({
             delay: constants.pipeTime, // We want 60px difference
             callback: () => this.addPipe(),
@@ -157,6 +156,9 @@ export class BattleScene extends Phaser.Scene {
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
+
+        // On spacebar bounce the bird
+        this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     }
 
     addPipe() {
@@ -181,6 +183,11 @@ export class BattleScene extends Phaser.Scene {
                 value: Math.round(this.bird.body.position.y)
             })
             this.lastSyncedTimestamp = adjustedTime
+        }
+
+        // Flap if appropriate
+        if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+            this.userFlap()
         }
 
         this.recordedInput.forEach((input, index) => {
