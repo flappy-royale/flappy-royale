@@ -7,7 +7,7 @@ export const setupDeveloperKeyboardShortcuts = (scene: BattleScene) => {
 
     // Press K to clear the console
     const clearConsole = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K)
-    logEvents.on("up", () => console.clear())
+    clearConsole.on("up", () => console.clear())
 
     return {
         logEvents,
