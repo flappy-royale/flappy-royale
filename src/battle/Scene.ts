@@ -87,11 +87,9 @@ export class BattleScene extends Phaser.Scene {
     devKeys: object
 
     constructor(opts: SceneSettings) {
-        super({
-            key: "GameScene"
-        })
+        super({ key: "BattleScene" })
 
-        this.seed = (opts && opts.seed) || "12345678"
+        this.seed = (opts && opts.seed) || "123456789"
         this.resetGame()
 
         if (!canRecordScore()) {
@@ -145,18 +143,26 @@ export class BattleScene extends Phaser.Scene {
         this.recordedInput.forEach(_ => {
             const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, false)
             ghost.isPlayer = false
+            ghost.setupForBeingInBus()
             this.ghostBirds.push(ghost)
         })
 
         // Setup your bird's initial position
         this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, true)
+        this.bird.setupForBeingInBus()
 
-        this.time.addEvent({
-            delay: constants.pipeTime, // We want 60px difference
-            callback: () => this.addPipe(),
-            callbackScope: this,
-            loop: true
-        })
+        this.time.delayedCall(
+            800,
+            () =>
+                this.time.addEvent({
+                    delay: constants.pipeTime, // We want 60px difference
+                    callback: () => this.addPipe(),
+                    callbackScope: this,
+                    loop: true
+                }),
+            [],
+            this
+        )
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
@@ -239,11 +245,19 @@ export class BattleScene extends Phaser.Scene {
         this.physics.overlap(this.bus, this.pipes, busCrashed, null, this)
 
         pipeOutOfBoundsCheck(this.pipes)
+
+        if (this.isRecording()) {
+            this.debug("Recording ghost")
+        }
     }
 
     userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
         this.scoreLines.shift()
         line.destroy()
+    }
+
+    isRecording() {
+        return canRecordScore() && this.dataStore && window.location.hash !== ""
     }
 
     userDied() {
@@ -254,17 +268,14 @@ export class BattleScene extends Phaser.Scene {
         })
 
         const hasJumped = this.userInput.length > 4
-        if (canRecordScore() && window.location.hash !== "" && hasJumped) {
+        if (this.isRecording() && hasJumped) {
             const name = window.location.hash.slice(1)
             this.dataStore.storeForSeed(this.seed, {
                 name: name,
+                score: 0,
                 apiVersion: this.apiVersion,
                 actions: this.userInput
             })
-        }
-
-        if (hasJumped) {
-            console.log(JSON.stringify(this.userInput, null, 2))
         }
 
         this.restartTheGame()

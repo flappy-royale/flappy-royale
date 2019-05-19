@@ -7,8 +7,13 @@ export interface PlayerEvent {
 }
 
 export interface PlayerData {
+    /** User's name */
     name: string
+    /** Final score */
+    score: number
+    /** What  */
     apiVersion: string
+    /** User input actions */
     actions: PlayerEvent[]
 }
 
@@ -37,7 +42,6 @@ export class FirebaseDataStore {
     }
 
     fetch() {
-        console.log(this)
         return new Promise((resolve, reject) => {
             this.ref
                 .child(`recordings/${this.apiVersion}`)

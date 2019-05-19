@@ -5,8 +5,6 @@ export const preloadBirdSprites = (scene: Phaser.Scene) => {
     scene.load.image("bird1", "assets/Bird1.png")
     scene.load.image("bird2", "assets/Bird2.png")
     scene.load.image("bird3", "assets/Bird3.png")
-
-    // scene.load.spritesheet("bird-flap", "assets/BirdFlapSprite.png", { frameWidth: 17, frameHeight: 12 })
 }
 
 export const setupBirdAnimations = (scene: Phaser.Scene) => {
@@ -36,7 +34,7 @@ export class BirdSprite {
     isPlayer: boolean = false
     isInBus: boolean
 
-    private sprite: Phaser.GameObjects.Sprite
+    private sprite: Phaser.Physics.Arcade.Sprite
     private body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
@@ -46,8 +44,8 @@ export class BirdSprite {
         this.isPlayer = isPlayer
 
         this.body = this.sprite.body as Phaser.Physics.Arcade.Body
-        this.body.setAllowGravity(false)
         this.isInBus = true
+        this.setupForBeingInBus()
 
         this.position = this.body.position
 
@@ -67,13 +65,9 @@ export class BirdSprite {
     }
 
     flap() {
-        if (this.isPlayer) {
-            console.log("flap")
-        }
-
         if (this.isInBus) {
-            this.body.setAllowGravity(true)
             this.isInBus = false
+            this.stopBeingInBus()
         }
 
         this.body.setVelocityY(-1 * constants.flapStrength)
@@ -82,13 +76,10 @@ export class BirdSprite {
 
     rotateSprite() {
         if (this.body.velocity.y >= 100) {
-            if (this.isPlayer) {
-                console.log("fall")
-            }
             this.sprite.play("dive")
         }
-        let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
 
+        let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
         this.sprite.setAngle(newAngle)
     }
 
@@ -99,6 +90,21 @@ export class BirdSprite {
             // move with the pipes
             this.body.velocity.x = -1 * constants.pipeSpeed
         }
+    }
+
+    // Use the same gravity + velocity as the bus
+    // until the bird first jumps and stop having x velocity
+    // and a custom (slower) gravity
+
+    setupForBeingInBus() {
+        this.sprite.setGravityY(-450)
+        this.sprite.setAccelerationX(20)
+    }
+
+    stopBeingInBus() {
+        this.sprite.setGravityY(0)
+        this.sprite.setAccelerationX(0)
+        this.sprite.setVelocityX(0)
     }
 
     preUpdate() {

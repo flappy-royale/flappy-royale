@@ -12,12 +12,10 @@ const config: Phaser.Types.Core.GameConfig = {
     scene: BattleScene,
     seed: ["consistent", "physics", "thanks"],
     scale: {
-        // mode: Phaser.DOM
         mode: Phaser.Scale.FIT,
         parent: "game",
         width: 160,
         height: 240,
-        // zoom: Phaser.Scale.MAX_ZOOM
         zoom: 4
     },
     type: Phaser.CANVAS,
@@ -47,6 +45,7 @@ window.onload = async () => {
 
     const firebase = new FirebaseDataStore("4")
     firebase.fetch().then(() => {
-        ; (game.scene.getScene("GameScene") as BattleScene).configureDataStore(firebase)
+        const battleScene = game.scene.getScene("BattleScene") as BattleScene
+        battleScene.configureDataStore(firebase)
     })
 }
