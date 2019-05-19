@@ -9,6 +9,7 @@ import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck } from "./PipeM
 import { addBirdToScene, BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./utils/enablePhysicsLogging"
+import { createBus, busCrashed } from "./utils/createBus"
 
 interface SceneSettings {
     seed: string
@@ -20,7 +21,7 @@ const devSettings = {
     // Allows falling off the bottom
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
-    debugPhysics: true,
+    debugPhysics: false,
     // Events + info
     debugMessages: true
 }
@@ -28,6 +29,9 @@ const devSettings = {
 export class BattleScene extends Phaser.Scene {
     // Used for determining what opponents to grab
     apiVersion: string = "1"
+
+    /** The starting bus */
+    bus: Phaser.Physics.Arcade.Image
 
     /** Your sprite  */
     bird: BirdSprite
@@ -97,6 +101,8 @@ export class BattleScene extends Phaser.Scene {
 
     preload() {
         this.load.image("invis", "assets/InvisiblePX.png")
+        this.load.image("bus", "assets/Bus.png")
+
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
@@ -104,7 +110,13 @@ export class BattleScene extends Phaser.Scene {
 
     userFlap() {
         this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
-        this.bird.flap()
+
+        const isInBus = !this.bird.body.allowGravity
+        if (isInBus) {
+            this.bird.body.setAllowGravity(true)
+        } else {
+            this.bird.flap()
+        }
     }
 
     create() {
@@ -121,9 +133,11 @@ export class BattleScene extends Phaser.Scene {
             this.recordedInput = _.cloneDeep(this.dataStore.data[this.seed] || [])
         }
 
+        this.bus = createBus(this)
+
         // Set up the competitor birds
         this.recordedInput.forEach(_ => {
-            const ghost = addBirdToScene(constants.birdXPosition, 80, this)
+            const ghost = addBirdToScene(constants.birdXPosition, constants.birdYPosition, this)
             ghost.setAlpha(0.3)
             ghost.isPlayer = false
 
@@ -131,9 +145,10 @@ export class BattleScene extends Phaser.Scene {
         })
 
         // Setup your bird's initial position
-        this.bird = addBirdToScene(constants.birdXPosition, 80, this)
+        this.bird = addBirdToScene(constants.birdXPosition, constants.birdYPosition, this)
         this.bird.isPlayer = true
         this.bird.setDepth(constants.zLevels.playerBird)
+        this.bird.body.setAllowGravity(false)
 
         // On spacebar bounce the bird
         var keyObj = this.input.keyboard.addKey("SPACE")
@@ -145,8 +160,6 @@ export class BattleScene extends Phaser.Scene {
             callbackScope: this,
             loop: true
         })
-
-        this.addPipe()
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
@@ -204,6 +217,8 @@ export class BattleScene extends Phaser.Scene {
 
         // Score points by checking whether you got halfway
         this.physics.overlap(this.bird, this.scoreLines, this.userScored, null, this)
+        // Let the bus collide
+        this.physics.overlap(this.bus, this.pipes, busCrashed, null, this)
 
         pipeOutOfBoundsCheck(this.pipes)
     }
@@ -261,8 +276,4 @@ export class BattleScene extends Phaser.Scene {
 
 const canRecordScore = () => {
     return !devSettings.skipBottomCollision && !devSettings.skipPipeCollision
-}
-
-const stringFromDevSettings = () => {
-    return `walls: ${devSettings.skipBottomCollision}, floor: ${devSettings.skipBottomCollision}`
 }
