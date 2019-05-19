@@ -31,15 +31,15 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
 }
 
 export class BirdSprite {
-    sprite: Phaser.GameObjects.Sprite
-
-    body: Phaser.Physics.Arcade.Body
+    position: Phaser.Math.Vector2
 
     isPlayer: boolean = false
+    isInBus: boolean
+
+    private sprite: Phaser.GameObjects.Sprite
+    private body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
-        // NOOP for now, but this is where customization can occur
-
         this.sprite = scene.physics.add.sprite(x, y, "bird1")
         this.sprite.setOrigin(0.13, 0.5)
         this.sprite.setDepth(constants.zLevels.playerBird)
@@ -47,19 +47,33 @@ export class BirdSprite {
         this.isPlayer = isPlayer
 
         this.body = this.sprite.body as Phaser.Physics.Arcade.Body
+
         this.body.setAllowGravity(false)
+        this.isInBus = true
+
+        this.position = this.body.position
 
         if (!isPlayer) {
             this.sprite.setAlpha(0.3)
         }
     }
 
+    checkCollision(scene: Scene, objects: Phaser.Types.Physics.Arcade.ArcadeColliderType, callback: ArcadePhysicsCallback) {
+        return scene.physics.overlap(this.sprite, objects, callback, null, scene)
+    }
+
     flap() {
-        this.body.setVelocityY(-1 * constants.flapStrength)
         if (this.isPlayer) {
             console.log("flap")
         }
-        this.sprite.play("flap")
+
+        if (this.isInBus) {
+            this.body.setAllowGravity(true)
+            this.isInBus = false
+        } else {
+            this.body.setVelocityY(-1 * constants.flapStrength)
+            this.sprite.play("flap")
+        }
     }
 
     rotateSprite() {

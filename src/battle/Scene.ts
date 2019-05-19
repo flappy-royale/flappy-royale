@@ -114,12 +114,7 @@ export class BattleScene extends Phaser.Scene {
     userFlap() {
         this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
 
-        const isInBus = !this.bird.body.allowGravity
-        if (isInBus) {
-            this.bird.body.setAllowGravity(true)
-        } else {
-            this.bird.flap()
-        }
+        this.bird.flap()
     }
 
     create() {
@@ -180,7 +175,7 @@ export class BattleScene extends Phaser.Scene {
             this.userInput.push({
                 action: "sync",
                 timestamp: adjustedTime,
-                value: Math.round(this.bird.body.position.y)
+                value: Math.round(this.bird.position.y)
             })
             this.lastSyncedTimestamp = adjustedTime
         }
@@ -201,7 +196,7 @@ export class BattleScene extends Phaser.Scene {
                 if (event.action === "flap") {
                     ghostBird.flap()
                 } else if (event.action === "sync" && event.value !== undefined) {
-                    ghostBird.body.position.y = event.value
+                    ghostBird.position.y = event.value
                 } else if (event.action === "died") {
                     ghostBird.die()
                 }
@@ -209,17 +204,17 @@ export class BattleScene extends Phaser.Scene {
         })
 
         // If the bird hits the floor
-        if (!devSettings.skipBottomCollision && this.bird.sprite.y > 160 + 20) {
+        if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20) {
             this.userDied()
         }
 
         // The collision of your bird and the pipes
         if (!devSettings.skipPipeCollision) {
-            this.physics.overlap(this.bird.sprite, this.pipes, this.userDied, null, this)
+            this.bird.checkCollision(this, this.pipes, this.userDied)
         }
 
         // Score points by checking whether you got halfway
-        this.physics.overlap(this.bird.sprite, this.scoreLines, this.userScored, null, this)
+        this.bird.checkCollision(this, this.scoreLines, this.userScored)
 
         // Let the bus collide
         this.physics.overlap(this.bus, this.pipes, busCrashed, null, this)
