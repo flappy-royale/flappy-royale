@@ -1,9 +1,5 @@
-import { createSprite } from "./utils/createSprite"
 import * as constants from "../constants"
 import { Scene } from "phaser"
-
-export const addBirdToScene = (x: number, y: number, scene: Phaser.Scene) =>
-    createSprite(x, y, "bird1", scene, BirdSprite) as BirdSprite
 
 export const preloadBirdSprites = (scene: Phaser.Scene) => {
     scene.load.image("bird1", "assets/Bird1.png")
@@ -22,8 +18,8 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
             { key: "bird3", frame: 2 },
             { key: "bird2", frame: 3 }
         ],
-        frameRate: 1,
-        repeat: 2
+        frameRate: 12,
+        repeat: 0
     })
 
     scene.anims.create({
@@ -34,16 +30,28 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
     })
 }
 
-export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
+export class BirdSprite {
+    sprite: Phaser.GameObjects.Sprite
+
     body: Phaser.Physics.Arcade.Body
+
     isPlayer: boolean = false
 
-    constructor(scene: Scene, x: number, y: number, texture: any, frame: any) {
-        super(scene, x, y, texture, frame)
-        this.setOrigin(0.13, 0.5)
-
+    constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
         // NOOP for now, but this is where customization can occur
-        scene.add.existing(this)
+
+        this.sprite = scene.physics.add.sprite(x, y, "bird1")
+        this.sprite.setOrigin(0.13, 0.5)
+        this.sprite.setDepth(constants.zLevels.playerBird)
+
+        this.isPlayer = isPlayer
+
+        this.body = this.sprite.body as Phaser.Physics.Arcade.Body
+        this.body.setAllowGravity(false)
+
+        if (!isPlayer) {
+            this.sprite.setAlpha(0.3)
+        }
     }
 
     flap() {
@@ -51,7 +59,7 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
         if (this.isPlayer) {
             console.log("flap")
         }
-        this.play("flap")
+        this.sprite.play("flap")
     }
 
     rotateSprite() {
@@ -59,11 +67,11 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
             if (this.isPlayer) {
                 console.log("fall")
             }
-            this.play("dive")
+            this.sprite.play("dive")
         }
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
 
-        this.setAngle(newAngle)
+        this.sprite.setAngle(newAngle)
     }
 
     die() {
@@ -75,8 +83,7 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    preUpdate(_time: number, _delta: number) {
-        // Hook up rotation to the general app update cycle
+    preUpdate() {
         this.rotateSprite()
     }
 }

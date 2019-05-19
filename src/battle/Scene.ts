@@ -6,7 +6,7 @@ import * as constants from "../constants"
 import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck } from "./PipeManager"
-import { addBirdToScene, BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
+import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./utils/enablePhysicsLogging"
 import { createBus, busCrashed } from "./utils/createBus"
@@ -137,18 +137,12 @@ export class BattleScene extends Phaser.Scene {
 
         // Set up the competitor birds
         this.recordedInput.forEach(_ => {
-            const ghost = addBirdToScene(constants.birdXPosition, constants.birdYPosition, this)
-            ghost.setAlpha(0.3)
-            ghost.isPlayer = false
-
+            const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, false)
             this.ghostBirds.push(ghost)
         })
 
         // Setup your bird's initial position
-        this.bird = addBirdToScene(constants.birdXPosition, constants.birdYPosition, this)
-        this.bird.isPlayer = true
-        this.bird.setDepth(constants.zLevels.playerBird)
-        this.bird.body.setAllowGravity(false)
+        this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition)
 
         // On spacebar bounce the bird
         var keyObj = this.input.keyboard.addKey("SPACE")
@@ -171,6 +165,8 @@ export class BattleScene extends Phaser.Scene {
     }
 
     update(timestamp: number) {
+        this.bird.preUpdate()
+
         // Parallax stuff, and moves the ground to the front
         bgUpdateTick()
 
@@ -206,24 +202,25 @@ export class BattleScene extends Phaser.Scene {
         })
 
         // If the bird hits the floor
-        if (!devSettings.skipBottomCollision && this.bird.y > 160 + 20) {
+        if (!devSettings.skipBottomCollision && this.bird.sprite.y > 160 + 20) {
             this.userDied()
         }
 
         // The collision of your bird and the pipes
         if (!devSettings.skipPipeCollision) {
-            this.physics.overlap(this.bird, this.pipes, this.userDied, null, this)
+            this.physics.overlap(this.bird.sprite, this.pipes, this.userDied, null, this)
         }
 
         // Score points by checking whether you got halfway
-        this.physics.overlap(this.bird, this.scoreLines, this.userScored, null, this)
+        this.physics.overlap(this.bird.sprite, this.scoreLines, this.userScored, null, this)
+
         // Let the bus collide
         this.physics.overlap(this.bus, this.pipes, busCrashed, null, this)
 
         pipeOutOfBoundsCheck(this.pipes)
     }
 
-    userScored(_bird: BirdSprite, line: Phaser.Physics.Arcade.Sprite) {
+    userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
         this.scoreLines.shift()
         line.destroy()
     }
