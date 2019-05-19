@@ -42,12 +42,10 @@ export class BirdSprite {
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
         this.sprite = scene.physics.add.sprite(x, y, "bird1")
         this.sprite.setOrigin(0.13, 0.5)
-        this.sprite.setDepth(constants.zLevels.playerBird)
 
         this.isPlayer = isPlayer
 
         this.body = this.sprite.body as Phaser.Physics.Arcade.Body
-
         this.body.setAllowGravity(false)
         this.isInBus = true
 
@@ -55,10 +53,16 @@ export class BirdSprite {
 
         if (!isPlayer) {
             this.sprite.setAlpha(0.3)
+        } else {
+            this.sprite.setDepth(constants.zLevels.playerBird)
         }
     }
 
-    checkCollision(scene: Scene, objects: Phaser.Types.Physics.Arcade.ArcadeColliderType, callback: ArcadePhysicsCallback) {
+    checkCollision(
+        scene: Scene,
+        objects: Phaser.Types.Physics.Arcade.ArcadeColliderType,
+        callback: ArcadePhysicsCallback
+    ) {
         return scene.physics.overlap(this.sprite, objects, callback, null, scene)
     }
 

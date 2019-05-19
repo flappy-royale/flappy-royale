@@ -83,7 +83,7 @@ export class BattleScene extends Phaser.Scene {
             key: "GameScene"
         })
 
-        this.seed = (opts && opts.seed) || "123456"
+        this.seed = (opts && opts.seed) || "12345678"
         this.resetGame()
 
         if (!canRecordScore()) {
@@ -114,7 +114,13 @@ export class BattleScene extends Phaser.Scene {
     userFlap() {
         this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
 
-        this.bird.flap()
+        const isInBus = !this.bird.body.allowGravity
+        if (isInBus) {
+            this.bird.body.setAllowGravity(true)
+            this.bird.flap()
+        } else {
+            this.bird.flap()
+        }
     }
 
     create() {
@@ -136,11 +142,12 @@ export class BattleScene extends Phaser.Scene {
         // Set up the competitor birds
         this.recordedInput.forEach(_ => {
             const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, false)
+            ghost.isPlayer = false
             this.ghostBirds.push(ghost)
         })
 
         // Setup your bird's initial position
-        this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition)
+        this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, true)
 
         this.time.addEvent({
             delay: constants.pipeTime, // We want 60px difference
