@@ -51,9 +51,6 @@ export class BattleScene extends Phaser.Scene {
     /** A timer for generating new pipes */
     newPipeTimer: Phaser.Time.TimerEvent
 
-    /* So the scene can be re-used but time offsets can always be accurate */
-    timestampOffset: number = 0
-
     /** Keeping track of events from the user, sent up later */
     userInput: PlayerEvent[] = []
 
@@ -66,7 +63,12 @@ export class BattleScene extends Phaser.Scene {
     /**  Number of MS to record the latest y-position */
     syncInterval = 400
 
-    /** When we last stored the timestamp */
+    /* Scene timestamp for when the most recent round started
+     * So recording timestamps can be consistent */
+    timestampOffset: number = 0
+
+    /** When we last stored a "sync" data point for the user.
+     * This is the number of ms since the scene started, not since the round started */
     lastSyncedTimestamp = 0
 
     /** Developer logging */
@@ -188,13 +190,13 @@ export class BattleScene extends Phaser.Scene {
         const adjustedTime = Math.round(timestamp - this.timestampOffset)
         // record a sync of the users y position every so often, so that
         // we can make sure that the y positions are consistent with the ghosts
-        if (adjustedTime - this.lastSyncedTimestamp >= this.syncInterval) {
+        if (timestamp - this.lastSyncedTimestamp >= this.syncInterval) {
             this.userInput.push({
                 action: "sync",
                 timestamp: adjustedTime,
                 value: Math.round(this.bird.position.y)
             })
-            this.lastSyncedTimestamp = adjustedTime
+            this.lastSyncedTimestamp = timestamp
         }
 
         // Flap if appropriate
@@ -278,7 +280,6 @@ export class BattleScene extends Phaser.Scene {
     }
 
     restartTheGame() {
-        this.lastSyncedTimestamp = this.time.now
         this.timestampOffset = this.time.now
         this.time.update(0, 0)
         this.resetGame()
