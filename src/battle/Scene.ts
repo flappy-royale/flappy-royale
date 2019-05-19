@@ -7,6 +7,8 @@ import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck } from "./PipeManager"
 import { addBirdToScene, BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
+import { addScoreLine } from "./scoreLine"
+import { enablePhysicsLogging } from "./utils/enablePhysicsLogging"
 
 interface SceneSettings {
     seed: string
@@ -17,6 +19,8 @@ const devSettings = {
     skipPipeCollision: false,
     // Allows falling off the bottom
     skipBottomCollision: false,
+    // Show bounding boxes for physics objs
+    debugPhysics: true,
     // Events + info
     debugMessages: true
 }
@@ -31,8 +35,11 @@ export class BattleScene extends Phaser.Scene {
     /** opponent */
     ghostBirds: BirdSprite[] = []
 
-    /**  Every pipe is a set of physics objects */
+    /** Every pipe is a set of physics objects */
     pipes: Phaser.Physics.Arcade.Group[]
+
+    /** All the current scorelines on screen */
+    scoreLines: Phaser.Physics.Arcade.Image[]
 
     /** A timer for generating new pipes */
     newPipeTimer: Phaser.Time.TimerEvent
@@ -89,6 +96,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("invis", "assets/InvisiblePX.png")
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
@@ -100,6 +108,10 @@ export class BattleScene extends Phaser.Scene {
     }
 
     create() {
+        if (devSettings.debugPhysics) {
+            enablePhysicsLogging(this)
+        }
+
         // setup bg + animations
         createBackgroundSprites(this)
         setupBirdAnimations(this)
@@ -129,15 +141,20 @@ export class BattleScene extends Phaser.Scene {
 
         this.time.addEvent({
             delay: constants.pipeTime, // We want 60px difference
-            callback: () => this.pipes.push(addRowOfPipes(this)),
+            callback: () => this.addPipe(),
             callbackScope: this,
             loop: true
         })
 
-        this.pipes.push(addRowOfPipes(this))
+        this.addPipe()
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
+    }
+
+    addPipe() {
+        this.pipes.push(addRowOfPipes(181, this))
+        this.scoreLines.push(addScoreLine(181, this, this.bird))
     }
 
     update(timestamp: number) {
@@ -185,7 +202,15 @@ export class BattleScene extends Phaser.Scene {
             this.physics.overlap(this.bird, this.pipes, this.userDied, null, this)
         }
 
+        // Score points by checking whether you got halfway
+        this.physics.overlap(this.bird, this.scoreLines, this.userScored, null, this)
+
         pipeOutOfBoundsCheck(this.pipes)
+    }
+
+    userScored(_bird: BirdSprite, line: Phaser.Physics.Arcade.Sprite) {
+        this.scoreLines.shift()
+        line.destroy()
     }
 
     userDied() {
@@ -217,6 +242,7 @@ export class BattleScene extends Phaser.Scene {
         this.userInput = []
         this.ghostBirds = []
         this.pipes = []
+        this.scoreLines = []
     }
 
     restartTheGame() {

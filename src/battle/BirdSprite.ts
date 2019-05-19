@@ -59,7 +59,7 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
             if (this.isPlayer) {
                 console.log("fall")
             }
-            // this.play("dive")
+            this.play("dive")
         }
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
 

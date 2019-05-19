@@ -3,7 +3,7 @@ import * as constants from "../constants"
 import * as Phaser from "phaser"
 import { createSprite } from "./utils/createSprite"
 
-export const addRowOfPipes = (scene: BattleScene): Phaser.Physics.Arcade.Group => {
+export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arcade.Group => {
     // Randomly pick a number between 1 and 7
     // This will be the hole positioning
     const slots = 7
@@ -25,13 +25,13 @@ export const addRowOfPipes = (scene: BattleScene): Phaser.Physics.Arcade.Group =
     const holeTop = pipeIntervals * holeSlot + pipeEdgeBuffer / 2 - constants.gapHeight / 2 - floorAvoidanceHeight
     const holeBottom = pipeIntervals * holeSlot + pipeEdgeBuffer / 2 + constants.gapHeight / 2 - floorAvoidanceHeight
 
-    const pipeTop = createSprite(180, holeTop, "pipe-top", scene)
-    const pipeBottom = createSprite(180, holeBottom, "pipe-bottom", scene)
+    const pipeTop = createSprite(x, holeTop, "pipe-top", scene)
+    const pipeBottom = createSprite(x, holeBottom, "pipe-bottom", scene)
 
-    const pipeTopBody = createSprite(180, holeTop - 5, "pipe-body", scene)
+    const pipeTopBody = createSprite(x, holeTop - 5, "pipe-body", scene)
     pipeTopBody.setScale(1, 4000)
 
-    const pipeBottomBody = createSprite(180, windowHeight, "pipe-body", scene)
+    const pipeBottomBody = createSprite(x, windowHeight, "pipe-body", scene)
     pipeBottomBody.setScale(1, windowHeight - holeBottom - 5)
 
     const pipes = [pipeTop, pipeTopBody, pipeBottom, pipeBottomBody]
