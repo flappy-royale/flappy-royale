@@ -45,8 +45,8 @@ export class FlappyGame extends Phaser.Game {
 window.onload = async () => {
     const game = new FlappyGame(config)
 
-    const firebase = new FirebaseDataStore("3")
+    const firebase = new FirebaseDataStore("4")
     firebase.fetch().then(() => {
-        ;(game.scene.getScene("GameScene") as BattleScene).configureDataStore(firebase)
+        ; (game.scene.getScene("GameScene") as BattleScene).configureDataStore(firebase)
     })
 }
