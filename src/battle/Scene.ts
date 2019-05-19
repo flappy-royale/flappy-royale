@@ -41,7 +41,6 @@ export class BattleScene extends Phaser.Scene {
     timestampOffset: number = 0
 
     /** Keeping track of events from the user, sent up later */
-
     userInput: PlayerEvent[] = []
 
     /** Other players input events */
@@ -55,6 +54,9 @@ export class BattleScene extends Phaser.Scene {
 
     /** When we last stored the timestamp */
     lastSyncedTimestamp = 0
+
+    /** Developer logging */
+    debugLabel: Phaser.GameObjects.Text
 
     /** A seed for the RNG function */
     seed: string
@@ -71,7 +73,7 @@ export class BattleScene extends Phaser.Scene {
         this.resetGame()
 
         if (!canRecordScore()) {
-            // debug("Not recoding inputs, because a dev option is set")
+            this.debug("Not recording inputs, because a dev option is set")
         }
 
         window.addEventListener("touchstart", () => {
@@ -111,12 +113,15 @@ export class BattleScene extends Phaser.Scene {
         this.recordedInput.forEach(_ => {
             const ghost = addBirdToScene(constants.birdXPosition, 80, this)
             ghost.setAlpha(0.3)
+            ghost.isPlayer = false
 
             this.ghostBirds.push(ghost)
         })
 
         // Setup your bird's initial position
         this.bird = addBirdToScene(constants.birdXPosition, 80, this)
+        this.bird.isPlayer = true
+        this.bird.setDepth(constants.zLevels.playerBird)
 
         // On spacebar bounce the bird
         var keyObj = this.input.keyboard.addKey("SPACE")
@@ -130,20 +135,24 @@ export class BattleScene extends Phaser.Scene {
         })
 
         this.pipes.push(addRowOfPipes(this))
+
+        this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
+        this.debugLabel.setDepth(constants.zLevels.debugText)
     }
 
     update(timestamp: number) {
         // Parallax stuff, and moves the ground to the front
         bgUpdateTick()
 
-        const adjustedTime = timestamp - this.timestampOffset
+        // The time from the start of a run
+        const adjustedTime = Math.round(timestamp - this.timestampOffset)
         // record a sync of the users y position every so often, so that
         // we can make sure that the y positions are consistent with the ghosts
         if (adjustedTime - this.lastSyncedTimestamp >= this.syncInterval) {
             this.userInput.push({
                 action: "sync",
                 timestamp: adjustedTime,
-                value: this.bird.body.position.y
+                value: Math.round(this.bird.body.position.y)
             })
             this.lastSyncedTimestamp = adjustedTime
         }
@@ -154,13 +163,13 @@ export class BattleScene extends Phaser.Scene {
             }
 
             while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
-                const action = input.actions.shift()
+                const event = input.actions.shift()
                 const ghostBird = this.ghostBirds[index]
-                if (action.action === "flap") {
+                if (event.action === "flap") {
                     ghostBird.flap()
-                } else if (action.action === "sync" && action.value !== undefined) {
-                    ghostBird.body.position.y = action.value
-                } else if (action.action === "died") {
+                } else if (event.action === "sync" && event.value !== undefined) {
+                    ghostBird.body.position.y = event.value
+                } else if (event.action === "died") {
                     ghostBird.die()
                 }
             }
@@ -186,7 +195,8 @@ export class BattleScene extends Phaser.Scene {
             timestamp: this.time.now - this.timestampOffset
         })
 
-        if (canRecordScore() && window.location.hash !== "" && this.userInput.length > 4) {
+        const hasJumped = this.userInput.length > 4
+        if (canRecordScore() && window.location.hash !== "" && hasJumped) {
             const name = window.location.hash.slice(1)
             this.dataStore.storeForSeed(this.seed, {
                 name: name,
@@ -195,7 +205,10 @@ export class BattleScene extends Phaser.Scene {
             })
         }
 
-        console.log(JSON.stringify(this.userInput, null, 2))
+        if (hasJumped) {
+            console.log(JSON.stringify(this.userInput, null, 2))
+        }
+
         this.restartTheGame()
     }
 
@@ -211,6 +224,12 @@ export class BattleScene extends Phaser.Scene {
         this.time.update(0, 0)
         this.resetGame()
         this.scene.restart()
+    }
+
+    debug(msg: string) {
+        if (devSettings.debugMessages) {
+            this.debugLabel.setText(msg)
+        }
     }
 }
 

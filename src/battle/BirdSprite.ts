@@ -9,6 +9,8 @@ export const preloadBirdSprites = (scene: Phaser.Scene) => {
     scene.load.image("bird1", "assets/Bird1.png")
     scene.load.image("bird2", "assets/Bird2.png")
     scene.load.image("bird3", "assets/Bird3.png")
+
+    // scene.load.spritesheet("bird-flap", "assets/BirdFlapSprite.png", { frameWidth: 17, frameHeight: 12 })
 }
 
 export const setupBirdAnimations = (scene: Phaser.Scene) => {
@@ -16,12 +18,12 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
         key: "flap",
         frames: [
             { key: "bird1", frame: 0 },
-            { key: "bird2", frame: 0 },
-            { key: "bird3", frame: 0 },
-            { key: "bird2", frame: 0 }
+            { key: "bird2", frame: 1 },
+            { key: "bird3", frame: 2 },
+            { key: "bird2", frame: 3 }
         ],
-        frameRate: 18,
-        repeat: -1
+        frameRate: 1,
+        repeat: 2
     })
 
     scene.anims.create({
@@ -46,11 +48,19 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
 
     flap() {
         this.body.setVelocityY(-1 * constants.flapStrength)
+        if (this.isPlayer) {
+            console.log("flap")
+        }
         this.play("flap")
     }
 
     rotateSprite() {
-        if (this.body.velocity.y >= 100) this.play("dive")
+        if (this.body.velocity.y >= 100) {
+            if (this.isPlayer) {
+                console.log("fall")
+            }
+            // this.play("dive")
+        }
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
 
         this.setAngle(newAngle)
@@ -58,6 +68,7 @@ export class BirdSprite extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         if (this.isPlayer) {
+            // NOOP
         } else {
             // move with the pipes
             this.body.velocity.x = -1 * constants.pipeSpeed

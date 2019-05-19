@@ -6,3 +6,8 @@ canvas {
   image-rendering: -webkit-optimize-contrast;
   -ms-interpolation-mode: nearest-neighbor;
 }
+
+body {
+  padding: 0;
+  margin: 0;
+}

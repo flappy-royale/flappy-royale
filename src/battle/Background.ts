@@ -1,4 +1,5 @@
 import { BattleScene } from "./Scene"
+import * as constants from "../constants"
 
 export const preloadBackgroundSprites = (scene: BattleScene) => {
     scene.load.image("ground", "assets/ground.png")
@@ -40,5 +41,5 @@ export const bgUpdateTick = () => {
     if (bushes2) bushes2.setTilePosition(bushes2.tilePositionX + 0.08)
 
     // Makes sure the ground is always at the front, this will be an issue for deaths
-    ground.setDepth(1)
+    ground.setDepth(constants.zLevels.ground)
 }
