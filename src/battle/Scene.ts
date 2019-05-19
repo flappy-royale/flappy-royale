@@ -114,13 +114,7 @@ export class BattleScene extends Phaser.Scene {
     userFlap() {
         this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
 
-        const isInBus = !this.bird.body.allowGravity
-        if (isInBus) {
-            this.bird.body.setAllowGravity(true)
-            this.bird.flap()
-        } else {
-            this.bird.flap()
-        }
+        this.bird.flap()
     }
 
     create() {
@@ -170,6 +164,7 @@ export class BattleScene extends Phaser.Scene {
 
     update(timestamp: number) {
         this.bird.preUpdate()
+        this.ghostBirds.forEach(b => b.preUpdate())
 
         // Parallax stuff, and moves the ground to the front
         bgUpdateTick()

@@ -74,10 +74,10 @@ export class BirdSprite {
         if (this.isInBus) {
             this.body.setAllowGravity(true)
             this.isInBus = false
-        } else {
-            this.body.setVelocityY(-1 * constants.flapStrength)
-            this.sprite.play("flap")
         }
+
+        this.body.setVelocityY(-1 * constants.flapStrength)
+        this.sprite.play("flap")
     }
 
     rotateSprite() {
