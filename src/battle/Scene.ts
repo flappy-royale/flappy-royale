@@ -86,10 +86,18 @@ export class BattleScene extends Phaser.Scene {
     // See debugging/keyboardShortcuts.ts
     devKeys: object
 
-    constructor(opts: SceneSettings) {
-        super({ key: "BattleScene" })
+    constructor(opts?: SceneSettings) {
+        super(Object.assign({
+            key: "GameScene",
+            active: false
+        }, opts))
 
         this.seed = (opts && opts.seed) || "123456789"
+    }
+
+    init(data: FirebaseDataStore) {
+        this.dataStore = data
+        this.apiVersion = this.dataStore.apiVersion
         this.resetGame()
 
         if (!canRecordScore()) {
@@ -99,13 +107,6 @@ export class BattleScene extends Phaser.Scene {
         window.addEventListener("touchstart", () => {
             this.userFlap()
         })
-    }
-
-    configureDataStore(dataStore: FirebaseDataStore) {
-        this.dataStore = dataStore
-        this.apiVersion = this.dataStore.apiVersion
-
-        this.restartTheGame()
     }
 
     preload() {
@@ -142,12 +143,14 @@ export class BattleScene extends Phaser.Scene {
         // Set up the competitor birds
         this.recordedInput.forEach(_ => {
             const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, false)
-            ghost.isPlayer = false
             ghost.setupForBeingInBus()
             this.ghostBirds.push(ghost)
         })
 
-        // Setup your bird's initial position
+        if (this.bird) {
+            this.bird.destroy()
+        }
+
         this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, true)
         this.bird.setupForBeingInBus()
 

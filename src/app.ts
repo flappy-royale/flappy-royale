@@ -9,7 +9,6 @@ const config: Phaser.Types.Core.GameConfig = {
     height: 240,
     parent: "game",
     backgroundColor: "#62CBE0",
-    scene: BattleScene,
     seed: ["consistent", "physics", "thanks"],
     scale: {
         mode: Phaser.Scale.FIT,
@@ -41,11 +40,10 @@ export class FlappyGame extends Phaser.Game {
 }
 
 window.onload = async () => {
-    const game = new FlappyGame(config)
-
     const firebase = new FirebaseDataStore("4")
     firebase.fetch().then(() => {
-        const battleScene = game.scene.getScene("BattleScene") as BattleScene
-        battleScene.configureDataStore(firebase)
+        const scene = new BattleScene()
+        const game = new FlappyGame(config)
+        game.scene.add("GameScene", scene, true, firebase)
     })
 }
