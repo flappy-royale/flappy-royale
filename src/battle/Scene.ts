@@ -273,7 +273,13 @@ export class BattleScene extends Phaser.Scene {
         this.bird.checkCollision(this, this.scoreLines, this.userScored)
 
         // Let the bus collide
-        this.physics.overlap(this.bus, this.pipes, busCrashed, null, this)
+        const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
+            busCrashed(bus)
+            if (this.bird.isInBus) {
+                this.userDied()
+            }
+        }
+        this.physics.overlap(this.bus, this.pipes, busCrash, null, this)
 
         pipeOutOfBoundsCheck(this.pipes)
 
