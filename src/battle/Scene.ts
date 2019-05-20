@@ -91,6 +91,9 @@ export class BattleScene extends Phaser.Scene {
     // What score did someone just get
     score: number
 
+    /** How we show your score */
+    scoreLabel: Phaser.GameObjects.Text
+
     // Analytics state management
     analytics: BattleAnalytics
 
@@ -177,6 +180,16 @@ export class BattleScene extends Phaser.Scene {
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
+
+        this.scoreLabel = this.add.text(80, 20, "", {
+            fontFamily: "PT Mono",
+            fontSize: "18px",
+            align: "center",
+            color: "white",
+            stroke: "#000",
+            strokeThickness: 2
+        })
+        this.scoreLabel.setDepth(constants.zLevels.debugText)
 
         // On spacebar bounce the bird
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
@@ -276,6 +289,7 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLines.shift()
         line.destroy()
         this.score++
+        this.scoreLabel.text = `${this.score}`
     }
 
     userDied() {
