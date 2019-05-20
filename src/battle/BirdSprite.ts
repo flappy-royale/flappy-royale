@@ -5,6 +5,9 @@ export const preloadBirdSprites = (scene: Phaser.Scene) => {
     scene.load.image("bird1", "assets/Bird1.png")
     scene.load.image("bird2", "assets/Bird2.png")
     scene.load.image("bird3", "assets/Bird3.png")
+
+    scene.load.image("hat1", "assets/Hat1.png")
+    scene.load.image("hat2", "assets/Hat2.png")
 }
 
 export const setupBirdAnimations = (scene: Phaser.Scene) => {
@@ -34,7 +37,11 @@ export class BirdSprite {
     isPlayer: boolean = false
     isInBus: boolean
 
+    // The bird itself
     private sprite: Phaser.Physics.Arcade.Sprite
+    // HATS
+    private attire: Phaser.GameObjects.Image[]
+    // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
@@ -42,6 +49,26 @@ export class BirdSprite {
         this.sprite.setOrigin(0.13, 0.5)
 
         this.isPlayer = isPlayer
+
+        // Temporarily randomly assign hats to any bird
+        let hat: Phaser.GameObjects.Image | undefined
+        const randomAttire = Math.floor(Math.random() * 6)
+        switch (randomAttire) {
+            case 0:
+                hat = scene.add.image(x, y, "hat1")
+                break
+            case 1:
+                hat = scene.add.image(x, y, "hat2")
+            default:
+                break
+        }
+
+        if (hat) {
+            hat.setOrigin(0.13, 0.5)
+            this.attire = [hat]
+        } else {
+            this.attire = []
+        }
 
         this.body = this.sprite.body as Phaser.Physics.Arcade.Body
         this.isInBus = true
@@ -51,8 +78,10 @@ export class BirdSprite {
 
         if (!isPlayer) {
             this.sprite.setAlpha(0.3)
+            this.attire.forEach(a => a.setAlpha(0.3))
         } else {
             this.sprite.setDepth(constants.zLevels.playerBird)
+            this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire))
         }
     }
 
@@ -109,6 +138,13 @@ export class BirdSprite {
 
     preUpdate() {
         this.rotateSprite()
+        // We can't attach physics bodies together
+        // so attire is just manually kept up to date with the positioning
+        // of the sprite, this means attire needs to be centered on the bird
+        this.attire.forEach(attire => {
+            attire.setPosition(this.sprite.x, this.sprite.y)
+            attire.rotation = this.sprite.rotation
+        })
     }
 }
 

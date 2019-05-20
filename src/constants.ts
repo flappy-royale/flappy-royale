@@ -9,6 +9,7 @@ export const birdYPosition = 30
 
 export enum zLevels {
     debugText = 3,
+    birdAttire = 2,
     playerBird = 1,
     ground = 2
 }
