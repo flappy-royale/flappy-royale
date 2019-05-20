@@ -42,19 +42,19 @@ export class BirdSprite {
     isDead: boolean = false
 
     // The bird itself
+    private bodySprite: Phaser.GameObjects.Sprite
     private sprite: Phaser.Physics.Arcade.Sprite
-    private wings: Phaser.GameObjects.Sprite
     // HATS
     private attire: Phaser.GameObjects.Image[]
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
-        this.sprite = scene.physics.add.sprite(x, y, "body")
+        this.sprite = scene.physics.add.sprite(x, y, "flap1")
         this.sprite.setOrigin(0.13, 0.5)
 
-        this.wings = scene.add.sprite(x, y, "flap1")
-        this.wings.setOrigin(0.13, 0.5)
+        this.bodySprite = scene.add.sprite(x, y, "body")
+        this.bodySprite.setOrigin(0.13, 0.5)
 
         this.isPlayer = isPlayer
 
@@ -89,12 +89,12 @@ export class BirdSprite {
         this.position = this.body.position
 
         if (!isPlayer) {
+            this.bodySprite.setAlpha(0.3)
             this.sprite.setAlpha(0.3)
-            this.wings.setAlpha(0.3)
             this.attire.forEach(a => a.setAlpha(0.3))
         } else {
-            this.sprite.setDepth(constants.zLevels.playerBird)
-            this.wings.setDepth(constants.zLevels.playerBird + 1)
+            this.bodySprite.setDepth(constants.zLevels.playerBird)
+            this.sprite.setDepth(constants.zLevels.playerBird + 1)
             this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire + 2))
         }
 
@@ -118,14 +118,12 @@ export class BirdSprite {
         }
 
         this.body.setVelocityY(-1 * constants.flapStrength)
-        this.wings.play("flap")
-        this.wings.setOrigin(0.13, 0.5)
+        this.sprite.play("flap")
     }
 
     rotateSprite() {
         if (this.body.velocity.y >= 100) {
-            this.wings.play("dive")
-            this.wings.setOrigin(0, 0.5)
+            this.sprite.play("dive")
         }
 
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
@@ -167,13 +165,14 @@ export class BirdSprite {
             // We can't attach physics bodies together
             // so attire is just manually kept up to date with the positioning
             // of the sprite, this means attire needs to be centered on the bird
-            this.attire.forEach(attire => {
-                attire.setPosition(this.sprite.x, this.sprite.y)
-                attire.rotation = this.sprite.rotation
-            })
 
-            this.wings.setPosition(this.sprite.x, this.sprite.y)
-            this.wings.rotation = this.sprite.rotation
+            this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
+            this.bodySprite.rotation = this.sprite.rotation
+
+            this.attire.forEach(attire => {
+                attire.setPosition(this.bodySprite.x, this.bodySprite.y)
+                attire.rotation = this.bodySprite.rotation
+            })
         }
     }
 }
