@@ -260,6 +260,10 @@ export class BattleScene extends Phaser.Scene {
             this.userDied()
         }
 
+        if (this.bird.position.x > 160) {
+            this.userDied()
+        }
+
         // The collision of your bird and the pipes
         if (!devSettings.skipPipeCollision) {
             this.bird.checkCollision(this, this.pipes, this.userDied)
