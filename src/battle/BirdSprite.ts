@@ -112,6 +112,10 @@ export class BirdSprite {
         this.sprite.setAngle(newAngle)
     }
 
+    destroy() {
+        this.sprite.destroy();
+    }
+
     die() {
         if (this.isPlayer) {
             // NOOP
