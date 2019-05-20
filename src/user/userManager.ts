@@ -21,21 +21,17 @@ export interface GameResults {
     aesthetics: Aesthetics
 }
 
-interface GlobalUserSettings {
+interface UserSettings {
     /** What do we call you? */
     name: string
 
     /** What do you look like? */
     aesthetics: Aesthetics
-
-    /** Every royale game completed, we want to store one of these */
-    royales: GameResults[]
 }
 
 // What it is when you first join
-const defaultSettings: GlobalUserSettings = {
+const defaultSettings: UserSettings = {
     name: "Cappy McCapperson_" + Math.floor(Math.random() * 999999) + 1,
-    royales: [],
     aesthetics: {
         attire: [],
         baseColor: "eeffee"
@@ -43,10 +39,8 @@ const defaultSettings: GlobalUserSettings = {
 }
 
 // localStorage only works with text, so we need to marshall
-const getSettings = (): GlobalUserSettings =>
-    JSON.parse(localStorage.getItem("settings") || JSON.stringify(defaultSettings))
-
-const saveSettings = (settings: GlobalUserSettings) => localStorage.setItem("settings", JSON.stringify(settings))
+const getSettings = (): UserSettings => JSON.parse(localStorage.getItem("settings") || JSON.stringify(defaultSettings))
+const saveSettings = (settings: UserSettings) => localStorage.setItem("settings", JSON.stringify(settings))
 
 /**  For user forms etc */
 export const changeSettings = (settings: { name?: string }) => {
@@ -57,9 +51,13 @@ export const changeSettings = (settings: { name?: string }) => {
     saveSettings(existingSettings)
 }
 
+// The royales are separated from the settings because it just felt a bit naff passing them around for no reason
+
+const getRoyales = (): GameResults[] => JSON.parse(localStorage.getItem("royales") || JSON.stringify([]))
+
 /**  For the end of a run */
 export const recordGamePlayed = (results: GameResults) => {
-    const existingSettings = getSettings()
-    existingSettings.royales.push(results)
-    saveSettings(existingSettings)
+    const existingRoyales = getRoyales()
+    existingRoyales.push(results)
+    localStorage.setItem("royales", JSON.stringify(existingRoyales))
 }
