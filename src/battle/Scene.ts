@@ -11,6 +11,8 @@ import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
+import { BattleAnalytics } from "./utils/battleAnalytics"
+import { recordGamePlayed } from "../user/userManager"
 
 interface SceneSettings {
     seed: string
@@ -86,12 +88,24 @@ export class BattleScene extends Phaser.Scene {
     // See debugging/keyboardShortcuts.ts
     devKeys: object
 
-    constructor(opts?: SceneSettings) {
-        super(Object.assign({
-            key: "GameScene",
-            active: false
-        }, opts))
+    // What score did someone just get
+    score: number
 
+    // Analytics state management
+    analytics: BattleAnalytics
+
+    constructor(opts?: SceneSettings) {
+        super(
+            Object.assign(
+                {
+                    key: "GameScene",
+                    active: false
+                },
+                opts
+            )
+        )
+
+        this.analytics = new BattleAnalytics()
         this.seed = (opts && opts.seed) || "123456789"
     }
 
@@ -116,12 +130,6 @@ export class BattleScene extends Phaser.Scene {
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
-    }
-
-    userFlap() {
-        this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
-
-        this.bird.flap()
     }
 
     create() {
@@ -176,6 +184,9 @@ export class BattleScene extends Phaser.Scene {
         if (devSettings.developer) {
             this.devKeys = setupDeveloperKeyboardShortcuts(this)
         }
+
+        // Keep track of stats for using later
+        this.analytics.startRecording(this)
     }
 
     addPipe() {
@@ -254,13 +265,17 @@ export class BattleScene extends Phaser.Scene {
         }
     }
 
+    userFlap() {
+        this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
+
+        this.bird.flap()
+        this.analytics.flap()
+    }
+
     userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
         this.scoreLines.shift()
         line.destroy()
-    }
-
-    isRecording() {
-        return canRecordScore() && this.dataStore && window.location.hash !== ""
+        this.score++
     }
 
     userDied() {
@@ -270,6 +285,12 @@ export class BattleScene extends Phaser.Scene {
             timestamp: this.time.now - this.timestampOffset
         })
 
+        // Store what happened
+        const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
+        this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
+        recordGamePlayed(this.analytics.getResults())
+
+        // Check if they did enough for us to record the run
         const hasJumped = this.userInput.length > 4
         if (this.isRecording() && hasJumped) {
             const name = window.location.hash.slice(1)
@@ -290,6 +311,7 @@ export class BattleScene extends Phaser.Scene {
         this.ghostBirds = []
         this.pipes = []
         this.scoreLines = []
+        this.score = 0
     }
 
     restartTheGame() {
@@ -299,6 +321,10 @@ export class BattleScene extends Phaser.Scene {
         this.scene.restart()
     }
 
+    isRecording() {
+        return canRecordScore() && this.dataStore && window.location.hash !== ""
+    }
+
     debug(msg: string) {
         if (devSettings.debugMessages) {
             this.debugLabel.setText(msg)
@@ -306,6 +332,7 @@ export class BattleScene extends Phaser.Scene {
     }
 }
 
+// Devs should never be recording when they can wrap through the floor or pipes
 const canRecordScore = () => {
     return !devSettings.skipBottomCollision && !devSettings.skipPipeCollision
 }

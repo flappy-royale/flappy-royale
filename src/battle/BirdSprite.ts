@@ -8,6 +8,7 @@ export const preloadBirdSprites = (scene: Phaser.Scene) => {
 
     scene.load.image("hat1", "assets/Hat1.png")
     scene.load.image("hat2", "assets/Hat2.png")
+    scene.load.image("hat3", "assets/Hat3.png")
 }
 
 export const setupBirdAnimations = (scene: Phaser.Scene) => {
@@ -36,6 +37,7 @@ export class BirdSprite {
 
     isPlayer: boolean = false
     isInBus: boolean
+    isDead: boolean = false
 
     // The bird itself
     private sprite: Phaser.Physics.Arcade.Sprite
@@ -52,13 +54,17 @@ export class BirdSprite {
 
         // Temporarily randomly assign hats to any bird
         let hat: Phaser.GameObjects.Image | undefined
-        const randomAttire = Math.floor(Math.random() * 6)
+        const randomAttire = Math.floor(Math.random() * 12)
         switch (randomAttire) {
             case 0:
                 hat = scene.add.image(x, y, "hat1")
                 break
             case 1:
                 hat = scene.add.image(x, y, "hat2")
+                break
+            case 2:
+                hat = scene.add.image(x, y, "hat3")
+                break
             default:
                 break
         }
@@ -113,7 +119,7 @@ export class BirdSprite {
     }
 
     destroy() {
-        this.sprite.destroy();
+        this.sprite.destroy()
     }
 
     die() {
@@ -123,6 +129,7 @@ export class BirdSprite {
             // move with the pipes
             this.body.velocity.x = -1 * constants.pipeSpeed
         }
+        this.isDead = true
     }
 
     // Use the same gravity + velocity as the bus
