@@ -195,8 +195,8 @@ export class BattleScene extends Phaser.Scene {
     }
 
     update(timestamp: number) {
-        this.bird.preUpdate()
-        this.ghostBirds.forEach(b => b.preUpdate())
+        //this.bird.preUpdate()
+        //this.ghostBirds.forEach(b => b.preUpdate())
 
         // Parallax stuff, and moves the ground to the front
         bgUpdateTick()

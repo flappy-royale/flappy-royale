@@ -2,9 +2,11 @@ import * as constants from "../constants"
 import { Scene } from "phaser"
 
 export const preloadBirdSprites = (scene: Phaser.Scene) => {
-    scene.load.image("bird1", "assets/Bird1.png")
-    scene.load.image("bird2", "assets/Bird2.png")
-    scene.load.image("bird3", "assets/Bird3.png")
+    scene.load.image("flap1", "assets/Flap1.png")
+    scene.load.image("flap2", "assets/Flap2.png")
+    scene.load.image("flap3", "assets/Flap3.png")
+
+    scene.load.image("body", "assets/BirdBody.png")
 
     scene.load.image("hat1", "assets/Hat1.png")
     scene.load.image("hat2", "assets/Hat2.png")
@@ -15,20 +17,20 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
     scene.anims.create({
         key: "flap",
         frames: [
-            { key: "bird1", frame: 0 },
-            { key: "bird2", frame: 1 },
-            { key: "bird3", frame: 2 },
-            { key: "bird2", frame: 3 }
+            { key: "flap1", frame: 0 },
+            { key: "flap2", frame: 1 },
+            { key: "flap3", frame: 2 },
+            { key: "flap2", frame: 3 }
         ],
         frameRate: 12,
-        repeat: 0
+        repeat: -1
     })
 
     scene.anims.create({
         key: "dive",
-        frames: [{ key: "bird2", frame: 0 }],
+        frames: [{ key: "flap2", frame: 0 }],
         frameRate: 0,
-        repeat: -1
+        repeat: 0
     })
 }
 
@@ -41,14 +43,18 @@ export class BirdSprite {
 
     // The bird itself
     private sprite: Phaser.Physics.Arcade.Sprite
+    private wings: Phaser.GameObjects.Sprite
     // HATS
     private attire: Phaser.GameObjects.Image[]
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
-        this.sprite = scene.physics.add.sprite(x, y, "bird1")
+        this.sprite = scene.physics.add.sprite(x, y, "body")
         this.sprite.setOrigin(0.13, 0.5)
+
+        this.wings = scene.add.sprite(x, y, "flap1")
+        this.wings.setOrigin(0.13, 0.5)
 
         this.isPlayer = isPlayer
 
@@ -84,11 +90,17 @@ export class BirdSprite {
 
         if (!isPlayer) {
             this.sprite.setAlpha(0.3)
+            this.wings.setAlpha(0.3)
             this.attire.forEach(a => a.setAlpha(0.3))
         } else {
             this.sprite.setDepth(constants.zLevels.playerBird)
-            this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire))
+            this.wings.setDepth(constants.zLevels.playerBird + 1)
+            this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire + 2))
         }
+
+        scene.sys.events.addListener("update", () => {
+            this.preUpdate()
+        })
     }
 
     checkCollision(
@@ -106,12 +118,12 @@ export class BirdSprite {
         }
 
         this.body.setVelocityY(-1 * constants.flapStrength)
-        this.sprite.play("flap")
+        this.wings.play("flap")
     }
 
     rotateSprite() {
         if (this.body.velocity.y >= 100) {
-            this.sprite.play("dive")
+            this.wings.play("dive")
         }
 
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
@@ -148,14 +160,19 @@ export class BirdSprite {
     }
 
     preUpdate() {
-        this.rotateSprite()
-        // We can't attach physics bodies together
-        // so attire is just manually kept up to date with the positioning
-        // of the sprite, this means attire needs to be centered on the bird
-        this.attire.forEach(attire => {
-            attire.setPosition(this.sprite.x, this.sprite.y)
-            attire.rotation = this.sprite.rotation
-        })
+        if (this.sprite.anims) {
+            this.rotateSprite()
+            // We can't attach physics bodies together
+            // so attire is just manually kept up to date with the positioning
+            // of the sprite, this means attire needs to be centered on the bird
+            this.attire.forEach(attire => {
+                attire.setPosition(this.sprite.x, this.sprite.y)
+                attire.rotation = this.sprite.rotation
+            })
+
+            this.wings.setPosition(this.sprite.x, this.sprite.y)
+            this.wings.rotation = this.sprite.rotation
+        }
     }
 }
 
