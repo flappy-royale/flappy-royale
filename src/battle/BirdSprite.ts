@@ -119,11 +119,13 @@ export class BirdSprite {
 
         this.body.setVelocityY(-1 * constants.flapStrength)
         this.wings.play("flap")
+        this.wings.setOrigin(0.13, 0.5)
     }
 
     rotateSprite() {
         if (this.body.velocity.y >= 100) {
             this.wings.play("dive")
+            this.wings.setOrigin(0, 0.5)
         }
 
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
