@@ -51,7 +51,7 @@ export class BirdSprite {
 
     constructor(scene: Scene, x: number, y: number, isPlayer: boolean = true) {
         this.sprite = scene.physics.add.sprite(x, y, "flap1")
-        this.sprite.setOrigin(0.13, 0.5)
+        this.sprite.setOrigin(0.13, 0.6)
 
         this.bodySprite = scene.add.sprite(x, y, "body")
         this.bodySprite.setOrigin(0.13, 0.5)
@@ -94,11 +94,11 @@ export class BirdSprite {
             this.attire.forEach(a => a.setAlpha(0.3))
         } else {
             this.bodySprite.setDepth(constants.zLevels.playerBird)
-            this.sprite.setDepth(constants.zLevels.playerBird + 1)
-            this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire + 2))
+            this.sprite.setDepth(constants.zLevels.playerBird + 10)
+            this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire + 1))
         }
 
-        scene.sys.events.addListener("update", () => {
+        scene.sys.events.addListener("postupdate", () => {
             this.preUpdate()
         })
     }

@@ -14,7 +14,7 @@ var clouds: Phaser.GameObjects.TileSprite,
     city2: Phaser.GameObjects.TileSprite,
     bushes: Phaser.GameObjects.TileSprite,
     bushes2: Phaser.GameObjects.TileSprite,
-    ground: Phaser.GameObjects.Sprite
+    ground: Phaser.GameObjects.TileSprite
 
 export const createBackgroundSprites = (scene: BattleScene) => {
     // 148 px wide
@@ -27,18 +27,20 @@ export const createBackgroundSprites = (scene: BattleScene) => {
     bushes = scene.add.tileSprite(74, 176, 0, 0, "bushes")
     bushes2 = scene.add.tileSprite(74 + 147, 176, 0, 0, "bushes")
 
-    ground = scene.add.sprite(80, 230, "ground")
+    ground = scene.add.tileSprite(80, 230, 0, 0, "ground")
 }
 
 export const bgUpdateTick = () => {
-    if (clouds) clouds.setTilePosition(clouds.tilePositionX + 0.01)
-    if (clouds2) clouds2.setTilePosition(clouds.tilePositionX + 0.01)
+    //if (clouds) clouds.setTilePosition(clouds.tilePositionX + 0.005)
+    //if (clouds2) clouds2.setTilePosition(clouds.tilePositionX + 0.005)
 
-    if (city) city.setTilePosition(city.tilePositionX + 0.04)
-    if (city2) city2.setTilePosition(city2.tilePositionX + 0.04)
+    if (city) city.setTilePosition(city.tilePositionX + 0.125)
+    if (city2) city2.setTilePosition(city2.tilePositionX + 0.125)
 
-    if (bushes) bushes.setTilePosition(bushes.tilePositionX + 0.08)
-    if (bushes2) bushes2.setTilePosition(bushes2.tilePositionX + 0.08)
+    if (bushes) bushes.setTilePosition(bushes.tilePositionX + 0.5)
+    if (bushes2) bushes2.setTilePosition(bushes2.tilePositionX + 0.5)
+
+    if (ground) ground.setTilePosition(ground.tilePositionX + 1)
 
     // Makes sure the ground is always at the front, this will be an issue for deaths
     ground.setDepth(constants.zLevels.ground)
