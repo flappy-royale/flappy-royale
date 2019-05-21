@@ -3,6 +3,7 @@ const path = require("path")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const ManifestPlugin = require("webpack-manifest-plugin")
 
 /** @type import("webpack").Configuration */
 module.exports = {
@@ -59,6 +60,9 @@ module.exports = {
             // both options are optional
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
+        }),
+        new ManifestPlugin({
+            fileName: "build-manifest.json"
         })
     ]
 }
