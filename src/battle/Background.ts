@@ -28,6 +28,7 @@ export const createBackgroundSprites = (scene: BattleScene) => {
     bushes2 = scene.add.tileSprite(74 + 147, 176, 0, 0, "bushes")
 
     ground = scene.add.tileSprite(80, 230, 0, 0, "ground")
+    ground.setDepth(constants.zLevels.ground)
 }
 
 export const bgUpdateTick = () => {
@@ -41,7 +42,4 @@ export const bgUpdateTick = () => {
     if (bushes2) bushes2.setTilePosition(bushes2.tilePositionX + 0.5)
 
     if (ground) ground.setTilePosition(ground.tilePositionX + 1)
-
-    // Makes sure the ground is always at the front, this will be an issue for deaths
-    ground.setDepth(constants.zLevels.ground)
 }

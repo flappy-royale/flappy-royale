@@ -12,7 +12,7 @@ import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
-import { recordGamePlayed } from "../user/userManager"
+import { recordGamePlayed, getUserSettings } from "../user/userManager"
 
 interface SceneSettings {
     seed: string
@@ -109,7 +109,7 @@ export class BattleScene extends Phaser.Scene {
         )
 
         this.analytics = new BattleAnalytics()
-        this.seed = (opts && opts.seed) || "123456789"
+        this.seed = (opts && opts.seed) || "12345678910"
     }
 
     init(data: FirebaseDataStore) {
@@ -152,8 +152,11 @@ export class BattleScene extends Phaser.Scene {
         this.bus = createBus(this)
 
         // Set up the competitor birds
-        this.recordedInput.forEach(_ => {
-            const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, false)
+        this.recordedInput.forEach(input => {
+            const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, {
+                isPlayer: false,
+                settings: input.user
+            })
             ghost.setupForBeingInBus()
             this.ghostBirds.push(ghost)
         })
@@ -162,9 +165,11 @@ export class BattleScene extends Phaser.Scene {
             this.bird.destroy()
         }
 
-        this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, true)
+        const settings = getUserSettings()
+        this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, { isPlayer: true, settings })
         this.bird.setupForBeingInBus()
 
+        // The delay here handles the time for the bus moving from left to right
         this.time.delayedCall(
             800,
             () =>
@@ -308,9 +313,9 @@ export class BattleScene extends Phaser.Scene {
         const hasJumped = this.userInput.length > 4
         if (this.isRecording() && hasJumped) {
             const name = window.location.hash.slice(1)
+            const settings = getUserSettings()
             this.dataStore.storeForSeed(this.seed, {
-                name: name,
-                score: 0,
+                user: settings,
                 apiVersion: this.apiVersion,
                 actions: this.userInput
             })

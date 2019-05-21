@@ -1,4 +1,5 @@
 import * as firebase from "firebase"
+import { UserSettings } from "./user/userManager"
 
 export interface PlayerEvent {
     timestamp: number
@@ -7,12 +8,8 @@ export interface PlayerEvent {
 }
 
 export interface PlayerData {
-    /** User's name */
-    name: string
-    /** Final score */
-    score: number
-    /** What  */
     apiVersion: string
+    user: UserSettings
     /** User input actions */
     actions: PlayerEvent[]
 }
