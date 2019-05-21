@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const ManifestPlugin = require("webpack-manifest-plugin")
+const WebpackNotifierPlugin = require("webpack-notifier")
 
 /** @type import("webpack").Configuration */
 module.exports = {
@@ -20,7 +21,7 @@ module.exports = {
             // Ensures that hashing works, but means you have to require
             // images etc for their path, and not hardcode them.
             {
-                test: /\.(png|svg|jpg|gif)$/,
+                test: /\.(png|svg|jpg|gif|html)$/,
                 use: ["file-loader"]
             },
             // CSS hookup
@@ -50,6 +51,11 @@ module.exports = {
         // @ts-ignore
         // Resets the build folder each time you run webpack
         new CleanWebpackPlugin(),
+        // Get notifications about failed builds as messages in the top left
+        new WebpackNotifierPlugin(),
+
+        // Acutal generation of the build
+
         // Creates the HTML files
         new HtmlWebpackPlugin({
             title: "Flappy Royale"

@@ -2,6 +2,7 @@ import * as Phaser from "phaser"
 import { BattleScene } from "./battle/Scene"
 import { FirebaseDataStore } from "./firebase"
 import * as constants from "./constants"
+import { UserSettings } from "./menus/UserSettingsScene"
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
@@ -20,6 +21,9 @@ const config: Phaser.Types.Core.GameConfig = {
         width: 160,
         height: 240,
         zoom: 4
+    },
+    dom: {
+        createContainer: true
     },
     type: Phaser.CANVAS,
     physics: {
@@ -45,9 +49,10 @@ export class FlappyGame extends Phaser.Game {
 
 window.onload = async () => {
     const firebase = new FirebaseDataStore("4")
-    firebase.fetch().then(() => {
-        const scene = new BattleScene()
-        const game = new FlappyGame(config)
-        game.scene.add("GameScene", scene, true, firebase)
-    })
+    await firebase.fetch()
+
+    const scene = new BattleScene()
+    // const settings = new UserSettings()
+    const game = new FlappyGame(config)
+    game.scene.add("GameScene", scene, true, firebase)
 }
