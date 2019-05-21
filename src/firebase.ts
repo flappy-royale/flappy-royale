@@ -16,7 +16,7 @@ export interface PlayerData {
 }
 
 export class FirebaseDataStore {
-    data?: { [seed: string]: PlayerData[] }
+    data: { [key: string]: PlayerData[] }
 
     apiVersion: string
 
@@ -38,33 +38,25 @@ export class FirebaseDataStore {
         this.apiVersion = apiVersion
         this.app = firebase.initializeApp(firebaseConfig)
         this.ref = firebase.database().ref()
+        this.data = {}
     }
 
-    fetch() {
+    fetch(seed: string) {
         return new Promise((resolve, reject) => {
             this.ref
-                .child(`recordings/${this.apiVersion}`)
+                .child(`recordings/${this.apiVersion}/${seed}`)
                 .once("value")
                 .then(snapshot => {
                     // Firebase doesn't store arrays of data, it stores objects whose keys are random IDs
                     // This garbage soup is just to mangle that into an array.
-
-                    const result: { [seed: string]: PlayerData[] } = {}
-
+                    const result: { [key: string]: PlayerData } = {}
                     const snap = snapshot.val()
                     if (!snap) {
                         resolve({})
                         return
                     }
 
-                    Object.keys(snap).forEach(key => {
-                        result[key] = []
-                        Object.keys(snap[key]).forEach(id => {
-                            result[key].push(snap[key][id])
-                        })
-                    })
-
-                    this.data = result
+                    this.data[seed] = Object.values(snap)
                     resolve(result)
                 })
         })

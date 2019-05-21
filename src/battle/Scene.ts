@@ -32,9 +32,6 @@ const devSettings = {
 }
 
 export class BattleScene extends Phaser.Scene {
-    // Used for determining what opponents to grab
-    apiVersion: string = "1"
-
     /** The starting bus */
     bus: Phaser.Physics.Arcade.Image
 
@@ -79,7 +76,7 @@ export class BattleScene extends Phaser.Scene {
     /** A seed for the RNG function */
     seed: string
 
-    /** The RNG function for this current run, and all ghosts*/
+    /** The RNG function for this current run, and all ghosts */
     rng: () => number
 
     /** Track spacebar keypresses to flap */
@@ -97,7 +94,7 @@ export class BattleScene extends Phaser.Scene {
     // Analytics state management
     analytics: BattleAnalytics
 
-    constructor(opts?: SceneSettings) {
+    constructor(opts: SceneSettings) {
         super(
             Object.assign(
                 {
@@ -109,12 +106,14 @@ export class BattleScene extends Phaser.Scene {
         )
 
         this.analytics = new BattleAnalytics()
-        this.seed = (opts && opts.seed) || "12345678910"
+        this.seed = opts.seed
     }
 
+    // This happens when the scene is being played by the game (more
+    // like UIKit's viewDidLoad instead of the constructor)
+    //
     init(data: FirebaseDataStore) {
         this.dataStore = data
-        this.apiVersion = this.dataStore.apiVersion
         this.resetGame()
 
         if (!canRecordScore()) {
@@ -213,14 +212,11 @@ export class BattleScene extends Phaser.Scene {
     }
 
     update(timestamp: number) {
-        //this.bird.preUpdate()
-        //this.ghostBirds.forEach(b => b.preUpdate())
-
         // Parallax stuff, and moves the ground to the front
         bgUpdateTick()
 
         // Just applying velocity, pipes have non-integer X values, which causes them to jiggle
-        // Naively rounding their x-values down to the nearest int seeems to work,
+        // Naively rounding their x-values down to the nearest int seems to work,
         // although could cause unexpected issues?
         nudgePipesOntoPixelGrid(this.pipes)
 
@@ -242,6 +238,7 @@ export class BattleScene extends Phaser.Scene {
             this.userFlap()
         }
 
+        // Replay all of the actions for the other players
         this.recordedInput.forEach((input, index) => {
             if (!input.actions) {
                 return
@@ -326,7 +323,7 @@ export class BattleScene extends Phaser.Scene {
             const settings = getUserSettings()
             this.dataStore.storeForSeed(this.seed, {
                 user: settings,
-                apiVersion: this.apiVersion,
+                apiVersion: constants.APIVersion,
                 actions: this.userInput,
                 timestamp: Date.now()
             })

@@ -1,8 +1,10 @@
 import * as Phaser from "phaser"
-import { BattleScene } from "./battle/Scene"
+
 import { FirebaseDataStore } from "./firebase"
+import { BattleScene } from "./battle/Scene"
+// import { UserSettings } from "./menus/UserSettingsScene"
+
 import * as constants from "./constants"
-import { UserSettings } from "./menus/UserSettingsScene"
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
@@ -48,10 +50,11 @@ export class FlappyGame extends Phaser.Game {
 }
 
 window.onload = async () => {
-    const firebase = new FirebaseDataStore("4")
-    await firebase.fetch()
+    const firebase = new FirebaseDataStore(constants.APIVersion)
+    const seed = constants.dailySeed()
+    await firebase.fetch(seed)
 
-    const scene = new BattleScene()
+    const scene = new BattleScene({ seed: seed })
     // const settings = new UserSettings()
     const game = new FlappyGame(config)
     game.scene.add("GameScene", scene, true, firebase)
