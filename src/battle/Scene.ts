@@ -127,8 +127,8 @@ export class BattleScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("invis", "assets/InvisiblePX.png")
-        this.load.image("bus", "assets/Bus.png")
+        this.load.image("invis", require("../../assets/InvisiblePX.png"))
+        this.load.image("bus", require("../../assets/Bus.png"))
 
         preloadPipeSprites(this)
         preloadBirdSprites(this)

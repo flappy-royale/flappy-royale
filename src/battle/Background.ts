@@ -2,10 +2,10 @@ import { BattleScene } from "./Scene"
 import * as constants from "../constants"
 
 export const preloadBackgroundSprites = (scene: BattleScene) => {
-    scene.load.image("ground", "assets/ground.png")
-    scene.load.image("clouds", "assets/clouds.png")
-    scene.load.image("bushes", "assets/bushes.png")
-    scene.load.image("city", "assets/city.png")
+    scene.load.image("ground", require("../../assets/ground.png"))
+    scene.load.image("clouds", require("../../assets/clouds.png"))
+    scene.load.image("bushes", require("../../assets/bushes.png"))
+    scene.load.image("city", require("../../assets/city.png"))
 }
 
 var clouds: Phaser.GameObjects.TileSprite,

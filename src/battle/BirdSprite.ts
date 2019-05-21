@@ -4,9 +4,9 @@ import { builtInAttire } from "../attire"
 import { UserSettings } from "../user/userManager"
 
 export const preloadBirdSprites = (scene: Phaser.Scene) => {
-    scene.load.image("flap1", "assets/Flap1.png")
-    scene.load.image("flap2", "assets/Flap2.png")
-    scene.load.image("flap3", "assets/Flap3.png")
+    scene.load.image("flap1", require("../../assets/Flap1.png"))
+    scene.load.image("flap2", require("../../assets/Flap2.png"))
+    scene.load.image("flap3", require("../../assets/Flap3.png"))
 
     // TODO: switch this to only loading what is used
     // by peeps in the scene

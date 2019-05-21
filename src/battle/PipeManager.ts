@@ -69,7 +69,7 @@ export const nudgePipesOntoPixelGrid = (pipes: Phaser.Physics.Arcade.Group[]) =>
 }
 
 export const preloadPipeSprites = (scene: Phaser.Scene) => {
-    scene.load.image("pipe-top", "assets/PipeTop.png")
-    scene.load.image("pipe-body", "assets/PipeLength.png")
-    scene.load.image("pipe-bottom", "assets/PipeBottom.png")
+    scene.load.image("pipe-top", require("../../assets/PipeTop.png"))
+    scene.load.image("pipe-body", require("../../assets/PipeLength.png"))
+    scene.load.image("pipe-bottom", require("../../assets/PipeBottom.png"))
 }

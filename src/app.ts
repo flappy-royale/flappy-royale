@@ -3,6 +3,10 @@ import { BattleScene } from "./battle/Scene"
 import { FirebaseDataStore } from "./firebase"
 import * as constants from "./constants"
 
+// Ensures that webpack picks up the CSS
+// and adds it to the HTML
+require("../style.css")
+
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy",
     width: 160,

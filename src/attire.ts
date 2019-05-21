@@ -6,7 +6,7 @@ export const defaultAttire: PresentationAttire = {
     description: "It flaps",
     fit: "tight",
     base: true,
-    href: "assets/BirdBody.png"
+    href: require("../assets/BirdBody.png")
 }
 
 export const builtInAttire: PresentationAttire[] = [
@@ -16,27 +16,27 @@ export const builtInAttire: PresentationAttire[] = [
         description: "Flapping in a half-shell",
         fit: "tight",
         base: true,
-        href: "assets/bases/Turtle.png"
+        href: require("../assets/bases/Turtle.png")
     },
     {
         id: "flat-cap1",
         description: "A good old flat cap",
         fit: "loose",
         base: false,
-        href: "assets/attire/FlatCap.png"
+        href: require("../assets/attire/FlatCap.png")
     },
     {
         id: "bad-beard",
         description: "A really dodgy beard",
         fit: "tight",
         base: false,
-        href: "assets/attire/BadBeard.png"
+        href: require("../assets/attire/BadBeard.png")
     },
     {
         id: "crown1",
         description: "We can all be royale-ty",
         fit: "loose",
         base: false,
-        href: "assets/attire/Crown1.png"
+        href: require("../assets/attire/Crown1.png")
     }
 ]
