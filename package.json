@@ -2,13 +2,15 @@
   "name": "flappy-battle",
   "version": "1.0.0",
   "description": "Battling birds",
+  "homepage": ".",
   "main": "index.js",
-  "author": "Orta + LazerWalker + Zach",
+  "author": "Orta + Lazer-Walker + Zach",
   "license": "MIT",
   "private": true,
   "scripts": {
     "build": "webpack",
-    "start": "webpack --watch & live-server --port=8085"
+    "start": "webpack --watch & live-server --port=8085",
+    "deploy": "yarn build; gh-pages -d dist"
   },
   "dependencies": {
     "firebase": "^6.0.2",
@@ -20,6 +22,10 @@
     "@types/firebase": "^3.2.1",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/seed-random": "^2.2.0",
+    "copy-webpack-plugin": "^5.0.3",
+    "gh-pages": "^2.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-tags-plugin": "^2.0.12",
     "live-server": "^1.2.1",
     "prettier": "^1.17.1",
     "ts-loader": "^6.0.0",
