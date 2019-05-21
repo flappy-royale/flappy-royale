@@ -12,6 +12,7 @@ export interface PlayerData {
     user: UserSettings
     /** User input actions */
     actions: PlayerEvent[]
+    timestamp: number
 }
 
 export class FirebaseDataStore {
@@ -19,6 +20,7 @@ export class FirebaseDataStore {
 
     apiVersion: string
 
+    app: firebase.app.App
     ref: firebase.database.Reference
 
     constructor(apiVersion: string) {
@@ -34,7 +36,7 @@ export class FirebaseDataStore {
         // Initialize Firebase
 
         this.apiVersion = apiVersion
-        firebase.initializeApp(firebaseConfig)
+        this.app = firebase.initializeApp(firebaseConfig)
         this.ref = firebase.database().ref()
     }
 
