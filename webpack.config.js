@@ -48,7 +48,7 @@ module.exports = {
     mode: "development",
     plugins: [
         // @ts-ignore
-        // Resets the build folder each time
+        // Resets the build folder each time you run webpack
         new CleanWebpackPlugin(),
         // Creates the HTML files
         new HtmlWebpackPlugin({
@@ -61,6 +61,7 @@ module.exports = {
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
         }),
+        // Makes sure that we know how to get all the referenced files
         new ManifestPlugin({
             fileName: "build-manifest.json"
         })
