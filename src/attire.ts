@@ -19,18 +19,18 @@ export const builtInAttire: PresentationAttire[] = [
         href: require("../assets/bases/Turtle.png")
     },
     {
-        id: "flat-cap1",
-        description: "A good old flat cap",
-        fit: "loose",
-        base: false,
-        href: require("../assets/attire/FlatCap.png")
-    },
-    {
         id: "bad-beard",
         description: "A really dodgy beard",
         fit: "tight",
         base: false,
         href: require("../assets/attire/BadBeard.png")
+    },
+    {
+        id: "flat-cap1",
+        description: "A good old flat cap",
+        fit: "loose",
+        base: false,
+        href: require("../assets/attire/FlatCap.png")
     },
     {
         id: "crown1",

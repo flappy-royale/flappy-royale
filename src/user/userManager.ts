@@ -76,7 +76,6 @@ export const changeSettings = (settings: { name?: string; aesthetics?: Aesthetic
 }
 
 // The royales are separated from the settings because it just felt a bit naff passing them around for no reason
-
 export const getRoyales = (): GameResults[] => JSON.parse(localStorage.getItem("royales") || JSON.stringify([]))
 
 /**  For the end of a run */
