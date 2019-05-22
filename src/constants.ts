@@ -1,5 +1,12 @@
+// Changing this will mean new seed data for everything
 export const APIVersion = "5"
 
+export const GameWidth = 160
+export const GameHeight = 240
+
+// Battle Constants
+
+/// Mysterious multiplier for the original game values from Zach
 export const mapValue = 20
 export const flapStrength = 6.8 * this.mapValue
 export const gravity = 23 * this.mapValue

@@ -135,6 +135,15 @@ export class BattleScene extends Phaser.Scene {
     }
 
     create() {
+        // Fill the BG
+        this.add.rectangle(
+            constants.GameWidth / 2,
+            constants.GameHeight / 2,
+            constants.GameWidth,
+            constants.GameHeight,
+            0x62cbe0
+        )
+
         if (devSettings.debugPhysics) {
             enablePhysicsLogging(this)
         }
@@ -262,7 +271,7 @@ export class BattleScene extends Phaser.Scene {
             this.userDied()
         }
 
-        if (this.bird.position.x > 160) {
+        if (this.bird.position.x > constants.GameWidth) {
             this.userDied()
         }
 

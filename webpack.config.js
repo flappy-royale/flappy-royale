@@ -50,7 +50,10 @@ module.exports = {
     plugins: [
         // @ts-ignore
         // Resets the build folder each time you run webpack
-        new CleanWebpackPlugin(),
+
+        // We kinda only want this for production runs though
+        // new CleanWebpackPlugin(),
+
         // Get notifications about failed builds as messages in the top left
         new WebpackNotifierPlugin(),
 
