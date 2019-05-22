@@ -1,6 +1,6 @@
 import * as Phaser from "phaser"
 
-import { FirebaseDataStore } from "./firebase"
+import { FirebaseDataStore, getSeedsFromAPI } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 // import { UserSettings } from "./menus/UserSettingsScene"
 
@@ -51,10 +51,11 @@ export class FlappyGame extends Phaser.Game {
 
 window.onload = async () => {
     const firebase = new FirebaseDataStore(constants.APIVersion)
-    const seed = constants.dailySeed()
+    const seeds = await getSeedsFromAPI(constants.APIVersion)
+    const seed = seeds.royale.production
     await firebase.fetch(seed)
+    const scene = new BattleScene({ seed: seeds.royale.production })
 
-    const scene = new BattleScene({ seed: seed })
     // const settings = new UserSettings()
     const game = new FlappyGame(config)
     game.scene.add("GameScene", scene, true, firebase)

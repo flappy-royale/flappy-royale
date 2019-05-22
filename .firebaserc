@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "flappy-royale-3377a"
+    "default": "flappy-royale-3377a",
+    "prod": "flappy-royale-3377a"
   }
 }

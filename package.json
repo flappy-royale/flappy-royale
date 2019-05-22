@@ -7,10 +7,13 @@
   "author": "Orta + Lazer-Walker + Zach",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "8"
+  },
   "scripts": {
     "build": "webpack",
     "start": "webpack --watch & live-server --port=8085",
-    "deploy": "yarn build; gh-pages -d dist"
+    "deploy": "yarn build; firebase deploy"
   },
   "dependencies": {
     "clean-webpack-plugin": "^2.0.2",
@@ -31,7 +34,8 @@
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/seed-random": "^2.2.0",
     "copy-webpack-plugin": "^5.0.3",
-    "gh-pages": "^2.0.1",
+    "firebase": "^6.0.2",
+    "firebase-tools": "^6.10.0",
     "html-webpack-plugin": "^3.2.0",
     "html-webpack-tags-plugin": "^2.0.12",
     "live-server": "^1.2.1",

@@ -1,17 +1,5 @@
 export const APIVersion = "5"
 
-/** Gets a consistent across all API versions seed for a day */
-export const dailySeed = () => {
-    const date = new Date()
-    return `${APIVersion}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-}
-
-/** Gets a consistent across all API versions seed for an hour */
-export const hourlySeed = () => {
-    const date = new Date()
-    return `${APIVersion}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-}
-
 export const mapValue = 20
 export const flapStrength = 6.8 * this.mapValue
 export const gravity = 23 * this.mapValue

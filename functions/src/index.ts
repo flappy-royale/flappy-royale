@@ -27,5 +27,9 @@ export const seeds = functions.https.onRequest((request, response) => {
             production: hourlySeed(version, 0)
         }
     }
-    response.status(200).send(responseJSON)
+    response
+        .status(200)
+        .header("Access-Control-Allow-Origin", "*")
+        .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+        .send(responseJSON)
 })
