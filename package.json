@@ -13,7 +13,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack --watch & live-server --port=8085",
-    "deploy": "yarn build; firebase deploy"
+    "deploy": "rm -rf dist; yarn build; firebase deploy"
   },
   "dependencies": {
     "clean-webpack-plugin": "^2.0.2",

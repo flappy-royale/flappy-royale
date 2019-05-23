@@ -9,7 +9,6 @@ export interface PlayerEvent {
 }
 
 export interface PlayerData {
-    apiVersion: string
     user: UserSettings
     /** User input actions */
     actions: PlayerEvent[]
@@ -87,11 +86,6 @@ export class FirebaseDataStore {
     }
 
     storeForSeed(seed: string, data: PlayerData) {
-        if (data.apiVersion != this.apiVersion) {
-            throw `Attempting to store data with a different API version than the API client: ${data.apiVersion} vs ${
-                this.apiVersion
-            }`
-        }
         this.ref.child(this.pathForSeed(seed)).push(data)
     }
 

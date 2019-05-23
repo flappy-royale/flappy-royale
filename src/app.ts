@@ -10,7 +10,7 @@ import { MainMenuScene } from "./menus/MainMenuScene"
 require("../style.css")
 
 const config: Phaser.Types.Core.GameConfig = {
-    title: "Flappy",
+    title: "Flappy Royale",
     width: constants.GameWidth,
     height: constants.GameHeight,
     parent: "game",
@@ -30,15 +30,13 @@ const config: Phaser.Types.Core.GameConfig = {
     physics: {
         default: "arcade",
         arcade: {
-            debug: false,
             gravity: {
                 y: constants.gravity
             }
         }
     },
     render: {
-        pixelArt: true,
-        antialias: false
+        pixelArt: true
     }
 }
 
@@ -49,10 +47,7 @@ export class FlappyGame extends Phaser.Game {
 }
 
 window.onload = async () => {
-    // const scene = new BattleScene({ seed: seeds.royale.production })
     const mainMenu = new MainMenuScene()
-    // const settings = new UserSettings()
     const game = new FlappyGame(config)
     game.scene.add("MainMenu", mainMenu, true)
-    // game.scene.add("GameScene", scene, true, firebase)
 }

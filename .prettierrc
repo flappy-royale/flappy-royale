@@ -7,7 +7,7 @@
   "jsxSingleQuote": false,
   "parser": "typescript",
   "printWidth": 120,
-  "proseWrap": "preserve",
+  "proseWrap": "always",
   "quoteProps": "as-needed",
   "requirePragma": false,
   "semi": false,

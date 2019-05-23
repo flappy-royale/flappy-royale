@@ -24,7 +24,7 @@ export class MainMenuScene extends Phaser.Scene {
             .on("pointerdown", async () => {
                 const firebase = new FirebaseDataStore(constants.APIVersion)
                 const seeds = await getSeedsFromAPI(constants.APIVersion)
-                const seed = seeds.royale.production
+                const seed = seeds.daily.production
                 await firebase.fetch(seed)
 
                 const scene = new BattleScene({ seed })
@@ -38,7 +38,7 @@ export class MainMenuScene extends Phaser.Scene {
             .on("pointerdown", async () => {
                 const firebase = new FirebaseDataStore(constants.APIVersion)
                 const seeds = await getSeedsFromAPI(constants.APIVersion)
-                const seed = seeds.trials.production
+                const seed = seeds.daily.production
                 await firebase.fetch(seed)
 
                 const scene = new BattleScene({ seed })
@@ -52,7 +52,7 @@ export class MainMenuScene extends Phaser.Scene {
             .on("pointerdown", async () => {
                 const firebase = new FirebaseDataStore(constants.APIVersion)
                 const seeds = await getSeedsFromAPI(constants.APIVersion)
-                const seed = seeds.royale.production
+                const seed = seeds.daily.production
                 await firebase.fetch(seed)
 
                 const scene = new BattleScene({ seed })

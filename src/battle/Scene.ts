@@ -332,7 +332,6 @@ export class BattleScene extends Phaser.Scene {
             const settings = getUserSettings()
             this.dataStore.storeForSeed(this.seed, {
                 user: settings,
-                apiVersion: constants.APIVersion,
                 actions: this.userInput,
                 timestamp: Date.now()
             })

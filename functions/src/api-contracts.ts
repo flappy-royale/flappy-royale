@@ -1,10 +1,10 @@
 export interface SeedsResponse {
-    royale: {
+    daily: {
         production: string
         staging: string
         dev: string
     }
-    trials: {
+    hourly: {
         production: string
         staging: string
         dev: string
