@@ -1,7 +1,6 @@
 import * as Phaser from "phaser"
-import { getUserSettings, changeSettings } from "../user/userManager"
 
-export class UserSettings extends Phaser.Scene {
+export class LobbyScene extends Phaser.Scene {
     constructor() {
         super("UserSettings")
     }

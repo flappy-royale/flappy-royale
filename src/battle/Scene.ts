@@ -16,6 +16,7 @@ import { recordGamePlayed, getUserSettings } from "../user/userManager"
 
 interface SceneSettings {
     seed: string
+    gameMode: 
 }
 
 const isInDevMode = document.location.port === "8085"
