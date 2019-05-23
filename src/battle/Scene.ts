@@ -328,7 +328,6 @@ export class BattleScene extends Phaser.Scene {
         // Check if they did enough for us to record the run
         const hasJumped = this.userInput.length > 4
         if (this.isRecording() && hasJumped) {
-            const name = window.location.hash.slice(1)
             const settings = getUserSettings()
             this.dataStore.storeForSeed(this.seed, {
                 user: settings,
