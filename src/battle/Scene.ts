@@ -18,9 +18,11 @@ interface SceneSettings {
     seed: string
 }
 
+const isInDevMode = document.location.port === "8085"
+
 const devSettings = {
     // Turn off for release builds
-    developer: true,
+    developer: isInDevMode,
     // Allows flying through pipes
     skipPipeCollision: false,
     // Allows falling off the bottom
@@ -89,7 +91,10 @@ export class BattleScene extends Phaser.Scene {
     score: number
 
     /** How we show your score */
-    scoreLabel: Phaser.GameObjects.Text
+    scoreLabel: Phaser.GameObjects.BitmapText
+
+    /** Where we tell you how many are left */
+    birdsLeft: Phaser.GameObjects.BitmapText
 
     // Analytics state management
     analytics: BattleAnalytics
@@ -128,6 +133,11 @@ export class BattleScene extends Phaser.Scene {
     preload() {
         this.load.image("invis", require("../../assets/InvisiblePX.png"))
         this.load.image("bus", require("../../assets/Bus.png"))
+        this.load.bitmapFont(
+            "nokia16",
+            require("../../assets/fonts/nokia16.png"),
+            require("../../assets/fonts/nokia16.xml")
+        )
 
         preloadPipeSprites(this)
         preloadBirdSprites(this)
@@ -177,32 +187,29 @@ export class BattleScene extends Phaser.Scene {
         this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, { isPlayer: true, settings })
         this.bird.setupForBeingInBus()
 
-        // The delay here handles the time for the bus moving from left to right
-        this.time.delayedCall(
-            800,
-            () =>
-                this.time.addEvent({
-                    delay: constants.pipeTime, // We want 60px difference
-                    callback: () => this.addPipe(),
-                    callbackScope: this,
-                    loop: true
-                }),
-            [],
-            this
-        )
+        // This sets up a new pipe every x seconds
+        const recurringTask = () =>
+            this.time.addEvent({
+                delay: constants.pipeTime, // We want 60px difference
+                callback: () => this.addPipe(),
+                callbackScope: this,
+                loop: true
+            })
+
+        // The delay here handles the time for the bus moving from left to right, increasing the value means the bus
+        // is on for longer.
+        this.time.delayedCall(800, recurringTask, [], this)
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
-        this.scoreLabel = this.add.text(80, 20, "", {
-            fontFamily: "PT Mono",
-            fontSize: "18px",
-            align: "center",
-            color: "white",
-            stroke: "#000",
-            strokeThickness: 2
-        })
+        const { ALIGN_CENTER, ALIGN_RIGHT } = Phaser.GameObjects.BitmapText
+        this.scoreLabel = this.add.bitmapText(80, 20, "nokia16", "0", 0, ALIGN_CENTER)
         this.scoreLabel.setDepth(constants.zLevels.debugText)
+
+        this.birdsLeft = this.add.bitmapText(constants.GameWidth - 40, 20, "nokia16", "0", 0, ALIGN_RIGHT)
+        this.birdsLeft.setDepth(constants.zLevels.debugText)
+        this.updateBirdsLeftLabel()
 
         // On spacebar bounce the bird
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
@@ -262,6 +269,7 @@ export class BattleScene extends Phaser.Scene {
                     ghostBird.position.y = event.value
                 } else if (event.action === "died") {
                     ghostBird.die()
+                    this.updateBirdsLeftLabel()
                 }
             }
         })
@@ -296,6 +304,14 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.isRecording()) {
             this.debug("Recording ghost")
+        }
+    }
+    updateBirdsLeftLabel() {
+        const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
+        if (birdsAlive) {
+            this.birdsLeft.text = `${birdsAlive + 1} left`
+        } else {
+            this.birdsLeft.text = "You won"
         }
     }
 
@@ -356,7 +372,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     isRecording() {
-        return canRecordScore() && this.dataStore && window.location.hash !== ""
+        return canRecordScore() && this.dataStore
     }
 
     debug(msg: string) {

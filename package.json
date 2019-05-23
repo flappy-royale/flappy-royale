@@ -1,49 +1,49 @@
 {
-  "name": "flappy-royale",
-  "version": "1.0.0",
-  "description": "Battling birds",
-  "homepage": ".",
-  "main": "index.js",
-  "author": "Orta + Lazer-Walker + Zach",
-  "license": "MIT",
-  "private": true,
-  "engines": {
-    "node": "8"
-  },
-  "scripts": {
-    "build": "yarn webpack",
-    "start": "yarn webpack --watch & yarn  live-server --port=8085",
-    "type-check": "yarn tsc --noEmit",
-    "deploy": "rm -rf dist && yarn build && firebase deploy"
-  },
-  "dependencies": {
-    "clean-webpack-plugin": "^2.0.2",
-    "css-loader": "^2.1.1",
-    "file-loader": "^3.0.1",
-    "firebase": "^6.0.2",
-    "lodash.clonedeep": "^4.5.0",
-    "mini-css-extract-plugin": "^0.6.0",
-    "phaser": "^3.17.0",
-    "seed-random": "^2.2.0",
-    "webpack-assets-manifest": "^3.1.1",
-    "webpack-manifest-plugin": "^2.0.4",
-    "webpack-notifier": "^1.7.0"
-  },
-  "devDependencies": {
-    "@firebase/app-types": "^0.4.0",
-    "@types/firebase": "^3.2.1",
-    "@types/lodash.clonedeep": "^4.5.6",
-    "@types/seed-random": "^2.2.0",
-    "copy-webpack-plugin": "^5.0.3",
-    "firebase": "^6.0.2",
-    "firebase-tools": "^6.10.0",
-    "html-webpack-plugin": "^3.2.0",
-    "html-webpack-tags-plugin": "^2.0.12",
-    "live-server": "^1.2.1",
-    "prettier": "^1.17.1",
-    "ts-loader": "^6.0.0",
-    "typescript": "^3.4.5",
-    "webpack": "^4.31.0",
-    "webpack-cli": "^3.3.2"
-  }
+    "name": "flappy-royale",
+    "version": "1.0.0",
+    "description": "Battling birds",
+    "homepage": ".",
+    "main": "index.js",
+    "author": "Orta + Lazer-Walker + Zach",
+    "license": "MIT",
+    "private": true,
+    "engines": {
+        "node": "8"
+    },
+    "scripts": {
+        "build": "yarn webpack",
+        "start": "yarn webpack --watch & yarn  live-server --port=8085",
+        "type-check": "yarn tsc --noEmit",
+        "deploy": "rm -rf dist && yarn build && firebase deploy"
+    },
+    "dependencies": {
+        "clean-webpack-plugin": "^2.0.2",
+        "css-loader": "^2.1.1",
+        "file-loader": "^3.0.1",
+        "firebase": "^6.0.2",
+        "lodash.clonedeep": "^4.5.0",
+        "mini-css-extract-plugin": "^0.6.0",
+        "phaser": "^3.17.0",
+        "seed-random": "^2.2.0",
+        "webpack-assets-manifest": "^3.1.1",
+        "webpack-manifest-plugin": "^2.0.4",
+        "webpack-notifier": "^1.7.0"
+    },
+    "devDependencies": {
+        "@firebase/app-types": "^0.4.0",
+        "@types/firebase": "^3.2.1",
+        "@types/lodash.clonedeep": "^4.5.6",
+        "@types/seed-random": "^2.2.0",
+        "copy-webpack-plugin": "^5.0.3",
+        "firebase": "^6.0.2",
+        "firebase-tools": "^6.10.0",
+        "html-webpack-plugin": "^3.2.0",
+        "html-webpack-tags-plugin": "^2.0.12",
+        "live-server": "^1.2.1",
+        "prettier": "^1.17.1",
+        "ts-loader": "^6.0.0",
+        "typescript": "^3.4.5",
+        "webpack": "^4.31.0",
+        "webpack-cli": "^3.3.2"
+    }
 }

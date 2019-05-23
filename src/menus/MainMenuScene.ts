@@ -14,6 +14,11 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("trial-button", require("../../assets/menu/trial.png"))
         this.load.image("training-button", require("../../assets/menu/training.png"))
         this.load.image("settings-button", require("../../assets/menu/settings.png"))
+        this.load.bitmapFont(
+            "nokia16",
+            require("../../assets/fonts/nokia16.png"),
+            require("../../assets/fonts/nokia16.xml")
+        )
     }
 
     create() {
