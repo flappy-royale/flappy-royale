@@ -110,7 +110,7 @@ export class TrialLobbyScene extends Phaser.Scene {
             // Preload the first three birds attire
 
             trial.setAlpha(1)
-            trial.on("pointerdown", async () => {
+            trial.once("pointerdown", async () => {
                 const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
                 this.game.scene.add("BattleScene" + this.seed, scene, true, {})
             })

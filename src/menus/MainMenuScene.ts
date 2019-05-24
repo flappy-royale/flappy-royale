@@ -42,6 +42,7 @@ export class MainMenuScene extends Phaser.Scene {
                 const playerData = await fetchRecordingsForSeed(seed)
 
                 const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Royale })
+                this.game.scene.remove(this)
                 this.game.scene.add("BattleScene" + seed, scene, true, {})
             })
 
@@ -52,6 +53,7 @@ export class MainMenuScene extends Phaser.Scene {
             .on("pointerdown", async () => {
                 const seed = this.seeds.daily.production
                 const lobby = new TrialLobbyScene({ seed })
+                this.game.scene.remove(this)
                 this.game.scene.add("TrialLobby" + seed, lobby, true, {})
             })
 
@@ -69,6 +71,7 @@ export class MainMenuScene extends Phaser.Scene {
                 }
 
                 const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
+                this.game.scene.remove(this)
                 this.game.scene.add("BattleScene" + seed, scene, true, {})
             })
 
@@ -78,6 +81,7 @@ export class MainMenuScene extends Phaser.Scene {
             // needs to be on up insider, but whatevs
             .on("pointerdown", () => {
                 const settings = new UserSettings()
+                this.game.scene.remove(this)
                 this.game.scene.add(UserSettingsKey, settings, true)
             })
     }

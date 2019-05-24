@@ -1,6 +1,7 @@
 import * as Phaser from "phaser"
 import { getUserSettings, changeSettings } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
+import { MainMenuScene } from "./MainMenuScene"
 
 export const UserSettingsKey = "UserSettings"
 
@@ -43,6 +44,8 @@ export class UserSettings extends Phaser.Scene {
             // needs to be on up insider, but whatever
             .on("pointerdown", () => {
                 this.game.scene.remove(this)
+                const mainMenu = new MainMenuScene()
+                this.game.scene.add("MainMenuScene", mainMenu, true)
             })
     }
 }
