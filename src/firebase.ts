@@ -11,6 +11,7 @@ export interface PlayerData {
     /** User input actions */
     actions: PlayerEvent[]
     timestamp: number
+    score: number
 }
 
 export interface PlayerEvent {

@@ -4,8 +4,12 @@ import { getSeedsFromAPI, fetchRecordingsForSeed, emptySeedData } from "../fireb
 import { BattleScene } from "../battle/Scene"
 import * as constants from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
+import { SeedsResponse } from "../../functions/src/api-contracts"
+import { TrialLobbyScene } from "./TrialLobbyScene"
 
 export class MainMenuScene extends Phaser.Scene {
+    seeds: SeedsResponse
+
     constructor() {
         super("MainMenu")
     }
@@ -23,6 +27,11 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        // NOTE: ASYNC!
+        getSeedsFromAPI(constants.APIVersion).then(seeds => {
+            this.seeds = seeds
+        })
+
         this.add
             .image(80, 40, "royale-button")
             .setInteractive()
@@ -41,12 +50,9 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
-                const seeds = await getSeedsFromAPI(constants.APIVersion)
-                const seed = seeds.daily.production
-                const playerData = await fetchRecordingsForSeed(seed)
-
-                const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Trial })
-                this.game.scene.add("BattleScene" + seed, scene, true, {})
+                const seed = this.seeds.daily.production
+                const lobby = new TrialLobbyScene({ seed })
+                this.game.scene.add("TrialLobby" + seed, lobby, true, {})
             })
 
         this.add

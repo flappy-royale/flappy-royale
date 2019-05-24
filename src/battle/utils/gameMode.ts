@@ -13,7 +13,7 @@ export enum GameMode {
 export const showPlayerBird = (mode: GameMode) => mode !== GameMode.Menu
 
 /** Should we upload player events? */
-export const shouldRecordScores = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Training
+export const shouldRecordScores = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
 
 /** Should we upload player events? */
 export const shouldRestartWhenAllBirdsAreDead = (mode: GameMode) => mode === GameMode.Menu

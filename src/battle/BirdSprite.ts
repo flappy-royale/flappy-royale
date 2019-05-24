@@ -16,11 +16,13 @@ export const preloadBirdSprites = (scene: BattleScene) => {
     })
 
     // Preload opponents attire
-    scene.seedData.users.forEach(user => {
-        for (const attire of user.user.aesthetics.attire) {
-            scene.load.image(attire.id, attire.href)
-        }
-    })
+    scene.seedData.users.forEach(data => preloadBirdAttire(scene, data.user))
+}
+
+export const preloadBirdAttire = (scene: Phaser.Scene, bird: UserSettings) => {
+    for (const attire of bird.aesthetics.attire) {
+        scene.load.image(attire.id, attire.href)
+    }
 }
 
 export const setupBirdAnimations = (scene: Phaser.Scene) => {
@@ -60,10 +62,10 @@ export class BirdSprite {
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
+    // Don't apply gravity / velocity etc during the constructor
+    // because this is used for previews
+    //
     constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; settings: UserSettings }) {
-        this.sprite = scene.physics.add.sprite(x, y, "flap1")
-        this.sprite.setOrigin(0.13, 0.6)
-
         this.isPlayer = meta.isPlayer
 
         // Setup the base body
@@ -81,10 +83,12 @@ export class BirdSprite {
                 return image
             })
 
+        this.sprite = scene.physics.add.sprite(x, y, "flap1")
+        this.sprite.setOrigin(0.13, 0.6)
+
         // Set up
         this.body = this.sprite.body as Phaser.Physics.Arcade.Body
         this.isInBus = true
-        this.setupForBeingInBus()
 
         this.position = this.body.position
 
@@ -131,7 +135,8 @@ export class BirdSprite {
     }
 
     destroy() {
-        this.sprite.destroy()
+        const sprites = [this.bodySprite, this.sprite, ...this.attire]
+        sprites.forEach(s => s.destroy())
     }
 
     die() {
@@ -157,6 +162,13 @@ export class BirdSprite {
         this.sprite.setGravityY(0)
         this.sprite.setAccelerationX(0)
         this.sprite.setVelocityX(0)
+    }
+
+    actAsImage() {
+        this.sprite.setGravityY(constants.gravity * -1)
+        const sprites = [this.bodySprite, this.sprite, ...this.attire]
+        sprites.forEach(a => a.setAlpha(1))
+        this.sprite.play("flap")
     }
 
     preUpdate() {

@@ -15,7 +15,7 @@ import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings } from "../user/userManager"
 
-interface SceneSettings {
+export interface BattleSceneSettings {
     /** The string representation for the level */
     seed: string
     /** The data from firebase */
@@ -41,74 +41,71 @@ const devSettings = {
 
 export class BattleScene extends Phaser.Scene {
     /** The starting bus */
-    bus: Phaser.Physics.Arcade.Image
+    private bus: Phaser.Physics.Arcade.Image
 
     /** Your sprite, or if behind the main menu - not set up for this game mode */
-    bird: BirdSprite | undefined
+    private bird: BirdSprite | undefined
 
     /** opponent */
-    ghostBirds: BirdSprite[] = []
+    private ghostBirds: BirdSprite[] = []
 
     /** Every pipe is a set of physics objects */
-    pipes: Phaser.Physics.Arcade.Group[]
+    private pipes: Phaser.Physics.Arcade.Group[]
 
     /** All the current scorelines on screen */
-    scoreLines: Phaser.Physics.Arcade.Image[]
+    private scoreLines: Phaser.Physics.Arcade.Image[]
 
     /** A timer for generating new pipes */
-    newPipeTimer: Phaser.Time.TimerEvent
+    private newPipeTimer: Phaser.Time.TimerEvent
 
     /** Keeping track of events from the user, sent up later */
-    userInput: PlayerEvent[] = []
+    private userInput: PlayerEvent[] = []
 
     /** A seed for the RNG function */
-    seed: string
+    public seed: string
 
     /** The data (user recordings etc) for this seed  */
-    seedData: SeedData
+    public seedData: SeedData
 
     /** A copy (to be mutated) of the other players input events */
-    recordedInput: PlayerData[] = []
-
-    /**  Number of MS to record the latest y-position */
-    syncInterval = 400
+    private recordedInput: PlayerData[] = []
 
     /* Scene timestamp for when the most recent round started
      * So recording timestamps can be consistent */
-    timestampOffset: number = 0
+    private timestampOffset: number = 0
 
     /** When we last stored a "sync" data point for the user.
      * This is the number of ms since the scene started, not since the round started */
-    lastSyncedTimestamp = 0
+    private lastSyncedTimestamp = 0
 
     /** Developer logging */
-    debugLabel: Phaser.GameObjects.Text
+    private debugLabel: Phaser.GameObjects.Text
 
-    /** The RNG function for this current run, and all ghosts */
-    rng: () => number
+    /** The RNG function for this current run, pipes, and all ghosts */
+    public rng: () => number
 
     /** Track spacebar keypresses to flap */
-    spacebar: Phaser.Input.Keyboard.Key
+    private spacebar: Phaser.Input.Keyboard.Key
 
     // See debugging/keyboardShortcuts.ts
-    devKeys: object
+    private devKeys: object
 
     // What score did someone just get
-    score: number
+    private score: number
 
     /** How we show your score */
-    scoreLabel: Phaser.GameObjects.BitmapText
+    private scoreLabel: Phaser.GameObjects.BitmapText
 
     /** Where we tell you how many are left */
-    birdsLeft: Phaser.GameObjects.BitmapText
+    private birdsLeft: Phaser.GameObjects.BitmapText
 
     /**  Analytics state management */
-    analytics: BattleAnalytics
+    private analytics: BattleAnalytics
 
     /** What game mode is this scene running in? */
-    mode: game.GameMode
+    public mode: game.GameMode
 
-    constructor(opts: SceneSettings) {
+    constructor(opts: BattleSceneSettings) {
         super(
             Object.assign(
                 {
@@ -289,7 +286,7 @@ export class BattleScene extends Phaser.Scene {
             //
             // record a sync of the users y position every so often, so that
             // we can make sure that the y positions are consistent with the ghosts
-            if (timestamp - this.lastSyncedTimestamp >= this.syncInterval) {
+            if (timestamp - this.lastSyncedTimestamp >= constants.timeBetweenYSyncs) {
                 this.userInput.push({
                     action: "sync",
                     timestamp: adjustedTime,
@@ -380,7 +377,7 @@ export class BattleScene extends Phaser.Scene {
             const create = this.ghostBirds.length === 0
             storeUserReplayForSeed(
                 { seed: this.seed, create },
-                { user: settings, actions: this.userInput, timestamp: Date.now() }
+                { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
             )
         }
 

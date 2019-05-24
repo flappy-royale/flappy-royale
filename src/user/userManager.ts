@@ -46,7 +46,7 @@ export interface UserSettings {
 }
 
 // What it is when you first join
-const defaultSettings: UserSettings = {
+export const defaultSettings: UserSettings = {
     name: "Cappy McCapperson_" + Math.floor(Math.random() * 999999) + 1,
     aesthetics: {
         attire: [defaultAttire]

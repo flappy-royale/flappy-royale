@@ -15,6 +15,7 @@ export const pipeTime = 1300
 export const gapHeight = 56
 export const birdXPosition = 20
 export const birdYPosition = 30
+export const timeBetweenYSyncs = 400
 
 export enum zLevels {
     debugText = 3,
