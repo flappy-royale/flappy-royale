@@ -11,7 +11,7 @@ export class UserSettings extends Phaser.Scene {
 
     preload() {
         // Adds the HTML file to the game cache
-        this.load.html("nameform", require("../../assets/html/user-form.html"))
+        this.load.html("name-form", require("../../assets/html/user-form.html"))
         this.load.image("back-button", require("../../assets/menu/back.png"))
     }
 
@@ -20,7 +20,7 @@ export class UserSettings extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xff0000)
 
         // Make a HTML form
-        var element = this.add.dom(75, 90).createFromCache("nameform")
+        var element = this.add.dom(75, 90).createFromCache("name-form")
         console.log(element)
         element.addListener("click")
 
@@ -40,7 +40,7 @@ export class UserSettings extends Phaser.Scene {
         this.add
             .image(80, 200, "back-button")
             .setInteractive()
-            // needs to be on up insider, but whatevs
+            // needs to be on up insider, but whatever
             .on("pointerdown", () => {
                 this.game.scene.remove(this)
             })

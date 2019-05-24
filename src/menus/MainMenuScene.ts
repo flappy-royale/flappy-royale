@@ -1,8 +1,9 @@
 import * as Phaser from "phaser"
 import { UserSettings, UserSettingsKey } from "./UserSettingsScene"
-import { FirebaseDataStore, getSeedsFromAPI } from "../firebase"
+import { getSeedsFromAPI, fetchRecordingsForSeed, emptySeedData } from "../firebase"
 import { BattleScene } from "../battle/Scene"
 import * as constants from "../constants"
+import { GameMode } from "../battle/utils/gameMode"
 
 export class MainMenuScene extends Phaser.Scene {
     constructor() {
@@ -27,13 +28,12 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", async () => {
-                const firebase = new FirebaseDataStore(constants.APIVersion)
                 const seeds = await getSeedsFromAPI(constants.APIVersion)
                 const seed = seeds.daily.production
-                await firebase.fetch(seed)
+                const playerData = await fetchRecordingsForSeed(seed)
 
-                const scene = new BattleScene({ seed })
-                this.game.scene.add("BattleScene" + seed, scene, true, firebase)
+                const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Royale })
+                this.game.scene.add("BattleScene" + seed, scene, true, {})
             })
 
         this.add
@@ -41,13 +41,12 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
-                const firebase = new FirebaseDataStore(constants.APIVersion)
                 const seeds = await getSeedsFromAPI(constants.APIVersion)
                 const seed = seeds.daily.production
-                await firebase.fetch(seed)
+                const playerData = await fetchRecordingsForSeed(seed)
 
-                const scene = new BattleScene({ seed })
-                this.game.scene.add("BattleScene" + seed, scene, true, firebase)
+                const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Trial })
+                this.game.scene.add("BattleScene" + seed, scene, true, {})
             })
 
         this.add
@@ -55,13 +54,16 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
-                const firebase = new FirebaseDataStore(constants.APIVersion)
-                const seeds = await getSeedsFromAPI(constants.APIVersion)
-                const seed = seeds.daily.production
-                await firebase.fetch(seed)
+                let seed = "offline-seed"
+                try {
+                    const seeds = await getSeedsFromAPI(constants.APIVersion)
+                    seed = seeds.daily.production
+                } catch (error) {
+                    // NOOP
+                }
 
-                const scene = new BattleScene({ seed })
-                this.game.scene.add("BattleScene" + seed, scene, true, firebase)
+                const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
+                this.game.scene.add("BattleScene" + seed, scene, true, {})
             })
 
         this.add

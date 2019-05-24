@@ -2,10 +2,8 @@ import * as firebase from "firebase"
 import { UserSettings } from "./user/userManager"
 import { SeedsResponse } from "../functions/src/api-contracts"
 
-export interface PlayerEvent {
-    timestamp: number
-    action: "flap" | "sync" | "died"
-    value?: number
+export interface SeedData {
+    users: PlayerData[]
 }
 
 export interface PlayerData {
@@ -15,10 +13,13 @@ export interface PlayerData {
     timestamp: number
 }
 
-// Offline
-const getLocalSeeds = () => ""
+export interface PlayerEvent {
+    timestamp: number
+    action: "flap" | "sync" | "died"
+    value?: number
+}
 
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyCPbIZkuRJSdIVlRCHJPCLlWd6cz6VAs-s",
     authDomain: "flappy-royale-3377a.firebaseapp.com",
     databaseURL: "https://flappy-royale-3377a.firebaseio.com",
@@ -26,6 +27,34 @@ const firebaseConfig = {
     storageBucket: "flappy-royale-3377a.appspot.com",
     messagingSenderId: "533580149860",
     appId: "1:533580149860:web:7be6631222f08df3"
+}
+
+const firebaseApp = firebase.initializeApp(firebaseConfig)
+
+export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> => {
+    const dataRef = await firebaseApp
+        .firestore()
+        .collection("recordings")
+        .doc(seed)
+        .get()
+
+    return dataRef.data() as any
+}
+
+export const storeForSeed = (meta: { seed: string; create: boolean }, data: PlayerData) => {
+    const db = firebaseApp.firestore()
+    const batch = db.batch()
+    const recordings = db.collection("recordings")
+    const seedDoc = recordings.doc(meta.seed)
+    if (meta.create) {
+        const toUpload: SeedData = { users: [data] }
+        batch.set(seedDoc, toUpload)
+    } else {
+        console.log("Updating")
+        batch.update(seedDoc, { users: firebase.firestore.FieldValue.arrayUnion(data) })
+    }
+
+    return batch.commit()
 }
 
 // prettier-ignore
@@ -47,49 +76,5 @@ export const getSeedsFromAPI = (apiVersion: string) => fetch(`https://us-central
 export const getLocallyStoredSeeds = (): SeedsResponse | undefined =>
     localStorage.getItem("lastSeeds") && JSON.parse(localStorage.getItem("lastSeeds"))
 
-export class FirebaseDataStore {
-    data: { [key: string]: PlayerData[] }
-
-    apiVersion: string
-
-    app: firebase.app.App
-    ref: firebase.database.Reference
-
-    constructor(apiVersion: string) {
-        // Initialize Firebase
-
-        this.apiVersion = apiVersion
-        this.app = firebase.initializeApp(firebaseConfig)
-        this.ref = firebase.database().ref()
-        this.data = {}
-    }
-
-    fetch(seed: string) {
-        return new Promise((resolve, reject) => {
-            this.ref
-                .child(`recordings/${this.apiVersion}/${seed}`)
-                .once("value")
-                .then(snapshot => {
-                    // Firebase doesn't store arrays of data, it stores objects whose keys are random IDs
-                    // This garbage soup is just to mangle that into an array.
-                    const result: { [key: string]: PlayerData } = {}
-                    const snap = snapshot.val()
-                    if (!snap) {
-                        resolve({})
-                        return
-                    }
-
-                    this.data[seed] = Object.values(snap)
-                    resolve(result)
-                })
-        })
-    }
-
-    storeForSeed(seed: string, data: PlayerData) {
-        this.ref.child(this.pathForSeed(seed)).push(data)
-    }
-
-    private pathForSeed(seed: string): string {
-        return `recordings/${this.apiVersion}/${seed}`
-    }
-}
+/** Used in training */
+export const emptySeedData: SeedData = { users: [] }

@@ -2,8 +2,9 @@ import * as Phaser from "phaser"
 import * as Seed from "seed-random"
 import * as _ from "lodash"
 import * as constants from "../constants"
+import * as game from "./utils/gameMode"
 
-import { PlayerEvent, FirebaseDataStore, PlayerData } from "../firebase"
+import { PlayerEvent, PlayerData, SeedData, storeForSeed as storeUserReplayForSeed } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
@@ -15,8 +16,12 @@ import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings } from "../user/userManager"
 
 interface SceneSettings {
+    /** The string representation for the level */
     seed: string
-    gameMode: 
+    /** The data from firebase */
+    data: SeedData
+    /** Game mode */
+    gameMode: game.GameMode
 }
 
 const isInDevMode = document.location.port === "8085"
@@ -38,8 +43,8 @@ export class BattleScene extends Phaser.Scene {
     /** The starting bus */
     bus: Phaser.Physics.Arcade.Image
 
-    /** Your sprite */
-    bird: BirdSprite
+    /** Your sprite, or if behind the main menu - not set up for this game mode */
+    bird: BirdSprite | undefined
 
     /** opponent */
     ghostBirds: BirdSprite[] = []
@@ -56,11 +61,14 @@ export class BattleScene extends Phaser.Scene {
     /** Keeping track of events from the user, sent up later */
     userInput: PlayerEvent[] = []
 
-    /** Other players input events */
-    recordedInput: PlayerData[] = []
+    /** A seed for the RNG function */
+    seed: string
 
-    /** A place to grab user data from */
-    dataStore: FirebaseDataStore
+    /** The data (user recordings etc) for this seed  */
+    seedData: SeedData
+
+    /** A copy (to be mutated) of the other players input events */
+    recordedInput: PlayerData[] = []
 
     /**  Number of MS to record the latest y-position */
     syncInterval = 400
@@ -75,9 +83,6 @@ export class BattleScene extends Phaser.Scene {
 
     /** Developer logging */
     debugLabel: Phaser.GameObjects.Text
-
-    /** A seed for the RNG function */
-    seed: string
 
     /** The RNG function for this current run, and all ghosts */
     rng: () => number
@@ -97,8 +102,11 @@ export class BattleScene extends Phaser.Scene {
     /** Where we tell you how many are left */
     birdsLeft: Phaser.GameObjects.BitmapText
 
-    // Analytics state management
+    /**  Analytics state management */
     analytics: BattleAnalytics
+
+    /** What game mode is this scene running in? */
+    mode: game.GameMode
 
     constructor(opts: SceneSettings) {
         super(
@@ -113,13 +121,14 @@ export class BattleScene extends Phaser.Scene {
 
         this.analytics = new BattleAnalytics()
         this.seed = opts.seed
+        this.seedData = opts.data
+        this.mode = opts.gameMode
     }
 
     // This happens when the scene is being played by the game (more
     // like UIKit's viewDidLoad instead of the constructor)
     //
-    init(data: FirebaseDataStore) {
-        this.dataStore = data
+    init() {
         this.resetGame()
 
         if (!canRecordScore()) {
@@ -164,8 +173,8 @@ export class BattleScene extends Phaser.Scene {
         setupBirdAnimations(this)
 
         // If there's a datastore of recorded inputs, then make a fresh clone of those
-        if (this.dataStore && this.dataStore.data) {
-            this.recordedInput = _.cloneDeep(this.dataStore.data[this.seed] || [])
+        if (this.seedData && this.seedData.users) {
+            this.recordedInput = _.cloneDeep(this.seedData.users || [])
         }
 
         this.bus = createBus(this)
@@ -184,9 +193,12 @@ export class BattleScene extends Phaser.Scene {
             this.bird.destroy()
         }
 
-        const settings = getUserSettings()
-        this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, { isPlayer: true, settings })
-        this.bird.setupForBeingInBus()
+        if (game.showPlayerBird(this.mode)) {
+            const settings = getUserSettings()
+            const birdConfig = { isPlayer: true, settings }
+            this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, birdConfig)
+            this.bird.setupForBeingInBus()
+        }
 
         // This sets up a new pipe every x seconds
         const recurringTask = () =>
@@ -208,9 +220,12 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLabel = this.add.bitmapText(80, 20, "nokia16", "0", 0, ALIGN_CENTER)
         this.scoreLabel.setDepth(constants.zLevels.debugText)
 
-        this.birdsLeft = this.add.bitmapText(constants.GameWidth - 40, 20, "nokia16", "0", 0, ALIGN_RIGHT)
-        this.birdsLeft.setDepth(constants.zLevels.debugText)
-        this.updateBirdsLeftLabel()
+        // When we want to show a countdown, set it up with defaults
+        if (game.shouldShowBirdsLeftLabel(this.mode)) {
+            this.birdsLeft = this.add.bitmapText(constants.GameWidth - 40, 20, "nokia16", "0", 0, ALIGN_RIGHT)
+            this.birdsLeft.setDepth(constants.zLevels.debugText)
+            this.ghostBirdHasDied()
+        }
 
         // On spacebar bounce the bird
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
@@ -225,7 +240,11 @@ export class BattleScene extends Phaser.Scene {
 
     addPipe() {
         this.pipes.push(addRowOfPipes(181, this))
-        this.scoreLines.push(addScoreLine(181, this, this.bird))
+
+        // When we have a bird, add lines to score from
+        if (game.showPlayerBird(this.mode)) {
+            this.scoreLines.push(addScoreLine(181, this, this.bird))
+        }
     }
 
     update(timestamp: number) {
@@ -239,16 +258,6 @@ export class BattleScene extends Phaser.Scene {
 
         // The time from the start of a run
         const adjustedTime = Math.round(timestamp - this.timestampOffset)
-        // record a sync of the users y position every so often, so that
-        // we can make sure that the y positions are consistent with the ghosts
-        if (timestamp - this.lastSyncedTimestamp >= this.syncInterval) {
-            this.userInput.push({
-                action: "sync",
-                timestamp: adjustedTime,
-                value: Math.round(this.bird.position.y)
-            })
-            this.lastSyncedTimestamp = timestamp
-        }
 
         // Flap if appropriate
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
@@ -270,35 +279,52 @@ export class BattleScene extends Phaser.Scene {
                     ghostBird.position.y = event.value
                 } else if (event.action === "died") {
                     ghostBird.die()
-                    this.updateBirdsLeftLabel()
+                    this.ghostBirdHasDied()
                 }
             }
         })
 
-        // If the bird hits the floor
-        if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20) {
-            this.userDied()
-        }
+        // Player related game logic
+        if (game.showPlayerBird(this.mode)) {
+            //
+            // record a sync of the users y position every so often, so that
+            // we can make sure that the y positions are consistent with the ghosts
+            if (timestamp - this.lastSyncedTimestamp >= this.syncInterval) {
+                this.userInput.push({
+                    action: "sync",
+                    timestamp: adjustedTime,
+                    value: Math.round(this.bird.position.y)
+                })
+                this.lastSyncedTimestamp = timestamp
+            }
 
-        if (this.bird.position.x > constants.GameWidth) {
-            this.userDied()
-        }
+            // If the bird hits the floor
+            if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20) {
+                this.userDied()
+            }
 
-        // The collision of your bird and the pipes
-        if (!devSettings.skipPipeCollision) {
-            this.bird.checkCollision(this, this.pipes, this.userDied)
-        }
+            // If somehow they move to the edge fo the screen past pipes
+            if (this.bird.position.x > constants.GameWidth) {
+                this.userDied()
+            }
 
-        // Score points by checking whether you got halfway
-        this.bird.checkCollision(this, this.scoreLines, this.userScored)
+            // The collision of your bird and the pipes
+            if (!devSettings.skipPipeCollision) {
+                this.bird.checkCollision(this, this.pipes, this.userDied)
+            }
+
+            // Score points by checking whether you got halfway
+            this.bird.checkCollision(this, this.scoreLines, this.userScored)
+        }
 
         // Let the bus collide
         const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
             busCrashed(bus)
-            if (this.bird.isInBus) {
+            if (this.bird && this.bird.isInBus) {
                 this.userDied()
             }
         }
+
         this.physics.overlap(this.bus, this.pipes, busCrash, null, this)
 
         pipeOutOfBoundsCheck(this.pipes)
@@ -307,12 +333,17 @@ export class BattleScene extends Phaser.Scene {
             this.debug("Recording ghost")
         }
     }
-    updateBirdsLeftLabel() {
-        const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
-        if (birdsAlive) {
-            this.birdsLeft.text = `${birdsAlive + 1} left`
+
+    ghostBirdHasDied() {
+        if (game.shouldRestartWhenAllBirdsAreDead(this.mode)) {
+            this.restartTheGame()
         } else {
-            this.birdsLeft.text = "You won"
+            const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
+            if (birdsAlive) {
+                this.birdsLeft.text = `${birdsAlive + 1} left`
+            } else {
+                this.birdsLeft.text = "You won"
+            }
         }
     }
 
@@ -346,11 +377,11 @@ export class BattleScene extends Phaser.Scene {
         const hasJumped = this.userInput.length > 4
         if (this.isRecording() && hasJumped) {
             const settings = getUserSettings()
-            this.dataStore.storeForSeed(this.seed, {
-                user: settings,
-                actions: this.userInput,
-                timestamp: Date.now()
-            })
+            const create = this.ghostBirds.length === 0
+            storeUserReplayForSeed(
+                { seed: this.seed, create },
+                { user: settings, actions: this.userInput, timestamp: Date.now() }
+            )
         }
 
         this.restartTheGame()
@@ -373,7 +404,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     isRecording() {
-        return canRecordScore() && this.dataStore
+        return canRecordScore() && game.shouldRecordScores(this.mode)
     }
 
     debug(msg: string) {

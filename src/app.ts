@@ -1,7 +1,5 @@
 import * as Phaser from "phaser"
 
-import { FirebaseDataStore, getSeedsFromAPI } from "./firebase"
-
 import * as constants from "./constants"
 import { MainMenuScene } from "./menus/MainMenuScene"
 

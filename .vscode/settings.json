@@ -4,6 +4,7 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
+    "Devs",
     "Lazer",
     "RCHJPC",
     "anims",
@@ -11,9 +12,11 @@
     "clonedeep",
     "datastore",
     "firebaseapp",
+    "firestore",
     "invis",
     "keypresses",
     "localstorage",
+    "nameform",
     "objs",
     "royale",
     "royales",
