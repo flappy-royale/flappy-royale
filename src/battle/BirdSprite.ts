@@ -5,9 +5,9 @@ import { UserSettings, getUserSettings } from "../user/userManager"
 import { BattleScene } from "./Scene"
 
 export const preloadBirdSprites = (scene: BattleScene) => {
-    scene.load.image("flap1", require("../../assets/Flap1.png"))
-    scene.load.image("flap2", require("../../assets/Flap2.png"))
-    scene.load.image("flap3", require("../../assets/Flap3.png"))
+    scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
+    scene.load.image("flap2", require("../../assets/battle/Flap2.png"))
+    scene.load.image("flap3", require("../../assets/battle/Flap3.png"))
 
     // Preload user attire
     const userSettings = getUserSettings()

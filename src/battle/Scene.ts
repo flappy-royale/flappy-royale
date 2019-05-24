@@ -139,7 +139,7 @@ export class BattleScene extends Phaser.Scene {
 
     preload() {
         this.load.image("invis", require("../../assets/InvisiblePX.png"))
-        this.load.image("bus", require("../../assets/Bus.png"))
+        this.load.image("bus", require("../../assets/battle/Bus.png"))
         this.load.bitmapFont(
             "nokia16",
             require("../../assets/fonts/nokia16.png"),

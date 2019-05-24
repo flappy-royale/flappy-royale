@@ -6,7 +6,7 @@ export const defaultAttire: PresentationAttire = {
     description: "It flaps",
     fit: "tight",
     base: true,
-    href: require("../assets/BirdBody.png")
+    href: require("../assets/bases/BirdBody.png")
 }
 
 export const builtInAttire: PresentationAttire[] = [
