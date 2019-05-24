@@ -1,17 +1,25 @@
 import * as constants from "../constants"
 import { Scene } from "phaser"
-import { builtInAttire } from "../attire"
-import { UserSettings } from "../user/userManager"
 
-export const preloadBirdSprites = (scene: Phaser.Scene) => {
+import { UserSettings, getUserSettings } from "../user/userManager"
+import { BattleScene } from "./Scene"
+
+export const preloadBirdSprites = (scene: BattleScene) => {
     scene.load.image("flap1", require("../../assets/Flap1.png"))
     scene.load.image("flap2", require("../../assets/Flap2.png"))
     scene.load.image("flap3", require("../../assets/Flap3.png"))
 
-    // TODO: switch this to only loading what is used
-    // by peeps in the scene
-    builtInAttire.forEach(attire => {
+    // Preload user attire
+    const userSettings = getUserSettings()
+    userSettings.aesthetics.attire.forEach(attire => {
         scene.load.image(attire.id, attire.href)
+    })
+
+    // Preload opponents attire
+    scene.seedData.users.forEach(user => {
+        for (const attire of user.user.aesthetics.attire) {
+            scene.load.image(attire.id, attire.href)
+        }
     })
 }
 
