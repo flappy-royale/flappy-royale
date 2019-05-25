@@ -39,7 +39,8 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
         .doc(seed)
         .get()
 
-    return dataRef.data() as any
+    const seeds = (dataRef.data() as any) || emptySeedData
+    return seeds
 }
 
 export const storeForSeed = (meta: { seed: string; create: boolean }, data: PlayerData) => {
