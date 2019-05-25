@@ -104,16 +104,17 @@ export class TrialLobbyScene extends Phaser.Scene {
                     const newBird3 = new BirdSprite(this, 20, 70, { isPlayer: false, settings: sortedScores[2].user })
                     newBird3.actAsImage()
                 }
+
+                // Now wwe're preloaded you can join
+                trial.setAlpha(1)
+                trial.once("pointerdown", async () => {
+                    const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
+                    this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                })
             }
 
             this.load.once("complete", updateBirds, this)
             // Preload the first three birds attire
-
-            trial.setAlpha(1)
-            trial.once("pointerdown", async () => {
-                const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
-                this.game.scene.add("BattleScene" + this.seed, scene, true, {})
-            })
         })
     }
 }

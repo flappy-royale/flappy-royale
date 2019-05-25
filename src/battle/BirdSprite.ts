@@ -61,6 +61,7 @@ export class BirdSprite {
     private attire: Phaser.GameObjects.Image[]
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
+    is: boolean
 
     // Don't apply gravity / velocity etc during the constructor
     // because this is used for previews
@@ -140,12 +141,8 @@ export class BirdSprite {
     }
 
     die() {
-        if (this.isPlayer) {
-            // NOOP
-        } else {
-            // move with the pipes
-            this.body.velocity.x = -1 * constants.pipeSpeed
-        }
+        // move with the pipes
+        this.body.velocity.x = -1 * constants.pipeSpeed
         this.isDead = true
     }
 

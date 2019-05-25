@@ -88,7 +88,7 @@ export class BattleScene extends Phaser.Scene {
     private spacebar: Phaser.Input.Keyboard.Key
 
     // See debugging/keyboardShortcuts.ts
-    private devKeys: object
+    public devKeys: object
 
     // What score did someone just get
     private score: number
@@ -208,7 +208,7 @@ export class BattleScene extends Phaser.Scene {
 
         // The delay here handles the time for the bus moving from left to right, increasing the value means the bus
         // is on for longer.
-        this.time.delayedCall(800, recurringTask, [], this)
+        this.newPipeTimer = this.time.delayedCall(800, recurringTask, [], this)
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
@@ -296,7 +296,7 @@ export class BattleScene extends Phaser.Scene {
             }
 
             // If the bird hits the floor
-            if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20) {
+            if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20 && !this.bird.isDead) {
                 this.userDied()
             }
 
@@ -381,7 +381,14 @@ export class BattleScene extends Phaser.Scene {
             )
         }
 
-        this.restartTheGame()
+        if (game.shouldRestartWhenPlayerDies(this.mode)) {
+            this.restartTheGame()
+        } else {
+            this.cameras.main.shake(20, 0.1)
+            this.newPipeTimer.destroy()
+            this.bird.die()
+            // Do something
+        }
     }
 
     resetGame() {

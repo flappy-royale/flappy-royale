@@ -47,6 +47,7 @@ module.exports = {
         path: path.resolve(__dirname, "dist")
     },
     mode: "development",
+    // mode: "production",
     plugins: [
         // @ts-ignore
         // Resets the build folder each time you run webpack

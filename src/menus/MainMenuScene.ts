@@ -6,6 +6,7 @@ import * as constants from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobbyScene } from "./TrialLobbyScene"
+import { RoyaleLobbyScene } from "./RoyaleLobby"
 
 export class MainMenuScene extends Phaser.Scene {
     seeds: SeedsResponse
@@ -37,13 +38,10 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", async () => {
-                const seeds = await getSeedsFromAPI(constants.APIVersion)
-                const seed = seeds.daily.production
-                const playerData = await fetchRecordingsForSeed(seed)
-
-                const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Royale })
+                const seed = this.seeds.daily.production
+                const lobby = new RoyaleLobbyScene({ seed })
                 this.game.scene.remove(this)
-                this.game.scene.add("BattleScene" + seed, scene, true, {})
+                this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
             })
 
         this.add

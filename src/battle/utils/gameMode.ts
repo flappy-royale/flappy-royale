@@ -20,3 +20,6 @@ export const shouldRestartWhenAllBirdsAreDead = (mode: GameMode) => mode === Gam
 
 /** Should we show the birds left? */
 export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
+
+/** Should we show the birds left? */
+export const shouldRestartWhenPlayerDies = (mode: GameMode) => mode === GameMode.Trial || mode === GameMode.Training
