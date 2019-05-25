@@ -2,6 +2,9 @@ import * as Phaser from "phaser"
 
 import * as constants from "./constants"
 import { MainMenuScene } from "./menus/MainMenuScene"
+import { getSeedsFromAPI, emptySeedData } from "./firebase"
+import { BattleScene } from "./battle/Scene"
+import { GameMode } from "./battle/utils/gameMode"
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
@@ -44,8 +47,32 @@ export class FlappyGame extends Phaser.Game {
     }
 }
 
-window.onload = async () => {
+// The normal game flow
+
+const loadUpMainMenu = () => {
     const mainMenu = new MainMenuScene()
     const game = new FlappyGame(config)
     game.scene.add("MainMenu", mainMenu, true)
+}
+
+const loadUpIntoTraining = async (settings: { offline: boolean }) => {
+    let seed = "offline-seed"
+    if (!settings.offline) {
+        try {
+            const seeds = await getSeedsFromAPI(constants.APIVersion)
+            seed = seeds.daily.production
+        } catch (error) {
+            // NOOP
+        }
+    }
+
+    const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
+    const game = new FlappyGame(config)
+    game.scene.add("Battle", scene, true)
+}
+
+window.onload = async () => {
+    loadUpMainMenu()
+
+    // loadUpIntoTraining({ offline: true })
 }

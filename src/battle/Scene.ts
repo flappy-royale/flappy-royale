@@ -198,17 +198,13 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // This sets up a new pipe every x seconds
-        const recurringTask = () =>
-            this.time.addEvent({
-                delay: constants.pipeTime, // We want 60px difference
-                callback: () => this.addPipe(),
-                callbackScope: this,
-                loop: true
-            })
-
-        // The delay here handles the time for the bus moving from left to right, increasing the value means the bus
-        // is on for longer.
-        this.newPipeTimer = this.time.delayedCall(800, recurringTask, [], this)
+        this.newPipeTimer = this.time.addEvent({
+            startAt: 800,
+            delay: constants.pipeTime, // We want 60px difference
+            callback: () => this.addPipe(),
+            callbackScope: this,
+            loop: true
+        })
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
@@ -246,7 +242,9 @@ export class BattleScene extends Phaser.Scene {
 
     update(timestamp: number) {
         // Parallax stuff, and moves the ground to the front
-        bgUpdateTick()
+        if (!this.bird.isDead) {
+            bgUpdateTick()
+        }
 
         // Just applying velocity, pipes have non-integer X values, which causes them to jiggle
         // Naively rounding their x-values down to the nearest int seems to work,
@@ -296,8 +294,11 @@ export class BattleScene extends Phaser.Scene {
             }
 
             // If the bird hits the floor
-            if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20 && !this.bird.isDead) {
-                this.userDied()
+            if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20) {
+                if (!this.bird.isDead) {
+                    this.userDied()
+                }
+                this.bird.hasHitFloor()
             }
 
             // If somehow they move to the edge fo the screen past pipes
@@ -345,6 +346,9 @@ export class BattleScene extends Phaser.Scene {
     }
 
     userFlap() {
+        // No dead birds flapping y'hear
+        if (this.bird.isDead) return
+
         this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
 
         this.bird.flap()
@@ -384,9 +388,13 @@ export class BattleScene extends Phaser.Scene {
         if (game.shouldRestartWhenPlayerDies(this.mode)) {
             this.restartTheGame()
         } else {
-            this.cameras.main.shake(20, 0.1)
-            this.newPipeTimer.destroy()
-            this.bird.die()
+            if (!this.bird.isDead) {
+                this.cameras.main.shake(50, 0.1)
+                this.newPipeTimer.destroy()
+                this.pipes.forEach(pg => pg.setVelocity(0, 0, 0))
+                this.scoreLines.forEach(pg => pg.setVelocity(0, 0))
+                this.bird.die()
+            }
             // Do something
         }
     }

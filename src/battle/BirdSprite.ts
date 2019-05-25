@@ -52,6 +52,7 @@ export class BirdSprite {
     isPlayer: boolean = false
     isInBus: boolean
     isDead: boolean = false
+    isAtRest: boolean = false
 
     // The bird itself
     private bodySprite: Phaser.GameObjects.Sprite
@@ -61,7 +62,6 @@ export class BirdSprite {
     private attire: Phaser.GameObjects.Image[]
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
-    is: boolean
 
     // Don't apply gravity / velocity etc during the constructor
     // because this is used for previews
@@ -142,7 +142,9 @@ export class BirdSprite {
 
     die() {
         // move with the pipes
-        this.body.velocity.x = -1 * constants.pipeSpeed
+        if (!this.isPlayer) {
+            this.body.velocity.x = -1 * constants.pipeSpeed
+        }
         this.isDead = true
     }
 
@@ -168,9 +170,17 @@ export class BirdSprite {
         this.sprite.play("flap")
     }
 
+    hasHitFloor() {
+        this.isAtRest = true
+        this.sprite.setGravityY(constants.gravity * -1)
+        this.sprite.setVelocityY(0)
+    }
+
     preUpdate() {
         if (this.sprite.anims) {
-            this.rotateSprite()
+            if (!this.isAtRest) {
+                this.rotateSprite()
+            }
             // We can't attach physics bodies together
             // so attire is just manually kept up to date with the positioning
             // of the sprite, this means attire needs to be centered on the bird

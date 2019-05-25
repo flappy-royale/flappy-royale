@@ -38,7 +38,6 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
 
     const group = scene.physics.add.group(pipes)
     group.setVelocityX(-1 * constants.pipeSpeed)
-
     pipes.forEach(configurePipeSprite)
 
     return group
