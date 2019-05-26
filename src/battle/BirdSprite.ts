@@ -131,6 +131,10 @@ export class BirdSprite {
         })
     }
 
+    addCollideForSprite(scene: Scene, otherPhysicsObj: Phaser.Physics.Arcade.Image) {
+        scene.physics.add.collider(this.sprite, otherPhysicsObj)
+    }
+
     checkCollision(
         scene: Scene,
         objects: Phaser.Types.Physics.Arcade.ArcadeColliderType,

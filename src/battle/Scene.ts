@@ -105,6 +105,8 @@ export class BattleScene extends Phaser.Scene {
     /** What game mode is this scene running in? */
     public mode: game.GameMode
 
+    public floorPhysics: Phaser.Physics.Arcade.Image
+
     constructor(opts: BattleSceneSettings) {
         super(
             Object.assign(
@@ -170,6 +172,7 @@ export class BattleScene extends Phaser.Scene {
         // setup bg + animations
         createBackgroundSprites(this)
         setupBirdAnimations(this)
+        this.setupPhysicsFloor()
 
         // If there's a datastore of recorded inputs, then make a fresh clone of those
         if (this.seedData && this.seedData.users) {
@@ -185,6 +188,7 @@ export class BattleScene extends Phaser.Scene {
                 settings: input.user
             })
             ghost.setupForBeingInBus()
+            ghost.addCollideForSprite(this, this.floorPhysics)
             this.ghostBirds.push(ghost)
         })
 
@@ -197,6 +201,10 @@ export class BattleScene extends Phaser.Scene {
             const birdConfig = { isPlayer: true, settings }
             this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, birdConfig)
             this.bird.setupForBeingInBus()
+            this.bird.addCollideForSprite(this, this.floorPhysics)
+
+            // On spacebar bounce the bird
+            this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
         }
 
         // This sets up a new pipe every x seconds
@@ -224,15 +232,20 @@ export class BattleScene extends Phaser.Scene {
             this.ghostBirdHasDied()
         }
 
-        // On spacebar bounce the bird
-        this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-
         if (devSettings.developer) {
             this.devKeys = setupDeveloperKeyboardShortcuts(this)
         }
 
         // Keep track of stats for using later
         this.analytics.startRecording(this)
+    }
+
+    setupPhysicsFloor() {
+        /** the physics floor, so that the bus + bird can land on it */
+        this.floorPhysics = this.physics.add.staticImage(0, constants.GameHeight - 50, "invis")
+        this.floorPhysics.setGravityY(-1 * constants.gravity)
+        this.floorPhysics.body.setSize(constants.GameWidth, 20)
+        this.floorPhysics.setBounce(0.3)
     }
 
     addPipe() {
@@ -259,7 +272,7 @@ export class BattleScene extends Phaser.Scene {
         const adjustedTime = Math.round(timestamp - this.timestampOffset)
 
         // Flap if appropriate
-        if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+        if (this.spacebar && Phaser.Input.Keyboard.JustDown(this.spacebar)) {
             this.userFlap()
         }
 
@@ -298,7 +311,7 @@ export class BattleScene extends Phaser.Scene {
             }
 
             // If the bird hits the floor
-            if (!devSettings.skipBottomCollision && this.bird.position.y > 160 + 20) {
+            if (!devSettings.skipBottomCollision && this.bird.position.y > 171) {
                 if (!this.bird.isDead) {
                     this.userDied()
                 }
