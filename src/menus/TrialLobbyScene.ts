@@ -1,4 +1,4 @@
-git aimport * as Phaser from "phaser"
+import * as Phaser from "phaser"
 import { fetchRecordingsForSeed } from "../firebase"
 import * as constants from "../constants"
 import { BattleScene } from "../battle/Scene"
