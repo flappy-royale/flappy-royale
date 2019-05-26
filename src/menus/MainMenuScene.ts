@@ -1,6 +1,6 @@
 import * as Phaser from "phaser"
 import { UserSettings, UserSettingsKey } from "./UserSettingsScene"
-import { getSeedsFromAPI, fetchRecordingsForSeed, emptySeedData } from "../firebase"
+import { getSeedsFromAPI, emptySeedData } from "../firebase"
 import { BattleScene } from "../battle/Scene"
 import * as constants from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
@@ -100,8 +100,8 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", () => {
+                this.removeMenu()
                 const settings = new UserSettings()
-                this.game.scene.remove(this)
                 this.game.scene.add(UserSettingsKey, settings, true)
             })
     }

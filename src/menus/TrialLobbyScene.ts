@@ -106,7 +106,7 @@ export class TrialLobbyScene extends Phaser.Scene {
 
                 debugger
 
-                // Now wwe're preloaded you can join
+                // Now we're preloaded you can join
                 trial.setAlpha(1)
                 trial.once("pointerdown", async () => {
                     const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
