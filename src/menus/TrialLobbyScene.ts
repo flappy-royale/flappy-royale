@@ -83,7 +83,6 @@ export class TrialLobbyScene extends Phaser.Scene {
             }
 
             sortedScores.slice(0, 3).forEach(score => preloadBirdAttire(this, score.user))
-            this.load.start()
 
             const updateBirds = () => {
                 bird.destroy()
@@ -105,6 +104,8 @@ export class TrialLobbyScene extends Phaser.Scene {
                     newBird3.actAsImage()
                 }
 
+                debugger
+
                 // Now wwe're preloaded you can join
                 trial.setAlpha(1)
                 trial.once("pointerdown", async () => {
@@ -113,8 +114,9 @@ export class TrialLobbyScene extends Phaser.Scene {
                 })
             }
 
-            this.load.once("complete", updateBirds, this)
             // Preload the first three birds attire
+            this.load.once("complete", updateBirds, this)
+            this.load.start()
         })
     }
 }

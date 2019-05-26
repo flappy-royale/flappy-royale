@@ -19,6 +19,13 @@ export const builtInAttire: PresentationAttire[] = [
         href: require("../assets/bases/Turtle.png")
     },
     {
+        id: "banana",
+        description: "It's a banana, kk",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Banana.png")
+    },
+    {
         id: "bad-beard",
         description: "A really dodgy beard",
         fit: "tight",
@@ -38,5 +45,12 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "loose",
         base: false,
         href: require("../assets/attire/Crown1.png")
+    },
+    {
+        id: "baseball-1",
+        description: "Going to a generic game",
+        fit: "loose",
+        base: true,
+        href: require("../assets/attire/Baseball-Whiteblue.png")
     }
 ]
