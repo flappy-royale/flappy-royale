@@ -34,6 +34,11 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
     const pipeBottomBody = createSprite(x, windowHeight, "pipe-body", scene)
     pipeBottomBody.setScale(1, windowHeight - holeBottom - 5)
 
+    pipeTop.setDepth(constants.zLevels.pipe)
+    pipeTopBody.setDepth(constants.zLevels.pipe)
+    pipeBottom.setDepth(constants.zLevels.pipe)
+    pipeBottomBody.setDepth(constants.zLevels.pipe)
+
     const pipes = [pipeTop, pipeTopBody, pipeBottom, pipeBottomBody]
 
     const group = scene.physics.add.group(pipes)

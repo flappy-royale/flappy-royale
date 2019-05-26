@@ -9,6 +9,8 @@ export const preloadBirdSprites = (scene: BattleScene) => {
     scene.load.image("flap2", require("../../assets/battle/Flap2.png"))
     scene.load.image("flap3", require("../../assets/battle/Flap3.png"))
 
+    scene.load.image("focusBackdrop", require("../../assets/bases/focusSprite.png"))
+
     // Preload user attire
     const userSettings = getUserSettings()
     userSettings.aesthetics.attire.forEach(attire => {
@@ -58,6 +60,8 @@ export class BirdSprite {
     private bodySprite: Phaser.GameObjects.Sprite
     // Actually the wings
     private sprite: Phaser.Physics.Arcade.Sprite
+    // Focus sprite
+    private focusSprite: Phaser.GameObjects.Image
     // HATS
     private tightAttire: Phaser.GameObjects.Image[]
     private looseAttire: Phaser.GameObjects.Image[]
@@ -75,6 +79,12 @@ export class BirdSprite {
         if (!base) throw "No base attire found"
         this.bodySprite = scene.add.sprite(x, y, base.id)
         this.bodySprite.setOrigin(0.13, 0.5)
+
+        // Setup the focus sprite
+        if (this.isPlayer) {
+            this.focusSprite = scene.add.sprite(x, y, "focusBackdrop")
+            this.focusSprite.setOrigin(0.13, 0.5)
+        }
 
         // Setup clothes (always set to true for non-player birds)
         this.tightAttire = meta.settings.aesthetics.attire
@@ -111,6 +121,7 @@ export class BirdSprite {
             allAttire.forEach(a => a.setAlpha(0.3))
         } else {
             this.bodySprite.setDepth(constants.zLevels.playerBird)
+            if (this.isPlayer) this.focusSprite.setDepth(constants.zLevels.focusBackdrop)
             this.sprite.setDepth(constants.zLevels.playerBird + 10)
             allAttire.forEach(a => (a.depth = constants.zLevels.birdAttire + 1))
         }
@@ -204,6 +215,10 @@ export class BirdSprite {
         this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
         this.bodySprite.rotation = this.sprite.rotation
 
+        if (this.isPlayer) {
+            this.focusSprite.setPosition(this.sprite.x, this.sprite.y)
+            this.focusSprite.rotation = this.sprite.rotation
+        }
         // There are two loops, one that is done _after_ the physics resolution
         // layer (coming from scene.sys.events.addListener("postupdate") above )
         // and another coming from the 'preUpdate' loop which comes from the game

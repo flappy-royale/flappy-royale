@@ -18,8 +18,10 @@ export const birdYPosition = 30
 export const timeBetweenYSyncs = 400
 
 export enum zLevels {
-    debugText = 4,
-    birdAttire = 3,
-    playerBird = 2,
+    pipe = 1000,
+    debugText = 5,
+    birdAttire = 4,
+    playerBird = 3,
+    focusBackdrop = 2,
     ground = 1
 }
