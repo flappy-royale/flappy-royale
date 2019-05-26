@@ -379,7 +379,7 @@ export class BattleScene extends Phaser.Scene {
         recordGamePlayed(this.analytics.getResults())
 
         // Check if they did enough for us to record the run
-        const hasJumped = this.userInput.length > 4
+        const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
         if (this.isRecording() && hasJumped) {
             const settings = getUserSettings()
             const create = this.ghostBirds.length === 0
@@ -410,10 +410,10 @@ export class BattleScene extends Phaser.Scene {
         this.pipes = []
         this.scoreLines = []
         this.score = 0
+        this.timestampOffset = this.time.now
     }
 
     restartTheGame() {
-        this.timestampOffset = this.time.now
         this.time.update(0, 0)
         this.resetGame()
         this.scene.restart()
