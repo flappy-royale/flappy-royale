@@ -152,6 +152,8 @@ export class BattleScene extends Phaser.Scene {
     }
 
     create() {
+        this.time.update(0, 0)
+
         // Fill the BG
         this.add.rectangle(
             constants.GameWidth / 2,
@@ -414,7 +416,6 @@ export class BattleScene extends Phaser.Scene {
     }
 
     restartTheGame() {
-        this.time.update(0, 0)
         this.resetGame()
         this.scene.restart()
     }
