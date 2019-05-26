@@ -1,4 +1,4 @@
-import * as Phaser from "phaser"
+git aimport * as Phaser from "phaser"
 import { fetchRecordingsForSeed } from "../firebase"
 import * as constants from "../constants"
 import { BattleScene } from "../battle/Scene"
@@ -103,8 +103,6 @@ export class TrialLobbyScene extends Phaser.Scene {
                     const newBird3 = new BirdSprite(this, 20, 70, { isPlayer: false, settings: sortedScores[2].user })
                     newBird3.actAsImage()
                 }
-
-                debugger
 
                 // Now we're preloaded you can join
                 trial.setAlpha(1)
