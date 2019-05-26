@@ -313,6 +313,8 @@ export class BattleScene extends Phaser.Scene {
 
             // Score points by checking whether you got halfway
             this.bird.checkCollision(this, this.scoreLines, this.userScored)
+
+            this.bird.updateRelatedSprites({ tight: false })
         }
 
         // Let the bus collide

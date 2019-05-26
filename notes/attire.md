@@ -38,6 +38,9 @@ You have to have a base, but can have up to three hats.
 ### Misc
 
 -   Robes
+-   Glasses
+-   Sunglasses
+-   Headphones
 
 ### Bodies
 

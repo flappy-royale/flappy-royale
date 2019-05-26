@@ -59,7 +59,8 @@ export class BirdSprite {
     // Actually the wings
     private sprite: Phaser.Physics.Arcade.Sprite
     // HATS
-    private attire: Phaser.GameObjects.Image[]
+    private tightAttire: Phaser.GameObjects.Image[]
+    private looseAttire: Phaser.GameObjects.Image[]
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
@@ -75,12 +76,23 @@ export class BirdSprite {
         this.bodySprite = scene.add.sprite(x, y, base.id)
         this.bodySprite.setOrigin(0.13, 0.5)
 
-        // Setup clothes
-        this.attire = meta.settings.aesthetics.attire
+        // Setup clothes (always set to true for non-player birds)
+        this.tightAttire = meta.settings.aesthetics.attire
             .filter(a => !a.base)
+            .filter(a => !meta.isPlayer || a.fit === "tight")
             .map(a => {
                 const image = scene.add.image(x, y, a.id)
-                image.setOrigin(0.13, 0.5)
+                image.setOrigin(0.13, 0.55)
+                return image
+            })
+
+        // See updateRelatedSprite for more info
+        this.looseAttire = meta.settings.aesthetics.attire
+            .filter(a => !a.base && meta.isPlayer)
+            .filter(a => a.fit === "loose")
+            .map(a => {
+                const image = scene.add.image(x, y, a.id)
+                image.setOrigin(0.13, 0.55)
                 return image
             })
 
@@ -92,19 +104,19 @@ export class BirdSprite {
         this.isInBus = true
 
         this.position = this.body.position
-
+        const allAttire = this.tightAttire.concat(this.looseAttire)
         if (!meta.isPlayer) {
             this.bodySprite.setAlpha(0.3)
             this.sprite.setAlpha(0.3)
-            this.attire.forEach(a => a.setAlpha(0.3))
+            allAttire.forEach(a => a.setAlpha(0.3))
         } else {
             this.bodySprite.setDepth(constants.zLevels.playerBird)
             this.sprite.setDepth(constants.zLevels.playerBird + 10)
-            this.attire.forEach(a => (a.depth = constants.zLevels.birdAttire + 1))
+            allAttire.forEach(a => (a.depth = constants.zLevels.birdAttire + 1))
         }
 
         scene.sys.events.addListener("postupdate", () => {
-            this.preUpdate()
+            this.updateRelatedSprites({ tight: true })
         })
     }
 
@@ -136,7 +148,7 @@ export class BirdSprite {
     }
 
     destroy() {
-        const sprites = [this.bodySprite, this.sprite, ...this.attire]
+        const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(s => s.destroy())
     }
 
@@ -165,7 +177,7 @@ export class BirdSprite {
 
     actAsImage() {
         this.sprite.setGravityY(constants.gravity * -1)
-        const sprites = [this.bodySprite, this.sprite, ...this.attire]
+        const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setAlpha(1))
         this.sprite.play("flap")
     }
@@ -176,23 +188,38 @@ export class BirdSprite {
         this.sprite.setVelocityY(0)
     }
 
-    preUpdate() {
-        if (this.sprite.anims) {
-            if (!this.isAtRest) {
-                this.rotateSprite()
-            }
-            // We can't attach physics bodies together
-            // so attire is just manually kept up to date with the positioning
-            // of the sprite, this means attire needs to be centered on the bird
+    updateRelatedSprites(settings: { tight: boolean }) {
+        if (!this.sprite.anims) return
 
-            this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
-            this.bodySprite.rotation = this.sprite.rotation
-
-            this.attire.forEach(attire => {
-                attire.setPosition(this.bodySprite.x, this.bodySprite.y)
-                attire.rotation = this.bodySprite.rotation
-            })
+        // When the bird has hit the floor, stop running rotations
+        // also, only do it once per render run.
+        if (!this.isAtRest && settings.tight) {
+            this.rotateSprite()
         }
+
+        // We can't attach physics bodies together
+        // so attire is just manually kept up to date with the positioning
+        // of the sprite, this means attire needs to be centered on the bird
+
+        this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
+        this.bodySprite.rotation = this.sprite.rotation
+
+        // There are two loops, one that is done _after_ the physics resolution
+        // layer (coming from scene.sys.events.addListener("postupdate") above )
+        // and another coming from the 'preUpdate' loop which comes from the game
+        // which occurs before physics is decided.
+        //
+        // This means that attire in the before loop is exactly up to date with
+        // the body, and the after one just happens to be a tick out. This tick out
+        // ends up giving this really cool effect of bouncing attire as though the
+        // item is loosely held.
+        //
+        // Note: This function will only be called with loose attire  on the player
+        const attireCount = settings.tight ? this.tightAttire : this.looseAttire
+        attireCount.forEach(item => {
+            item.setPosition(this.bodySprite.x, this.bodySprite.y)
+            item.rotation = this.bodySprite.rotation
+        })
     }
 }
 
