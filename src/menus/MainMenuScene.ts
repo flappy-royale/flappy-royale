@@ -14,11 +14,6 @@ export const launchMainMenu = (game: Phaser.Game) => {
     game.scene.add("MainMenu", mainMenu, true)
 }
 
-export const removeMenu = (game: Phaser.Game) => {
-    game.scene.remove("battlebg")
-    game.scene.remove("MainMenu")
-}
-
 export class MainMenuScene extends Phaser.Scene {
     seeds: SeedsResponse
     battleBG: BattleScene
@@ -76,7 +71,7 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
-                removeMenu(this.game)
+                this.removeMenu()
                 const seed = this.seeds.daily.production
                 const lobby = new TrialLobbyScene({ seed })
                 this.game.scene.add("TrialLobby" + seed, lobby, true, {})
