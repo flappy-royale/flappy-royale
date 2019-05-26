@@ -62,7 +62,8 @@ module.exports = {
 
         // Creates the HTML files
         new HtmlWebpackPlugin({
-            title: "Flappy Royale"
+            title: "Flappy Royale",
+            meta: { viewport: "width=device-width, initial-scale=1, shrink-to-fit=no" }
         }),
         // This must come after HTML, generates the CSS
         new MiniCssExtractPlugin({
