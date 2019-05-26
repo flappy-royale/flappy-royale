@@ -18,6 +18,9 @@ export const shouldRecordScores = (mode: GameMode) => mode === GameMode.Royale |
 /** Should we upload player events? */
 export const shouldRestartWhenAllBirdsAreDead = (mode: GameMode) => mode === GameMode.Menu
 
+/** Should we show the player score? */
+export const shouldShowScoreLabel = (mode: GameMode) => mode !== GameMode.Menu
+
 /** Should we show the birds left? */
 export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
 

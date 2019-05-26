@@ -8,8 +8,20 @@ import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobbyScene } from "./TrialLobbyScene"
 import { RoyaleLobbyScene } from "./RoyaleLobby"
 
+/** Used on launch, and when you go back to the main menu */
+export const launchMainMenu = (game: Phaser.Game) => {
+    const mainMenu = new MainMenuScene()
+    game.scene.add("MainMenu", mainMenu, true)
+}
+
+export const removeMenu = (game: Phaser.Game) => {
+    game.scene.remove("battlebg")
+    game.scene.remove("MainMenu")
+}
+
 export class MainMenuScene extends Phaser.Scene {
     seeds: SeedsResponse
+    battleBG: BattleScene
 
     constructor() {
         super("MainMenu")
@@ -28,6 +40,20 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        this.battleBG = new BattleScene({ seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })
+        this.game.scene.add("battlebg", this.battleBG, true)
+        this.game.scene.bringToTop("MainMenu")
+
+        // Fill the BG
+        this.add.rectangle(
+            constants.GameWidth / 2,
+            constants.GameHeight / 2,
+            constants.GameWidth,
+            constants.GameHeight,
+            0x000000,
+            0.3
+        )
+
         // NOTE: ASYNC!
         getSeedsFromAPI(constants.APIVersion).then(seeds => {
             this.seeds = seeds
@@ -38,9 +64,10 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", async () => {
+                this.removeMenu()
+
                 const seed = this.seeds.daily.production
                 const lobby = new RoyaleLobbyScene({ seed })
-                this.game.scene.remove(this)
                 this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
             })
 
@@ -49,9 +76,9 @@ export class MainMenuScene extends Phaser.Scene {
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
+                removeMenu(this.game)
                 const seed = this.seeds.daily.production
                 const lobby = new TrialLobbyScene({ seed })
-                this.game.scene.remove(this)
                 this.game.scene.add("TrialLobby" + seed, lobby, true, {})
             })
 
@@ -68,8 +95,8 @@ export class MainMenuScene extends Phaser.Scene {
                     // NOOP
                 }
 
+                this.removeMenu()
                 const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
-                this.game.scene.remove(this)
                 this.game.scene.add("BattleScene" + seed, scene, true, {})
             })
 
@@ -82,5 +109,10 @@ export class MainMenuScene extends Phaser.Scene {
                 this.game.scene.remove(this)
                 this.game.scene.add(UserSettingsKey, settings, true)
             })
+    }
+
+    removeMenu() {
+        this.game.scene.remove(this)
+        this.game.scene.remove(this.battleBG)
     }
 }

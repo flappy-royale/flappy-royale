@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 
 import * as constants from "./constants"
-import { MainMenuScene } from "./menus/MainMenuScene"
+import { MainMenuScene, launchMainMenu } from "./menus/MainMenuScene"
 import { getSeedsFromAPI, emptySeedData } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
@@ -50,9 +50,8 @@ export class FlappyGame extends Phaser.Game {
 // The normal game flow
 
 const loadUpMainMenu = () => {
-    const mainMenu = new MainMenuScene()
     const game = new FlappyGame(config)
-    game.scene.add("MainMenu", mainMenu, true)
+    launchMainMenu(game)
 }
 
 const loadUpIntoTraining = async (settings: { offline: boolean }) => {

@@ -210,8 +210,10 @@ export class BattleScene extends Phaser.Scene {
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
         const { ALIGN_CENTER, ALIGN_RIGHT } = Phaser.GameObjects.BitmapText
-        this.scoreLabel = this.add.bitmapText(80, 20, "nokia16", "0", 0, ALIGN_CENTER)
-        this.scoreLabel.setDepth(constants.zLevels.debugText)
+        if (game.shouldShowScoreLabel(this.mode)) {
+            this.scoreLabel = this.add.bitmapText(80, 20, "nokia16", "0", 0, ALIGN_CENTER)
+            this.scoreLabel.setDepth(constants.zLevels.debugText)
+        }
 
         // When we want to show a countdown, set it up with defaults
         if (game.shouldShowBirdsLeftLabel(this.mode)) {
@@ -242,7 +244,7 @@ export class BattleScene extends Phaser.Scene {
 
     update(timestamp: number) {
         // Parallax stuff, and moves the ground to the front
-        if (!this.bird.isDead) {
+        if (!this.bird || !this.bird.isDead) {
             bgUpdateTick()
         }
 
@@ -349,7 +351,7 @@ export class BattleScene extends Phaser.Scene {
 
     userFlap() {
         // No dead birds flapping y'hear
-        if (this.bird.isDead) return
+        if (this.bird && this.bird.isDead) return
 
         this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
 
