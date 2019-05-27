@@ -9,7 +9,7 @@ const WebpackNotifierPlugin = require("webpack-notifier")
 /** @type import("webpack").Configuration */
 module.exports = {
     entry: "./src/app.ts",
-    devtool: "inline-source-map",
+    // devtool: "inline-source-map",
     module: {
         rules: [
             // TS support
@@ -21,7 +21,7 @@ module.exports = {
             // Ensures that hashing works, but means you have to require
             // images etc for their path, and not hardcode them.
             {
-                test: /\.(png|svg|jpg|gif|html|xml)$/,
+                test: /\.(png|svg|jpg|gif|html|xml|otf)$/,
                 use: ["file-loader"]
             },
             // CSS hookup
@@ -58,12 +58,13 @@ module.exports = {
         // Get notifications about failed builds as messages in the top left
         new WebpackNotifierPlugin(),
 
-        // Acutal generation of the build
+        // Actual generation of the build
 
         // Creates the HTML files
         new HtmlWebpackPlugin({
             title: "Flappy Royale",
-            meta: { viewport: "width=device-width, initial-scale=1, shrink-to-fit=no" }
+            meta: { viewport: "width=device-width, initial-scale=1, shrink-to-fit=no" },
+            template: "src/index.template"
         }),
         // This must come after HTML, generates the CSS
         new MiniCssExtractPlugin({

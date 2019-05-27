@@ -54,6 +54,18 @@ export class MainMenuScene extends Phaser.Scene {
             this.seeds = seeds
         })
 
+        this.time.delayedCall(
+            1000,
+            () => {
+                this.add.text(0, 0, "Hello World", {
+                    fontSize: "8px",
+                    fontFamily: "Fipps"
+                })
+            },
+            [],
+            this
+        )
+
         this.add
             .image(80, 40, "royale-button")
             .setInteractive()
