@@ -1,10 +1,7 @@
 // @ts-check
 const path = require("path")
-const CleanWebpackPlugin = require("clean-webpack-plugin")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
-const AppCachePlugin = require('appcache-webpack-plugin')
 
 
 /** @type import("webpack").Configuration */
@@ -47,39 +44,19 @@ module.exports = {
         filename: "app.[contenthash].js",
         path: path.resolve(__dirname, "dist")
     },
-    mode: "development",
-    // mode: "production",
     plugins: [
         // @ts-ignore
         // Resets the build folder each time you run webpack
 
-        // We kinda only want this for production runs though
-        // new CleanWebpackPlugin(),
-
         // Get notifications about failed builds as messages in the top left
         new WebpackNotifierPlugin(),
 
-        // Actual generation of the build
-
-        // Creates the HTML files
-        new HtmlWebpackPlugin({
-            title: "Flappy Royale",
-            meta: { viewport: "width=device-width, initial-scale=1, shrink-to-fit=no" },
-            template: "src/index.template"
-        }),
         // This must come after HTML, generates the CSS
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
-        }),
-        new AppCachePlugin({
-            network: [
-                '*'
-            ],
-            settings: ['prefer-online'],
-            output: 'manifest.appcache'
         })
     ]
 }

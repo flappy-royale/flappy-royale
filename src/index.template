@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html manifest="manifest.appcache">
+<% if (htmlWebpackPlugin.options.production) { %>
+    <html manifest="manifest.appcache">
+<% } else { %>
+    <html>
+<% } %>
     <head>
         <meta charset="UTF-8" />
         <title><%= htmlWebpackPlugin.options.title %></title>

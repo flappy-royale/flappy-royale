@@ -11,11 +11,13 @@
         "node": "8"
     },
     "scripts": {
-        "build": "yarn webpack",
-        "start": "yarn webpack --watch & yarn  live-server --port=8085",
+        "build": "yarn webpack-prod",
+        "start": "yarn webpack-dev --watch & yarn live-server --port=8085",
         "type-check": "yarn tsc --noEmit",
         "deploy": "rm -rf dist && yarn build && firebase deploy",
-        "deploy-hosting": "rm -rf dist && yarn build && firebase deploy --only hosting"
+        "deploy-hosting": "rm -rf dist && yarn build && firebase deploy --only hosting",
+        "webpack-prod": "webpack -p --progress --config=webpack.prod.js --mode production",
+        "webpack-dev": "webpack -p --progress --config=webpack.dev.js --mode development"
     },
     "dependencies": {
         "appcache-webpack-plugin": "^1.4.0",
@@ -28,6 +30,7 @@
         "phaser": "^3.17.0",
         "seed-random": "^2.2.0",
         "webpack-assets-manifest": "^3.1.1",
+        "webpack-merge": "^4.2.1",
         "webpack-notifier": "^1.7.0"
     },
     "devDependencies": {

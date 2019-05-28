@@ -5,27 +5,18 @@ import { MainMenuScene, launchMainMenu } from "./menus/MainMenuScene"
 import { getSeedsFromAPI, emptySeedData } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
+import configureAppCache from "./configureAppCache";
+
+declare var PRODUCTION: boolean;
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
 require("../style.css")
 
-// Check if a new cache is available on page load.
-// (Copy/pasted from https://www.html5rocks.com/en/tutorials/appcache/beginner/)
-window.addEventListener('load', function (e) {
-    window.applicationCache.addEventListener('updateready', function (e) {
-        if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-            // A new version of the app is ready, reload it
-            // TODO: Do this automatically! For now, though, I want to test if this works
-            if (confirm('A new version of this site is available. Load it?')) {
-                window.location.reload();
-            }
-        } else {
-            // Manifest didn't changed. Nothing new to server.
-        }
-    }, false);
+if (PRODUCTION) {
+    configureAppCache()
+}
 
-}, false);
 
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy Royale",
