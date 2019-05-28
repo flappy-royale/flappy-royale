@@ -71,7 +71,7 @@ export class TrialLobbyScene extends Phaser.Scene {
         // const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Trial })
         fetchRecordingsForSeed(this.seed).then(seedData => {
             // Fill out the data we'll preview
-            const sortedScores = seedData.users.sort((lhs, rhs) => rhs.score - lhs.score)
+            const sortedScores = seedData.replays.sort((lhs, rhs) => rhs.score - lhs.score)
 
             if (sortedScores[0]) {
                 rank1Text.text = `${sortedScores[0].user.name} ${sortedScores[0].score}`

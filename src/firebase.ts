@@ -2,9 +2,16 @@ import * as firebase from "firebase"
 import { UserSettings } from "./user/userManager"
 import { SeedsResponse } from "../functions/src/api-contracts"
 import { ReplayUploadRequest } from "../functions/src"
+import * as pako from "pako"
 
+/** How it's stored in the DB to save on fs space */
+export interface SeedDataZipped {
+    replaysZipped: string
+}
+
+/** How it's unzipped in the client */
 export interface SeedData {
-    users: PlayerData[]
+    replays: PlayerData[]
 }
 
 export interface PlayerData {
@@ -40,25 +47,12 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
         .doc(seed)
         .get()
 
-    const seeds = (dataRef.data() as any) || emptySeedData
-    return seeds
-}
-
-export const storeForSeed = (meta: { seed: string; create: boolean }, data: PlayerData) => {
-    const db = firebaseApp.firestore()
-    const batch = db.batch()
-    const recordings = db.collection("recordings")
-    const seedDoc = recordings.doc(meta.seed)
-    if (meta.create) {
-        const toUpload: SeedData = { users: [data] }
-        console.log("Creating new seed")
-        batch.set(seedDoc, toUpload)
-    } else {
-        console.log("Updating")
-        batch.update(seedDoc, { users: firebase.firestore.FieldValue.arrayUnion(data) })
+    const seedData = dataRef.data() as SeedDataZipped
+    if (!seedData) {
+        return emptySeedData
     }
 
-    return batch.commit()
+    return unzipSeedData(seedData)
 }
 
 // prettier-ignore
@@ -82,10 +76,42 @@ export const getLocallyStoredSeeds = (): SeedsResponse | undefined =>
 
 export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/addReplayToSeed`, {
+        // return fetch(`http://localhost:5000/${firebaseConfig.projectId}/us-central1/addReplayToSeed`, {
         method: "POST",
         body: JSON.stringify(replay)
     })
 }
 
 /** Used in training */
-export const emptySeedData: SeedData = { users: [] }
+export const emptySeedData: SeedData = { replays: [] }
+
+/**
+ * Converts from the db representation where the seed data is gzipped into
+ * a useable model JSON on the client
+ */
+export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
+    return {
+        replays: unzip(seed.replaysZipped)
+    }
+}
+
+const unzip = (bin: string) => {
+    if (!bin) {
+        throw new Error("No bin param passed to unzip")
+    }
+    let uncompressed = ""
+    try {
+        uncompressed = pako.inflate(bin, { to: "string" })
+    } catch (error) {
+        console.error("Issue unzipping")
+        console.error(error)
+    }
+    let decoded = decodeURIComponent(escape(uncompressed))
+    try {
+        let obj = JSON.parse(decoded)
+        return obj
+    } catch (error) {
+        console.error("Issue parsing JSON: ", decoded)
+        console.error(error)
+    }
+}

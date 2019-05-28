@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions"
-import { SeedsResponse } from "./api-contracts"
 import * as admin from "firebase-admin"
+import { SeedsResponse } from "./api-contracts"
+import * as pako from "pako"
+import { SeedDataZipped, SeedData } from "../../src/firebase"
 
 const numberOfDifferentRoyaleReplays = 50
 const maxNumberOfReplays = 250
@@ -70,31 +72,76 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
     const db = admin.firestore()
     const recordings = db.collection("recordings")
     const dataRef = await recordings.doc(seed)
-    const seedData = (await dataRef.get()).data() as import("../../src/firebase").SeedData
+    const zippedSeedData = (await dataRef.get()).data() as SeedDataZipped
 
-    if (!seedData) {
+    // Mainly to provide typings to dataRef.set
+    const saveToDB = (a: SeedDataZipped) => dataRef.set(a)
+
+    if (!zippedSeedData) {
         // We need too make the data
-        await dataRef.set({ users: [data] }) 
+        const document = { replaysZipped: zippedObj([data]) }
+        await saveToDB(document)
     } else {
         // We need to amend the data instead
-        const existingCount = seedData.users.length
+        const seedData = unzipSeedData(zippedSeedData)
+        const existingCount = seedData.replays.length
         const shouldUpdateNotAdd = existingCount < maxNumberOfReplays
-
+        const hasOverHalfData = existingCount > maxNumberOfReplays / 2
 
         // We want to cap the number of recordings overall
-        if (shouldUpdateNotAdd) {
-            // TODO: Add a UUID to the user?
-            const hasUserInData = seedData.users.findIndex(d => d.user.name == uuid)
+        if (hasOverHalfData && shouldUpdateNotAdd) {
+            // One user can ship many replays until there is over half
+            // the number of max replays
+            // TODO: Add a real UUID for the user?
+            const hasUserInData = seedData.replays.findIndex(d => d.user.name == uuid)
             const randomIndexToDrop = Math.floor(Math.random() * existingCount)
-            const index = hasUserInData !== -1 ? hasUserInData : randomIndexToDrop
-            seedData.users[index] = data
+            const index = hasOverHalfData && hasUserInData !== -1 ? hasUserInData : randomIndexToDrop
+            seedData.replays[index] = data
         } else {
-            seedData.users.push(data)
+            seedData.replays.push(data)
         }
 
-        dataRef.set({ users: seedData.users })
+        await saveToDB({ replaysZipped: zippedObj(seedData.replays) })
     }
 
     const responseJSON = { success: true }
     return response.status(200).send(responseJSON)
 })
+
+/**
+ * Converts from the db representation where the seed data is gzipped into
+ * a useable model JSON on the client
+ */
+export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
+    return {
+        replays: unzip(seed.replaysZipped)
+    }
+}
+
+const unzip = (bin: string) => {
+    if (!bin) {
+        throw new Error("No bin param passed to unzip")
+    }
+    let uncompressed = ""
+    try {
+        uncompressed = pako.inflate(bin, { to: "string" })
+    } catch (error) {
+        console.error("Issue unzipping")
+        console.error(error)
+    }
+    let decoded = decodeURIComponent(escape(uncompressed))
+    try {
+        let obj = JSON.parse(decoded)
+        return obj
+    } catch (error) {
+        console.error("Issue parsing JSON: ", decoded)
+        console.error(error)
+    }
+}
+
+const zippedObj = (obj: object) => {
+    const str = JSON.stringify(obj)
+    const data = unescape(encodeURIComponent(str))
+    const zipped = pako.deflate(data, { to: "string" })
+    return zipped
+}

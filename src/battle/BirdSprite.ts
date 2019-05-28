@@ -18,7 +18,7 @@ export const preloadBirdSprites = (scene: BattleScene) => {
     })
 
     // Preload opponents attire
-    scene.seedData.users.forEach(data => preloadBirdAttire(scene, data.user))
+    scene.seedData.replays.forEach(data => preloadBirdAttire(scene, data.user))
 }
 
 export const preloadBirdAttire = (scene: Phaser.Scene, bird: UserSettings) => {

@@ -175,8 +175,8 @@ export class BattleScene extends Phaser.Scene {
         this.setupPhysicsFloor()
 
         // If there's a datastore of recorded inputs, then make a fresh clone of those
-        if (this.seedData && this.seedData.users) {
-            this.recordedInput = _.cloneDeep(this.seedData.users || [])
+        if (this.seedData && this.seedData.replays) {
+            this.recordedInput = _.cloneDeep(this.seedData.replays || [])
         }
 
         this.bus = createBus(this)
@@ -345,10 +345,6 @@ export class BattleScene extends Phaser.Scene {
         this.physics.overlap(this.bus, this.pipes, busCrash, null, this)
 
         pipeOutOfBoundsCheck(this.pipes)
-
-        if (this.isRecording()) {
-            this.debug("Recording ghost")
-        }
     }
 
     ghostBirdHasDied() {

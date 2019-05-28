@@ -82,24 +82,6 @@ export class MainMenuScene extends Phaser.Scene {
             })
 
         this.add
-            .image(80, 120, "training-button")
-            .setInteractive()
-            // needs to be on up inside, but whatevs
-            .on("pointerdown", async () => {
-                let seed = "offline-seed"
-                try {
-                    const seeds = await getSeedsFromAPI(constants.APIVersion)
-                    seed = seeds.daily.production
-                } catch (error) {
-                    // NOOP
-                }
-
-                this.removeMenu()
-                const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
-                this.game.scene.add("BattleScene" + seed, scene, true, {})
-            })
-
-        this.add
             .image(80, 200, "settings-button")
             .setInteractive()
             // needs to be on up insider, but whatevs

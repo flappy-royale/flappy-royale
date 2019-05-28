@@ -1,5 +1,5 @@
 // Changing this will mean new seed data for everything
-export const APIVersion = "5"
+export const APIVersion = "1"
 
 export const GameWidth = 160
 export const GameHeight = 240
