@@ -43,6 +43,14 @@ export interface UserSettings {
     name: string
     /** What do you look like? */
     aesthetics: Aesthetics
+    /** Settings just fort royale */
+    royale: {
+        /**
+         * Which index were you last on? The idea being that you will cycle through
+         * these indexes so that the last game definitely won't be on the same seed
+         */
+        seedIndex: number
+    }
 }
 
 // What it is when you first join
@@ -50,6 +58,10 @@ export const defaultSettings: UserSettings = {
     name: "Cappy McCapperson_" + Math.floor(Math.random() * 999999) + 1,
     aesthetics: {
         attire: [defaultAttire]
+    },
+    royale: {
+        // It'll auto-add one when you go into a royale
+        seedIndex: -1
     }
 }
 
@@ -60,10 +72,11 @@ export const getUserSettings = (): UserSettings =>
 const saveSettings = (settings: UserSettings) => localStorage.setItem("settings", JSON.stringify(settings))
 
 /**  For user forms etc */
-export const changeSettings = (settings: { name?: string; aesthetics?: Aesthetics }) => {
+export const changeSettings = (settings: Partial<UserSettings>) => {
     const existingSettings = getUserSettings()
 
     if ("name" in settings) existingSettings.name = settings.name!
+    if ("royale" in settings) existingSettings.royale = settings.royale!
 
     if ("aesthetics" in settings) {
         const base = settings.aesthetics!.attire.filter(a => a.base)
@@ -83,4 +96,17 @@ export const recordGamePlayed = (results: GameResults) => {
     const existingRoyales = getRoyales()
     existingRoyales.push(results)
     localStorage.setItem("royales", JSON.stringify(existingRoyales))
+}
+
+/** Will get the seed index + 1 or 0 if it's at the cap */
+export const getAndBumpUserCycleSeedIndex = (cap: number) => {
+    const settings = getUserSettings()
+    if (!settings.royale) settings.royale = defaultSettings.royale
+
+    const newIndex = settings.royale.seedIndex + 1
+
+    const index = newIndex < cap ? newIndex : 0
+
+    changeSettings({ royale: { seedIndex: index } })
+    return index
 }

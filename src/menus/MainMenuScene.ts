@@ -7,6 +7,7 @@ import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobbyScene } from "./TrialLobbyScene"
 import { RoyaleLobbyScene } from "./RoyaleLobby"
+import { getUserSettings, changeSettings, getAndBumpUserCycleSeedIndex } from "../user/userManager"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
@@ -74,7 +75,9 @@ export class MainMenuScene extends Phaser.Scene {
             .on("pointerdown", async () => {
                 this.removeMenu()
 
-                const seed = this.seeds.daily.production
+                const index = getAndBumpUserCycleSeedIndex(this.seeds.royale.length)
+                const seed = this.seeds.royale[index]
+
                 const lobby = new RoyaleLobbyScene({ seed })
                 this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
             })
@@ -85,6 +88,7 @@ export class MainMenuScene extends Phaser.Scene {
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
                 this.removeMenu()
+
                 const seed = this.seeds.daily.production
                 const lobby = new TrialLobbyScene({ seed })
                 this.game.scene.add("TrialLobby" + seed, lobby, true, {})
