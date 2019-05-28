@@ -45,23 +45,6 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
     return seeds
 }
 
-export const storeForSeed = (meta: { seed: string; create: boolean }, data: PlayerData) => {
-    const db = firebaseApp.firestore()
-    const batch = db.batch()
-    const recordings = db.collection("recordings")
-    const seedDoc = recordings.doc(meta.seed)
-    if (meta.create) {
-        const toUpload: SeedData = { users: [data] }
-        console.log("Creating new seed")
-        batch.set(seedDoc, toUpload)
-    } else {
-        console.log("Updating")
-        batch.update(seedDoc, { users: firebase.firestore.FieldValue.arrayUnion(data) })
-    }
-
-    return batch.commit()
-}
-
 // prettier-ignore
 /**
  * Grabs a copy of the seeds from a google function which ensures we have consistent seeds.
