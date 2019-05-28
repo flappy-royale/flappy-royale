@@ -32,6 +32,7 @@ export const firebaseConfig = {
 }
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
+firebaseApp.firestore().enablePersistence()
 
 export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> => {
     const dataRef = await firebaseApp
