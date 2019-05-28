@@ -27,7 +27,8 @@
         "seed-random": "^2.2.0",
         "webpack-assets-manifest": "^3.1.1",
         "webpack-manifest-plugin": "^2.0.4",
-        "webpack-notifier": "^1.7.0"
+        "webpack-notifier": "^1.7.0",
+        "workbox-webpack-plugin": "^4.3.1"
     },
     "devDependencies": {
         "@firebase/app-types": "^0.4.0",
