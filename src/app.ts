@@ -10,6 +10,18 @@ import { GameMode } from "./battle/utils/gameMode"
 // and adds it to the HTML
 require("../style.css")
 
+// Register service workers
+// (copy/pasted from https://webpack.js.org/guides/progressive-web-application/)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('SW registered: ', registration);
+        }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+        });
+    });
+}
+
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy Royale",
     width: constants.GameWidth,

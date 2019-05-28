@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const ManifestPlugin = require("webpack-manifest-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
+const { GenerateSW } = require('workbox-webpack-plugin');
+
 
 /** @type import("webpack").Configuration */
 module.exports = {
@@ -76,6 +78,10 @@ module.exports = {
         // Makes sure that we know how to get all the referenced files
         new ManifestPlugin({
             fileName: "build-manifest.json"
+        }),
+        new GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true
         })
     ]
 }
