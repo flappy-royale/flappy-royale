@@ -3,7 +3,6 @@ const path = require("path")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const ManifestPlugin = require("webpack-manifest-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
 const { GenerateSW } = require('workbox-webpack-plugin');
 
@@ -74,10 +73,6 @@ module.exports = {
             // both options are optional
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
-        }),
-        // Makes sure that we know how to get all the referenced files
-        new ManifestPlugin({
-            fileName: "build-manifest.json"
         }),
         new GenerateSW({
             clientsClaim: true,
