@@ -71,15 +71,27 @@ export const storeForSeed = (meta: { seed: string; create: boolean }, data: Play
  * app opens up offline you've got something to work with.
  */
 export const getSeedsFromAPI = (apiVersion: string) => fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/seeds?version=${apiVersion}`)
-                                                  .then(r => r.json() as Promise<SeedsResponse>)
-                                                  .then(seeds => {
-                                                      // Store a local copy of the seeds
-                                                    localStorage.setItem("lastSeeds", JSON.stringify(seeds))
-                                                    return seeds
-                                                  })
+    .then(r => r.json() as Promise<SeedsResponse | undefined>)
+    .then(seeds => {
+        // Store a local copy of the seeds
+        localStorage.setItem("lastSeeds", JSON.stringify({
+            apiVersion, seeds
+        }))
+        console.log("Got seeds!", apiVersion, seeds)
+        return seeds
+    }).catch(e => {
+        console.log("Could not fetch seeds, falling back to local cache", e)
+        return getLocallyStoredSeeds(apiVersion)
+    })
 
-export const getLocallyStoredSeeds = (): SeedsResponse | undefined =>
-    localStorage.getItem("lastSeeds") && JSON.parse(localStorage.getItem("lastSeeds") as string)
+export const getLocallyStoredSeeds = (apiVersion): SeedsResponse | undefined => {
+    const stringResult = localStorage.getItem("lastSeeds")
+    const result = JSON.parse(stringResult)
+
+    if (result && result.apiVersion === apiVersion) {
+        return result.seeds
+    }
+}
 
 export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/addReplayToSeed`, {
