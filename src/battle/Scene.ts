@@ -4,7 +4,7 @@ import * as _ from "lodash"
 import * as constants from "../constants"
 import * as game from "./utils/gameMode"
 
-import { PlayerEvent, PlayerData, SeedData, storeForSeed as storeUserReplayForSeed } from "../firebase"
+import { PlayerEvent, PlayerData, SeedData, uploadReplayForSeed } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
@@ -368,7 +368,7 @@ export class BattleScene extends Phaser.Scene {
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return
 
-        this.userInput.push({ action: "flap", timestamp: this.time.now - this.timestampOffset })
+        this.userInput.push({ action: "flap", timestamp: Math.round(this.time.now - this.timestampOffset) })
 
         this.bird.flap()
         this.analytics.flap()
@@ -396,12 +396,17 @@ export class BattleScene extends Phaser.Scene {
         // Check if they did enough for us to record the run
         const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
         if (this.isRecording() && hasJumped) {
+            // TODO: Generate a UUID?
+            this.debug("Uploading replay")
             const settings = getUserSettings()
-            const create = this.ghostBirds.length === 0
-            storeUserReplayForSeed(
-                { seed: this.seed, create },
-                { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
-            )
+            uploadReplayForSeed({
+                seed: this.seed,
+                uuid: settings.name,
+                version: constants.APIVersion,
+                data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
+            })
+                .then(a => a.json())
+                .then(r => console.log(r))
         }
 
         if (game.shouldRestartWhenPlayerDies(this.mode)) {
@@ -439,7 +444,7 @@ export class BattleScene extends Phaser.Scene {
 
     debug(msg: string) {
         if (devSettings.debugMessages) {
-            this.debugLabel.setText(msg)
+            console.log(msg)
         }
     }
 }

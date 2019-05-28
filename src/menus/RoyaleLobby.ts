@@ -18,6 +18,7 @@ export class RoyaleLobbyScene extends Phaser.Scene {
     constructor(props: RoyaleLobbyProps) {
         super("RoyaleLobbyScene")
         this.seed = props.seed
+        console.log("Starting Royale with seed: " + props.seed)
     }
 
     preload() {

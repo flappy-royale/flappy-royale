@@ -50,15 +50,21 @@ export interface ReplayUploadRequest {
 }
 
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
-    const { seed, uuid, version, data } = request.query.request.query as ReplayUploadRequest
+    // Ensure CORS is cool
+    response
+        .header("Access-Control-Allow-Origin", "*")
+        .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+
+    const { seed, uuid, version, data } = JSON.parse(request.body) as ReplayUploadRequest
+
     if (!uuid) {
-        return response.status(400).send({ error: "Needs a uuid in request " })
+        return response.status(400).send({ error: "Needs a uuid in request" })
     }
     if (!version) {
-        return response.status(400).send({ error: "Needs a version in request " })
+        return response.status(400).send({ error: "Needs a version in request" })
     }
     if (!data) {
-        return response.status(400).send({ error: "Needs a data of type PlayerData in request " })
+        return response.status(400).send({ error: "Needs a data of type PlayerData in request" })
     }
 
     const db = admin.firestore()
@@ -68,16 +74,20 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
 
     if (!seedData) {
         // We need too make the data
-        await recordings.add({ users: [data] })
+        await dataRef.set({ users: [data] }) 
     } else {
         // We need to amend the data instead
         const existingCount = seedData.users.length
         const shouldUpdateNotAdd = existingCount < maxNumberOfReplays
 
+
         // We want to cap the number of recordings overall
         if (shouldUpdateNotAdd) {
+            // TODO: Add a UUID to the user?
+            const hasUserInData = seedData.users.findIndex(d => d.user.name == uuid)
             const randomIndexToDrop = Math.floor(Math.random() * existingCount)
-            seedData.users[randomIndexToDrop] = data
+            const index = hasUserInData !== -1 ? hasUserInData : randomIndexToDrop
+            seedData.users[index] = data
         } else {
             seedData.users.push(data)
         }
@@ -86,9 +96,5 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
     }
 
     const responseJSON = { success: true }
-    return response
-        .status(200)
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-        .send(responseJSON)
+    return response.status(200).send(responseJSON)
 })

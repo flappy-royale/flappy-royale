@@ -18,6 +18,7 @@ export class TrialLobbyScene extends Phaser.Scene {
     constructor(props: TrialLobbyProps) {
         super("TrialLobbyScene")
         this.seed = props.seed
+        console.log("Starting trial with seed: " + props.seed)
     }
 
     preload() {

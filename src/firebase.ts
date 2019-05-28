@@ -51,6 +51,7 @@ export const storeForSeed = (meta: { seed: string; create: boolean }, data: Play
     const seedDoc = recordings.doc(meta.seed)
     if (meta.create) {
         const toUpload: SeedData = { users: [data] }
+        console.log("Creating new seed")
         batch.set(seedDoc, toUpload)
     } else {
         console.log("Updating")
