@@ -23,7 +23,7 @@ export const hourlySeed = (version: string, offset: number) => {
 export const seeds = functions.https.onRequest((request, response) => {
     const version = request.query.version || request.params.version
     const responseJSON: SeedsResponse = {
-        royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-${i}`),
+        royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-royale-${i}`),
         daily: {
             dev: dailySeed(version, 2),
             staging: dailySeed(version, 1),
