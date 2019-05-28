@@ -1,4 +1,5 @@
 export interface SeedsResponse {
+    royale: string[]
     daily: {
         production: string
         staging: string

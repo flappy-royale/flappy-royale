@@ -62,6 +62,7 @@ export class MainMenuScene extends Phaser.Scene {
                     fontFamily: "Fipps"
                 })
             },
+
             [],
             this
         )

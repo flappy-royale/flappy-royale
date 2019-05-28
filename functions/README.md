@@ -1,6 +1,8 @@
 ## Firebase functions
 
-Right now this is only for sending the seeds.
+Functions for dealing with replay data and random level seeds.
+
+Note that the build process is a bit weird ( see `yarn build`)
 
 ## Setup
 

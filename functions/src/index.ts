@@ -2,6 +2,9 @@ import * as functions from "firebase-functions"
 import { SeedsResponse } from "./api-contracts"
 import * as admin from "firebase-admin"
 
+const numberOfDifferentRoyaleReplays = 50
+const maxNumberOfReplays = 250
+
 // So we can access the db
 admin.initializeApp()
 
@@ -20,6 +23,7 @@ export const hourlySeed = (version: string, offset: number) => {
 export const seeds = functions.https.onRequest((request, response) => {
     const version = request.query.version || request.params.version
     const responseJSON: SeedsResponse = {
+        royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-${i}`),
         daily: {
             dev: dailySeed(version, 2),
             staging: dailySeed(version, 1),
@@ -38,57 +42,53 @@ export const seeds = functions.https.onRequest((request, response) => {
         .send(responseJSON)
 })
 
-// WIP DB cleaner
+export interface ReplayUploadRequest {
+    uuid?: string
+    version: string
+    seed: string
+    data: import("../../src/firebase").PlayerData
+}
 
-// export const dbCleaner = functions.pubsub.schedule("every 1 day").onRun(async _context => {
-//     // const allRecordings = await admin.database().ref("recordings/")
-//     // const latestTwoBuilds = allRecordings
+export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
+    const { seed, uuid, version, data } = request.query.request.query as ReplayUploadRequest
+    if (!uuid) {
+        return response.status(400).send({ error: "Needs a uuid in request " })
+    }
+    if (!version) {
+        return response.status(400).send({ error: "Needs a version in request " })
+    }
+    if (!data) {
+        return response.status(400).send({ error: "Needs a data of type PlayerData in request " })
+    }
 
-//     const url = "https://flappy-royale-3377a.firebaseio.com/recordings.json?shallow=true"
-//     const apiVersions = await fetch(url)
-//         .then(r => r.json())
-//         .then(data => Object.keys(data))
+    const db = admin.firestore()
+    const recordings = db.collection("recordings")
+    const dataRef = await recordings.doc(seed)
+    const seedData = (await dataRef.get()).data() as import("../../src/firebase").SeedData
 
-//     // Assume we're working on prod and staging
-//     const latestTwoAPIs = apiVersions.sort().slice(2)
-//     for (const api of latestTwoAPIs) {
-//         const db = admin.firestore()
-        
-//         const query = db.collection(`recordings/${api}/`)
-//         // await deleteQueryBatch(db, query, 50)
-//     }
-// })
+    if (!seedData) {
+        // We need too make the data
+        await recordings.add({ users: [data] })
+    } else {
+        // We need to amend the data instead
+        const existingCount = seedData.users.length
+        const shouldUpdateNotAdd = existingCount < maxNumberOfReplays
 
-// // // // Grabbed this from
-// // // // https://firebase.google.com/docs/firestore/manage-data/delete-data#collections
-// const deleteQueryBatch = (db: admin.firestore.Firestore, query: admin.firestore.Query, batchSize: number, resolve: any, reject: any) => {
-//     return query.get()
-//       .then((snapshot) => {
-//         // When there are no documents left, we are done
-//         if (snapshot.size == 0) {
-//           return 0;
-//         }
+        // We want to cap the number of recordings overall
+        if (shouldUpdateNotAdd) {
+            const randomIndexToDrop = Math.floor(Math.random() * existingCount)
+            seedData.users[randomIndexToDrop] = data
+        } else {
+            seedData.users.push(data)
+        }
 
-//         // Delete documents in a batch
-//         var batch = db.batch();
-//         snapshot.docs.forEach((doc) => {
-//           batch.delete(doc.ref);
-//         });
+        dataRef.set({ users: seedData.users })
+    }
 
-//         return batch.commit().then(() => {
-//           return snapshot.size;
-//         });
-//       }).then((numDeleted) => {
-//         if (numDeleted === 0) {
-//           resolve();
-//           return;
-//         }
-
-//         // Recurse on the next process tick, to avoid
-//         // exploding the stack.
-//         process.nextTick(() => {
-//           deleteQueryBatch(db, query, batchSize, resolve, reject);
-//         });
-//       })
-//       .catch(reject);
-//   }
+    const responseJSON = { success: true }
+    return response
+        .status(200)
+        .header("Access-Control-Allow-Origin", "*")
+        .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+        .send(responseJSON)
+})

@@ -1,6 +1,7 @@
 import * as firebase from "firebase"
 import { UserSettings } from "./user/userManager"
 import { SeedsResponse } from "../functions/src/api-contracts"
+import { ReplayUploadRequest } from "../functions/src"
 
 export interface SeedData {
     users: PlayerData[]
@@ -76,7 +77,14 @@ export const getSeedsFromAPI = (apiVersion: string) => fetch(`https://us-central
                                                   })
 
 export const getLocallyStoredSeeds = (): SeedsResponse | undefined =>
-    localStorage.getItem("lastSeeds") && JSON.parse(localStorage.getItem("lastSeeds"))
+    localStorage.getItem("lastSeeds") && JSON.parse(localStorage.getItem("lastSeeds") as string)
+
+export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
+    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/addReplayToSeed`, {
+        method: "POST",
+        body: JSON.stringify(replay)
+    })
+}
 
 /** Used in training */
 export const emptySeedData: SeedData = { users: [] }

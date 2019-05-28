@@ -63,13 +63,13 @@ const saveSettings = (settings: UserSettings) => localStorage.setItem("settings"
 export const changeSettings = (settings: { name?: string; aesthetics?: Aesthetics }) => {
     const existingSettings = getUserSettings()
 
-    if ("name" in settings) existingSettings.name = settings.name
+    if ("name" in settings) existingSettings.name = settings.name!
 
     if ("aesthetics" in settings) {
-        const base = settings.aesthetics.attire.filter(a => a.base)
+        const base = settings.aesthetics!.attire.filter(a => a.base)
         if (base.length !== 1) throw "Must be one, and only be one base"
 
-        existingSettings.aesthetics = settings.aesthetics
+        existingSettings.aesthetics = settings.aesthetics!
     }
 
     saveSettings(existingSettings)

@@ -62,7 +62,15 @@ export class RoyaleLobbyScene extends Phaser.Scene {
             .setInteractive()
 
         fetchRecordingsForSeed(this.seed).then(seedData => {
-            lobby.text = `${seedData.users.length} birds`
+            this.tweens.addCounter({
+                from: 0,
+                to: seedData.users.length,
+                ease: "Cubic", // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                duration: Math.floor(Math.random() * 2000),
+                repeat: 0,
+                onUpdate: (v: Phaser.Tweens.Tween) => (lobby.text = `${Math.round(v.getValue())} birds`)
+            })
+
             seedData.users.forEach(score => preloadBirdAttire(this, score.user))
 
             const preloadAssetsDone = () => {

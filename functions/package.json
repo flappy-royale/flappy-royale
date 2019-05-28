@@ -1,26 +1,26 @@
 {
-  "name": "functions",
-  "scripts": {
-    "build": "yarn tsc",
-    "serve": "yarn build && yarn firebase serve --only functions",
-    "shell": "yarn build && yarn firebase functions:shell",
-    "start": "yarn shell",
-    "deploy": "yarn firebase deploy --only functions",
-    "logs": "yarn firebase functions:log"
-  },
-  "engines": {
-    "node": "8"
-  },
-  "main": "lib/index.js",
-  "dependencies": {
-    "firebase-admin": "~7.0.0",
-    "firebase-functions": "^2.3.0"
-  },
-  "devDependencies": {
-    "firebase": "^6.0.2",
-    "firebase-functions-test": "^0.1.6",
-    "firebase-tools": "^6.10.0",
-    "typescript": "^3.2.2"
-  },
-  "private": true
+    "name": "functions",
+    "scripts": {
+        "build": "yarn tsc && mv lib/functions/src/* lib; rm  -r lib/functions lib/src",
+        "serve": "yarn build && yarn firebase serve --only functions",
+        "shell": "yarn build && yarn firebase functions:shell",
+        "start": "yarn shell",
+        "deploy": "yarn firebase deploy --only functions",
+        "logs": "yarn firebase functions:log"
+    },
+    "engines": {
+        "node": "8"
+    },
+    "main": "lib/index.js",
+    "dependencies": {
+        "firebase-admin": "~7.0.0",
+        "firebase-functions": "^2.3.0"
+    },
+    "devDependencies": {
+        "firebase": "^6.0.2",
+        "firebase-functions-test": "^0.1.6",
+        "firebase-tools": "^6.10.0",
+        "typescript": "^3.2.2"
+    },
+    "private": true
 }
