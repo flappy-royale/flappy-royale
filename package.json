@@ -18,6 +18,7 @@
         "deploy-hosting": "rm -rf dist && yarn build && firebase deploy --only hosting"
     },
     "dependencies": {
+        "appcache-webpack-plugin": "^1.4.0",
         "clean-webpack-plugin": "^2.0.2",
         "css-loader": "^2.1.1",
         "file-loader": "^3.0.1",
@@ -27,8 +28,7 @@
         "phaser": "^3.17.0",
         "seed-random": "^2.2.0",
         "webpack-assets-manifest": "^3.1.1",
-        "webpack-notifier": "^1.7.0",
-        "workbox-webpack-plugin": "^4.3.1"
+        "webpack-notifier": "^1.7.0"
     },
     "devDependencies": {
         "@firebase/app-types": "^0.4.0",

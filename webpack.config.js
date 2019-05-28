@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
-const { GenerateSW } = require('workbox-webpack-plugin');
+const AppCachePlugin = require('appcache-webpack-plugin')
 
 
 /** @type import("webpack").Configuration */
@@ -74,9 +74,12 @@ module.exports = {
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
         }),
-        new GenerateSW({
-            clientsClaim: true,
-            skipWaiting: true
+        new AppCachePlugin({
+            network: [
+                '*'
+            ],
+            settings: ['prefer-online'],
+            output: 'manifest.appcache'
         })
     ]
 }
