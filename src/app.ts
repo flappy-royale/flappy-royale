@@ -5,10 +5,10 @@ import { MainMenuScene, launchMainMenu } from "./menus/MainMenuScene"
 import { getSeedsFromAPI, emptySeedData } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
-import * as appCache from "./appCache";
-import { showLoadingScreen } from "./menus/LoadingScene";
+import * as appCache from "./appCache"
+import { showLoadingScreen } from "./menus/LoadingScene"
 
-declare var PRODUCTION: boolean;
+declare var PRODUCTION: boolean
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
@@ -54,6 +54,7 @@ export class FlappyGame extends Phaser.Game {
         super(config)
     }
 }
+const game = new FlappyGame(config)
 
 // The normal game flow
 
@@ -69,20 +70,21 @@ const loadUpIntoTraining = async (settings: { offline: boolean }) => {
     }
 
     const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
-    const game = new FlappyGame(config)
     game.scene.add("Battle", scene, true)
 }
 
 window.onload = async () => {
-    const game = new FlappyGame(config)
-
-    launchMainMenu(game)
+    // launchMainMenu(game)
     // appCache.fakeLoadingScreen()
 
-    appCache.onDownloadStart(() => {
-        console.log("New version!")
-        showLoadingScreen(game)
-    })
+    if (PRODUCTION) {
+        console.log("Skipping app cache")
+    } else {
+        appCache.onDownloadStart(() => {
+            console.log("New version!")
+            showLoadingScreen(game)
+        })
+    }
 
-    // loadUpIntoTraining({ offline: true })
+    loadUpIntoTraining({ offline: true })
 }

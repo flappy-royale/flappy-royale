@@ -122,7 +122,7 @@ export class BirdSprite {
         } else {
             this.bodySprite.setDepth(constants.zLevels.playerBird)
             if (this.isPlayer) this.focusSprite.setDepth(constants.zLevels.focusBackdrop)
-            this.sprite.setDepth(constants.zLevels.playerBird + 10)
+            this.sprite.setDepth(constants.zLevels.birdWings)
             allAttire.forEach(a => (a.depth = constants.zLevels.birdAttire + 1))
         }
 

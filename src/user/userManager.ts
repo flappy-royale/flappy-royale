@@ -95,7 +95,9 @@ export const getRoyales = (): GameResults[] => JSON.parse(localStorage.getItem("
 export const recordGamePlayed = (results: GameResults) => {
     const existingRoyales = getRoyales()
     existingRoyales.push(results)
-    localStorage.setItem("royales", JSON.stringify(existingRoyales))
+
+    //  TODO: This can't just be the full data anymore
+    // localStorage.setItem("royales", JSON.stringify(existingRoyales))
 }
 
 /** Will get the seed index + 1 or 0 if it's at the cap */

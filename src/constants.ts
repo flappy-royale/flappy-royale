@@ -1,6 +1,9 @@
 // Changing this will mean new seed data for everything
 export const APIVersion = "1"
 
+// Are you working in a dev build?
+export const isInDevMode = document.location.port === "8085"
+
 export const GameWidth = 160
 export const GameHeight = 240
 
@@ -11,10 +14,11 @@ export const mapValue = 20
 export const flapStrength = 6.8 * this.mapValue
 export const gravity = 23 * this.mapValue
 export const pipeSpeed = 2.9 * this.mapValue
-export const pipeTime = 1300
+export const timeBeforeFirstPipeLoads = 1800
+export const pipeRepeatTime = 1300
 export const gapHeight = 56
-export const birdXPosition = 20
-export const birdYPosition = 30
+export const birdXPosition = -8
+export const birdYPosition = 38
 export const timeBetweenYSyncs = 400
 
 export enum zLevels {
@@ -22,6 +26,7 @@ export enum zLevels {
     ground = 7,
     pipe = 6,
     debugText = 5,
+    birdWings = 12,
     birdAttire = 4,
     playerBird = 3,
     focusBackdrop = 2

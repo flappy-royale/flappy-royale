@@ -14,6 +14,7 @@ import { createBus, busCrashed } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings } from "../user/userManager"
+import { launchMainMenu } from "../menus/MainMenuScene"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -24,11 +25,9 @@ export interface BattleSceneSettings {
     gameMode: game.GameMode
 }
 
-const isInDevMode = document.location.port === "8085"
-
 const devSettings = {
     // Turn off for release builds
-    developer: isInDevMode,
+    developer: constants.isInDevMode,
     // Allows flying through pipes
     skipPipeCollision: false,
     // Allows falling off the bottom
@@ -142,6 +141,7 @@ export class BattleScene extends Phaser.Scene {
     preload() {
         this.load.image("invis", require("../../assets/InvisiblePX.png"))
         this.load.image("bus", require("../../assets/battle/Bus.png"))
+        this.load.image("bus-crashed", require("../../assets/battle/BusCrashed.png"))
         this.load.bitmapFont(
             "nokia16",
             require("../../assets/fonts/nokia16.png"),
@@ -151,6 +151,7 @@ export class BattleScene extends Phaser.Scene {
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
+        this.load.image("back-button", require("../../assets/menu/back.png"))
     }
 
     create() {
@@ -180,6 +181,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         this.bus = createBus(this)
+        this.physics.add.collider(this.bus, this.floorPhysics)
 
         // Set up the competitor birds
         this.recordedInput.forEach(input => {
@@ -208,13 +210,15 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // This sets up a new pipe every x seconds
-        this.newPipeTimer = this.time.addEvent({
-            startAt: 800,
-            delay: constants.pipeTime, // We want 60px difference
-            callback: () => this.addPipe(),
-            callbackScope: this,
-            loop: true
-        })
+        const startPipeTimer = () => {
+            this.newPipeTimer = this.time.addEvent({
+                delay: constants.pipeRepeatTime, // We want 60px difference
+                callback: () => this.addPipe(),
+                callbackScope: this,
+                loop: true
+            })
+        }
+        this.time.delayedCall(constants.timeBeforeFirstPipeLoads, startPipeTimer, [], this)
 
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
@@ -222,13 +226,13 @@ export class BattleScene extends Phaser.Scene {
         const { ALIGN_CENTER, ALIGN_RIGHT } = Phaser.GameObjects.BitmapText
         if (game.shouldShowScoreLabel(this.mode)) {
             this.scoreLabel = this.add.bitmapText(80, 20, "nokia16", "0", 0, ALIGN_CENTER)
-            this.scoreLabel.setDepth(constants.zLevels.debugText)
+            this.scoreLabel.setDepth(constants.zLevels.ui)
         }
 
         // When we want to show a countdown, set it up with defaults
         if (game.shouldShowBirdsLeftLabel(this.mode)) {
             this.birdsLeft = this.add.bitmapText(constants.GameWidth - 40, 20, "nokia16", "0", 0, ALIGN_RIGHT)
-            this.birdsLeft.setDepth(constants.zLevels.debugText)
+            this.birdsLeft.setDepth(constants.zLevels.ui)
             this.ghostBirdHasDied()
         }
 
@@ -238,6 +242,17 @@ export class BattleScene extends Phaser.Scene {
 
         // Keep track of stats for using later
         this.analytics.startRecording(this)
+
+        if (this.mode !== game.GameMode.Menu) {
+            // TODO: Temporary
+            const back = this.add.image(20, 10, "back-button").setInteractive()
+            // needs to be on up insider, but whatever
+            back.on("pointerdown", () => {
+                this.game.scene.remove(this)
+                launchMainMenu(this.game)
+            })
+            back.setDepth(constants.zLevels.ui)
+        }
     }
 
     setupPhysicsFloor() {
@@ -366,6 +381,7 @@ export class BattleScene extends Phaser.Scene {
 
         this.userInput.push({ action: "flap", timestamp: Math.round(this.time.now - this.timestampOffset) })
 
+        this.bus.setDepth(constants.zLevels.playerBird - 1)
         this.bird.flap()
         this.analytics.flap()
     }

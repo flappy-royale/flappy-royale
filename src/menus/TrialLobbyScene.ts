@@ -5,6 +5,7 @@ import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import { BirdSprite, setupBirdAnimations, preloadBirdAttire } from "../battle/BirdSprite"
 import { defaultSettings } from "../user/userManager"
+import { launchMainMenu } from "./MainMenuScene"
 
 export interface TrialLobbyProps {
     seed: string
@@ -67,6 +68,13 @@ export class TrialLobbyScene extends Phaser.Scene {
             .image(80, 160, "trial-button")
             .setAlpha(0.2)
             .setInteractive()
+
+        const back = this.add.image(20, 10, "back-button").setInteractive()
+        // needs to be on up insider, but whatever
+        back.on("pointerdown", () => {
+            this.game.scene.remove(this)
+            launchMainMenu(this.game)
+        })
 
         // const scene = new BattleScene({ seed, data: playerData, gameMode: GameMode.Trial })
         fetchRecordingsForSeed(this.seed).then(seedData => {

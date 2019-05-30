@@ -5,6 +5,7 @@ import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import { BirdSprite, setupBirdAnimations, preloadBirdAttire } from "../battle/BirdSprite"
 import { defaultSettings, getUserSettings } from "../user/userManager"
+import { launchMainMenu } from "./MainMenuScene"
 
 export interface RoyaleLobbyProps {
     seed: string
@@ -61,6 +62,13 @@ export class RoyaleLobbyScene extends Phaser.Scene {
             .image(80, 160, "royale-button")
             .setAlpha(0.2)
             .setInteractive()
+
+        const back = this.add.image(20, 10, "back-button").setInteractive()
+        // needs to be on up insider, but whatever
+        back.on("pointerdown", () => {
+            this.game.scene.remove(this)
+            launchMainMenu(this.game)
+        })
 
         fetchRecordingsForSeed(this.seed).then(seedData => {
             this.tweens.addCounter({

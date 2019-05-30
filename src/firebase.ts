@@ -56,7 +56,9 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
 
         const seeds = unzipSeedData(seedData)
         console.log(`Fetched recordings from server for seed ${seed}`, seeds)
-        cache.setRecordings(seed, seeds)
+        try {
+            cache.setRecordings(seed, seeds)
+        } catch (error) {}
         return seeds
     } catch (e) {
         console.log("Could not fetch recordings over the network. Falling back on local cache", e)
