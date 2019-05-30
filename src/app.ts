@@ -5,7 +5,8 @@ import { MainMenuScene, launchMainMenu } from "./menus/MainMenuScene"
 import { getSeedsFromAPI, emptySeedData } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
-import configureAppCache from "./configureAppCache";
+import * as appCache from "./appCache";
+import { showLoadingScreen } from "./menus/LoadingScene";
 
 declare var PRODUCTION: boolean;
 
@@ -14,9 +15,8 @@ declare var PRODUCTION: boolean;
 require("../style.css")
 
 if (PRODUCTION) {
-    configureAppCache()
+    appCache.configure()
 }
-
 
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy Royale",
@@ -57,11 +57,6 @@ export class FlappyGame extends Phaser.Game {
 
 // The normal game flow
 
-const loadUpMainMenu = () => {
-    const game = new FlappyGame(config)
-    launchMainMenu(game)
-}
-
 const loadUpIntoTraining = async (settings: { offline: boolean }) => {
     let seed = "offline-seed"
     if (!settings.offline) {
@@ -79,7 +74,15 @@ const loadUpIntoTraining = async (settings: { offline: boolean }) => {
 }
 
 window.onload = async () => {
-    loadUpMainMenu()
+    const game = new FlappyGame(config)
+
+    launchMainMenu(game)
+    // appCache.fakeLoadingScreen()
+
+    appCache.onDownloadStart(() => {
+        console.log("New version!")
+        showLoadingScreen(game)
+    })
 
     // loadUpIntoTraining({ offline: true })
 }

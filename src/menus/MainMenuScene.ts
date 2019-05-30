@@ -8,6 +8,7 @@ import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobbyScene } from "./TrialLobbyScene"
 import { RoyaleLobbyScene } from "./RoyaleLobby"
 import { getUserSettings, changeSettings, getAndBumpUserCycleSeedIndex } from "../user/userManager"
+import { LoadingScene } from "./LoadingScene";
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
