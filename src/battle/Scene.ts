@@ -33,7 +33,7 @@ const devSettings = {
     // Allows falling off the bottom
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
-    debugPhysics: false,
+    debugPhysics: true,
     // Events + info
     debugMessages: true
 }
@@ -378,7 +378,11 @@ export class BattleScene extends Phaser.Scene {
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return
 
-        this.userInput.push({ action: "flap", timestamp: Math.round(this.time.now - this.timestampOffset) })
+        // Give a delay of 1s so that your sprite is on-screen entirely
+        const timestamp = Math.round(this.time.now - this.timestampOffset)
+        if (timestamp < 1000) return
+
+        this.userInput.push({ action: "flap", timestamp })
 
         this.bus.setDepth(constants.zLevels.playerBird - 1)
         this.bird.flap()

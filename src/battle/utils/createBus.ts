@@ -22,6 +22,7 @@ export const createBus = (scene: BattleScene) => {
 export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: BattleScene) => {
     if (bus.getData("dead")) return
 
+    // Stop the bus, make it bounce back a bit
     bus.setAccelerationX(0)
     bus.setVelocityX(-65)
     bus.setGravityX(0)
@@ -29,6 +30,7 @@ export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: BattleScene)
     bus.setGravityY(-300)
     bus.setData("dead", {})
 
+    // Do some cute little trash bounces
     const trash1 = game.physics.add.image(bus.x + bus.width / 2 - 8, bus.y + 5, "trash-1")
     trash1.setVelocity(-70, -80)
     trash1.setDepth(constants.zLevels.birdWings + 2)
@@ -40,4 +42,14 @@ export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: BattleScene)
     const trash3 = game.physics.add.image(bus.x + bus.width / 2 - 8, bus.y + 5, "trash-3")
     trash3.setVelocity(-60, -60)
     trash3.setDepth(constants.zLevels.birdWings + 2)
+
+    // give them a hint of spin
+    const trash1Body = trash1.body as Phaser.Physics.Arcade.Body
+    trash1Body.setAngularVelocity(2)
+
+    const trash2body = trash2.body as Phaser.Physics.Arcade.Body
+    trash2body.setAngularVelocity(4)
+
+    const trash3Body = trash3.body as Phaser.Physics.Arcade.Body
+    trash3Body.setAngularVelocity(-6)
 }
