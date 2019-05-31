@@ -74,10 +74,10 @@ const loadUpIntoTraining = async (settings: { offline: boolean }) => {
 }
 
 window.onload = async () => {
-    // launchMainMenu(game)
+    launchMainMenu(game)
     // appCache.fakeLoadingScreen()
 
-    if (PRODUCTION) {
+    if (!PRODUCTION) {
         console.log("Skipping app cache")
     } else {
         appCache.onDownloadStart(() => {
@@ -86,5 +86,5 @@ window.onload = async () => {
         })
     }
 
-    loadUpIntoTraining({ offline: true })
+    // loadUpIntoTraining({ offline: true })
 }
