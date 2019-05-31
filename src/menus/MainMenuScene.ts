@@ -51,7 +51,7 @@ export class MainMenuScene extends Phaser.Scene {
             constants.GameWidth,
             constants.GameHeight,
             0x000000,
-            0.3
+            0.4
         )
         this.add.image(80, 50, "logo")
         setupBackgroundBlogImages(this)

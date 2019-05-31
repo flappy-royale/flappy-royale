@@ -8,6 +8,12 @@ export const preloadBackgroundBlogImages = (scene: MainMenuScene) => {
     scene.load.image("blob-4", require("../../../assets/menu/blob-4.png"))
     scene.load.image("blob-5", require("../../../assets/menu/blob-5.png"))
 
+    scene.load.image("green-1", require("../../../assets/menu/green-1.png"))
+    scene.load.image("green-2", require("../../../assets/menu/green-2.png"))
+    scene.load.image("green-3", require("../../../assets/menu/green-3.png"))
+    scene.load.image("green-4", require("../../../assets/menu/green-4.png"))
+    scene.load.image("green-5", require("../../../assets/menu/green-5.png"))
+
     scene.load.image("bottom-left", require("../../../assets/menu/BottomLeft.png"))
     scene.load.image("bottom-right", require("../../../assets/menu/BottomRight.png"))
 
@@ -31,6 +37,12 @@ export const setupBackgroundBlogImages = (scene: MainMenuScene) => {
     scene.add.image(rand(0, w), rand(min, h), "blob-3").setRotation(Math.PI)
     scene.add.image(rand(0, w), rand(min, h), "blob-4").setRotation(Math.PI)
     scene.add.image(rand(0, w), rand(min, h), "blob-5").setRotation(Math.PI)
+
+    scene.add.image(rand(-10, w + 10), rand(min, h), "green-1")
+    scene.add.image(rand(-10, w + 10), rand(min, h), "green-2")
+    scene.add.image(rand(-10, w + 10), rand(min, h), "green-3")
+    scene.add.image(rand(0, w), rand(min, h), "green-4")
+    scene.add.image(rand(0, w), rand(min, h), "green-5")
 
     scene.add.image(40, h - 20, "bottom-left")
     scene.add.image(130, h - 8, "bottom-right")

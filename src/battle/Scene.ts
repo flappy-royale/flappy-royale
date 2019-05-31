@@ -10,7 +10,7 @@ import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOnto
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
-import { createBus, busCrashed } from "./utils/createBus"
+import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings } from "../user/userManager"
@@ -140,14 +140,13 @@ export class BattleScene extends Phaser.Scene {
 
     preload() {
         this.load.image("invis", require("../../assets/InvisiblePX.png"))
-        this.load.image("bus", require("../../assets/battle/Bus.png"))
-        this.load.image("bus-crashed", require("../../assets/battle/BusCrashed.png"))
         this.load.bitmapFont(
             "nokia16",
             require("../../assets/fonts/nokia16.png"),
             require("../../assets/fonts/nokia16.xml")
         )
 
+        preloadBusImages(this)
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
@@ -351,7 +350,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Let the bus collide
         const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
-            busCrashed(bus)
+            busCrashed(bus, this)
             if (this.bird && this.bird.isInBus) {
                 this.userDied()
             }

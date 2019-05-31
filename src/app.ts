@@ -80,8 +80,8 @@ const loadUpIntoSettings = () => {
 }
 
 window.onload = async () => {
-    // launchMainMenu(game)
-    loadUpIntoSettings()
+    launchMainMenu(game)
+    // loadUpIntoSettings()
     // appCache.fakeLoadingScreen()
 
     if (!PRODUCTION) {
