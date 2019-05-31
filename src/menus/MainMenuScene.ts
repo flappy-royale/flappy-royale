@@ -9,6 +9,7 @@ import { TrialLobbyScene } from "./TrialLobbyScene"
 import { RoyaleLobbyScene } from "./RoyaleLobby"
 import { getUserSettings, changeSettings, getAndBumpUserCycleSeedIndex } from "../user/userManager"
 import { LoadingScene } from "./LoadingScene"
+import { preloadBackgroundBlogImages, setupBackgroundBlogImages } from "./utils/backgroundColors"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
@@ -25,6 +26,7 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("logo", require("../../assets/menu/logo.png"))
         this.load.image("royale-button", require("../../assets/menu/royale.png"))
         this.load.image("trial-button", require("../../assets/menu/trial.png"))
         this.load.image("training-button", require("../../assets/menu/training.png"))
@@ -34,6 +36,7 @@ export class MainMenuScene extends Phaser.Scene {
             require("../../assets/fonts/nokia16.png"),
             require("../../assets/fonts/nokia16.xml")
         )
+        preloadBackgroundBlogImages(this)
     }
 
     create() {
@@ -50,6 +53,8 @@ export class MainMenuScene extends Phaser.Scene {
             0x000000,
             0.3
         )
+        this.add.image(80, 50, "logo")
+        setupBackgroundBlogImages(this)
 
         // NOTE: ASYNC!
         getSeedsFromAPI(constants.APIVersion).then(seeds => {
@@ -57,7 +62,7 @@ export class MainMenuScene extends Phaser.Scene {
         })
 
         this.add
-            .image(80, 40, "royale-button")
+            .image(80, 110, "royale-button")
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", async () => {
@@ -71,7 +76,7 @@ export class MainMenuScene extends Phaser.Scene {
             })
 
         this.add
-            .image(80, 80, "trial-button")
+            .image(80, 140, "trial-button")
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
