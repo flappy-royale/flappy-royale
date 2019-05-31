@@ -1,10 +1,15 @@
 <html>
     <style>
+        body {
+            height: 160px;
+        }
+
         .login {
             border: 1px solid #42464b;
             border-radius: 6px;
             height: 160px;
             width: 140px;
+            overflow-y: scroll;
         }
 
         input[type="text"] {
@@ -14,10 +19,53 @@
             margin: 31px 0 0 29px;
             padding-left: 37px;
         }
+
+        ul {
+            padding: 0;
+            display: flex;
+        }
+
+        li {
+            display: inline-block;
+            border: 1px solid black;
+            width: 30px;
+            height: 30px;
+            margin: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        li.wearing {
+            border: 1px solid yellow;
+        }
+
+        div.you {
+            width: 30px;
+            height: 30px;
+            border: 1px solid green;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        div.you img {
+            position: absolute;
+        }
     </style>
 
     <div class="login">
         <input style="width: 110px;" type="username" placeholder="Username" id="username" name="username" />
+
+        <h3>You</h3>
+        <div class="you"></div>
+
+        <h3>Bases</h3>
+        <ul class="bases"></ul>
+        <h3>Clothings</h3>
+        <ul class="attires"></ul>
+
         <input type="submit" value="Save" name="loginButton" />
     </div>
 </html>

@@ -7,6 +7,7 @@ import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
+import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 
 declare var PRODUCTION: boolean
 
@@ -73,8 +74,14 @@ const loadUpIntoTraining = async (settings: { offline: boolean }) => {
     game.scene.add("Battle", scene, true)
 }
 
+const loadUpIntoSettings = () => {
+    const settings = new UserSettings()
+    game.scene.add(UserSettingsKey, settings, true)
+}
+
 window.onload = async () => {
-    launchMainMenu(game)
+    // launchMainMenu(game)
+    loadUpIntoSettings()
     // appCache.fakeLoadingScreen()
 
     if (!PRODUCTION) {

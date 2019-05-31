@@ -50,7 +50,7 @@ export const builtInAttire: PresentationAttire[] = [
         id: "baseball-1",
         description: "Going to a generic game",
         fit: "loose",
-        base: true,
+        base: false,
         href: require("../assets/attire/Baseball-Whiteblue.png")
     }
 ]
