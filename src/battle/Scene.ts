@@ -33,7 +33,7 @@ const devSettings = {
     // Allows falling off the bottom
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
-    debugPhysics: true,
+    debugPhysics: false,
     // Events + info
     debugMessages: true
 }
