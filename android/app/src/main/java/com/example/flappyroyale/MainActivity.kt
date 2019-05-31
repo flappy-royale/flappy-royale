@@ -9,11 +9,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        print("------------------------------------")
 
-        val setting = webview.settings
-        setting.javaScriptEnabled = true
-        setting.domStorageEnabled = true
+        val settings = webview.settings
+        settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
+        settings.setAppCacheEnabled(true)
         webview.loadUrl("https://flappy-royale-3377a.firebaseapp.com")
 
     }
