@@ -1,4 +1,4 @@
-import * as firebase from "firebase"
+import * as firebase from "firebase/app"
 import { UserSettings } from "./user/userManager"
 import { SeedsResponse } from "../functions/src/api-contracts"
 import { ReplayUploadRequest } from "../functions/src"
