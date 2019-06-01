@@ -160,6 +160,10 @@ export class BirdSprite {
 
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
         this.sprite.setAngle(newAngle)
+
+        const defaultWidth = 17
+        let physicsWidth = remapClamped(this.body.velocity.y, 105, 200, defaultWidth, 8)
+        this.sprite.body.setSize(physicsWidth, this.sprite.body.height)
     }
 
     destroy() {

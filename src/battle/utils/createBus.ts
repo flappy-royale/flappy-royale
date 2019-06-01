@@ -43,6 +43,16 @@ export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: BattleScene)
     trash3.setVelocity(-60, -60)
     trash3.setDepth(constants.zLevels.birdWings + 2)
 
+    const trash4 = game.physics.add.image(bus.x + bus.width / 2 - 8, bus.y + 5, "trash-3")
+    trash4.setVelocity(-75, -60)
+    trash4.setDepth(constants.zLevels.birdWings + 2)
+    trash4.setAngle(90)
+
+    const trash5 = game.physics.add.image(bus.x + bus.width / 2 - 8, bus.y + 5, "trash-2")
+    trash5.setVelocity(-75, -50)
+    trash5.setDepth(constants.zLevels.birdWings + 2)
+    trash5.setAngle(180)
+
     // give them a hint of spin
     const trash1Body = trash1.body as Phaser.Physics.Arcade.Body
     trash1Body.setAngularVelocity(2)
