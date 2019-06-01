@@ -17,7 +17,8 @@
         "deploy": "rm -rf dist && yarn build && firebase deploy",
         "deploy-hosting": "rm -rf dist && yarn build && firebase deploy --only hosting",
         "webpack-prod": "webpack -p --progress --config=webpack.prod.js --mode production",
-        "webpack-dev": "webpack -p --progress --config=webpack.dev.js --mode development"
+        "webpack-dev": "webpack -p --progress --config=webpack.dev.js --mode development",
+        "danger-prepush": "yarn ts-node dangerfile.lite.ts"
     },
     "dependencies": {
         "lodash.clonedeep": "^4.5.0",
@@ -35,6 +36,7 @@
         "clean-webpack-plugin": "^2.0.2",
         "copy-webpack-plugin": "^5.0.3",
         "css-loader": "^2.1.1",
+        "danger": "^7.1.4",
         "file-loader": "^3.0.1",
         "firebase": "^6.0.2",
         "firebase-tools": "^6.10.0",
@@ -55,7 +57,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn type-check"
+            "pre-commit": "yarn type-check; yarn danger-prepush"
         }
     }
 }
