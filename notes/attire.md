@@ -41,6 +41,7 @@ You have to have a base, but can have up to three hats.
 -   Glasses
 -   Sunglasses
 -   Headphones
+-   Raincoat
 
 ### Bodies
 

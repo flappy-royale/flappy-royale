@@ -26,6 +26,13 @@ export const builtInAttire: PresentationAttire[] = [
         href: require("../assets/bases/Banana.png")
     },
     {
+        id: "dog-1",
+        description: "Woof woof",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Dog1.png")
+    },
+    {
         id: "bad-beard",
         description: "A really dodgy beard",
         fit: "tight",
@@ -52,5 +59,40 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "loose",
         base: false,
         href: require("../assets/attire/Baseball-Whiteblue.png")
+    },
+    {
+        id: "bobble-1",
+        description: "Keeping your noggin wawrm",
+        fit: "loose",
+        base: false,
+        href: require("../assets/attire/BobbleHat.png")
+    },
+    {
+        id: "sunnies-1",
+        description: "Going to a generic game",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Sunnies.png")
+    },
+    {
+        id: "tophat-1",
+        description: "Going to a generic game",
+        fit: "loose",
+        base: false,
+        href: require("../assets/attire/TopHat.png")
+    },
+    {
+        id: "straw-1",
+        description: "Going to a generic game",
+        fit: "loose",
+        base: false,
+        href: require("../assets/attire/SummerHat.png")
+    },
+    {
+        id: "mohawk-1",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Mohawk.png")
     }
 ]
