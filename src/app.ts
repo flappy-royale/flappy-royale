@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 
 import * as constants from "./constants"
-import { MainMenuScene, launchMainMenu } from "./menus/MainMenuScene"
+import { launchMainMenu } from "./menus/MainMenuScene"
 import { getSeedsFromAPI, emptySeedData } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
@@ -18,6 +18,15 @@ require("../style.css")
 if (PRODUCTION) {
     appCache.configure()
 }
+
+enum StartupScreen {
+    MainMenu,
+    Battle,
+    Settings
+}
+
+// Change this to have it load up into a different screen on save
+const startupScreen = StartupScreen.Settings as StartupScreen
 
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy Royale",
@@ -80,8 +89,20 @@ const loadUpIntoSettings = () => {
 }
 
 window.onload = async () => {
-    launchMainMenu(game)
-    // loadUpIntoSettings()
+    switch (startupScreen) {
+        case StartupScreen.Battle:
+            loadUpIntoTraining({ offline: true })
+            break
+
+        case StartupScreen.Settings:
+            loadUpIntoSettings()
+            break
+
+        case StartupScreen.MainMenu:
+            launchMainMenu(game)
+            break
+    }
+
     // appCache.fakeLoadingScreen()
 
     if (!PRODUCTION) {
@@ -92,6 +113,4 @@ window.onload = async () => {
             showLoadingScreen(game)
         })
     }
-
-    // loadUpIntoTraining({ offline: true })
 }
