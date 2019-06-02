@@ -85,7 +85,7 @@ export class RoyaleLobbyScene extends Phaser.Scene {
             const preloadAssetsDone = () => {
                 royale.setAlpha(1)
                 royale.once("pointerdown", async () => {
-                    const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
+                    const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Royale })
                     this.game.scene.add("BattleScene" + this.seed, scene, true, {})
                 })
             }

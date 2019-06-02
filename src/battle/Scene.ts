@@ -304,7 +304,13 @@ export class BattleScene extends Phaser.Scene {
                 } else if (event.action === "sync" && event.value !== undefined) {
                     ghostBird.position.y = event.value
                 } else if (event.action === "died") {
-                    ghostBird.die()
+                    // If the player isn't dead, then this
+                    // bird will now be moving at the pipes speed
+                    // off the screen
+                    let pipeSpeed = constants.pipeSpeed
+                    if (this.bird.isDead) pipeSpeed = 0
+
+                    ghostBird.die(-1 * pipeSpeed)
                     this.ghostBirdHasDied()
                 }
             }
@@ -326,19 +332,18 @@ export class BattleScene extends Phaser.Scene {
 
             // If the bird hits the floor
             if (!devSettings.skipBottomCollision && this.bird.position.y > 171) {
-                if (!this.bird.isDead) {
-                    this.userDied()
-                }
+                if (!this.bird.isDead) this.userDied()
+
                 this.bird.hasHitFloor()
             }
 
             // If somehow they move to the edge fo the screen past pipes
-            if (this.bird.position.x > constants.GameWidth) {
+            if (!this.bird.isDead && this.bird.position.x > constants.GameWidth) {
                 this.userDied()
             }
 
             // The collision of your bird and the pipes
-            if (!devSettings.skipPipeCollision) {
+            if (!this.bird.isDead && !devSettings.skipPipeCollision) {
                 this.bird.checkCollision(this, this.pipes, this.userDied)
             }
 
@@ -428,13 +433,24 @@ export class BattleScene extends Phaser.Scene {
             this.restartTheGame()
         } else {
             if (!this.bird.isDead) {
-                this.cameras.main.shake(50, 0.1)
+                // Stop everything!
+                this.cameras.main.shake(20, 0.1)
+                // No more new pipes
                 this.newPipeTimer.destroy()
+                // Stop the pipes and scores from scrolling
                 this.pipes.forEach(pg => pg.setVelocity(0, 0, 0))
                 this.scoreLines.forEach(pg => pg.setVelocity(0, 0))
+
+                // Make your bird go through the death animation
                 this.bird.die()
+
+                // Allow the other birds to continue off screen
+                this.ghostBirds.forEach(b => !b.isDead && b.startMovingLeft())
+
+                // Stop the bus from moving with the pipes
+                this.bus.setVelocityX(0)
             }
-            // Do something
+            // NOOP
         }
     }
 

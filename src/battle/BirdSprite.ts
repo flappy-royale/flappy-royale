@@ -171,10 +171,10 @@ export class BirdSprite {
         sprites.forEach(s => s.destroy())
     }
 
-    die() {
+    die(velocity?: number) {
         // move with the pipes
-        if (!this.isPlayer) {
-            this.body.velocity.x = -1 * constants.pipeSpeed
+        if (typeof velocity !== "undefined") {
+            this.body.setVelocityX(velocity)
         }
         this.isDead = true
     }
@@ -205,6 +205,11 @@ export class BirdSprite {
         this.isAtRest = true
         this.sprite.setGravityY(constants.gravity * -1)
         this.sprite.setVelocityY(0)
+    }
+
+    // When a player dies in royale, the rest if the birds move forwards
+    startMovingLeft() {
+        this.sprite.setVelocityX(constants.pipeSpeed)
     }
 
     updateRelatedSprites(settings: { tight: boolean }) {
