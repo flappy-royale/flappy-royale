@@ -241,7 +241,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // Keep track of stats for using later
-        this.analytics.startRecording(this)
+        this.analytics.startRecording({ totalBirds: this.ghostBirds.length })
 
         if (this.mode !== game.GameMode.Menu) {
             // TODO: Temporary
@@ -403,20 +403,21 @@ export class BattleScene extends Phaser.Scene {
     }
 
     userDied() {
-        // in the future we'll want to show the death animation etc
-        this.userInput.push({
-            action: "died",
-            timestamp: this.time.now - this.timestampOffset
-        })
-
-        // Store what happened
-        const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
-        this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
-        recordGamePlayed(this.analytics.getResults())
+        const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
 
         // Check if they did enough for us to record the run
-        const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
         if (this.isRecording() && hasJumped) {
+            // in the future we'll want to show the death animation etc
+            this.userInput.push({
+                action: "died",
+                timestamp: this.time.now - this.timestampOffset
+            })
+
+            // Store what happened
+            const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
+            this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
+            recordGamePlayed(this.analytics.getResults())
+
             // TODO: Generate a UUID?
             this.debug("Uploading replay")
 

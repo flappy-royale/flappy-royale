@@ -1,8 +1,8 @@
 import * as Phaser from "phaser"
-import { getUserSettings, changeSettings, Attire } from "../user/userManager"
+import { getUserSettings, changeSettings, Attire, getUserStatistics } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
-import { MainMenuScene, launchMainMenu } from "./MainMenuScene"
-import { builtInAttire, defaultAttire } from "../attire"
+import { launchMainMenu } from "./MainMenuScene"
+import { builtInAttire } from "../attire"
 
 export const UserSettingsKey = "UserSettings"
 
@@ -42,12 +42,6 @@ export class UserSettings extends Phaser.Scene {
         const settings = getUserSettings()
         usernameInput.value = settings.name
 
-        const bases = builtInAttire.filter(a => a.base)
-        const attires = builtInAttire.filter(a => !a.base)
-
-        const basesUL = element.node.getElementsByClassName("bases").item(0)
-        const attiresUL = element.node.getElementsByClassName("attires").item(0)
-
         /**
          * Runs on every selection change and asserts whether an LI
          * corresponding to attire is selected or not
@@ -70,6 +64,7 @@ export class UserSettings extends Phaser.Scene {
             styleCount.textContent = `${attires.length}/3`
         }
 
+        /** Generates the HTML to create a clickable item for attire, and adds it to the element  */
         const makeClickableAttire = (attire: Attire, element: Element) => {
             const li = document.createElement("li")
             li.id = attire.id
@@ -101,9 +96,7 @@ export class UserSettings extends Phaser.Scene {
             return null
         }
 
-        bases.forEach(a => makeClickableAttire(a, basesUL))
-        attires.forEach(a => makeClickableAttire(a, attiresUL))
-
+        /** Creates and updates the unique 'you' preview */
         const showUser = () => {
             const settings = getUserSettings()
 
@@ -133,8 +126,7 @@ export class UserSettings extends Phaser.Scene {
             user.appendChild(wings)
         }
 
-        updateWearables()
-
+        // Click handling
         element.on("click", function(event) {
             const target = event.target as Element
 
@@ -157,7 +149,10 @@ export class UserSettings extends Phaser.Scene {
                     const isWearingAttire = currentAttire.find(a => a.id === clickedAttire.id)
                     if (!isWearingAttire) {
                         // Add the clothes, up to three items
-                        changeSettings({ aesthetics: { attire: [...currentAttire, clickedAttire] } })
+                        const currentAttireLength = currentAttire.filter(a => !a.base).length
+                        if (currentAttireLength < 3) {
+                            changeSettings({ aesthetics: { attire: [...currentAttire, clickedAttire] } })
+                        }
                     } else {
                         // remove it
                         const currentClothes = currentAttire.filter(a => a.id !== clickedAttire.id)
@@ -176,6 +171,21 @@ export class UserSettings extends Phaser.Scene {
             }
         })
 
+        // Sets up the attires
+        const bases = builtInAttire.filter(a => a.base)
+        const attires = builtInAttire.filter(a => !a.base)
+
+        const basesUL = element.node.getElementsByClassName("bases").item(0)
+        const attiresUL = element.node.getElementsByClassName("attires").item(0)
+
+        bases.forEach(a => makeClickableAttire(a, basesUL))
+        attires.forEach(a => makeClickableAttire(a, attiresUL))
+
+        // Sets up the stats which lives under the settings
+        setUpStatsHTML()
+
+        // Run all the interactions upfront
+        updateWearables()
         showUser()
 
         this.add
@@ -187,4 +197,46 @@ export class UserSettings extends Phaser.Scene {
                 launchMainMenu(this.game)
             })
     }
+}
+
+function setUpStatsHTML() {
+    const statsElement = document.getElementById("stats")
+    const stats = getUserStatistics()
+
+    let seconds = Math.floor(stats.totalTime / 1000)
+    let minutes = Math.floor(seconds / 60)
+    let hours = Math.floor(minutes / 60)
+    let days = Math.floor(hours / 24)
+
+    hours = hours - days * 24
+    minutes = minutes - days * 24 * 60 - hours * 60
+    seconds = seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60
+
+    const time = [days, hours, minutes, seconds].filter(d => !!d)
+    const postThing = time.length == 1 ? "s" : ""
+
+    // User facing names for the stats
+    const presentation = {
+        "Royale Wins": stats.royaleWins,
+        "Best Position": stats.bestPosition,
+        "Top Score": stats.bestScore,
+        "Games Played": stats.gamesPlayed,
+        "First pipe fails": stats.instaDeaths,
+        "Birds Past": stats.birdsBeaten,
+        "Play Time": `${time.join(":")}${postThing}`,
+        Flaps: stats.totalFlaps
+    }
+
+    // Show either top position or royale wins
+    if (stats.royaleWins === 0) delete presentation["Royale Wins"]
+    if (stats.bestPosition === 0) delete presentation["Best Position"]
+
+    // convert ^ to HTML
+    Object.keys(presentation).forEach(key => {
+        const value = presentation[key]
+        const dataDiv = document.createElement("p")
+        dataDiv.innerHTML = `${key}<span>${value}</span>`
+        statsElement.appendChild(dataDiv)
+        statsElement.appendChild(document.createElement("hr"))
+    })
 }

@@ -102,10 +102,42 @@
             image-rendering: pixelated;
         }
 
-        #style-title > span {
+        #stats {
+            margin-bottom: 60px;
+        }
+
+        #stats p > span, #style-title > span {
             float: right;
             margin-right: 9px;
         }
+
+        #stats p {
+            font-size: 8px;
+            color: white;
+            margin-left: 10px;
+        }
+
+        #stats hr {
+            background-color:white; 
+            border-width:0;
+            color:white; 
+            height:1px; 
+            margin: 0 14px;
+        }
+        
+        /* just being lazy so I can add one every time */
+        #stats hr:last-child {
+            display: none;
+        }
+
+        p, li, h3, h2 {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: default;
+        }
+
     </style>
 
     <div class="screen">
@@ -130,12 +162,6 @@
         </div>
 
         <h2>stats</h3>
-            <h3>name</h3>
-            <h3>name</h3>
-            <h3>name</h3>
-            <h3>name</h3>
-            <h3>name</h3>
-            <h3>name</h3>
-        <!-- <input type="submit" value="Save" name="loginButton" /> -->
+        <div id="stats"></div>
     </div>
 </html>

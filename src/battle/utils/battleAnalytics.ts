@@ -8,7 +8,10 @@ import { BattleScene } from "../Scene"
 export class BattleAnalytics {
     private data: Partial<GameResults> = {}
 
-    startRecording(_scene: BattleScene) {
+    startRecording(input: Partial<GameResults>) {
+        // Pull in partial data
+        this.data.totalBirds = input.totalBirds
+
         // The scene is for aesthetics eventually
         this.data.startTimestamp = Date.now()
 

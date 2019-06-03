@@ -31,6 +31,8 @@ export interface GameResults {
     endTimestamp: number
     // What was the users score
     position: number
+    // How many birds were there?
+    totalBirds: number
     // How many flaps did it take to win
     flaps: number
     // How many pipes did they get past?
@@ -91,7 +93,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 // just felt a bit naff passing them around for no reason
 //
 export const getRoyales = (): GameResults[] => {
-    const existingData = localStorage.getItem("royales") //|| JSON.stringify([]))
+    const existingData = localStorage.getItem("royales")
     if (!existingData) return []
     return unzip(existingData)
 }
@@ -116,4 +118,48 @@ export const getAndBumpUserCycleSeedIndex = (cap: number) => {
 
     changeSettings({ royale: { seedIndex: index } })
     return index
+}
+
+/** The stats from all your runs */
+export const getUserStatistics = () => {
+    const runs = getRoyales()
+    const stats = {
+        gamesPlayed: runs.length,
+        bestScore: 0,
+        bestPosition: 500,
+        royaleWins: 0,
+        birdsBeaten: 0,
+        crashes: 0,
+        totalTime: 0,
+        instaDeaths: 0,
+        totalFlaps: 0
+    }
+
+    runs.forEach(run => {
+        // Highest score
+        if (run.score > stats.bestScore) stats.bestScore = run.score
+
+        // Lowest position
+        if (run.position < stats.bestPosition) stats.bestPosition = run.position
+
+        // Position = 0, is a win
+        if (run.position === 0) stats.royaleWins += 1
+
+        // Birds you've gone past
+        stats.birdsBeaten += run.totalBirds - run.position
+
+        // when you didn't get past one pipe
+        if (run.score === 0) stats.instaDeaths += 1
+
+        // All time played
+        stats.totalTime += run.endTimestamp - run.startTimestamp
+
+        // How many time did you flap
+        stats.totalFlaps += run.flaps
+    })
+
+    // how many times did you not win
+    stats.crashes = stats.gamesPlayed - stats.royaleWins
+
+    return stats
 }
