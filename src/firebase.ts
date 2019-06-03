@@ -4,8 +4,8 @@ import "firebase/firestore"
 import { UserSettings } from "./user/userManager"
 import { SeedsResponse } from "../functions/src/api-contracts"
 import { ReplayUploadRequest } from "../functions/src"
-import * as pako from "pako"
 import { cache } from "./localCache"
+import { unzip } from "./zip"
 
 /** How it's stored in the DB to save on fs space */
 export interface SeedDataZipped {
@@ -69,7 +69,6 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
     }
 }
 
-// prettier-ignore
 /**
  * Grabs a copy of the seeds from a google function which ensures we have consistent seeds.
  * It's expected that this would be called every time you see the main menu.
@@ -85,7 +84,8 @@ export const getSeedsFromAPI = (apiVersion: string) => {
             cache.setSeeds(apiVersion, seeds)
             console.log("Got seeds from server", apiVersion, seeds)
             return seeds
-        }).catch(e => {
+        })
+        .catch(e => {
             console.log("Could not fetch seeds, falling back to local cache", e)
             return cache.getSeeds(apiVersion)
         })
@@ -109,26 +109,5 @@ export const emptySeedData: SeedData = { replays: [] }
 export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
     return {
         replays: unzip(seed.replaysZipped)
-    }
-}
-
-const unzip = (bin: string) => {
-    if (!bin) {
-        throw new Error("No bin param passed to unzip")
-    }
-    let uncompressed = ""
-    try {
-        uncompressed = pako.inflate(bin, { to: "string" })
-    } catch (error) {
-        console.error("Issue unzipping")
-        console.error(error)
-    }
-    let decoded = decodeURIComponent(escape(uncompressed))
-    try {
-        let obj = JSON.parse(decoded)
-        return obj
-    } catch (error) {
-        console.error("Issue parsing JSON: ", decoded)
-        console.error(error)
     }
 }

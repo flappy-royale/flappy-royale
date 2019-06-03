@@ -1,4 +1,5 @@
 import { defaultAttire } from "../attire"
+import { unzip, zippedObj } from "../zip"
 
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {
@@ -34,8 +35,6 @@ export interface GameResults {
     flaps: number
     // How many pipes did they get past?
     score: number
-    // What did you look like?
-    aesthetics: Aesthetics
 }
 
 export interface UserSettings {
@@ -88,16 +87,23 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
     saveSettings(existingSettings)
 }
 
-// The royales are separated from the settings because it just felt a bit naff passing them around for no reason
-export const getRoyales = (): GameResults[] => JSON.parse(localStorage.getItem("royales") || JSON.stringify([]))
+// The royales are separated from the settings because they can get pretty big
+// just felt a bit naff passing them around for no reason
+//
+export const getRoyales = (): GameResults[] => {
+    const existingData = localStorage.getItem("royales") //|| JSON.stringify([]))
+    if (!existingData) return []
+    return unzip(existingData)
+}
 
 /**  For the end of a run */
 export const recordGamePlayed = (results: GameResults) => {
     const existingRoyales = getRoyales()
     existingRoyales.push(results)
 
-    //  TODO: This can't just be the full data anymore
-    // localStorage.setItem("royales", JSON.stringify(existingRoyales))
+    console.log(existingRoyales)
+    const zippedRoyales = zippedObj(existingRoyales)
+    localStorage.setItem("royales", zippedRoyales)
 }
 
 /** Will get the seed index + 1 or 0 if it's at the cap */
@@ -106,7 +112,6 @@ export const getAndBumpUserCycleSeedIndex = (cap: number) => {
     if (!settings.royale) settings.royale = defaultSettings.royale
 
     const newIndex = settings.royale.seedIndex + 1
-
     const index = newIndex < cap ? newIndex : 0
 
     changeSettings({ royale: { seedIndex: index } })

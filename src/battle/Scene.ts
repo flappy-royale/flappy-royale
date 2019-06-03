@@ -419,6 +419,7 @@ export class BattleScene extends Phaser.Scene {
         if (this.isRecording() && hasJumped) {
             // TODO: Generate a UUID?
             this.debug("Uploading replay")
+
             const settings = getUserSettings()
             uploadReplayForSeed({
                 seed: this.seed,
