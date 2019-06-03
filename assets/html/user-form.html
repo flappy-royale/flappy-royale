@@ -1,75 +1,141 @@
 <html>
     <style>
         body {
-            height: 160px;
+            font-family: Fipps;
+            -webkit-font-smoothing: none;
         }
 
-        .login {
+        h2 {
+            font-size: 16px;
+            color: #000000;
+            padding-left: 10px;
+        }
+
+        h3 {
+            margin: 12px 0 -2px 0;
+            font-size: 8px;
+            color: #ffffff;
+        }
+
+        .screen {
             border: 1px solid #42464b;
             border-radius: 6px;
-            height: 160px;
-            width: 140px;
+            height: 220px;
+            width: 160px;
             overflow-y: scroll;
         }
 
-        input[type="text"] {
-            border: 2px solid black;
-            border-radius: 0px;
-            height: 39px;
-            margin: 31px 0 0 29px;
-            padding-left: 37px;
+        input[type="username"] {
+            font-family: Fipps;
+            height: 20px;
+        }
+
+        .section {
+            padding-left: 30px;
+            position: relative;
         }
 
         ul {
             padding: 0;
-            display: flex;
+            margin: 0;
+            background-color: white;
         }
 
         li {
             display: inline-block;
-            border: 1px solid black;
-            width: 30px;
-            height: 30px;
-            margin: 4px;
+            margin: 3px;
+            background-size: contain;
+        }
+        
+        ul li .render {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+        }
+
+        ul li img {
+            position: absolute;
+        }
+
+        div#you-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            z-index:  -10;
+
+            top: 10px;
+            margin-bottom: 18px;
+
+            width: 44px;
+            height: 44px;
+        }
+
+        div#you-sticky > img {
+            position: absolute;
+            top: 20px;
+            left: -36px;
+        }
+
+        div#you {
+            position: absolute;
+            top: 20px;
+            left: -36px;
+         
+            width: 44px;
+            height: 44px;
+
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        li.wearing {
-            border: 1px solid yellow;
+        #remove-sticky-you-margin {
+            margin-top: -54px;
         }
 
-        div.you {
-            width: 30px;
-            height: 30px;
-            border: 1px solid green;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        div.you img {
+        div#you img {
             position: absolute;
         }
 
         img {
             image-rendering: pixelated;
         }
+
+        #style-title > span {
+            float: right;
+            margin-right: 9px;
+        }
     </style>
 
-    <div class="login">
-        <input style="width: 110px;" type="username" placeholder="Username" id="username" name="username" />
+    <div class="screen">
+        <h2>you</h3>
+        
+        <div class="section">
+            <h3>name</h3>
+            <input style="width: 110px;" type="username" placeholder="Username" id="username" name="username" />
+        </div>
 
-        <h3>You</h3>
-        <div class="you"></div>
+        <div class="section">
 
-        <h3>Bases</h3>
-        <ul class="bases"></ul>
-        <h3>Clothings</h3>
-        <ul class="attires"></ul>
+            <div id="you-sticky">
+                <img>
+                <div id="you"></div>
+            </div>
+             
+            <h3 id="remove-sticky-you-margin">body</h3>
+            <ul class="bases"></ul>
+            <h3 id="style-title">style<span>1/3</span></h3>
+            <ul class="attires"></ul>
+        </div>
 
-        <input type="submit" value="Save" name="loginButton" />
+        <h2>stats</h3>
+            <h3>name</h3>
+            <h3>name</h3>
+            <h3>name</h3>
+            <h3>name</h3>
+            <h3>name</h3>
+            <h3>name</h3>
+        <!-- <input type="submit" value="Save" name="loginButton" /> -->
     </div>
 </html>

@@ -15,15 +15,27 @@ export class UserSettings extends Phaser.Scene {
         // Adds the HTML file to the game cache
         this.load.html("name-form", require("../../assets/html/user-form.html"))
         this.load.image("back-button", require("../../assets/menu/back.png"))
+        this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
+        this.load.image("white-circle", require("../../assets/menu/Circle.png"))
+        this.load.image("attire-empty", require("../../assets/menu/AttireSelectionEmpty.png"))
+        this.load.image("attire-selected", require("../../assets/menu/AttireSelected.png"))
     }
 
     create() {
         // Fill the BG
-        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xff0000)
+        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xe7d866)
+
+        // Bottom BG
+        this.add.image(GameWidth / 2, GameHeight - 0, "bottom-sash")
 
         // Make a HTML form
-        var element = this.add.dom(75, 90).createFromCache("name-form")
+        var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("name-form")
         element.addListener("click")
+
+        // Set the circle BG on the you bird
+        const you = document.getElementById("you-sticky")
+        const youBG = you.getElementsByTagName("img").item(0)
+        youBG.src = require("../../assets/menu/Circle.png")
 
         // Grab the username via the DOM API
         const usernameInput = element.node.getElementsByTagName("input").item(0)
@@ -36,24 +48,57 @@ export class UserSettings extends Phaser.Scene {
         const basesUL = element.node.getElementsByClassName("bases").item(0)
         const attiresUL = element.node.getElementsByClassName("attires").item(0)
 
+        /**
+         * Runs on every selection change and asserts whether an LI
+         * corresponding to attire is selected or not
+         */
         const updateWearables = () => {
             const settings = getUserSettings()
             for (const element of document.getElementsByTagName("li")) {
                 const id = element.id
                 const isWearing = settings.aesthetics.attire.find(a => a.id === id)
-                element.className = isWearing ? "attire" : "attire wearing"
+                const wearing = `url(${require("../../assets/menu/AttireSelected.png")})`
+                const notWearing = `url(${require("../../assets/menu/AttireSelectionEmpty.png")})`
+                element.style.backgroundImage = isWearing ? wearing : notWearing
             }
+
+            const attires = settings.aesthetics.attire.filter(a => !a.base)
+            const styleCount = document
+                .getElementById("style-title")
+                .getElementsByTagName("span")
+                .item(0)
+            styleCount.textContent = `${attires.length}/3`
         }
 
         const makeClickableAttire = (attire: Attire, element: Element) => {
             const li = document.createElement("li")
             li.id = attire.id
 
+            const div = document.createElement("div")
+            div.className = "render"
+            li.appendChild(div)
+
+            if (!attire.base) {
+                const img = document.createElement("img")
+                img.src = require("../../assets/bases/BirdBody.png")
+                img.style.opacity = "0.1"
+                div.appendChild(img)
+            }
+
             const img = document.createElement("img")
             img.src = attire.href
-            li.appendChild(img)
+            div.appendChild(img)
 
             element.appendChild(li)
+        }
+
+        /** Goes up the parent tree till it finds a particular tag */
+        const findUpTag = (el: any, tag: string): Element | null => {
+            while (el.parentNode) {
+                el = el.parentNode
+                if (el.tagName === tag) return el
+            }
+            return null
         }
 
         bases.forEach(a => makeClickableAttire(a, basesUL))
@@ -62,7 +107,7 @@ export class UserSettings extends Phaser.Scene {
         const showUser = () => {
             const settings = getUserSettings()
 
-            const user = element.node.getElementsByClassName("you").item(0)
+            const user = document.getElementById("you")
             while (user.hasChildNodes()) {
                 user.removeChild(user.lastChild)
             }
@@ -94,18 +139,11 @@ export class UserSettings extends Phaser.Scene {
             const target = event.target as Element
 
             // Getting a potential attire is tricky, you could hit
-            // either the li or the img, so always get to the li.
-            let attire = null as null | Element
-            if (target.tagName === "IMG") {
-                if (target.parentElement.tagName === "LI" && target.parentElement.className.includes("attire")) {
-                    attire = target.parentElement
-                }
-            } else if (target.parentElement.tagName === "LI" && target.parentElement.className.includes("attire")) {
-                attire = target
-            }
+            // either the li, the div or the img, so always get to the li.
+            const maybeLI = findUpTag(target, "LI")
+            if (maybeLI && maybeLI.id) {
+                const attire = maybeLI as Element
 
-            // Looks like we were on some attire
-            if (attire) {
                 const settings = getUserSettings()
                 const currentAttire = settings.aesthetics.attire
                 const clickedAttire = builtInAttire.find(att => att.id === attire.id)
@@ -141,7 +179,7 @@ export class UserSettings extends Phaser.Scene {
         showUser()
 
         this.add
-            .image(80, 200, "back-button")
+            .image(14, 224, "back-button")
             .setInteractive()
             // needs to be on up insider, but whatever
             .on("pointerdown", () => {

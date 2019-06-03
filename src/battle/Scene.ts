@@ -104,6 +104,7 @@ export class BattleScene extends Phaser.Scene {
     /** What game mode is this scene running in? */
     public mode: game.GameMode
 
+    /** The thing that represents the floor (birds/the bus sit on this) */
     public floorPhysics: Phaser.Physics.Arcade.Image
 
     constructor(opts: BattleSceneSettings) {
