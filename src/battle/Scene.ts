@@ -472,6 +472,10 @@ export class BattleScene extends Phaser.Scene {
         this.scene.restart()
     }
 
+    prepareForShutdown() {
+        // if (this.spacebar) this.spacebar.destroy()
+    }
+
     isRecording() {
         return canRecordScore() && game.shouldRecordScores(this.mode)
     }

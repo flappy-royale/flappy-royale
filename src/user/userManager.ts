@@ -95,7 +95,12 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 export const getRoyales = (): GameResults[] => {
     const existingData = localStorage.getItem("royales")
     if (!existingData) return []
-    return unzip(existingData)
+    try {
+        return unzip(existingData)
+    } catch (error) {
+        console.log("empty")
+        return []
+    }
 }
 
 /**  For the end of a run */

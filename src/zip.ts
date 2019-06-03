@@ -11,6 +11,7 @@ export const unzip = (bin: string) => {
     } catch (error) {
         console.error("Issue unzipping")
         console.error(error)
+        return undefined
     }
     let decoded = decodeURIComponent(escape(uncompressed))
     try {
