@@ -1,5 +1,6 @@
 import { SeedsResponse } from "../functions/src/api-contracts"
 import { SeedData, emptySeedData } from "./firebase"
+import { zippedObj, unzip } from "./zip"
 
 // For now, the API returns at most 50 royale seeds, plus one daily
 // (a comment is a promise waiting to be broken, etc)
@@ -29,22 +30,20 @@ export const cache = {
             localStorage.recordingList = list
         }
 
-        localStorage[`recordings-${seed}`] = JSON.stringify(data)
+        localStorage[`recordings-${seed}`] = zippedObj(data)
     },
 
     getRecordings: (seed: String): SeedData => {
         const data = localStorage[`recordings-${seed}`]
         if (data) {
-            return JSON.parse(data)
+            return unzip(data)
         } else {
             return emptySeedData
         }
     },
 
     setSeeds: (apiVersion: string, seeds: SeedsResponse) => {
-        // localStorage.setItem("lastSeeds", JSON.stringify({
-        //   apiVersion, seeds
-        // }))
+        localStorage.setItem("lastSeeds", JSON.stringify({ apiVersion, seeds }))
     },
 
     getSeeds: (apiVersion: string): SeedsResponse | undefined => {
