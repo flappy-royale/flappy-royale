@@ -9,6 +9,11 @@
             font-size: 16px;
             color: #000000;
             padding-left: 10px;
+            margin: 12px 0 -10px 0;
+        }
+
+        h2:first-of-type {
+            margin-top: -16px;
         }
 
         h3 {
@@ -18,11 +23,10 @@
         }
 
         .screen {
-            border: 1px solid #42464b;
-            border-radius: 6px;
-            height: 220px;
+            height: 240px;
             width: 160px;
             overflow-y: scroll;
+            overflow-x: hidden;
         }
 
         input[type="username"] {
@@ -138,9 +142,43 @@
             cursor: default;
         }
 
+        div#header-container {
+            position: relative;
+        }
+
+        div#header-container p {
+            position:absolute;
+            color: white;
+            top: 10px;
+            left: 10px;
+        }
+        
+        #footer-container {
+            position: absolute;
+            bottom: -50px;
+            z-index: 200;
+        }
+
+        #back {
+            position: absolute;
+            bottom: 54px;
+            left: 0px;
+        }
+
     </style>
 
+
+    <div id="footer-container">
+        <img id="back"/>
+        <img id="footer"/>
+    </div>
+    
+
     <div class="screen">
+        <div id="header-container">
+            <p>Settings</p>
+            <img id="header"/>
+        </div>
         <h2>you</h3>
         
         <div class="section">

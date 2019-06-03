@@ -25,9 +25,6 @@ export class UserSettings extends Phaser.Scene {
         // Fill the BG
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xe7d866)
 
-        // Bottom BG
-        this.add.image(GameWidth / 2, GameHeight - 0, "bottom-sash")
-
         // Make a HTML form
         var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("name-form")
         element.addListener("click")
@@ -187,6 +184,13 @@ export class UserSettings extends Phaser.Scene {
         // Run all the interactions upfront
         updateWearables()
         showUser()
+
+        const header = document.getElementById("header") as HTMLImageElement
+        header.src = require("../../assets/menu/RedSash.png")
+        const footer = document.getElementById("footer") as HTMLImageElement
+        footer.src = require("../../assets/menu/BottomSash.png")
+        const back = document.getElementById("back") as HTMLImageElement
+        back.src = require("../../assets/menu/back.png")
 
         this.add
             .image(14, 224, "back-button")
