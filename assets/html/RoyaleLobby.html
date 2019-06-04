@@ -1,0 +1,168 @@
+<html>
+    <style>
+        body {
+            font-family: Fipps;
+            -webkit-font-smoothing: none;
+            font-size: 8px;
+        }
+
+        h3 {
+            margin: 12px 0 -2px 0;
+            font-size: 8px;
+            color: #ffffff;
+        }
+
+        .screen {
+            height: 240px;
+            width: 160px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #white-slash {
+            position: absolute;
+            z-index: -1;
+        }
+
+        #white-circle {
+            position: absolute;
+            z-index: -1;
+            left: 55px;
+            top: 27px;
+            width: 60px;
+            height: 60px;
+        }
+
+        #you-vs {
+            padding-left: 10px;
+            margin-top: -18px;
+        }
+
+        #you-vs span {
+            font-size: 24px;
+            position: relative;
+            top: 9px;
+            width: 50px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .section {
+            padding-left: 40px;
+            position: relative;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+            margin-bottom: 40px;
+        }
+
+        ul li {
+            position: relative;
+            list-style: none;
+        }
+
+        ul li img {
+            position: absolute;
+        }
+
+        #header-container {
+            font-size: 16px;
+            height: 40px;
+        }
+
+        #birds div {
+            position: absolute;
+            top: -10px;
+            left: -36px;
+
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            image-rendering: pixelated;
+        }
+
+        p,
+        li,
+        h3,
+        h2 {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: default;
+        }
+
+        div#header-container {
+            position: relative;
+        }
+
+        div#header-container p {
+            position: absolute;
+            color: white;
+            top: -10px;
+            left: 10px;
+            transform: rotate(-6deg);
+        }
+
+        #footer-container {
+            position: absolute;
+            bottom: -40px;
+            z-index: 200;
+        }
+
+        #back {
+            position: absolute;
+            bottom: 54px;
+            left: 0px;
+        }
+
+        #button {
+            color: white;
+            bottom: 0px;
+            width: 80px;
+        }
+
+        #button-bg {
+            width: 80px;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .screen {
+            /* padding-bottom: 40px; */
+        }
+    </style>
+
+    <div id="footer-container">
+        <img id="back" />
+        <div id="button">
+            <img id="button-bg" />
+            start
+        </div>
+        <img id="footer" />
+    </div>
+
+    <div class="screen">
+        <div id="header-container">
+            <p>Royale</p>
+            <img id="header" />
+        </div>
+
+        <img id="white-slash" src="" />
+        <img id="white-circle" src="" />
+        <div id="you-vs">You vs <span>00</span> birds</div>
+
+        <div class="section">
+            <ul id="birds"></ul>
+        </div>
+    </div>
+</html>

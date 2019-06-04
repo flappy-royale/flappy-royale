@@ -1,19 +1,19 @@
 import * as Phaser from "phaser"
+import { changeSettings, UserSettings } from "../user/userManager"
+import { GameWidth, GameHeight } from "../constants"
+import { launchMainMenu } from "./MainMenuScene"
 import { fetchRecordingsForSeed } from "../firebase"
-import * as constants from "../constants"
+import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
-import { BirdSprite, setupBirdAnimations, preloadBirdAttire } from "../battle/BirdSprite"
-import { defaultSettings, getUserSettings } from "../user/userManager"
-import { launchMainMenu } from "./MainMenuScene"
+
+export const RoyaleLobbyKey = "RoyaleLobby"
 
 export interface RoyaleLobbyProps {
     seed: string
 }
 
-// This is a little brute-force-y code for the moment
-
-export class RoyaleLobbyScene extends Phaser.Scene {
+export class RoyaleLobby extends Phaser.Scene {
     private seed: string
 
     constructor(props: RoyaleLobbyProps) {
@@ -23,75 +23,139 @@ export class RoyaleLobbyScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.bitmapFont(
-            "nokia16",
-            require("../../assets/fonts/nokia16.png"),
-            require("../../assets/fonts/nokia16.xml")
-        )
-        this.load.image("royale-button", require("../../assets/menu/royale.png"))
-
-        this.load.image("flap1", require("../../assets/battle/Flap1.png"))
-        this.load.image("flap2", require("../../assets/battle/Flap2.png"))
-        this.load.image("flap3", require("../../assets/battle/Flap3.png"))
-
-        const settings = getUserSettings()
-        preloadBirdAttire(this, settings)
+        // Adds the HTML file to the game cache
+        this.load.html("RoyaleLobby", require("../../assets/html/RoyaleLobby.html"))
+        this.load.image("back-button", require("../../assets/menu/back.png"))
+        this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
+        this.load.image("white-circle", require("../../assets/menu/Circle.png"))
+        this.load.image("purple-sash", require("../../assets/menu/PurpleishSash.png"))
+        this.load.image("white-sash", require("../../assets/menu/WhiteTriangleSlashShape.png"))
+        this.load.image("attire-selected", require("../../assets/menu/AttireSelected.png"))
     }
 
     create() {
         // Fill the BG
-        this.add.rectangle(
-            constants.GameWidth / 2,
-            constants.GameHeight / 2,
-            constants.GameWidth,
-            constants.GameHeight,
-            0x000000
-        )
+        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xacd49d)
 
-        this.add.bitmapText(20, 20, "nokia16", "Starting Royale")
+        // Make a HTML form
+        var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("RoyaleLobby")
 
-        setupBirdAnimations(this)
+        // Set the circle BG on the you bird
+        const you = document.getElementById("you-sticky")
+        // const youBG = you.getElementsByTagName("img").item(0)
+        // youBG.src = require("../../assets/menu/Circle.png")
 
-        const settings = getUserSettings()
-        const bird = new BirdSprite(this, 70, 60, { isPlayer: false, settings: settings })
-        bird.actAsImage()
+        // Click handling
+        element.on("click", function(event) {
+            const target = event.target as Element
 
-        const lobby = this.add.bitmapText(40, 80, "nokia16", "...")
-
-        const royale = this.add
-            .image(80, 160, "royale-button")
-            .setAlpha(0.2)
-            .setInteractive()
-
-        const back = this.add.image(20, 10, "back-button").setInteractive()
-        // needs to be on up insider, but whatever
-        back.on("pointerdown", () => {
-            this.game.scene.remove(this)
-            launchMainMenu(this.game)
+            if (event.target.name === "loginButton") {
+                const usernameInput = element.node.getElementsByTagName("input").item(0)
+                changeSettings({ name: usernameInput.value })
+                this.removeListener("click")
+            }
         })
 
+        // const lobby = this.add.bitmapText(40, 80, "nokia16", "...")
+        // const royale = this.add
+        //     .image(80, 160, "royale-button")
+        //     .setAlpha(0.2)
+        //     .setInteractive()
+
+        const createUserImage = (user: UserSettings) => {
+            const root = document.createElement("div")
+
+            const userBase = user.aesthetics.attire.find(a => a.base)
+            const img = document.createElement("img")
+            img.src = userBase.href
+            img.className = "you-attire"
+            root.appendChild(img)
+
+            user.aesthetics.attire
+                .filter(a => !a.base)
+                .forEach(a => {
+                    const attireImg = document.createElement("img")
+                    attireImg.src = a.href
+                    attireImg.className = "you-attire"
+                    root.appendChild(attireImg)
+                })
+
+            const wings = document.createElement("img")
+            wings.src = require("../../assets/battle/flap-gif.gif")
+            wings.className = "you-attire"
+            root.appendChild(wings)
+
+            return root
+        }
+
         fetchRecordingsForSeed(this.seed).then(seedData => {
+            const birdCount = document.getElementById("you-vs")
+            console.log(seedData)
             this.tweens.addCounter({
                 from: 0,
                 to: seedData.replays.length,
-                ease: "Cubic", // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                ease: "Cubic",
                 duration: Math.floor(Math.random() * 2000),
                 repeat: 0,
-                onUpdate: (v: Phaser.Tweens.Tween) => (lobby.text = `${Math.round(v.getValue())} birds`)
+                onUpdate: (v: Phaser.Tweens.Tween) =>
+                    (birdCount.innerHTML = `You vs <span>${pad(Math.round(v.getValue()), 2)}</span> birds`)
             })
 
-            seedData.replays.forEach(score => preloadBirdAttire(this, score.user))
+            const birds = document.getElementById("birds")
+            seedData.replays.forEach(score => {
+                preloadBirdAttire(this, score.user)
+
+                const birdLi = document.createElement("li")
+                const previewDiv = createUserImage(score.user)
+                const theirName = document.createElement("p")
+                theirName.innerText = score.user.name
+
+                birdLi.appendChild(previewDiv)
+                birdLi.appendChild(theirName)
+                birds.appendChild(birdLi)
+            })
 
             const preloadAssetsDone = () => {
-                royale.setAlpha(1)
-                royale.once("pointerdown", async () => {
+                const goButton = document.getElementById("button")
+
+                goButton.onclick = () => {
+                    this.game.scene.remove(this)
                     const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Royale })
                     this.game.scene.add("BattleScene" + this.seed, scene, true, {})
-                })
+                }
             }
 
             this.load.once("complete", preloadAssetsDone, this)
             this.load.start()
         })
+
+        const header = document.getElementById("header") as HTMLImageElement
+        header.src = require("../../assets/menu/PurpleishSash.png")
+
+        const footer = document.getElementById("footer") as HTMLImageElement
+        footer.src = require("../../assets/menu/BottomSash.png")
+
+        const back = document.getElementById("back") as HTMLImageElement
+        back.src = require("../../assets/menu/back.png")
+
+        const whiteSlash = document.getElementById("white-slash") as HTMLImageElement
+        whiteSlash.src = require("../../assets/menu/WhiteTriangleSlashShape.png")
+
+        const whiteCircle = document.getElementById("white-circle") as HTMLImageElement
+        whiteCircle.src = require("../../assets/menu/Circle.png")
+
+        const buttonBG = document.getElementById("button-bg") as HTMLImageElement
+        buttonBG.src = require("../../assets/menu/ButtonBG.png")
+
+        document.getElementById("back").onclick = () => {
+            this.game.scene.remove(this)
+            launchMainMenu(this.game)
+        }
     }
+}
+
+function pad(n: any, width: any, z?: any) {
+    z = z || "0"
+    n = n + ""
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
 }

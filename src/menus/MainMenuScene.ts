@@ -6,7 +6,7 @@ import * as constants from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobbyScene } from "./TrialLobbyScene"
-import { RoyaleLobbyScene } from "./RoyaleLobby"
+import { RoyaleLobby } from "./RoyaleLobby"
 import { getUserSettings, changeSettings, getAndBumpUserCycleSeedIndex } from "../user/userManager"
 import { LoadingScene } from "./LoadingScene"
 import { preloadBackgroundBlogImages, setupBackgroundBlogImages } from "./utils/backgroundColors"
@@ -71,7 +71,7 @@ export class MainMenuScene extends Phaser.Scene {
                 const index = getAndBumpUserCycleSeedIndex(this.seeds.royale.length)
                 const seed = this.seeds.royale[index]
 
-                const lobby = new RoyaleLobbyScene({ seed })
+                const lobby = new RoyaleLobby({ seed })
                 this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
             })
 
