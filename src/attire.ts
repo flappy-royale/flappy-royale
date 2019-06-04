@@ -94,5 +94,33 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "tight",
         base: false,
         href: require("../assets/attire/Mohawk.png")
+    },
+    {
+        id: "bandana1",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/bad-dana.png")
+    },
+    {
+        id: "tired",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/tired.png")
+    },
+    {
+        id: "paranoid",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Paranoid.png")
+    },
+    {
+        id: "halo",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/halo.png")
     }
 ]
