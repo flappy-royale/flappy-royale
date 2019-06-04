@@ -13,7 +13,7 @@ export class UserSettings extends Phaser.Scene {
 
     preload() {
         // Adds the HTML file to the game cache
-        this.load.html("name-form", require("../../assets/html/user-form.html"))
+        this.load.html("Settings", require("../../assets/html/Settings.html"))
         this.load.image("back-button", require("../../assets/menu/back.png"))
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
@@ -26,7 +26,7 @@ export class UserSettings extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xe7d866)
 
         // Make a HTML form
-        var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("name-form")
+        var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("Settings")
         element.addListener("click")
 
         // Set the circle BG on the you bird
