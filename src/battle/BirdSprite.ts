@@ -162,8 +162,15 @@ export class BirdSprite {
         this.sprite.setAngle(newAngle)
 
         const defaultWidth = 17
-        let physicsWidth = remapClamped(this.body.velocity.y, 105, 200, defaultWidth, 8)
-        this.sprite.body.setSize(physicsWidth, this.sprite.body.height)
+        const defaultHeight = 11
+        let physicsWidth = remapClamped(this.body.velocity.y, 105, 200, defaultWidth - 2, 12 - 2)
+        let physicsHeight = remapClamped(this.body.velocity.y, 105, 200, defaultHeight - 2, 16 - 2)
+
+        this.sprite.body.setSize(physicsWidth, physicsHeight)
+        this.sprite.body.offset = new Phaser.Math.Vector2(
+            remapClamped(this.body.velocity.y, 105, 200, -1, 3) * -1,
+            remapClamped(this.body.velocity.y, 105, 200, 1, 8)
+        )
     }
 
     destroy() {

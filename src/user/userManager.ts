@@ -96,7 +96,7 @@ export const getRoyales = (): GameResults[] => {
     const existingData = localStorage.getItem("royales")
     if (!existingData) return []
     try {
-        return unzip(existingData)
+        return unzip(existingData) || []
     } catch (error) {
         console.log("empty")
         return []
