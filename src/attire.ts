@@ -122,5 +122,26 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "tight",
         base: false,
         href: require("../assets/attire/halo.png")
+    },
+    {
+        id: "big-mouth",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/bigmouth.png")
+    },
+    {
+        id: "drool",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/drool.png")
+    },
+    {
+        id: "tiny-eye",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Tiny_eyes.png")
     }
 ]
