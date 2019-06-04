@@ -8,6 +8,7 @@ import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
 import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
+import { RoyaleLobby } from "./menus/RoyaleLobby"
 
 declare var PRODUCTION: boolean
 
@@ -22,7 +23,8 @@ if (PRODUCTION) {
 enum StartupScreen {
     MainMenu,
     Battle,
-    Settings
+    Settings,
+    RoyaleLobby
 }
 
 // Change this to have it load up into a different screen on save
@@ -100,6 +102,12 @@ window.onload = async () => {
 
         case StartupScreen.MainMenu:
             launchMainMenu(game)
+            break
+
+        case StartupScreen.RoyaleLobby:
+            const seed = "1-royale-0"
+            const lobby = new RoyaleLobby({ seed })
+            game.scene.add("RoyaleLobby" + seed, lobby, true, {})
             break
     }
 

@@ -108,7 +108,6 @@ export const recordGamePlayed = (results: GameResults) => {
     const existingRoyales = getRoyales()
     existingRoyales.push(results)
 
-    console.log(existingRoyales)
     const zippedRoyales = zippedObj(existingRoyales)
     localStorage.setItem("royales", zippedRoyales)
 }
