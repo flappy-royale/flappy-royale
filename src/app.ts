@@ -9,7 +9,7 @@ import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
 import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
-import { TrialLobby } from "./menus/NewTrialLobby"
+import { TrialLobby } from "./menus/TrialLobby"
 
 declare var PRODUCTION: boolean
 
