@@ -9,6 +9,7 @@ import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
 import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
+import { TrialLobby } from "./menus/NewTrialLobby"
 
 declare var PRODUCTION: boolean
 
@@ -24,7 +25,8 @@ enum StartupScreen {
     MainMenu,
     Battle,
     Settings,
-    RoyaleLobby
+    RoyaleLobby,
+    TrialLobby
 }
 
 // Change this to have it load up into a different screen on save
@@ -91,6 +93,8 @@ const loadUpIntoSettings = () => {
 }
 
 window.onload = async () => {
+    const seed = "1-royale-0"
+
     switch (startupScreen) {
         case StartupScreen.Battle:
             loadUpIntoTraining({ offline: true })
@@ -105,9 +109,13 @@ window.onload = async () => {
             break
 
         case StartupScreen.RoyaleLobby:
-            const seed = "1-royale-0"
             const lobby = new RoyaleLobby({ seed })
             game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+            break
+
+        case StartupScreen.TrialLobby:
+            const trial = new TrialLobby({ seed })
+            game.scene.add("TrialLobby" + seed, trial, true, {})
             break
     }
 

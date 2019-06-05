@@ -5,7 +5,7 @@ import { BattleScene } from "../battle/Scene"
 import * as constants from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
-import { TrialLobbyScene } from "./TrialLobbyScene"
+import { TrialLobby } from "./NewTrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
 import { getUserSettings, changeSettings, getAndBumpUserCycleSeedIndex } from "../user/userManager"
 import { LoadingScene } from "./LoadingScene"
@@ -83,7 +83,7 @@ export class MainMenuScene extends Phaser.Scene {
                 this.removeMenu()
 
                 const seed = this.seeds.daily.production
-                const lobby = new TrialLobbyScene({ seed })
+                const lobby = new TrialLobby({ seed })
                 this.game.scene.add("TrialLobby" + seed, lobby, true, {})
             })
 
