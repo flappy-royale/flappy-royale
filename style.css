@@ -8,6 +8,7 @@ canvas {
 }
 
 body {
+    -webkit-overflow-scrolling: touch;
     padding: 0;
     margin: 0;
 }
