@@ -143,5 +143,40 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Tiny_eyes.png")
+    },
+    {
+        id: "ghost",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Ghost.png")
+    },
+    {
+        id: "fantasy",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Fantasy.png")
+    },
+    {
+        id: "sheep",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Sheep.png")
+    },
+    {
+        id: "pug",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Pug.png")
+    },
+    {
+        id: "robin",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Robin.png")
     }
 ]
