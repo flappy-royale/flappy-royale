@@ -2,7 +2,7 @@ import * as Phaser from "phaser"
 
 import * as constants from "./constants"
 import { launchMainMenu } from "./menus/MainMenuScene"
-import { getSeedsFromAPI, emptySeedData } from "./firebase"
+import { emptySeedData, fetchRecordingsForSeed } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
@@ -23,14 +23,15 @@ if (PRODUCTION) {
 
 enum StartupScreen {
     MainMenu,
-    Battle,
+    RoyalBattle,
+    TrialBattle,
     Settings,
     RoyaleLobby,
     TrialLobby
 }
 
 // Change this to have it load up into a different screen on save
-const startupScreen = StartupScreen.MainMenu as StartupScreen
+const startupScreen = StartupScreen.TrialBattle as StartupScreen
 
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy Royale",
@@ -72,18 +73,15 @@ const game = new FlappyGame(config)
 
 // The normal game flow
 
-const loadUpIntoTraining = async (settings: { offline: boolean }) => {
-    let seed = "offline-seed"
+const loadUpIntoTraining = async (settings: { offline: boolean; mode: GameMode }) => {
+    let seed = "0-royale-1"
+    let data = emptySeedData
+
     if (!settings.offline) {
-        try {
-            const seeds = await getSeedsFromAPI(constants.APIVersion)
-            seed = seeds.daily.production
-        } catch (error) {
-            // NOOP
-        }
+        data = await fetchRecordingsForSeed(seed)
     }
 
-    const scene = new BattleScene({ seed, data: emptySeedData, gameMode: GameMode.Training })
+    const scene = new BattleScene({ seed, data, gameMode: settings.mode })
     game.scene.add("Battle", scene, true)
 }
 
@@ -96,8 +94,12 @@ window.onload = async () => {
     const seed = "1-royale-0"
 
     switch (startupScreen) {
-        case StartupScreen.Battle:
-            loadUpIntoTraining({ offline: true })
+        case StartupScreen.TrialBattle:
+            loadUpIntoTraining({ offline: false, mode: GameMode.Trial })
+            break
+
+        case StartupScreen.RoyalBattle:
+            loadUpIntoTraining({ offline: false, mode: GameMode.Royale })
             break
 
         case StartupScreen.Settings:

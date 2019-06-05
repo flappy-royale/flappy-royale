@@ -29,7 +29,7 @@ const devSettings = {
     // Turn off for release builds
     developer: constants.isInDevMode,
     // Allows flying through pipes
-    skipPipeCollision: false,
+    skipPipeCollision: true,
     // Allows falling off the bottom
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
@@ -151,7 +151,7 @@ export class BattleScene extends Phaser.Scene {
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
-        this.load.image("back-button", require("../../assets/menu/back.png"))
+        this.load.image("back-button", require("../../assets/menu/Back2.png"))
     }
 
     create() {
@@ -223,16 +223,19 @@ export class BattleScene extends Phaser.Scene {
         this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
-        const { ALIGN_CENTER, ALIGN_RIGHT } = Phaser.GameObjects.BitmapText
         if (game.shouldShowScoreLabel(this.mode)) {
-            this.scoreLabel = this.add.bitmapText(80, 20, "nokia16", "0", 0, ALIGN_CENTER)
+            this.scoreLabel = this.add.bitmapText(constants.GameWidth - 30, 0, "nokia16", "0", 0)
+            this.scoreLabel.setRightAlign()
+            this.scoreLabel.setFontSize(30)
             this.scoreLabel.setDepth(constants.zLevels.ui)
+            this.updateScoreLabel()
         }
 
         // When we want to show a countdown, set it up with defaults
         if (game.shouldShowBirdsLeftLabel(this.mode)) {
-            this.birdsLeft = this.add.bitmapText(constants.GameWidth - 40, 20, "nokia16", "0", 0, ALIGN_RIGHT)
+            this.birdsLeft = this.add.bitmapText(4, 4, "nokia16", "0", 0)
             this.birdsLeft.setDepth(constants.zLevels.ui)
+            this.birdsLeft.setFontSize(12)
             this.ghostBirdHasDied()
         }
 
@@ -245,7 +248,7 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.mode !== game.GameMode.Menu) {
             // TODO: Temporary
-            const back = this.add.image(20, 10, "back-button").setInteractive()
+            const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
             // needs to be on up insider, but whatever
             back.on("pointerdown", () => {
                 this.game.scene.remove(this)
@@ -253,6 +256,13 @@ export class BattleScene extends Phaser.Scene {
             })
             back.setDepth(constants.zLevels.ui)
         }
+    }
+
+    updateScoreLabel() {
+        this.scoreLabel.text = `${this.score}`
+        // Right alignment doesn't work in phaser, so we fake it
+        const rightAligned = constants.GameWidth - this.scoreLabel.getTextBounds(true).local.width
+        this.scoreLabel.setX(rightAligned)
     }
 
     setupPhysicsFloor() {
@@ -371,11 +381,13 @@ export class BattleScene extends Phaser.Scene {
         if (game.shouldRestartWhenAllBirdsAreDead(this.mode)) {
             this.restartTheGame()
         } else {
+            if (this.bird && this.bird.isDead) return
+
             const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
             if (birdsAlive) {
-                this.birdsLeft.text = `${birdsAlive + 1} left`
+                this.birdsLeft.text = `${getNumberWithOrdinal(birdsAlive + 1)}`
             } else {
-                this.birdsLeft.text = "You won"
+                this.birdsLeft.text = "1st"
             }
         }
     }
@@ -399,20 +411,20 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLines.shift()
         line.destroy()
         this.score++
-        this.scoreLabel.text = `${this.score}`
+        this.updateScoreLabel()
     }
 
     userDied() {
+        this.userInput.push({
+            action: "died",
+            timestamp: this.time.now - this.timestampOffset
+        })
+
         const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
 
         // Check if they did enough for us to record the run
+        // in the future we'll want to show the death animation etc
         if (this.isRecording() && hasJumped) {
-            // in the future we'll want to show the death animation etc
-            this.userInput.push({
-                action: "died",
-                timestamp: this.time.now - this.timestampOffset
-            })
-
             // Store what happened
             const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
             this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
@@ -490,4 +502,11 @@ export class BattleScene extends Phaser.Scene {
 // Devs should never be recording when they can wrap through the floor or pipes
 const canRecordScore = () => {
     return !devSettings.skipBottomCollision && !devSettings.skipPipeCollision
+}
+
+// https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number/13627586
+function getNumberWithOrdinal(n) {
+    var s = ["th", "st", "nd", "rd"],
+        v = n % 100
+    return n + (s[(v - 20) % 10] || s[v] || s[0])
 }
