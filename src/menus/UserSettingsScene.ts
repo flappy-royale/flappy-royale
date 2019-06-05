@@ -36,8 +36,13 @@ export class UserSettings extends Phaser.Scene {
 
         // Grab the username via the DOM API
         const usernameInput = element.node.getElementsByTagName("input").item(0)
+        // Set the default value
         const settings = getUserSettings()
         usernameInput.value = settings.name
+        // Make changes propagate to settings
+        usernameInput.onchange = function() {
+            changeSettings({ name: usernameInput.value })
+        }
 
         /**
          * Runs on every selection change and asserts whether an LI
