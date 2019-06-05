@@ -13,20 +13,23 @@ code .
 yarn start
 ```
 
+To build this app you will need access to our assets git submodule, feel free to DM any contributor to get access to
+that repo.
+
 ## Key Tech
 
 To grok the codebase entirely, you'll see:
 
-- Phaser 3
-- TypeScript
-- Webpack
-- Firebase (DB/Functions/Hosting)
+-   Phaser 3
+-   TypeScript
+-   Webpack
+-   Firebase (DB/Functions/Hosting)
 
 ## Deploy
 
 1. Running `yarn build` will create a `dist` folder, which is the game statically compiled.
 2. Running `yarn deploy` will:
- - Update all functions
- - Compile your app in webpack
- - Ship the webpack build to firebase hosting
 
+-   Update all functions
+-   Compile your app in webpack
+-   Ship the webpack build to firebase hosting
