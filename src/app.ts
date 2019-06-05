@@ -28,7 +28,7 @@ enum StartupScreen {
 }
 
 // Change this to have it load up into a different screen on save
-const startupScreen = StartupScreen.MainMenu as StartupScreen
+const startupScreen = StartupScreen.Settings as StartupScreen
 
 const config: Phaser.Types.Core.GameConfig = {
     title: "Flappy Royale",

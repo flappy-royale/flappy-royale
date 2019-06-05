@@ -1,3 +1,7 @@
+<!-- 
+    You might see that the HTML is weird, we have to use IMGs instead of backgrounds everywhere
+    to make sure that images stay sharp after being 4X'd up
+ -->
 <html>
     <style>
         body {
@@ -121,24 +125,30 @@
 
         #back {
             position: absolute;
-            bottom: 54px;
-            left: 0px;
+            bottom: 46px;
+            left: 6px;
         }
 
         #button {
-            color: white;
-            bottom: 0px;
+            z-index: 300;
+            bottom: -10px;
+            left: 60px;
             width: 80px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #button span {
+            z-index: 301;
+            color: white;
+            position: absolute;
+            width: 80px;
+            text-align: center;
         }
 
         #button-bg {
             width: 80px;
             position: absolute;
-            z-index: -1;
-        }
-
-        .screen {
-            /* padding-bottom: 40px; */
         }
     </style>
 
@@ -146,7 +156,7 @@
         <img id="back" />
         <div id="button">
             <img id="button-bg" />
-            start
+            <span>start</span>
         </div>
         <img id="footer" />
     </div>

@@ -14,7 +14,7 @@ export class UserSettings extends Phaser.Scene {
     preload() {
         // Adds the HTML file to the game cache
         this.load.html("Settings", require("../../assets/html/Settings.html"))
-        this.load.image("back-button", require("../../assets/menu/back.png"))
+        this.load.image("back-button", require("../../assets/menu/Back2.png"))
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
         this.load.image("attire-empty", require("../../assets/menu/AttireSelectionEmpty.png"))
@@ -189,17 +189,14 @@ export class UserSettings extends Phaser.Scene {
         header.src = require("../../assets/menu/RedSash.png")
         const footer = document.getElementById("footer") as HTMLImageElement
         footer.src = require("../../assets/menu/BottomSash.png")
-        const back = document.getElementById("back") as HTMLImageElement
-        back.src = require("../../assets/menu/back.png")
 
-        this.add
-            .image(14, 224, "back-button")
-            .setInteractive()
-            // needs to be on up insider, but whatever
-            .on("pointerdown", () => {
-                this.game.scene.remove(this)
-                launchMainMenu(this.game)
-            })
+        const back = document.getElementById("back") as HTMLImageElement
+        back.src = require("../../assets/menu/Back2.png")
+
+        back.onclick = () => {
+            this.game.scene.remove(this)
+            launchMainMenu(this.game)
+        }
     }
 }
 

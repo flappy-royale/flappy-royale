@@ -136,7 +136,7 @@ export class RoyaleLobby extends Phaser.Scene {
         footer.src = require("../../assets/menu/BottomSash.png")
 
         const back = document.getElementById("back") as HTMLImageElement
-        back.src = require("../../assets/menu/back.png")
+        back.src = require("../../assets/menu/Back2.png")
 
         const whiteSlash = document.getElementById("white-slash") as HTMLImageElement
         whiteSlash.src = require("../../assets/menu/WhiteTriangleSlashShape.png")
