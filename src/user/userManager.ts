@@ -56,7 +56,7 @@ export interface UserSettings {
 
 // What it is when you first join
 export const defaultSettings: UserSettings = {
-    name: "Cappy McCapperson_" + Math.floor(Math.random() * 999999) + 1,
+    name: "Flappy_" + Math.floor(Math.random() * 999999) + 1,
     aesthetics: {
         attire: [defaultAttire]
     },
