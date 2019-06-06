@@ -165,6 +165,9 @@ export class BattleScene extends Phaser.Scene {
 
         this.load.audio("other_flap", require("../../assets/audio/other_flap.wav"))
         this.load.audio("other_hit", require("../../assets/audio/other_hit.wav"))
+
+        this.load.audio("crash", require("../../assets/audio/crash.wav"))
+        this.load.audio("win", require("../../assets/audio/win.wav"))
     }
 
     create() {
@@ -174,6 +177,9 @@ export class BattleScene extends Phaser.Scene {
 
         this.sound.add("other_flap")
         this.sound.add("other_hit")
+
+        this.sound.add("crash")
+        this.sound.add("win")
 
         this.time.update(0, 0)
 
@@ -201,6 +207,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         this.bus = createBus(this)
+
         this.physics.add.collider(this.bus, this.floorPhysics)
 
         // Set up the competitor birds
@@ -300,6 +307,10 @@ export class BattleScene extends Phaser.Scene {
         if (game.showPlayerBird(this.mode)) {
             this.scoreLines.push(addScoreLine(181, this, this.bird))
         }
+    }
+
+    playBusCrash() {
+        this.sound.play("crash")
     }
 
     update(timestamp: number) {
@@ -408,6 +419,7 @@ export class BattleScene extends Phaser.Scene {
                 this.birdsLeft.text = `${getNumberWithOrdinal(birdsAlive + 1)}`
             } else {
                 this.birdsLeft.text = "1st"
+                this.sound.play("win")
             }
         }
     }
