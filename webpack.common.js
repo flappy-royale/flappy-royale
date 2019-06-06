@@ -3,7 +3,6 @@ const path = require("path")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
 
-
 /** @type import("webpack").Configuration */
 module.exports = {
     entry: "./src/app.ts",
@@ -19,7 +18,7 @@ module.exports = {
             // Ensures that hashing works, but means you have to require
             // images etc for their path, and not hardcode them.
             {
-                test: /\.(wav|ogg|png|svg|jpg|gif|html|xml|otf)$/,
+                test: /\.(wav|ogg|png|svg|jpg|gif|html|xml|otf|fnt)$/,
                 use: ["file-loader"]
             },
             // CSS hookup

@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { changeSettings, UserSettings } from "../user/userManager"
+import { UserSettings } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { fetchRecordingsForSeed } from "../firebase"
