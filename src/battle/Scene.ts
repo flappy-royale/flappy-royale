@@ -25,7 +25,7 @@ export interface BattleSceneSettings {
     /** Game mode */
     gameMode: game.GameMode
     /** a UUID for the game scene  */
-    key: string
+    key?: string
 }
 
 const devSettings = {
