@@ -117,7 +117,7 @@ export class BattleScene extends Phaser.Scene {
         super(
             Object.assign(
                 {
-                    key: "GameScene",
+                    key: "GameScene" + opts.seed,
                     active: false
                 },
                 opts
