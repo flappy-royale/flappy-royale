@@ -89,6 +89,7 @@ export class TrialLobby extends Phaser.Scene {
                     this.game.scene.remove(this)
                     const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
                     this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                    scene.playBusCrash()
                 }
             }
 
