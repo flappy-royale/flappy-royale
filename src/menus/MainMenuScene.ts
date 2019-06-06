@@ -8,7 +8,7 @@ import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
 import { getAndBumpUserCycleSeedIndex, getUserSettings } from "../user/userManager"
-import { preloadBackgroundBlogImages, setupBackgroundBlogImages } from "./utils/backgroundColors"
+import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import _ = require("lodash")
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 
@@ -31,7 +31,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("royale-button", require("../../assets/menu/royale-2.png"))
         this.load.image("trial-button", require("../../assets/menu/trial-2.png"))
         this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
-        preloadBackgroundBlogImages(this)
+        preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
     }
 
@@ -50,7 +50,7 @@ export class MainMenuScene extends Phaser.Scene {
             0.4
         )
         this.add.image(80, 50, "logo")
-        setupBackgroundBlogImages(this)
+        setupBackgroundBlobImages(this, { min: 100, allColors: true })
 
         // NOTE: ASYNC!
         getSeedsFromAPI(constants.APIVersion).then(seeds => {
