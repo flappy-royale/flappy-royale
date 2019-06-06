@@ -4,7 +4,7 @@ import { Scene } from "phaser"
 import { UserSettings, getUserSettings } from "../user/userManager"
 import { BattleScene } from "./Scene"
 
-export const preloadBirdSprites = (scene: BattleScene) => {
+export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
     scene.load.image("flap2", require("../../assets/battle/Flap2.png"))
     scene.load.image("flap3", require("../../assets/battle/Flap3.png"))
@@ -17,8 +17,10 @@ export const preloadBirdSprites = (scene: BattleScene) => {
         scene.load.image(attire.id, attire.href)
     })
 
-    // Preload opponents attire
-    scene.seedData.replays.forEach(data => preloadBirdAttire(scene, data.user))
+    if ("seedData" in scene) {
+        // Preload opponents attire
+        scene.seedData.replays.forEach(data => preloadBirdAttire(scene, data.user))
+    }
 }
 
 export const preloadBirdAttire = (scene: Phaser.Scene, bird: UserSettings) => {
@@ -202,10 +204,12 @@ export class BirdSprite {
     }
 
     actAsImage() {
+        this.isAtRest = true
         this.sprite.setGravityY(constants.gravity * -1)
         const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setAlpha(1))
-        this.sprite.play("flap")
+        // this.sprite.play("flap")
+        this.sprite.setAngle(0)
     }
 
     hasHitFloor() {

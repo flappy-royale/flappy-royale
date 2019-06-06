@@ -7,10 +7,10 @@ import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
-import { getUserSettings, changeSettings, getAndBumpUserCycleSeedIndex } from "../user/userManager"
-import { LoadingScene } from "./LoadingScene"
+import { getAndBumpUserCycleSeedIndex, getUserSettings } from "../user/userManager"
 import { preloadBackgroundBlogImages, setupBackgroundBlogImages } from "./utils/backgroundColors"
-import _ = require("lodash");
+import _ = require("lodash")
+import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
@@ -28,16 +28,11 @@ export class MainMenuScene extends Phaser.Scene {
 
     preload() {
         this.load.image("logo", require("../../assets/menu/logo.png"))
-        this.load.image("royale-button", require("../../assets/menu/royale.png"))
-        this.load.image("trial-button", require("../../assets/menu/trial.png"))
-        this.load.image("training-button", require("../../assets/menu/training.png"))
-        this.load.image("settings-button", require("../../assets/menu/settings.png"))
-        this.load.bitmapFont(
-            "nokia16",
-            require("../../assets/fonts/nokia16.png"),
-            require("../../assets/fonts/nokia16.xml")
-        )
+        this.load.image("royale-button", require("../../assets/menu/royale-2.png"))
+        this.load.image("trial-button", require("../../assets/menu/trial-2.png"))
+        this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
         preloadBackgroundBlogImages(this)
+        preloadBirdSprites(this)
     }
 
     create() {
@@ -62,8 +57,15 @@ export class MainMenuScene extends Phaser.Scene {
             this.seeds = seeds
         })
 
+        const settings = getUserSettings()
+        const player = new BirdSprite(this, 6, constants.GameHeight - 12, {
+            isPlayer: false,
+            settings: settings
+        })
+        player.actAsImage()
+
         this.add
-            .image(80, 110, "royale-button")
+            .image(84, 110, "royale-button")
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", async () => {
@@ -77,7 +79,7 @@ export class MainMenuScene extends Phaser.Scene {
             })
 
         this.add
-            .image(80, 140, "trial-button")
+            .image(74, 146, "trial-button")
             .setInteractive()
             // needs to be on up inside, but whatevs
             .on("pointerdown", async () => {
@@ -89,7 +91,7 @@ export class MainMenuScene extends Phaser.Scene {
             })
 
         this.add
-            .image(80, 200, "settings-button")
+            .image(76, 200, "settings-button")
             .setInteractive()
             // needs to be on up insider, but whatevs
             .on("pointerdown", () => {
