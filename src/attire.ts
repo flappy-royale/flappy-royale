@@ -178,5 +178,12 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Robin.png")
+    },
+    {
+        id: "hedgehog",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Hedgehog.png")
     }
 ]
