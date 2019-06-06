@@ -18,16 +18,14 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
     // Distance from the bottom
     const floorAvoidanceHeight = 40
 
+    const gapHeight = constants.gapHeight - Math.min(Math.floor(scene.score / 20), 6)
+
     // get the distance between each potential interval
-    const pipeIntervals = (windowHeight - pipeEdgeBuffer / 2 - constants.gapHeight / 2) / slots
+    const pipeIntervals = (windowHeight - pipeEdgeBuffer / 2 - gapHeight / 2) / slots
 
     const holeSlot = Math.floor(scene.rng() * 5) + 1
-    const holeTop = Math.round(
-        pipeIntervals * holeSlot + pipeEdgeBuffer / 2 - constants.gapHeight / 2 - floorAvoidanceHeight
-    )
-    const holeBottom = Math.round(
-        pipeIntervals * holeSlot + pipeEdgeBuffer / 2 + constants.gapHeight / 2 - floorAvoidanceHeight
-    )
+    const holeTop = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 - gapHeight / 2 - floorAvoidanceHeight)
+    const holeBottom = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 + gapHeight / 2 - floorAvoidanceHeight)
 
     const pipeTop = createSprite(x, holeTop, "pipe-top", scene)
     const pipeBottom = createSprite(x, holeBottom, "pipe-bottom", scene)
