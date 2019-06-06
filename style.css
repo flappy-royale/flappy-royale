@@ -10,6 +10,7 @@ canvas {
 body {
     padding: 0;
     margin: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 @font-face {
