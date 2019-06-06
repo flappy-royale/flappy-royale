@@ -157,6 +157,7 @@ export class BattleScene extends Phaser.Scene {
         this.load.audio("hit", require("../../assets/audio/hit.wav"))
         this.load.audio("point", require("../../assets/audio/point.wav"))
 
+        this.load.audio("other_flap", require("../../assets/audio/other_flap.wav"))
         this.load.audio("other_hit", require("../../assets/audio/other_hit.wav"))
     }
 
@@ -164,6 +165,8 @@ export class BattleScene extends Phaser.Scene {
         this.sound.add("flap")
         this.sound.add("hit")
         this.sound.add("point")
+
+        this.sound.add("other_flap")
         this.sound.add("other_hit")
 
         this.time.update(0, 0)

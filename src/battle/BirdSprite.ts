@@ -156,7 +156,9 @@ export class BirdSprite {
 
         this.body.setVelocityY(-1 * constants.flapStrength)
         this.sprite.play("flap")
-        this.scene.sound.play("flap")
+
+        if (this.isPlayer) this.scene.sound.play("flap")
+        else this.scene.sound.play("other_flap")
     }
 
     rotateSprite() {
@@ -215,7 +217,6 @@ export class BirdSprite {
         this.sprite.setGravityY(constants.gravity * -1)
         const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setAlpha(1))
-        // this.sprite.play("flap")
         this.sprite.setAngle(0)
     }
 
