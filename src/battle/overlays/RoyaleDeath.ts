@@ -62,10 +62,12 @@ export class RoyaleDeath extends Phaser.Scene {
         share.on("pointerdown", () => {
             if (navigator && "share" in navigator) {
                 const n = navigator as any
+                const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`
+                const winMessaage = `I won on Flappy Royale!`
                 n.share({
-                    title: "Sharrreeed",
-                    text: "Hello World",
-                    url: "https://developer.mozilla.org"
+                    title: "Flappy Royale",
+                    text: won ? winMessaage : lossMessage,
+                    url: "https://flappyroyale.io"
                 })
             }
         })
