@@ -236,6 +236,7 @@ function setUpStatsHTML() {
     // Show either top position or royale wins
     if (stats.royaleWins === 0) delete presentation["Royale Wins"]
     if (stats.bestPosition === 0) delete presentation["Best Position"]
+    if (stats.bestPosition === 500) delete presentation["Best Position"] // not played a game
 
     // convert ^ to HTML
     Object.keys(presentation).forEach(key => {
