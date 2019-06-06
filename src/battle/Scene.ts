@@ -152,9 +152,20 @@ export class BattleScene extends Phaser.Scene {
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
+
+        this.load.audio("flap", require("../../assets/audio/flap.wav"))
+        this.load.audio("hit", require("../../assets/audio/hit.wav"))
+        this.load.audio("point", require("../../assets/audio/point.wav"))
+
+        this.load.audio("other_hit", require("../../assets/audio/other_hit.wav"))
     }
 
     create() {
+        this.sound.add("flap")
+        this.sound.add("hit")
+        this.sound.add("point")
+        this.sound.add("other_hit")
+
         this.time.update(0, 0)
 
         // Fill the BG
@@ -411,6 +422,7 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLines.shift()
         line.destroy()
         this.score++
+        this.sound.play("point")
         this.updateScoreLabel()
     }
 

@@ -19,7 +19,7 @@ module.exports = {
             // Ensures that hashing works, but means you have to require
             // images etc for their path, and not hardcode them.
             {
-                test: /\.(png|svg|jpg|gif|html|xml|otf)$/,
+                test: /\.(wav|ogg|png|svg|jpg|gif|html|xml|otf)$/,
                 use: ["file-loader"]
             },
             // CSS hookup

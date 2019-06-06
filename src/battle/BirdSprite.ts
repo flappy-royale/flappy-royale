@@ -70,11 +70,14 @@ export class BirdSprite {
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
+    private scene: Scene
     // Don't apply gravity / velocity etc during the constructor
     // because this is used for previews
     //
     constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; settings: UserSettings }) {
         this.isPlayer = meta.isPlayer
+
+        this.scene = scene
 
         // Setup the base body
         const base = meta.settings.aesthetics.attire.find(a => a.base)
@@ -153,6 +156,7 @@ export class BirdSprite {
 
         this.body.setVelocityY(-1 * constants.flapStrength)
         this.sprite.play("flap")
+        this.scene.sound.play("flap")
     }
 
     rotateSprite() {
@@ -186,6 +190,9 @@ export class BirdSprite {
             this.body.setVelocityX(velocity)
         }
         this.isDead = true
+
+        if (this.isPlayer) this.scene.sound.play("hit")
+        else this.scene.sound.play("other_hit")
     }
 
     // Use the same gravity + velocity as the bus
