@@ -15,6 +15,7 @@ import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
+import { RoyaleDeath } from "./overlays/RoyaleDeath"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -93,10 +94,13 @@ export class BattleScene extends Phaser.Scene {
     private score: number
 
     /** How we show your score */
-    private scoreLabel: Phaser.GameObjects.BitmapText
+    private scoreLabel: Phaser.GameObjects.BitmapText | undefined
 
     /** Where we tell you how many are left */
-    private birdsLeft: Phaser.GameObjects.BitmapText
+    private birdsLeft: Phaser.GameObjects.BitmapText | undefined
+
+    /** What you see to go back, hides on dying in a royale */
+    private backButton: Phaser.GameObjects.Image | undefined
 
     /**  Analytics state management */
     private analytics: BattleAnalytics
@@ -247,7 +251,6 @@ export class BattleScene extends Phaser.Scene {
         this.analytics.startRecording({ totalBirds: this.ghostBirds.length })
 
         if (this.mode !== game.GameMode.Menu) {
-            // TODO: Temporary
             const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
             // needs to be on up insider, but whatever
             back.on("pointerdown", () => {
@@ -255,6 +258,7 @@ export class BattleScene extends Phaser.Scene {
                 launchMainMenu(this.game)
             })
             back.setDepth(constants.zLevels.ui)
+            this.backButton = back
         }
     }
 
@@ -421,12 +425,12 @@ export class BattleScene extends Phaser.Scene {
         })
 
         const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
+        const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
 
         // Check if they did enough for us to record the run
         // in the future we'll want to show the death animation etc
         if (this.isRecording() && hasJumped) {
             // Store what happened
-            const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
             this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
             recordGamePlayed(this.analytics.getResults())
 
@@ -447,25 +451,34 @@ export class BattleScene extends Phaser.Scene {
         if (game.shouldRestartWhenPlayerDies(this.mode)) {
             this.restartTheGame()
         } else {
-            if (!this.bird.isDead) {
-                // Stop everything!
-                this.cameras.main.shake(20, 0.1)
-                // No more new pipes
-                this.newPipeTimer.destroy()
-                // Stop the pipes and scores from scrolling
-                this.pipes.forEach(pg => pg.setVelocity(0, 0, 0))
-                this.scoreLines.forEach(pg => pg.setVelocity(0, 0))
+            // Could be hitting this on a loop
+            if (this.bird.isDead) return
 
-                // Make your bird go through the death animation
-                this.bird.die()
+            // Stop everything!
+            this.cameras.main.shake(20, 0.1)
+            // No more new pipes
+            this.newPipeTimer.destroy()
+            // Stop the pipes and scores from scrolling
+            this.pipes.forEach(pg => pg.setVelocity(0, 0, 0))
+            this.scoreLines.forEach(pg => pg.setVelocity(0, 0))
 
-                // Allow the other birds to continue off screen
-                this.ghostBirds.forEach(b => !b.isDead && b.startMovingLeft())
+            // Make your bird go through the death animation
+            this.bird.die()
 
-                // Stop the bus from moving with the pipes
-                this.bus.setVelocityX(0)
-            }
-            // NOOP
+            // Allow the other birds to continue off screen
+            this.ghostBirds.forEach(b => !b.isDead && b.startMovingLeft())
+
+            // Stop the bus from moving with the pipes
+            this.bus.setVelocityX(0)
+
+            // Remove the UI
+            // TODO: Fade?
+            this.scoreLabel.destroy()
+            this.birdsLeft.destroy()
+            this.backButton.destroy()
+
+            const deathOverlay = new RoyaleDeath("death", { score: this.score, position: birdsAlive.length })
+            this.scene.add("deathoverlay", deathOverlay, true)
         }
     }
 
@@ -505,7 +518,7 @@ const canRecordScore = () => {
 }
 
 // https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number/13627586
-function getNumberWithOrdinal(n) {
+export function getNumberWithOrdinal(n) {
     var s = ["th", "st", "nd", "rd"],
         v = n % 100
     return n + (s[(v - 20) % 10] || s[v] || s[0])

@@ -208,7 +208,7 @@ export class BirdSprite {
         this.sprite.setGravityY(constants.gravity * -1)
         const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setAlpha(1))
-        // this.sprite.play("flap")
+        this.sprite.play("flap")
         this.sprite.setAngle(0)
     }
 
