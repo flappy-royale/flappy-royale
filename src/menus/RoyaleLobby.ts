@@ -25,7 +25,6 @@ export class RoyaleLobby extends Phaser.Scene {
     preload() {
         // Adds the HTML file to the game cache
         this.load.html("RoyaleLobby", require("../../assets/html/RoyaleLobby.html"))
-        this.load.image("back-button", require("../../assets/menu/back.png"))
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
         this.load.image("purple-sash", require("../../assets/menu/PurpleishSash.png"))
@@ -38,29 +37,7 @@ export class RoyaleLobby extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xacd49d)
 
         // Make a HTML form
-        var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("RoyaleLobby")
-
-        // Set the circle BG on the you bird
-        const you = document.getElementById("you-sticky")
-        // const youBG = you.getElementsByTagName("img").item(0)
-        // youBG.src = require("../../assets/menu/Circle.png")
-
-        // Click handling
-        element.on("click", function(event) {
-            const target = event.target as Element
-
-            if (event.target.name === "loginButton") {
-                const usernameInput = element.node.getElementsByTagName("input").item(0)
-                changeSettings({ name: usernameInput.value })
-                this.removeListener("click")
-            }
-        })
-
-        // const lobby = this.add.bitmapText(40, 80, "nokia16", "...")
-        // const royale = this.add
-        //     .image(80, 160, "royale-button")
-        //     .setAlpha(0.2)
-        //     .setInteractive()
+        this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("RoyaleLobby")
 
         const createUserImage = (user: UserSettings) => {
             const root = document.createElement("div")

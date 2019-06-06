@@ -25,7 +25,6 @@ export class TrialLobby extends Phaser.Scene {
     preload() {
         // Adds the HTML file to the game cache
         this.load.html("Lobby", require("../../assets/html/TrialLobby.html"))
-        this.load.image("back-button", require("../../assets/menu/back.png"))
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
         this.load.image("purple-sash", require("../../assets/menu/PurpleishSash.png"))
@@ -38,18 +37,7 @@ export class TrialLobby extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xeb9599)
 
         // Make a HTML form
-        var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("Lobby")
-
-        // Click handling
-        element.on("click", function(event) {
-            const target = event.target as Element
-
-            if (event.target.name === "loginButton") {
-                const usernameInput = element.node.getElementsByTagName("input").item(0)
-                changeSettings({ name: usernameInput.value })
-                this.removeListener("click")
-            }
-        })
+        this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("Lobby")
 
         const createUserImage = (user: UserSettings) => {
             const root = document.createElement("div")
