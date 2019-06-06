@@ -93,7 +93,7 @@ export class BattleScene extends Phaser.Scene {
     public devKeys: object
 
     // What score did someone just get
-    private score: number
+    public score: number
 
     /** How we show your score */
     private scoreLabel: Phaser.GameObjects.BitmapText | undefined
