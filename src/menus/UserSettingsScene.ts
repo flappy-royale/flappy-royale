@@ -3,6 +3,8 @@ import { getUserSettings, changeSettings, Attire, getUserStatistics } from "../u
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { builtInAttire } from "../attire"
+import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
+import { runInThisContext } from "vm"
 
 export const UserSettingsKey = "UserSettings"
 
@@ -19,11 +21,15 @@ export class UserSettings extends Phaser.Scene {
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
         this.load.image("attire-empty", require("../../assets/menu/AttireSelectionEmpty.png"))
         this.load.image("attire-selected", require("../../assets/menu/AttireSelected.png"))
+
+        preloadBackgroundBlobImages(this)
     }
 
     create() {
         // Fill the BG
-        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xe7d866)
+        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xdecf5e)
+
+        setupBackgroundBlobImages(this, { min: 30 })
 
         // Make a HTML form
         var element = this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("Settings")
