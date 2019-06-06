@@ -7,7 +7,7 @@ import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
-import { getAndBumpUserCycleSeedIndex, getUserSettings } from "../user/userManager"
+import { getAndBumpUserCycleSeedIndex, getUserSettings, getUserStatistics } from "../user/userManager"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import _ = require("lodash")
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
@@ -33,6 +33,12 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
+
+        this.load.bitmapFont(
+            "nokia16",
+            require("../../assets/fonts/nokia16.png"),
+            require("../../assets/fonts/nokia16.xml")
+        )
     }
 
     create() {
@@ -51,6 +57,13 @@ export class MainMenuScene extends Phaser.Scene {
         )
         this.add.image(80, 50, "logo")
         setupBackgroundBlobImages(this, { min: 100, allColors: true })
+
+        const stats = getUserStatistics()
+
+        const wins = this.add.bitmapText(constants.GameWidth, 0, "nokia16", "wins: " + stats.royaleWins, 0)
+        const rightAligned = constants.GameWidth - wins.getTextBounds(true).local.width
+        wins.setX(rightAligned - 1)
+        //this.add.bitmapText(10, 0, "nokia16", "wins: 0", 0)
 
         // NOTE: ASYNC!
         getSeedsFromAPI(constants.APIVersion).then(seeds => {
