@@ -46,7 +46,7 @@ export class RoyaleDeath extends Phaser.Scene {
 
         if (!won) {
             this.add.image(60, 152, "green-sash-small")
-            this.add.bitmapText(10, 146, "fipps-bit", `${getNumberWithOrdinal(this.props.position)} place`, 8)
+            this.add.bitmapText(10, 148, "fipps-bit", `${getNumberWithOrdinal(this.props.position)} place`, 8)
         }
 
         this.add.image(80, GameHeight - 8, "footer-bg")
