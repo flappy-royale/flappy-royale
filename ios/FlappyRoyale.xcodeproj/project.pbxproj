@@ -18,7 +18,7 @@
 
 /* Begin PBXFileReference section */
 		8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
-		C637388322A874B700E5A33D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C637388322A874B700E5A33D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../assets/config/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C653148D21EE7BB80068609E /* FlappyRoyale.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyRoyale.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C653149021EE7BB80068609E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C653149221EE7BB80068609E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };

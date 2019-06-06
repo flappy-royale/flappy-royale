@@ -6,6 +6,7 @@ import { SeedsResponse } from "../functions/src/api-contracts"
 import { ReplayUploadRequest } from "../functions/src"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
+import { firebaseConfig } from "../assets/config/firebaseConfig"
 
 /** How it's stored in the DB to save on fs space */
 export interface SeedDataZipped {
@@ -29,16 +30,6 @@ export interface PlayerEvent {
     timestamp: number
     action: "flap" | "sync" | "died"
     value?: number
-}
-
-export const firebaseConfig = {
-    apiKey: "AIzaSyCPbIZkuRJSdIVlRCHJPCLlWd6cz6VAs-s",
-    authDomain: "flappy-royale-3377a.firebaseapp.com",
-    databaseURL: "https://flappy-royale-3377a.firebaseio.com",
-    projectId: "flappy-royale-3377a",
-    storageBucket: "flappy-royale-3377a.appspot.com",
-    messagingSenderId: "533580149860",
-    appId: "1:533580149860:web:7be6631222f08df3"
 }
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
