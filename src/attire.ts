@@ -103,6 +103,20 @@ export const builtInAttire: PresentationAttire[] = [
         href: require("../assets/attire/bad-dana.png")
     },
     {
+        id: "zen",
+        description: "See no evil",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/zen.png")
+    },
+    {
+        id: "nervous",
+        description: ":|",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/nervous.png")
+    },
+    {
         id: "tired",
         description: "Bird got punk'd",
         fit: "tight",

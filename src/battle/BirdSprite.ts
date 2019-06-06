@@ -264,7 +264,7 @@ export class BirdSprite {
         // Note: This function will only be called with loose attire  on the player
         const attireCount = settings.tight ? this.tightAttire : this.looseAttire
         attireCount.forEach(item => {
-            item.setPosition(this.bodySprite.x, this.bodySprite.y)
+            item.setPosition(this.bodySprite.x - 1, this.bodySprite.y + 1)
             item.rotation = this.bodySprite.rotation
         })
     }
