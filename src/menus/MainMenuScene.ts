@@ -36,7 +36,7 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
-        this.battleBG = new BattleScene({ seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })
+        this.battleBG = new BattleScene({ key: "menu-bg", seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })
         this.game.scene.add("battlebg", this.battleBG, true)
         this.game.scene.bringToTop("MainMenu")
 

@@ -60,7 +60,14 @@ export class RoyaleDeath extends Phaser.Scene {
         const share = this.add.image(100, GameHeight - 18, "button-bg")
         share.setInteractive()
         share.on("pointerdown", () => {
-            // NOOP for now
+            if (navigator && "share" in navigator) {
+                const n = navigator as any
+                n.share({
+                    title: "Sharrreeed",
+                    text: "Hello World",
+                    url: "https://developer.mozilla.org"
+                })
+            }
         })
 
         this.add.bitmapText(62, GameHeight - 31, "fipps-bit", "SHARE", 16)

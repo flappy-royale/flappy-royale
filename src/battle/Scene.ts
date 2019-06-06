@@ -24,6 +24,8 @@ export interface BattleSceneSettings {
     data: SeedData
     /** Game mode */
     gameMode: game.GameMode
+    /** a UUID for the game scene  */
+    key: string
 }
 
 const devSettings = {
