@@ -239,7 +239,7 @@ export class BattleScene extends Phaser.Scene {
 
         // This sets up a new pipe every x seconds
         const startPipeTimer = () => {
-            if (this.bird.isDead) return
+            if (this.bird && this.bird.isDead) return
 
             this.newPipeTimer = this.time.addEvent({
                 delay: constants.pipeRepeatTime, // We want 60px difference
