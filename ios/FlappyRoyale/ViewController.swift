@@ -11,6 +11,7 @@ import SafariServices
 import WebKit
 
 class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UIScrollViewDelegate, SFSafariViewControllerDelegate {
+    let haptics = HapticManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
+
+        haptics.inject(userContentController)
 
         let configuration = WKWebViewConfiguration()
 

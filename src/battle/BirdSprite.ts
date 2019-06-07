@@ -157,7 +157,13 @@ export class BirdSprite {
         this.body.setVelocityY(-1 * constants.flapStrength)
         this.sprite.play("flap")
 
-        if (this.isPlayer) this.scene.sound.play("flap")
+        if (this.isPlayer) {
+            this.scene.sound.play("flap")
+
+            if (window.haptics) {
+                window.haptics.prepareLight()
+            }
+        }
         else this.scene.sound.play("other_flap")
     }
 
@@ -193,8 +199,15 @@ export class BirdSprite {
         }
         this.isDead = true
 
-        if (this.isPlayer) this.scene.sound.play("hit")
-        else this.scene.sound.play("other_hit")
+        if (this.isPlayer) {
+            this.scene.sound.play("hit")
+            if (window.haptics) {
+                window.haptics.playLight()
+                window.haptics.prepareHeavy()
+            }
+        } else {
+            this.scene.sound.play("other_hit")
+        }
     }
 
     // Use the same gravity + velocity as the bus
@@ -224,6 +237,10 @@ export class BirdSprite {
         this.isAtRest = true
         this.sprite.setGravityY(constants.gravity * -1)
         this.sprite.setVelocityY(0)
+
+        if (window.haptics) {
+            window.haptics.playHeavy()
+        }
     }
 
     // When a player dies in royale, the rest if the birds move forwards
