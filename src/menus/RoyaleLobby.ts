@@ -2,10 +2,11 @@ import * as Phaser from "phaser"
 import { UserSettings } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
-import { fetchRecordingsForSeed } from "../firebase"
+import { fetchRecordingsForSeed, SeedData } from "../firebase"
 import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
+import _ = require("lodash");
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -15,6 +16,9 @@ export interface RoyaleLobbyProps {
 
 export class RoyaleLobby extends Phaser.Scene {
     private seed: string
+
+    // If true, we can safely start the game
+    private seedData?: SeedData
 
     constructor(props: RoyaleLobbyProps) {
         super("RoyaleLobbyScene")
@@ -38,6 +42,9 @@ export class RoyaleLobby extends Phaser.Scene {
 
         // Make a HTML form
         this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("RoyaleLobby")
+
+        // Number of seconds until the game starts
+        let countdownTime = _.random(4, 6) + 1
 
         const createUserImage = (user: UserSettings) => {
             const root = document.createElement("div")
@@ -66,13 +73,17 @@ export class RoyaleLobby extends Phaser.Scene {
         }
 
         fetchRecordingsForSeed(this.seed).then(seedData => {
+            this.seedData = seedData
+
+            let duration = _.random(countdownTime - 2, countdownTime) * 1000
+
             const birdCount = document.getElementById("you-vs")
             console.log(seedData)
             this.tweens.addCounter({
                 from: 0,
                 to: seedData.replays.length,
                 ease: "Cubic",
-                duration: Math.floor(Math.random() * 2000),
+                duration: duration,
                 repeat: 0,
                 onUpdate: (v: Phaser.Tweens.Tween) =>
                     (birdCount.innerHTML = `You vs <span>${pad(Math.round(v.getValue()), 2)}</span> birds`)
@@ -92,18 +103,6 @@ export class RoyaleLobby extends Phaser.Scene {
                 birds.appendChild(birdLi)
             })
 
-            const preloadAssetsDone = () => {
-                const goButton = document.getElementById("button")
-
-                goButton.onclick = () => {
-                    this.game.scene.remove(this)
-                    const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Royale })
-                    this.game.scene.add("BattleScene" + this.seed, scene, true, {})
-                    scene.playBusCrash()
-                }
-            }
-
-            this.load.once("complete", preloadAssetsDone, this)
             this.load.start()
         })
 
@@ -129,6 +128,35 @@ export class RoyaleLobby extends Phaser.Scene {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
         }
+
+        // Start the countdown timer
+        let period = "." // Tracks "hold on..." periods if we don't load seeds in time
+
+        const countdownButton = document.getElementById("countdown-description")
+        const countdownTimerText = document.getElementById("countdown-time")
+
+        const updateTimer = () => {
+            countdownTime -= 1
+            if (countdownTime <= 0) {
+                if (this.seedData) {
+                    // Load the game!
+                    this.game.scene.remove(this)
+                    const scene = new BattleScene({ seed: this.seed, data: this.seedData, gameMode: GameMode.Royale })
+                    this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                    scene.playBusCrash()
+                    return
+                } else {
+                    countdownButton.innerText = `hold on${period}`
+                    period += "."
+                    if (period === "....") { period = "" }
+                }
+            } else {
+                countdownTimerText.innerText = `${countdownTime}`
+            }
+            setTimeout(updateTimer, 1000)
+        }
+        updateTimer()
+
     }
 }
 

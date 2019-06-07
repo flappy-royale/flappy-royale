@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		127243B3B042825660633491 /* Pods_FlappyRoyale.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4D29A2DC207E9AB7FEB15EF /* Pods_FlappyRoyale.framework */; };
+		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
+		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
+		C626522622AAA1C100720FE0 /* JS in Resources */ = {isa = PBXBuildFile; fileRef = C626522522AAA1C100720FE0 /* JS */; };
 		C637388422A874B700E5A33D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C637388322A874B700E5A33D /* GoogleService-Info.plist */; };
 		C653149121EE7BB80068609E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149021EE7BB80068609E /* AppDelegate.swift */; };
 		C653149321EE7BB80068609E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149221EE7BB80068609E /* ViewController.swift */; };
@@ -18,6 +21,9 @@
 
 /* Begin PBXFileReference section */
 		8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
+		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
+		C626522522AAA1C100720FE0 /* JS */ = {isa = PBXFileReference; lastKnownFileType = folder; path = JS; sourceTree = "<group>"; };
 		C637388322A874B700E5A33D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../assets/config/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C653148D21EE7BB80068609E /* FlappyRoyale.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyRoyale.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C653149021EE7BB80068609E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +86,7 @@
 		C653148F21EE7BB80068609E /* FlappyRoyale */ = {
 			isa = PBXGroup;
 			children = (
+				C626522522AAA1C100720FE0 /* JS */,
 				C637388322A874B700E5A33D /* GoogleService-Info.plist */,
 				C653149021EE7BB80068609E /* AppDelegate.swift */,
 				C653149221EE7BB80068609E /* ViewController.swift */,
@@ -87,6 +94,8 @@
 				C653149721EE7BBA0068609E /* Assets.xcassets */,
 				C653149921EE7BBA0068609E /* LaunchScreen.storyboard */,
 				C653149C21EE7BBA0068609E /* Info.plist */,
+				C626521F22AA9C1400720FE0 /* HapticManager.swift */,
+				C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */,
 			);
 			path = FlappyRoyale;
 			sourceTree = "<group>";
@@ -151,6 +160,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C626522622AAA1C100720FE0 /* JS in Resources */,
 				C653149B21EE7BBA0068609E /* LaunchScreen.storyboard in Resources */,
 				C637388422A874B700E5A33D /* GoogleService-Info.plist in Resources */,
 				C653149821EE7BBA0068609E /* Assets.xcassets in Resources */,
@@ -214,7 +224,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */,
 				C653149321EE7BB80068609E /* ViewController.swift in Sources */,
+				C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */,
 				C653149121EE7BB80068609E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
