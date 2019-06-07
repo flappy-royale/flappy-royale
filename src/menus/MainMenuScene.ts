@@ -57,7 +57,7 @@ export class MainMenuScene extends Phaser.Scene {
             0.4
         )
 
-        const logo = this.add.image(80, 50, "logo")
+        const logo = this.add.image(84, 50, "logo")
         becomeButton(logo, this.loadRoyale, this)
 
         setupBackgroundBlobImages(this, { min: 100, allColors: true })

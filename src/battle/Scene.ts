@@ -15,7 +15,7 @@ import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings, subtractALife } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
-import { RoyaleDeath } from "./overlays/RoyaleDeath"
+import { RoyaleDeath } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 
 export interface BattleSceneSettings {
@@ -239,6 +239,8 @@ export class BattleScene extends Phaser.Scene {
 
         // This sets up a new pipe every x seconds
         const startPipeTimer = () => {
+            if (this.bird.isDead) return
+
             this.newPipeTimer = this.time.addEvent({
                 delay: constants.pipeRepeatTime, // We want 60px difference
                 callback: () => this.addPipe(),
@@ -503,7 +505,7 @@ export class BattleScene extends Phaser.Scene {
             // Stop everything!
             this.cameras.main.shake(20, 0.1)
             // No more new pipes
-            this.newPipeTimer.destroy()
+            if (this.newPipeTimer) this.newPipeTimer.destroy()
             // Stop the pipes and scores from scrolling
             this.pipes.forEach(pg => pg.setVelocity(0, 0, 0))
             this.scoreLines.forEach(pg => pg.setVelocity(0, 0))
