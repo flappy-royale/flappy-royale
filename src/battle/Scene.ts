@@ -16,6 +16,7 @@ import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings, subtractALife } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath } from "./overlays/RoyaleDeath"
+import { becomeButton } from "../menus/utils/becomeButton"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -275,13 +276,16 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.mode !== game.GameMode.Menu) {
             const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
-            back.on("pointerup", () => {
-                this.game.scene.remove(this)
-                launchMainMenu(this.game)
-            })
+            becomeButton(back, this.goBackToMainMenu, this)
+
             back.setDepth(constants.zLevels.ui)
             this.backButton = back
         }
+    }
+
+    private goBackToMainMenu() {
+        this.game.scene.remove(this)
+        launchMainMenu(this.game)
     }
 
     updateScoreLabel() {

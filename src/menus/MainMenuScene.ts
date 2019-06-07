@@ -11,6 +11,7 @@ import { getAndBumpUserCycleSeedIndex, getUserSettings, getUserStatistics } from
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import _ = require("lodash")
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
+import { becomeButton } from "./utils/becomeButton"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
@@ -55,12 +56,10 @@ export class MainMenuScene extends Phaser.Scene {
             0x000000,
             0.4
         )
-        this.add
-            .image(80, 50, "logo")
-            .setInteractive()
-            .on("pointerup", async () => {
-                this.loadRoyale()
-            })
+
+        const logo = this.add.image(80, 50, "logo")
+        becomeButton(logo, this.loadRoyale, this)
+
         setupBackgroundBlobImages(this, { min: 100, allColors: true })
 
         const stats = getUserStatistics()
@@ -82,32 +81,27 @@ export class MainMenuScene extends Phaser.Scene {
         })
         player.actAsImage()
 
-        this.add
-            .image(84, 110, "royale-button")
-            .setInteractive()
-            .on("pointerup", async () => {
-                this.loadRoyale()
-            })
+        const royaleButton = this.add.image(84, 110, "royale-button")
+        becomeButton(royaleButton, this.loadRoyale, this)
 
-        this.add
-            .image(74, 146, "trial-button")
-            .setInteractive()
-            .on("pointerup", async () => {
-                this.removeMenu()
+        const trial = this.add.image(74, 146, "trial-button")
+        becomeButton(trial, this.loadTrial, this)
 
-                const seed = this.seeds.daily.production
-                const lobby = new TrialLobby({ seed })
-                this.game.scene.add("TrialLobby" + seed, lobby, true, {})
-            })
+        const settingsButton = this.add.image(76, 200, "settings-button")
+        becomeButton(settingsButton, this.loadSettings, this)
+    }
 
-        this.add
-            .image(76, 200, "settings-button")
-            .setInteractive()
-            .on("pointerup", () => {
-                this.removeMenu()
-                const settings = new UserSettings()
-                this.game.scene.add(UserSettingsKey, settings, true)
-            })
+    private loadSettings() {
+        this.removeMenu()
+        const settings = new UserSettings()
+        this.game.scene.add(UserSettingsKey, settings, true)
+    }
+
+    private loadTrial() {
+        this.removeMenu()
+        const seed = this.seeds.daily.production
+        const lobby = new TrialLobby({ seed })
+        this.game.scene.add("TrialLobby" + seed, lobby, true, {})
     }
 
     private loadRoyale() {
