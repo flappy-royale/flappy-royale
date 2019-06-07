@@ -54,8 +54,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 //        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
 //        webView.loadFileURL(url, allowingReadAccessTo: url)
 
-//        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
-        guard let url = URL(string: "http://localhost:8085") else { return }
+        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
+//        guard let url = URL(string: "http://localhost:8085") else { return }
         webView.load(URLRequest(url: url))
 
         // Dispatch app pause/resume events to JS, so we can manually pause/resume gameplay

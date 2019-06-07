@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale-frameworks.sh
+${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework
+${BUILT_PRODUCTS_DIR}/mopub-ios-sdk/MoPub.framework
+${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework

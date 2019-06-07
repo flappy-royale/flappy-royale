@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>ALAdRewardDelegate Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">AppLovin iOS SDK 6.6.0 </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">AppLovin</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/rewardValidationRequestForAd:didExceedQuotaWithResponse:">- rewardValidationRequestForAd:didExceedQuotaWithResponse:</option>
+		
+		<option value="//api/name/rewardValidationRequestForAd:didFailWithError:">- rewardValidationRequestForAd:didFailWithError:</option>
+		
+		<option value="//api/name/rewardValidationRequestForAd:didSucceedWithResponse:">- rewardValidationRequestForAd:didSucceedWithResponse:</option>
+		
+		<option value="//api/name/rewardValidationRequestForAd:wasRejectedWithResponse:">- rewardValidationRequestForAd:wasRejectedWithResponse:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">ALAdRewardDelegate Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>ALAdRewardDelegate.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>This protocol defines a listener for rewarded video events.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/rewardValidationRequestForAd:didSucceedWithResponse:" title="rewardValidationRequestForAd:didSucceedWithResponse:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rewardValidationRequestForAd:didSucceedWithResponse:">&ndash;&nbsp;rewardValidationRequestForAd:didSucceedWithResponse:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This method is invoked if a user viewed a rewarded video and their reward was approved by the AppLovin server.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)rewardValidationRequestForAd:(ALAd *)<em>ad</em> didSucceedWithResponse:(NSDictionary *)<em>response</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>ad</code></th>
+						<td><p>Ad which was viewed.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>response</code></th>
+						<td><p>Dictionary containing response data, including &ldquo;currency&rdquo; and &ldquo;amount&rdquo;.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method is invoked if a user viewed a rewarded video and their reward was approved by the AppLovin server.</p>
+
+<p>If you are using reward validation for incentivized videos, this method
+will be invoked if we contacted AppLovin successfully. This means that we believe the
+reward is legitimate and should be awarded. Please note that ideally you should refresh the
+user&rsquo;s balance from your server at this point to prevent tampering with local data on jailbroken devices.</p>
+
+<p>The response NSDictionary will typically includes the keys &ldquo;currency&rdquo; and &ldquo;amount&rdquo;, which point to NSStrings containing the name and amount of the virtual currency to be awarded.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">ALAdRewardDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/rewardValidationRequestForAd:didExceedQuotaWithResponse:" title="rewardValidationRequestForAd:didExceedQuotaWithResponse:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rewardValidationRequestForAd:didExceedQuotaWithResponse:">&ndash;&nbsp;rewardValidationRequestForAd:didExceedQuotaWithResponse:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This method will be invoked if we were able to contact AppLovin, but the user has already received
+the maximum number of coins you allowed per day in the web UI.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)rewardValidationRequestForAd:(ALAd *)<em>ad</em> didExceedQuotaWithResponse:(NSDictionary *)<em>response</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>ad</code></th>
+						<td><p>Ad which was viewed.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>response</code></th>
+						<td><p>Dictionary containing response data from the server.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method will be invoked if we were able to contact AppLovin, but the user has already received
+the maximum number of coins you allowed per day in the web UI.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">ALAdRewardDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/rewardValidationRequestForAd:wasRejectedWithResponse:" title="rewardValidationRequestForAd:wasRejectedWithResponse:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rewardValidationRequestForAd:wasRejectedWithResponse:">&ndash;&nbsp;rewardValidationRequestForAd:wasRejectedWithResponse:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This method will be invoked if the AppLovin server rejected the reward request.
+This would usually happen if the user fails to pass an anti-fraud check.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)rewardValidationRequestForAd:(ALAd *)<em>ad</em> wasRejectedWithResponse:(NSDictionary *)<em>response</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>ad</code></th>
+						<td><p>Ad which was viewed.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>response</code></th>
+						<td><p>Dictionary containing response data from the server.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method will be invoked if the AppLovin server rejected the reward request.
+This would usually happen if the user fails to pass an anti-fraud check.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">ALAdRewardDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/rewardValidationRequestForAd:didFailWithError:" title="rewardValidationRequestForAd:didFailWithError:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rewardValidationRequestForAd:didFailWithError:">&ndash;&nbsp;rewardValidationRequestForAd:didFailWithError:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This method will be invoked if were unable to contact AppLovin, so no ping will be heading to your server.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)rewardValidationRequestForAd:(ALAd *)<em>ad</em> didFailWithError:(NSInteger)<em>responseCode</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>ad</code></th>
+						<td><p>Ad which was viewed.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>responseCode</code></th>
+						<td><p>A failure code corresponding to a constant defined in <code>ALErrorCodes.h</code>.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method will be invoked if were unable to contact AppLovin, so no ping will be heading to your server.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">ALAdRewardDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 AppLovin. All rights reserved. Updated: 2019-05-02</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

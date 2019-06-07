@@ -8,4 +8,10 @@ target 'FlappyRoyale' do
   # Pods for FlappyRoyale
   pod 'Firebase/Core'
 
+  # ADDDDSsssss
+  pod 'mopub-ios-sdk', '~> 5.0'
+  pod 'AdColony'
+  pod 'VungleSDK-iOS'
+  pod 'AppLovinSDK'
+  pod 'ChartboostSDK'
 end

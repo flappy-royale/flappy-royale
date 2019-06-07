@@ -1,0 +1,6 @@
+framework module AdColony {
+  umbrella header "AdColony.h"
+
+  export *
+  module * { export * }
+}
