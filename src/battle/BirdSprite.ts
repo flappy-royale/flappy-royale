@@ -161,7 +161,8 @@ export class BirdSprite {
             this.scene.sound.play("flap")
 
             if (window.haptics) {
-                window.haptics.prepareLight()
+                window.haptics.playSelection()
+                window.haptics.prepareHeavy()
             }
         }
         else this.scene.sound.play("other_flap")
@@ -202,7 +203,7 @@ export class BirdSprite {
         if (this.isPlayer) {
             this.scene.sound.play("hit")
             if (window.haptics) {
-                window.haptics.playLight()
+                window.haptics.playHeavy()
                 window.haptics.prepareHeavy()
             }
         } else {
@@ -234,12 +235,14 @@ export class BirdSprite {
     }
 
     hasHitFloor() {
-        this.isAtRest = true
-        this.sprite.setGravityY(constants.gravity * -1)
-        this.sprite.setVelocityY(0)
+        if (!this.isAtRest) {
+            this.isAtRest = true
+            this.sprite.setGravityY(constants.gravity * -1)
+            this.sprite.setVelocityY(0)
 
-        if (window.haptics) {
-            window.haptics.playHeavy()
+            if (window.haptics) {
+                window.haptics.playHeavy()
+            }
         }
     }
 
