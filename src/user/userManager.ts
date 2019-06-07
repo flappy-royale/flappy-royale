@@ -167,3 +167,33 @@ export const getUserStatistics = () => {
 
     return stats
 }
+
+const defaultLives = 10
+
+export const getLives = (seed: string) => {
+    const livesData = localStorage.getItem("lives")
+
+    let livesNum = livesData && JSON.parse(livesData)[seed]
+    if (livesNum === undefined) livesNum = defaultLives
+
+    // Cleans up old lives data every time you grab one,
+    // mainly just keeps the amount of space in localstorage small
+    const newData = {}
+    newData[seed] = livesNum
+    localStorage.setItem("lives", JSON.stringify(newData))
+
+    return livesNum
+}
+
+export const subtractALife = (seed: string) => addLives(seed, -1)
+
+export const addLives = (seed: string, val: number): number => {
+    const livesData = localStorage.getItem("lives")
+    const lives = (livesData && JSON.parse(livesData)[seed]) || defaultLives
+
+    const newData = {}
+    newData[seed] = lives + val
+    localStorage.setItem("lives", JSON.stringify(newData))
+
+    return newData[seed]
+}

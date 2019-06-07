@@ -26,3 +26,6 @@ export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Ro
 
 /** Should we show the birds left? */
 export const shouldRestartWhenPlayerDies = (mode: GameMode) => mode === GameMode.Trial || mode === GameMode.Training
+
+/** Should we boot you out if you're out of lives? */
+export const usesLives = (mode: GameMode) => mode === GameMode.Trial

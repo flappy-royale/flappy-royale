@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { changeSettings, UserSettings } from "../user/userManager"
+import { UserSettings, getLives } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { fetchRecordingsForSeed } from "../firebase"
@@ -38,6 +38,8 @@ export class TrialLobby extends Phaser.Scene {
 
         // Make a HTML form
         this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("Lobby")
+
+        const lives = getLives(this.seed)
 
         const createUserImage = (user: UserSettings) => {
             const root = document.createElement("div")
@@ -86,6 +88,8 @@ export class TrialLobby extends Phaser.Scene {
                 const goButton = document.getElementById("button")
 
                 goButton.onclick = () => {
+                    if (lives === 0) return
+
                     this.game.scene.remove(this)
                     const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
                     this.game.scene.add("BattleScene" + this.seed, scene, true, {})
@@ -118,6 +122,13 @@ export class TrialLobby extends Phaser.Scene {
         document.getElementById("back").onclick = () => {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
+        }
+
+        const info = document.getElementById("info")
+        info.innerHTML = `Daily scoreboard<br />You have ${lives} lives`
+
+        if (lives === 0) {
+            buttonBG.style.opacity = "0.3"
         }
     }
 }

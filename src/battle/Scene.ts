@@ -13,7 +13,7 @@ import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
-import { recordGamePlayed, getUserSettings } from "../user/userManager"
+import { recordGamePlayed, getUserSettings, subtractALife } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath } from "./overlays/RoyaleDeath"
 
@@ -478,7 +478,21 @@ export class BattleScene extends Phaser.Scene {
         }
 
         if (game.shouldRestartWhenPlayerDies(this.mode)) {
-            this.restartTheGame()
+            if (!game.usesLives(this.mode)) {
+                // Training is still in the code
+                // better to be prepared
+                this.restartTheGame()
+            } else {
+                // This is only in trial mode
+                const newLives = subtractALife(this.seed)
+                console.log("lives", newLives)
+                if (newLives === 0) {
+                    // TODO: Modal instead
+                    launchMainMenu(this.game)
+                } else {
+                    this.restartTheGame()
+                }
+            }
         } else {
             // Could be hitting this on a loop
             if (this.bird.isDead) return
