@@ -5,7 +5,13 @@ window.haptics = {
 
   playLight: () => { play("light") },
   playMedium: () => { play("medium") },
-  playHeavy: () => { play("heavy") }
+  playHeavy: () => { play("heavy") },
+
+  playSelection: () => { play("selection") },
+
+  playSuccess: () => { play("success") },
+  playError: () => { play("error") },
+  playWarning: () => { play("warning") }
 }
 
 function prepare(type) {

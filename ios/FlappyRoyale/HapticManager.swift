@@ -13,6 +13,8 @@ class HapticManager : NSObject {
     let lightManager = UIImpactFeedbackGenerator(style: .light)
     let mediumManager = UIImpactFeedbackGenerator(style: .medium)
     let heavyManager = UIImpactFeedbackGenerator(style: .heavy)
+    let selectionManager = UISelectionFeedbackGenerator()
+    let notificationManager = UINotificationFeedbackGenerator()
 
     func prepareLight() {
         lightManager.prepare()
@@ -32,10 +34,27 @@ class HapticManager : NSObject {
 
     func medium() {
         mediumManager.impactOccurred()
+
     }
 
     func heavy() {
         heavyManager.impactOccurred()
+    }
+
+    func selection() {
+        selectionManager.selectionChanged()
+    }
+
+    func success() {
+        notificationManager.notificationOccurred(.success)
+    }
+
+    func error() {
+        notificationManager.notificationOccurred(.error)
+    }
+
+    func warning() {
+        notificationManager.notificationOccurred(.warning)
     }
 }
 
@@ -54,7 +73,11 @@ extension HapticManager : WebViewInteropProvider {
             hapticsMap = [
                 "light": light,
                 "medium": medium,
-                "heavy": heavy
+                "heavy": heavy,
+                "selection": selection,
+                "success": success,
+                "error": error,
+                "warning": warning
             ]
         } else {
             return

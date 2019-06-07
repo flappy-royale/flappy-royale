@@ -9,5 +9,11 @@ interface Haptics {
 
   playLight: () => void,
   playMedium: () => void,
-  playHeavy: () => void
+  playHeavy: () => void,
+
+  playSelection: () => void
+
+  playSuccess: () => void
+  playError: () => void
+  playWarning: () => void
 }
