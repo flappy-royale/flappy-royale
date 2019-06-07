@@ -52,14 +52,14 @@ export class RoyaleDeath extends Phaser.Scene {
         this.add.image(80, GameHeight - 8, "footer-bg")
         const back = this.add.image(16, GameHeight - 20, "back")
         back.setInteractive()
-        back.on("pointerdown", () => {
+        back.on("pointerup", () => {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
         })
 
         const share = this.add.image(100, GameHeight - 18, "button-bg")
         share.setInteractive()
-        share.on("pointerdown", () => {
+        share.on("pointerup", () => {
             if (navigator && "share" in navigator) {
                 const n = navigator as any
                 const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`

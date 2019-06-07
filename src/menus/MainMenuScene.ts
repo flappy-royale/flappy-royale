@@ -55,7 +55,12 @@ export class MainMenuScene extends Phaser.Scene {
             0x000000,
             0.4
         )
-        this.add.image(80, 50, "logo")
+        this.add
+            .image(80, 50, "logo")
+            .setInteractive()
+            .on("pointerup", async () => {
+                this.loadRoyale()
+            })
         setupBackgroundBlobImages(this, { min: 100, allColors: true })
 
         const stats = getUserStatistics()
@@ -80,22 +85,14 @@ export class MainMenuScene extends Phaser.Scene {
         this.add
             .image(84, 110, "royale-button")
             .setInteractive()
-            // needs to be on up insider, but whatevs
-            .on("pointerdown", async () => {
-                this.removeMenu()
-
-                const index = getAndBumpUserCycleSeedIndex(this.seeds.royale.length)
-                const seed = this.seeds.royale[index]
-
-                const lobby = new RoyaleLobby({ seed })
-                this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+            .on("pointerup", async () => {
+                this.loadRoyale()
             })
 
         this.add
             .image(74, 146, "trial-button")
             .setInteractive()
-            // needs to be on up inside, but whatevs
-            .on("pointerdown", async () => {
+            .on("pointerup", async () => {
                 this.removeMenu()
 
                 const seed = this.seeds.daily.production
@@ -106,15 +103,22 @@ export class MainMenuScene extends Phaser.Scene {
         this.add
             .image(76, 200, "settings-button")
             .setInteractive()
-            // needs to be on up insider, but whatevs
-            .on("pointerdown", () => {
+            .on("pointerup", () => {
                 this.removeMenu()
                 const settings = new UserSettings()
                 this.game.scene.add(UserSettingsKey, settings, true)
             })
     }
 
-    removeMenu() {
+    private loadRoyale() {
+        this.removeMenu()
+        const index = getAndBumpUserCycleSeedIndex(this.seeds.royale.length)
+        const seed = this.seeds.royale[index]
+        const lobby = new RoyaleLobby({ seed })
+        this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+    }
+
+    private removeMenu() {
         // We get a JS error if we just remove the scene before the new scene has started (finished?) loading
         // Phaser's docs claim scene.remove() will process the operation, but that seems to not be the case
         // Manually pushing the remove action til the next update loop seems to fix it /shrug

@@ -275,8 +275,7 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.mode !== game.GameMode.Menu) {
             const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
-            // needs to be on up insider, but whatever
-            back.on("pointerdown", () => {
+            back.on("pointerup", () => {
                 this.game.scene.remove(this)
                 launchMainMenu(this.game)
             })
