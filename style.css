@@ -17,3 +17,8 @@ body {
     font-family: "Fipps";
     src: url("./assets/fonts/Fipps-Regular.otf") format("opentype");
 }
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none; /* Disable selection/copy in UIWebView */
+}
