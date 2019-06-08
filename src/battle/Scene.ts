@@ -478,6 +478,7 @@ export class BattleScene extends Phaser.Scene {
                 seed: this.seed,
                 uuid: settings.name,
                 version: constants.APIVersion,
+                mode: this.mode,
                 data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
             })
                 .then(a => a.json())

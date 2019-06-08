@@ -3,6 +3,7 @@ import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData } from "../../src/firebase"
+import { GameMode } from "../../src/battle/utils/gameMode"
 
 const numberOfDifferentRoyaleReplays = 50
 const maxNumberOfReplays = 250
@@ -48,6 +49,7 @@ export interface ReplayUploadRequest {
     uuid?: string
     version: string
     seed: string
+    mode: number
     data: import("../../src/firebase").PlayerData
 }
 
@@ -57,7 +59,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         .header("Access-Control-Allow-Origin", "*")
         .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 
-    const { seed, uuid, version, data } = JSON.parse(request.body) as ReplayUploadRequest
+    const { seed, uuid, version, data, mode } = JSON.parse(request.body) as ReplayUploadRequest
 
     if (!uuid) {
         return response.status(400).send({ error: "Needs a uuid in request" })
@@ -67,6 +69,9 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
     }
     if (!data) {
         return response.status(400).send({ error: "Needs a data of type PlayerData in request" })
+    }
+    if (!mode) {
+        return response.status(400).send({ error: "Needs a game mode in request" })
     }
 
     const db = admin.firestore()
@@ -87,6 +92,13 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         const existingCount = seedData.replays.length
         const shouldUpdateNotAdd = existingCount < maxNumberOfReplays
         const hasOverHalfData = existingCount > maxNumberOfReplays / 2
+
+        // Do we want to keep the top of all time
+        const highScoresOnly = mode === GameMode.Royale
+        if (highScoresOnly) {
+            const lowest = seedData.replays.map(r => r.score).sort()[0]
+            if (lowest > data.score) return
+        }
 
         // We want to cap the number of recordings overall
         if (hasOverHalfData && shouldUpdateNotAdd) {
