@@ -262,7 +262,7 @@ export class BattleScene extends Phaser.Scene {
             this.updateScoreLabel()
         }
 
-        if (game.shouldShowScoreLabel(this.mode)) {
+        if (game.shouldShowLivesLabel(this.mode)) {
             const livesNum = getLives(this.seed)
             const copy = livesNum == 1 ? "life" : "lives"
             const lives = `${livesNum} ${copy}`

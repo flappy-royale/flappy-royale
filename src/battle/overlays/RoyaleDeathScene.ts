@@ -14,12 +14,12 @@ export interface RoyaleDeathProps {
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
-    game.load.image("green-sash", "../../../assets/menu/GreenSash.png")
-    game.load.image("red-sash", "../../../assets/menu/RedSash.png")
-    game.load.image("green-sash-small", "../../../assets/menu/GreenSashSmall.png")
-    game.load.image("footer-bg", "../../../assets/menu/BottomSash.png")
-    game.load.image("back", "../../../assets/menu/Back2.png")
-    game.load.image("button-bg", "../../../assets/menu/ButtonSmallBG.png")
+    game.load.image("green-sash", require("../../../assets/menu/GreenSash.png"))
+    game.load.image("red-sash", require("../../../assets/menu/RedSash.png"))
+    game.load.image("green-sash-small", require("../../../assets/menu/GreenSashSmall.png"))
+    game.load.image("footer-bg", require("../../../assets/menu/BottomSash.png"))
+    game.load.image("back", require("../../../assets/menu/Back2.png"))
+    game.load.image("button-bg", require("../../../assets/menu/ButtonSmallBG.png"))
     game.load.bitmapFont(
         "fipps-bit",
         require("../../../assets/fonts/fipps.png"),
