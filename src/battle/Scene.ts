@@ -12,7 +12,7 @@ import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
-import { recordGamePlayed, getUserSettings, subtractALife } from "../user/userManager"
+import { recordGamePlayed, getUserSettings, subtractALife, getLives } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
@@ -256,18 +256,24 @@ export class BattleScene extends Phaser.Scene {
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
         if (game.shouldShowScoreLabel(this.mode)) {
-            this.scoreLabel = this.add.bitmapText(constants.GameWidth - 30, 0, "nokia16", "0", 0)
+            this.scoreLabel = this.add.bitmapText(constants.GameWidth - 30, 0, "nokia16", "0", 32)
             this.scoreLabel.setRightAlign()
-            this.scoreLabel.setFontSize(30)
             this.scoreLabel.setDepth(constants.zLevels.ui)
             this.updateScoreLabel()
         }
 
+        if (game.shouldShowScoreLabel(this.mode)) {
+            const livesNum = getLives(this.seed)
+            const copy = livesNum == 1 ? "life" : "lives"
+            const lives = `${livesNum} ${copy}`
+            const livesText = this.add.bitmapText(4, 22, "nokia16", lives, 16)
+            livesText.setDepth(constants.zLevels.ui)
+        }
+
         // When we want to show a countdown, set it up with defaults
         if (game.shouldShowBirdsLeftLabel(this.mode)) {
-            this.birdsLeft = this.add.bitmapText(4, 4, "nokia16", "0", 0)
+            this.birdsLeft = this.add.bitmapText(4, 4, "nokia16", "0", 16)
             this.birdsLeft.setDepth(constants.zLevels.ui)
-            this.birdsLeft.setFontSize(12)
             this.ghostBirdHasDied()
         }
 
@@ -493,9 +499,9 @@ export class BattleScene extends Phaser.Scene {
             } else {
                 // This is only in trial mode
                 const newLives = subtractALife(this.seed)
-                console.log("lives", newLives)
                 if (newLives === 0) {
                     // TODO: Modal instead
+                    this.game.scene.remove(this)
                     launchMainMenu(this.game)
                 } else {
                     this.restartTheGame()
