@@ -12,6 +12,7 @@
 #import "MPAPIEndpoints.h"
 #import "NSBundle+MPAdditions.h"
 #import "MPURLRequest.h"
+#import "MoPub+Utility.h"
 
 static NSString * const kAdBrowserControllerNibName = @"MPAdBrowserController";
 
@@ -225,7 +226,7 @@ static NSString * const kAdBrowserControllerNibName = @"MPAdBrowserController";
     self.actionSheet = nil;
     if (buttonIndex == 0) {
         // Open in Safari.
-        [[UIApplication sharedApplication] openURL:self.URL];
+        [MoPub openURL:self.URL];
     }
 }
 
@@ -242,7 +243,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     BOOL appShouldOpenURL = ![self.URL.scheme isEqualToString:@"http"] && ![self.URL.scheme isEqualToString:@"https"];
 
     if (appShouldOpenURL) {
-        [[UIApplication sharedApplication] openURL:self.URL];
+        [MoPub openURL:self.URL];
     }
 
     return !appShouldOpenURL;

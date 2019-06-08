@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MPGlobal.h"
+#import "MPImpressionData.h"
 
 @class MPRewardedVideoReward;
 
@@ -51,6 +52,7 @@ extern NSString * const kRewardedVideoCompletionUrlMetadataKey;
 extern NSString * const kRewardedCurrenciesMetadataKey;
 extern NSString * const kRewardedPlayableDurationMetadataKey;
 extern NSString * const kRewardedPlayableRewardOnClickMetadataKey;
+extern NSString * const kImpressionDataMetadataKey;
 
 extern NSString * const kInterstitialAdTypeMetadataKey;
 extern NSString * const kOrientationTypeMetadataKey;
@@ -108,6 +110,7 @@ extern NSString * const kBannerImpressionMinPixelMetadataKey;
 @property (nonatomic, assign) NSTimeInterval rewardedPlayableDuration;
 @property (nonatomic, assign) BOOL rewardedPlayableShouldRewardOnClick;
 @property (nonatomic, copy) NSString *advancedBidPayload;
+@property (nonatomic, strong) MPImpressionData * impressionData;
 
 // viewable impression tracking experiment
 @property (nonatomic) NSTimeInterval impressionMinVisibleTimeInSec;

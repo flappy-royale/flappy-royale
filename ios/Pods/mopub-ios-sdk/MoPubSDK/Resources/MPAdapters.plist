@@ -9,9 +9,9 @@
 	<string>FlurryAdapterConfiguration</string>
 	<string>GoogleAdMobAdapterConfiguration</string>
 	<string>IronSourceAdapterConfiguration</string>
-	<string>MillennialAdapterConfiguration</string>
 	<string>TapjoyAdapterConfiguration</string>
 	<string>UnityAdsAdapterConfiguration</string>
+	<string>VerizonAdapterConfiguration</string>
 	<string>VungleAdapterConfiguration</string>
 </array>
 </plist>

@@ -18,4 +18,7 @@
 
 + (MPNativeAdRendererConfiguration *)rendererConfigurationWithRendererSettings:(id<MPNativeAdRendererSettings>)rendererSettings;
 
++ (MPNativeAdRendererConfiguration *)rendererConfigurationWithRendererSettings:(id<MPNativeAdRendererSettings>)rendererSettings
+                                               additionalSupportedCustomEvents:(NSArray *)additionalSupportedCustomEvents;
+
 @end

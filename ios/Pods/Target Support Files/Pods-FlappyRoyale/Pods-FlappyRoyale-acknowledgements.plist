@@ -497,6 +497,16 @@ The AppLovin SDK is available under a commercial license (https://www.applovin.c
 			<key>License</key>
 			<string>Copyright</string>
 			<key>Title</key>
+			<string>Google-Mobile-Ads-SDK</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string>Copyright 2019 Google</string>
+			<key>License</key>
+			<string>Copyright</string>
+			<key>Title</key>
 			<string>GoogleAppMeasurement</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -710,6 +720,71 @@ The AppLovin SDK is available under a commercial license (https://www.applovin.c
 			<string>Apache</string>
 			<key>Title</key>
 			<string>GoogleUtilities</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string> The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+</string>
+			<key>License</key>
+			<string>New BSD</string>
+			<key>Title</key>
+			<string>MoPub-AdColony-Adapters</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string> The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+</string>
+			<key>License</key>
+			<string>New BSD</string>
+			<key>Title</key>
+			<string>MoPub-AdMob-Adapters</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string> The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+</string>
+			<key>License</key>
+			<string>New BSD</string>
+			<key>Title</key>
+			<string>MoPub-Applovin-Adapters</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string> The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+</string>
+			<key>License</key>
+			<string>New BSD</string>
+			<key>Title</key>
+			<string>MoPub-Chartboost-Adapters</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string> The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+</string>
+			<key>License</key>
+			<string>New BSD</string>
+			<key>Title</key>
+			<string>MoPub-Vungle-Adapters</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

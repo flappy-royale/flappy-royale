@@ -100,3 +100,20 @@ extern NSString * const kRewardedCurrencyNameKey;
 extern NSString * const kRewardedCurrencyAmountKey;
 extern NSString * const kRewardedCustomEventNameKey;
 extern NSString * const kRewardedCustomDataKey;
+
+#pragma mark - Impression Level Revenue Data Keys
+
+extern NSString * const kImpressionDataImpressionIDKey;
+extern NSString * const kImpressionDataAdUnitIDKey;
+extern NSString * const kImpressionDataAdUnitNameKey;
+extern NSString * const kImpressionDataAdUnitFormatKey;
+extern NSString * const kImpressionDataAdGroupIDKey;
+extern NSString * const kImpressionDataAdGroupNameKey;
+extern NSString * const kImpressionDataAdGroupTypeKey;
+extern NSString * const kImpressionDataAdGroupPriorityKey;
+extern NSString * const kImpressionDataCurrencyKey;
+extern NSString * const kImpressionDataCountryKey;
+extern NSString * const kImpressionDataNetworkNameKey;
+extern NSString * const kImpressionDataNetworkPlacementIDKey;
+extern NSString * const kImpressionDataPublisherRevenueKey;
+extern NSString * const kImpressionDataPrecisionKey;

@@ -10,8 +10,6 @@
 
 @implementation MPInterstitialCustomEvent
 
-@synthesize delegate;
-
 - (void)requestInterstitialWithCustomEventInfo:(NSDictionary *)info
 {
     // The default implementation of this method does nothing. Subclasses must override this method

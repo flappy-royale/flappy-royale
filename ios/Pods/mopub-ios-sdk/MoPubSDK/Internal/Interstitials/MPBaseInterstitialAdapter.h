@@ -67,5 +67,6 @@
 - (void)interstitialDidExpireForAdapter:(MPBaseInterstitialAdapter *)adapter;
 - (void)interstitialDidReceiveTapEventForAdapter:(MPBaseInterstitialAdapter *)adapter;
 - (void)interstitialWillLeaveApplicationForAdapter:(MPBaseInterstitialAdapter *)adapter;
+- (void)interstitialDidReceiveImpressionEventForAdapter:(MPBaseInterstitialAdapter *)adapter;
 
 @end

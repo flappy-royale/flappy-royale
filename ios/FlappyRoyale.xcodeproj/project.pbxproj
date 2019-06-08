@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		127243B3B042825660633491 /* Pods_FlappyRoyale.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4D29A2DC207E9AB7FEB15EF /* Pods_FlappyRoyale.framework */; };
+		6067812822AB0A830036A5FC /* AdConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067812722AB0A830036A5FC /* AdConstants.swift */; };
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
 		C626522622AAA1C100720FE0 /* JS in Resources */ = {isa = PBXBuildFile; fileRef = C626522522AAA1C100720FE0 /* JS */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6067812722AB0A830036A5FC /* AdConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdConstants.swift; path = ../../assets/config/AdConstants.swift; sourceTree = "<group>"; };
+		6067812922AB29B70036A5FC /* FlappyRoyale-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlappyRoyale-Bridging-Header.h"; sourceTree = "<group>"; };
 		8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 				C653148E21EE7BB80068609E /* Products */,
 				B8CE5A8B137FCA8B62F8579A /* Pods */,
 				116FE70DA20A244CB108EBBA /* Frameworks */,
+				6067812922AB29B70036A5FC /* FlappyRoyale-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,6 +100,7 @@
 				C653149C21EE7BBA0068609E /* Info.plist */,
 				C626521F22AA9C1400720FE0 /* HapticManager.swift */,
 				C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */,
+				6067812722AB0A830036A5FC /* AdConstants.swift */,
 			);
 			path = FlappyRoyale;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 				TargetAttributes = {
 					C653148C21EE7BB80068609E = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -218,6 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */,
+				6067812822AB0A830036A5FC /* AdConstants.swift in Sources */,
 				C653149321EE7BB80068609E /* ViewController.swift in Sources */,
 				C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */,
 				C653149121EE7BB80068609E /* AppDelegate.swift in Sources */,
@@ -367,10 +374,12 @@
 			baseConfigurationReference = 8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DL8L9H58NG;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -378,6 +387,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.Flappy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -388,10 +399,12 @@
 			baseConfigurationReference = E934DCF54BFC91DD5DFDCCA0 /* Pods-FlappyRoyale.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DL8L9H58NG;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -399,6 +412,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.Flappy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

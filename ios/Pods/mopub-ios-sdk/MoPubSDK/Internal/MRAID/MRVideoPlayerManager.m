@@ -12,8 +12,6 @@
 
 @implementation MRVideoPlayerManager
 
-@synthesize delegate = _delegate;
-
 - (id)initWithDelegate:(id<MRVideoPlayerManagerDelegate>)delegate
 {
     self = [super init];

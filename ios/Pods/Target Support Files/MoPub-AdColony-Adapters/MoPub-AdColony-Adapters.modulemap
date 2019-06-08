@@ -1,0 +1,6 @@
+framework module MoPub_AdColony_Adapters {
+  umbrella header "MoPub-AdColony-Adapters-umbrella.h"
+
+  export *
+  module * { export * }
+}

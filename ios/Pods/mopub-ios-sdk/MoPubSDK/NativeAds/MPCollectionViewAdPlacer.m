@@ -148,6 +148,14 @@ static NSString * const kCollectionViewAdPlacerReuseIdentifier = @"MPCollectionV
     }
 }
 
+- (void)mopubAdPlacer:(id<MPMoPubAdPlacer>)adPlacer didTrackImpressionForAd:(id<MPMoPubAd>)ad withImpressionData:(MPImpressionData *)impressionData {
+    if ([self.delegate respondsToSelector:@selector(mopubAdPlacer:didTrackImpressionForAd:withImpressionData:)]) {
+        [self.delegate mopubAdPlacer:self
+             didTrackImpressionForAd:ad
+                  withImpressionData:impressionData];
+    }
+}
+
 #pragma mark - <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

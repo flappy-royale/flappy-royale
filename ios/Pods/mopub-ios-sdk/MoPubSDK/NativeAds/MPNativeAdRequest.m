@@ -242,6 +242,8 @@ static NSString * const kNativeAdErrorDomain = @"com.mopub.NativeAd";
     self.remainingConfigurations = nil;
 
     adObject.renderer = self.customEventRenderer;
+    adObject.configuration = self.adConfiguration;
+    adObject.adUnitID = self.adUnitIdentifier;
 
     if ([(id)adObject.adAdapter respondsToSelector:@selector(setAdConfiguration:)]) {
         [(id)adObject.adAdapter performSelector:@selector(setAdConfiguration:) withObject:self.adConfiguration];

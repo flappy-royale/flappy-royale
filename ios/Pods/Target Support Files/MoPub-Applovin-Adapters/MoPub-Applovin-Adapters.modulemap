@@ -1,0 +1,6 @@
+framework module MoPub_Applovin_Adapters {
+  umbrella header "MoPub-Applovin-Adapters-umbrella.h"
+
+  export *
+  module * { export * }
+}

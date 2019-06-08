@@ -53,7 +53,7 @@
 @property (nonatomic) BOOL isReadyToPlay;
 @property (nonatomic) BOOL disposed;
 
-#pragma - Call to action click tracking url
+#pragma mark - Call to action click tracking url
 @property (nonatomic) NSURL *defaultActionURL;
 
 @property (nonatomic, weak) id<MOPUBPlayerViewControllerDelegate> delegate;

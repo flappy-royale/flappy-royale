@@ -360,6 +360,10 @@
     [self.delegate rewardedVideoDidReceiveTapEventForAdManager:self];
 }
 
+- (void)rewardedVideoDidReceiveImpressionEventForAdapter:(MPRewardedVideoAdapter *)adapter {
+    [self.delegate rewardedVideoAdManager:self didReceiveImpressionEventWithImpressionData:self.configuration.impressionData];
+}
+
 - (void)rewardedVideoWillLeaveApplicationForAdapter:(MPRewardedVideoAdapter *)adapter
 {
     MPLogAdEvent(MPLogEvent.adWillLeaveApplication, self.adUnitID);

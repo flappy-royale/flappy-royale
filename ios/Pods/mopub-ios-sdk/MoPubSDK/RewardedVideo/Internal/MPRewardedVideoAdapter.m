@@ -167,6 +167,7 @@ static const NSUInteger kExcessiveCustomDataLength = 8196;
     [[MPAnalyticsTracker sharedTracker] trackImpressionForConfiguration:self.configuration];
     self.hasTrackedImpression = YES;
     [self.expirationTimer invalidate];
+    [self.delegate rewardedVideoDidReceiveImpressionEventForAdapter:self];
 }
 
 - (void)trackClick

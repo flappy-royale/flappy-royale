@@ -16,7 +16,9 @@
 @dynamic impressionTrackerURLs;
 @dynamic clickTrackerURLs;
 @dynamic creationDate;
+@dynamic adUnitID;
 @dynamic renderer;
+@dynamic configuration;
 @dynamic associatedView;
 @dynamic adAdapter;
 

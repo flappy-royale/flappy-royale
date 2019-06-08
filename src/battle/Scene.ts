@@ -15,7 +15,7 @@ import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import { recordGamePlayed, getUserSettings, subtractALife } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
-import { RoyaleDeath } from "./overlays/RoyaleDeathScene"
+import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 
 export interface BattleSceneSettings {
@@ -158,6 +158,8 @@ export class BattleScene extends Phaser.Scene {
         preloadPipeSprites(this)
         preloadBirdSprites(this)
         preloadBackgroundSprites(this)
+        deathPreload(this)
+
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
 
         this.load.audio("flap", require("../../assets/audio/flap.wav"))

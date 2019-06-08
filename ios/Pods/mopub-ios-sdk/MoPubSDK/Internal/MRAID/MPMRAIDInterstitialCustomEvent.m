@@ -19,8 +19,6 @@
 
 @implementation MPMRAIDInterstitialCustomEvent
 
-@synthesize interstitial = _interstitial;
-
 - (void)requestInterstitialWithCustomEventInfo:(NSDictionary *)info
 {
     MPAdConfiguration * configuration = self.delegate.configuration;

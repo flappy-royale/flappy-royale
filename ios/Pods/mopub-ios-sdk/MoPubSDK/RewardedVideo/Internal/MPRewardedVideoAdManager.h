@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MPAdTargeting.h"
+#import "MPImpressionData.h"
 
 @class MPRewardedVideoReward;
 @protocol MPRewardedVideoAdManagerDelegate;
@@ -88,6 +89,7 @@
 - (void)rewardedVideoWillDisappearForAdManager:(MPRewardedVideoAdManager *)manager;
 - (void)rewardedVideoDidDisappearForAdManager:(MPRewardedVideoAdManager *)manager;
 - (void)rewardedVideoDidReceiveTapEventForAdManager:(MPRewardedVideoAdManager *)manager;
+- (void)rewardedVideoAdManager:(MPRewardedVideoAdManager *)manager didReceiveImpressionEventWithImpressionData:(MPImpressionData *)impressionData;
 - (void)rewardedVideoWillLeaveApplicationForAdManager:(MPRewardedVideoAdManager *)manager;
 - (void)rewardedVideoShouldRewardUserForAdManager:(MPRewardedVideoAdManager *)manager reward:(MPRewardedVideoReward *)reward;
 

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MPImpressionData.h"
 
 @class MPRewardedVideoReward;
 @class CLLocation;
@@ -254,5 +255,13 @@
  * @param reward The object that contains all the information regarding how much you should reward the user.
  */
 - (void)rewardedVideoAdShouldRewardForAdUnitID:(NSString *)adUnitID reward:(MPRewardedVideoReward *)reward;
+
+/**
+ Called when an impression is fired on a Rewarded Video. Includes information about the impression if applicable.
+
+ @param adUnitID The ad unit ID of the rewarded video that fired the impression.
+ @param impressionData Information about the impression, or @c nil if the server didn't return any information.
+ */
+- (void)didTrackImpressionWithAdUnitID:(NSString *)adUnitID impressionData:(MPImpressionData *)impressionData;
 
 @end

@@ -20,8 +20,6 @@
 
 @implementation MPHTMLInterstitialCustomEvent
 
-@synthesize interstitial = _interstitial;
-
 - (BOOL)enableAutomaticImpressionAndClickTracking
 {
     // An HTML interstitial tracks its own clicks. Turn off automatic tracking to prevent the tap event callback

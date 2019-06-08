@@ -80,6 +80,10 @@ NSString * const kNSErrorDomain = @"com.mopub.iossdk";
 
 @implementation NSError (Consent)
 
++ (instancetype)consentDialogAlreadyShowing {
+    return [NSError errorWithCode:MOPUBErrorConsentDialogAlreadyShowing localizedDescription:@"Consent dialog is already being presented modally."];
+}
+
 + (instancetype)noConsentDialogLoaded {
     return [NSError errorWithCode:MOPUBErrorNoConsentDialogLoaded localizedDescription:@"Consent dialog has not been loaded."];
 }

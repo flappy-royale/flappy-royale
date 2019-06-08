@@ -1,0 +1,6 @@
+framework module MoPub_Vungle_Adapters {
+  umbrella header "MoPub-Vungle-Adapters-umbrella.h"
+
+  export *
+  module * { export * }
+}

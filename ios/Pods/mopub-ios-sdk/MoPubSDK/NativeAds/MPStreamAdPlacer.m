@@ -553,6 +553,14 @@ static const NSUInteger kIndexPathItemIndex = 1;
     }
 }
 
+- (void)mopubAd:(id<MPMoPubAd>)ad didTrackImpressionWithImpressionData:(MPImpressionData *)impressionData {
+    if ([self.delegate respondsToSelector:@selector(mopubAdPlacer:didTrackImpressionForAd:withImpressionData:)]) {
+        [self.delegate mopubAdPlacer:self
+             didTrackImpressionForAd:ad
+                  withImpressionData:impressionData];
+    }
+}
+
 #pragma mark - Internal
 
 - (CGSize)sizeForAd:(MPNativeAd *)ad withMaximumWidth:(CGFloat)maxWidth andIndexPath:(NSIndexPath *)indexPath

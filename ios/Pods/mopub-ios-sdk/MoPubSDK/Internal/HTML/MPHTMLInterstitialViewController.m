@@ -21,10 +21,6 @@
 
 @implementation MPHTMLInterstitialViewController
 
-@synthesize delegate = _delegate;
-@synthesize backingViewAgent = _backingViewAgent;
-@synthesize backingView = _backingView;
-
 - (void)dealloc
 {
     self.backingViewAgent.delegate = nil;

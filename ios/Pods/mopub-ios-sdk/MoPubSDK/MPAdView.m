@@ -7,11 +7,13 @@
 //
 
 #import "MPAdView.h"
+#import "MoPub+Utility.h"
 #import "MPAdTargeting.h"
 #import "MPBannerAdManager.h"
 #import "MPBannerAdManagerDelegate.h"
 #import "MPClosableView.h"
 #import "MPCoreInstanceProvider.h"
+#import "MPImpressionTrackedNotification.h"
 #import "MPLogging.h"
 
 @interface MPAdView () <MPBannerAdManagerDelegate>
@@ -150,14 +152,22 @@
     [self setAdContentView:nil];
 }
 
-- (void)managerDidFailToLoadAd
+- (void)managerDidFailToLoadAdWithError:(NSError *)error
 {
     if ([self.delegate respondsToSelector:@selector(adViewDidFailToLoadAd:)]) {
         // make sure we are not released synchronously as objects owned by us
         // may do additional work after this callback
         [[MPCoreInstanceProvider sharedProvider] keepObjectAliveForCurrentRunLoopIteration:self];
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         [self.delegate adViewDidFailToLoadAd:self];
+#pragma GCC diagnostic pop
+    }
+    if ([self.delegate respondsToSelector:@selector(adView:didFailToLoadAdWithError:)]) {
+        // make sure we are not released synchronously as objects owned by us
+        // may do additional work after this callback
+        [[MPCoreInstanceProvider sharedProvider] keepObjectAliveForCurrentRunLoopIteration:self];
+        [self.delegate adView:self didFailToLoadAdWithError:error];
     }
 }
 
@@ -188,6 +198,12 @@
     if ([self.delegate respondsToSelector:@selector(willLeaveApplicationFromAd:)]) {
         [self.delegate willLeaveApplicationFromAd:self];
     }
+}
+
+- (void)impressionDidFireWithImpressionData:(MPImpressionData *)impressionData {
+    [MoPub sendImpressionDelegateAndNotificationFromAd:self
+                                              adUnitID:self.adUnitId
+                                        impressionData:impressionData];
 }
 
 @end

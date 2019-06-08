@@ -21,8 +21,6 @@
 
 @implementation MPHTMLBannerCustomEvent
 
-@synthesize bannerAgent = _bannerAgent;
-
 - (BOOL)enableAutomaticImpressionAndClickTracking
 {
     return NO;

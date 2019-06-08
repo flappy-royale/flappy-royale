@@ -28,4 +28,12 @@ NSInteger const kMPRewardedVideoRewardCurrencyAmountUnspecified = 0;
     return [self initWithCurrencyType:kMPRewardedVideoRewardCurrencyTypeUnspecified amount:amount];
 }
 
+- (NSString *)description {
+    NSString * message = nil;
+    if (self.amount != nil && self.currencyType != nil) {
+        message = [NSString stringWithFormat:@"%@ %@", self.amount, self.currencyType];
+    }
+    return message;
+}
+
 @end

@@ -14,7 +14,7 @@
 #define MP_SERVER_VERSION           @"8"
 #define MP_REWARDED_API_VERSION     @"1"
 #define MP_BUNDLE_IDENTIFIER        @"com.mopub.mopub"
-#define MP_SDK_VERSION              @"5.6.0"
+#define MP_SDK_VERSION              @"5.7.1"
 
 // Sizing constants.
 extern CGSize const MOPUB_BANNER_SIZE;

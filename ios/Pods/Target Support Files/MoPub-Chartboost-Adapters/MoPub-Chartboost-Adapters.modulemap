@@ -1,0 +1,6 @@
+framework module MoPub_Chartboost_Adapters {
+  umbrella header "MoPub-Chartboost-Adapters-umbrella.h"
+
+  export *
+  module * { export * }
+}

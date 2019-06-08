@@ -72,6 +72,7 @@
 - (void)rewardedVideoWillDisappearForAdapter:(MPRewardedVideoAdapter *)adapter;
 - (void)rewardedVideoDidDisappearForAdapter:(MPRewardedVideoAdapter *)adapter;
 - (void)rewardedVideoDidReceiveTapEventForAdapter:(MPRewardedVideoAdapter *)adapter;
+- (void)rewardedVideoDidReceiveImpressionEventForAdapter:(MPRewardedVideoAdapter *)adapter;
 - (void)rewardedVideoWillLeaveApplicationForAdapter:(MPRewardedVideoAdapter *)adapter;
 - (void)rewardedVideoShouldRewardUserForAdapter:(MPRewardedVideoAdapter *)adapter reward:(MPRewardedVideoReward *)reward;
 

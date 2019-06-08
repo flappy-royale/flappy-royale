@@ -137,9 +137,16 @@ static NSString * const kMacroReplaceLanguageCode = @"%%LANGUAGE%%";
         _consentDialogViewController = nil;
         _syncFrequency = kDefaultRefreshInterval;
 
-        // Initializing the timer must be done last since it depends on the
-        // value of _syncFrequency
-        _nextUpdateTimer = [self newNextUpdateTimer];
+        // Initializing the timer must be done last since it depends on the value of _syncFrequency
+        __weak __typeof__(self) weakSelf = self;
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // During SDK init, the chain of calls `MPConsentManager.sharedManager` -> `newNextUpdateTimer`
+            // -> `MPTimer.scheduleNow` -> `MPLogDebug` -> `MPIdentityProvider.identifier` ->
+            // `MPConsentManager.sharedManager` will cause a crash with EXC_BAD_INSTRUCTION since
+            // the same `dispatch_once` is called twice for `MPConsentManager.sharedManager` in the
+            // same call stack. To avoid this crash, call `newNextUpdateTimer` asynchronusly for now.
+            weakSelf.nextUpdateTimer = [weakSelf newNextUpdateTimer];
+        });
     }
 
     return self;
@@ -349,6 +356,21 @@ static NSString * const kMacroReplaceLanguageCode = @"%%LANGUAGE%%";
 - (void)showConsentDialogFromViewController:(UIViewController *)viewController
                                     didShow:(void (^)(void))didShow
                                  didDismiss:(void (^)(void))didDismiss {
+    // Ensure that this method is invoked from the main thread.
+    if (!NSThread.isMainThread) {
+        __weak __typeof__(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf showConsentDialogFromViewController:viewController didShow:didShow didDismiss:didDismiss];
+        });
+        return;
+    }
+
+    // If `viewController` is already presenting the consent dialog modally, do nothing.
+    if (viewController.presentedViewController == self.consentDialogViewController) {
+        MPLogEvent([MPLogEvent error:NSError.consentDialogAlreadyShowing message:nil]);
+        return;
+    }
+
     MPLogEvent(MPLogEvent.consentDialogShowAttempted);
     if (self.isConsentDialogLoaded) {
         [viewController presentViewController:self.consentDialogViewController
@@ -396,6 +418,15 @@ static NSString * const kMacroReplaceLanguageCode = @"%%LANGUAGE%%";
 }
 
 - (void)consentDialogViewControllerDidDismiss:(MPConsentDialogViewController *)consentDialogViewController {
+    // Ensure that this method is invoked from the main thread.
+    if (!NSThread.isMainThread) {
+        __weak __typeof__(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf consentDialogViewControllerDidDismiss:consentDialogViewController];
+        });
+        return;
+    }
+
     // Execute @c consentDialogWillDismissCompletionBlock if needed
     if (self.consentDialogDidDismissCompletionBlock) {
         self.consentDialogDidDismissCompletionBlock();
@@ -527,30 +558,29 @@ static NSString * const kMacroReplaceLanguageCode = @"%%LANGUAGE%%";
         // ad server.
         strongSelf.isForcedGDPRAppliesTransition = NO;
 
-        // Schedule the next timer.
-        strongSelf.nextUpdateTimer = [strongSelf newNextUpdateTimer];
-
         // Deserialize the JSON response and attempt to parse it
         NSError * deserializationError = nil;
         NSDictionary * json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&deserializationError];
         if (deserializationError != nil) {
-            // Schedule the next timer and complete with error.
-            strongSelf.nextUpdateTimer = [strongSelf newNextUpdateTimer];
+            // Complete with error.
             MPLogEvent([MPLogEvent consentSyncFailedWithError:deserializationError]);
             completion(deserializationError);
-            return;
         }
-
-        // Attempt to parse and update the consent state
-        if (![strongSelf updateConsentStateWithParameters:json]) {
+        else if (![strongSelf updateConsentStateWithParameters:json]) {
+            // Attempt to parse and update the consent state
             NSError * parseError = [NSError errorWithDomain:kConsentErrorDomain code:MPConsentErrorCodeFailedToParseSynchronizationResponse userInfo:@{ NSLocalizedDescriptionKey: @"Failed to parse consent synchronization response; one or more required fields are missing" }];
             MPLogEvent([MPLogEvent consentSyncFailedWithError:parseError]);
             completion(parseError);
         }
+        else {
+            // Success
+            MPLogEvent([MPLogEvent consentSyncCompletedWithMessage:nil]);
+            completion(nil);
+        }
 
-        // Complete successfully.
-        MPLogEvent([MPLogEvent consentSyncCompletedWithMessage:nil]);
-        completion(nil);
+        // `updateConsentStateWithParameters` might update `syncFrequency`, which is referenced in
+        // `newNextUpdateTimer`, so, call `updateConsentStateWithParameters` before `newNextUpdateTimer`
+        strongSelf.nextUpdateTimer = [strongSelf newNextUpdateTimer];
     } errorHandler:^(NSError * _Nonnull error) {
         __typeof__(self) strongSelf = weakSelf;
 

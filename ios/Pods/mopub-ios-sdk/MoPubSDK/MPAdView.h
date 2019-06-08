@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MPConstants.h"
+#import "MPAdViewDelegate.h"
 
 typedef enum
 {
@@ -17,13 +18,11 @@ typedef enum
     MPNativeAdOrientationLandscape
 } MPNativeAdOrientation;
 
-@protocol MPAdViewDelegate;
-
 /**
  * The MPAdView class provides a view that can display banner advertisements.
  */
 
-@interface MPAdView : UIView
+@interface MPAdView : UIView <MPMoPubAd>
 
 /** @name Initializing a Banner Ad */
 
@@ -210,91 +209,5 @@ typedef enum
  * @see stopAutomaticallyRefreshingContents
  */
 - (void)startAutomaticallyRefreshingContents;
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#pragma mark -
-
-/**
- * The delegate of an `MPAdView` object must adopt the `MPAdViewDelegate` protocol. It must
- * implement `viewControllerForPresentingModalView` to provide a root view controller from which
- * the ad view should present modal content.
- *
- * Optional methods of this protocol allow the delegate to be notified of banner success or
- * failure, as well as other lifecycle events.
- */
-
-@protocol MPAdViewDelegate <NSObject>
-
-@required
-
-/** @name Managing Modal Content Presentation */
-
-/**
- * Asks the delegate for a view controller to use for presenting modal content, such as the in-app
- * browser that can appear when an ad is tapped.
- *
- * @return A view controller that should be used for presenting modal content.
- */
-- (UIViewController *)viewControllerForPresentingModalView;
-
-@optional
-
-/** @name Detecting When a Banner Ad is Loaded */
-
-/**
- * Sent when an ad view successfully loads an ad.
- *
- * Your implementation of this method should insert the ad view into the view hierarchy, if you
- * have not already done so.
- *
- * @param view The ad view sending the message.
- */
-- (void)adViewDidLoadAd:(MPAdView *)view;
-
-/**
- * Sent when an ad view fails to load an ad.
- *
- * To avoid displaying blank ads, you should hide the ad view in response to this message.
- *
- * @param view The ad view sending the message.
- */
-- (void)adViewDidFailToLoadAd:(MPAdView *)view;
-
-/** @name Detecting When a User Interacts With the Ad View */
-
-/**
- * Sent when an ad view is about to present modal content.
- *
- * This method is called when the user taps on the ad view. Your implementation of this method
- * should pause any application activity that requires user interaction.
- *
- * @param view The ad view sending the message.
- * @see `didDismissModalViewForAd:`
- */
-- (void)willPresentModalViewForAd:(MPAdView *)view;
-
-/**
- * Sent when an ad view has dismissed its modal content, returning control to your application.
- *
- * Your implementation of this method should resume any application activity that was paused
- * in response to `willPresentModalViewForAd:`.
- *
- * @param view The ad view sending the message.
- * @see `willPresentModalViewForAd:`
- */
-- (void)didDismissModalViewForAd:(MPAdView *)view;
-
-/**
- * Sent when a user is about to leave your application as a result of tapping
- * on an ad.
- *
- * Your application will be moved to the background shortly after this method is called.
- *
- * @param view The ad view sending the message.
- */
-- (void)willLeaveApplicationFromAd:(MPAdView *)view;
 
 @end

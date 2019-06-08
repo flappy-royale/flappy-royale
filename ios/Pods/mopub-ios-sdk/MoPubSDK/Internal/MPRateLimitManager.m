@@ -12,7 +12,7 @@
 @interface MPRateLimitManager ()
 
 // Ad Unit IDs are used as keys; @c MPRateLimitConfiguration objects are used as values
-@property (nonatomic, copy) NSMutableDictionary <NSString *, MPRateLimitConfiguration *> * configurationDictionary;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, MPRateLimitConfiguration *> * configurationDictionary;
 
 @end
 

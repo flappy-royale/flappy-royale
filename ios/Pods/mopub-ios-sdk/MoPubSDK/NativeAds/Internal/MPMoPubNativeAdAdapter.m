@@ -28,6 +28,7 @@ static const CGFloat kMoPubRequiredViewVisibilityPercentage = 0.5;
 
 @implementation MPMoPubNativeAdAdapter
 
+// synthesize for `MPNativeAdAdapter` protocol
 @synthesize properties = _properties;
 @synthesize defaultActionURL = _defaultActionURL;
 

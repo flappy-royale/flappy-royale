@@ -48,6 +48,7 @@ NSString * const kWidthMetadataKey = @"x-width";
 NSString * const kDspCreativeIdKey = @"x-dspcreativeid";
 NSString * const kPrecacheRequiredKey = @"x-precacherequired";
 NSString * const kIsVastVideoPlayerKey = @"x-vastvideoplayer";
+NSString * const kImpressionDataMetadataKey = @"impdata";
 
 NSString * const kInterstitialAdTypeMetadataKey = @"x-fulladtype";
 NSString * const kOrientationTypeMetadataKey = @"x-orientation";
@@ -113,6 +114,7 @@ NSString * const kAdvancedBiddingMarkupMetadataKey = @"adm";
 - (NSURL *)URLFromMetadata:(NSDictionary *)metadata forKey:(NSString *)key;
 - (NSArray <NSURL *> *)URLsFromMetadata:(NSDictionary *)metadata forKey:(NSString *)key;
 - (Class)setUpCustomEventClassFromMetadata:(NSDictionary *)metadata;
+- (MPImpressionData *)impressionDataFromMetadata:(NSDictionary *)metadata;
 
 @end
 
@@ -185,6 +187,8 @@ NSString * const kAdvancedBiddingMarkupMetadataKey = @"adm";
 
         self.impressionMinVisibleTimeInSec = [self timeIntervalFromMsmetadata:metadata forKey:kBannerImpressionVisableMsMetadataKey];
         self.impressionMinVisiblePixels = [[self adAmountFromMetadata:metadata key:kBannerImpressionMinPixelMetadataKey] floatValue];
+
+        self.impressionData = [self impressionDataFromMetadata:metadata];
 
         // Organize impression tracking URLs
         NSArray <NSURL *> * URLs = [self URLsFromMetadata:metadata forKey:kImpressionTrackersMetadataKey];
@@ -263,14 +267,12 @@ NSString * const kAdvancedBiddingMarkupMetadataKey = @"adm";
     NSMutableDictionary *convertedCustomEvents = [NSMutableDictionary dictionary];
     if (self.adType == MPAdTypeInline) {
         [convertedCustomEvents setObject:@"MPGoogleAdMobBannerCustomEvent" forKey:@"admob_native"];
-        [convertedCustomEvents setObject:@"MPMillennialBannerCustomEvent" forKey:@"millennial_native"];
         [convertedCustomEvents setObject:@"MPHTMLBannerCustomEvent" forKey:@"html"];
         [convertedCustomEvents setObject:@"MPMRAIDBannerCustomEvent" forKey:@"mraid"];
         [convertedCustomEvents setObject:@"MOPUBNativeVideoCustomEvent" forKey:@"json_video"];
         [convertedCustomEvents setObject:@"MPMoPubNativeCustomEvent" forKey:@"json"];
     } else if (self.adType == MPAdTypeFullscreen) {
         [convertedCustomEvents setObject:@"MPGoogleAdMobInterstitialCustomEvent" forKey:@"admob_full"];
-        [convertedCustomEvents setObject:@"MPMillennialInterstitialCustomEvent" forKey:@"millennial_full"];
         [convertedCustomEvents setObject:@"MPHTMLInterstitialCustomEvent" forKey:@"html"];
         [convertedCustomEvents setObject:@"MPMRAIDInterstitialCustomEvent" forKey:@"mraid"];
         [convertedCustomEvents setObject:@"MPMoPubRewardedVideoCustomEvent" forKey:@"rewarded_video"];
@@ -607,6 +609,17 @@ NSString * const kAdvancedBiddingMarkupMetadataKey = @"adm";
         return NO;
     }
     return YES;
+}
+
+- (MPImpressionData *)impressionDataFromMetadata:(NSDictionary *)metadata
+{
+    NSDictionary * impressionDataDictionary = metadata[kImpressionDataMetadataKey];
+    if (impressionDataDictionary == nil) {
+        return nil;
+    }
+
+    MPImpressionData * impressionData = [[MPImpressionData alloc] initWithDictionary:impressionDataDictionary];
+    return impressionData;
 }
 
 @end

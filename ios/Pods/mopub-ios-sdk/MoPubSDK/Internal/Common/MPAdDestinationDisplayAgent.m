@@ -14,6 +14,7 @@
 #import "MPCoreInstanceProvider.h"
 #import "MPAnalyticsTracker.h"
 #import "MOPUBExperimentProvider.h"
+#import "MoPub+Utility.h"
 #import <SafariServices/SafariServices.h>
 
 static NSString * const kDisplayAgentErrorDomain = @"com.mopub.displayagent";
@@ -45,10 +46,6 @@ static NSString * const kDisplayAgentErrorDomain = @"com.mopub.displayagent";
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation MPAdDestinationDisplayAgent
-
-@synthesize delegate = _delegate;
-@synthesize resolver = _resolver;
-@synthesize isLoadingDestination = _isLoadingDestination;
 
 + (MPAdDestinationDisplayAgent *)agentWithDelegate:(id<MPAdDestinationDisplayAgentDelegate>)delegate
 {
@@ -164,17 +161,18 @@ static NSString * const kDisplayAgentErrorDomain = @"com.mopub.displayagent";
 
 - (void)handleEnhancedDeeplinkRequest:(MPEnhancedDeeplinkRequest *)request
 {
-    BOOL didOpenSuccessfully = [[UIApplication sharedApplication] openURL:request.primaryURL];
-    if (didOpenSuccessfully) {
-        [self hideOverlay];
-        [self.delegate displayAgentWillLeaveApplication];
-        [self completeDestinationLoading];
-        [[MPAnalyticsTracker sharedTracker] sendTrackingRequestForURLs:request.primaryTrackingURLs];
-    } else if (request.fallbackURL) {
-        [self handleEnhancedDeeplinkFallbackForRequest:request];
-    } else {
-        [self openURLInApplication:request.originalURL];
-    }
+    [MoPub openURL:request.primaryURL options:@{} completion:^(BOOL didOpenURLSuccessfully) {
+        if (didOpenURLSuccessfully) {
+            [self hideOverlay];
+            [self.delegate displayAgentWillLeaveApplication];
+            [self completeDestinationLoading];
+            [[MPAnalyticsTracker sharedTracker] sendTrackingRequestForURLs:request.primaryTrackingURLs];
+        } else if (request.fallbackURL) {
+            [self handleEnhancedDeeplinkFallbackForRequest:request];
+        } else {
+            [self openURLInApplication:request.originalURL];
+        }
+    }];
 }
 
 - (void)handleEnhancedDeeplinkFallbackForRequest:(MPEnhancedDeeplinkRequest *)request;
@@ -253,11 +251,12 @@ static NSString * const kDisplayAgentErrorDomain = @"com.mopub.displayagent";
     if ([URL mp_hasTelephoneScheme] || [URL mp_hasTelephonePromptScheme]) {
         [self interceptTelephoneURL:URL];
     } else {
-        BOOL didOpenSuccessfully = [[UIApplication sharedApplication] openURL:URL];
-        if (didOpenSuccessfully) {
-            [self.delegate displayAgentWillLeaveApplication];
-        }
-        [self completeDestinationLoading];
+        [MoPub openURL:URL options:@{} completion:^(BOOL didOpenURLSuccessfully) {
+            if (didOpenURLSuccessfully) {
+                [self.delegate displayAgentWillLeaveApplication];
+            }
+            [self completeDestinationLoading];
+        }];
     }
 }
 
@@ -282,7 +281,7 @@ static NSString * const kDisplayAgentErrorDomain = @"com.mopub.displayagent";
         if (strongSelf) {
             if (confirmed) {
                 [strongSelf.delegate displayAgentWillLeaveApplication];
-                [[UIApplication sharedApplication] openURL:targetTelephoneURL];
+                [MoPub openURL:targetTelephoneURL];
             }
             [strongSelf completeDestinationLoading];
         }

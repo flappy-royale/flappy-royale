@@ -37,9 +37,6 @@ static void exponentialDecayInterpolation(void *info, const CGFloat *input, CGFl
 
 @implementation MPProgressOverlayView
 
-@synthesize delegate = _delegate;
-@synthesize closeButton = _closeButton;
-
 - (id)initWithDelegate:(id<MPProgressOverlayViewDelegate>)delegate
 {
     self = [self initWithFrame:MPKeyWindow().bounds];

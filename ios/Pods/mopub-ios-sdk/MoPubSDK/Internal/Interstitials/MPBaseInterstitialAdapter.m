@@ -26,10 +26,6 @@
 
 @implementation MPBaseInterstitialAdapter
 
-@synthesize delegate = _delegate;
-@synthesize configuration = _configuration;
-@synthesize timeoutTimer = _timeoutTimer;
-
 - (id)initWithDelegate:(id<MPInterstitialAdapterDelegate>)delegate
 {
     self = [super init];
@@ -105,6 +101,7 @@
 - (void)trackImpression
 {
     [[MPAnalyticsTracker sharedTracker] trackImpressionForConfiguration:self.configuration];
+    [self.delegate interstitialDidReceiveImpressionEventForAdapter:self];
 }
 
 - (void)trackClick

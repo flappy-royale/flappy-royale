@@ -1,5 +1,5 @@
 CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/AppLovinSDK
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/AppLovinSDK/applovin-ios-sdk-6.6.0"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/AppLovinSDK/applovin-ios-sdk-6.6.1"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 OTHER_LDFLAGS = $(inherited) -ObjC -l"z" -framework "AVFoundation" -framework "AdSupport" -framework "CoreGraphics" -framework "CoreMedia" -framework "CoreTelephony" -framework "SafariServices" -framework "StoreKit" -framework "SystemConfiguration" -framework "UIKit" -framework "WebKit"
 PODS_BUILD_DIR = ${BUILD_DIR}

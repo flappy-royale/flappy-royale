@@ -1,0 +1,6 @@
+framework module MoPub_AdMob_Adapters {
+  umbrella header "MoPub-AdMob-Adapters-umbrella.h"
+
+  export *
+  module * { export * }
+}

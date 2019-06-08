@@ -31,10 +31,6 @@
 @end
 
 @implementation MPInterstitialCustomEventAdapter
-@synthesize hasTrackedImpression = _hasTrackedImpression;
-@synthesize hasTrackedClick = _hasTrackedClick;
-
-@synthesize interstitialCustomEvent = _interstitialCustomEvent;
 
 - (void)dealloc
 {

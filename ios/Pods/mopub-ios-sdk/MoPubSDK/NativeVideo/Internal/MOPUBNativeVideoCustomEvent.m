@@ -34,7 +34,10 @@
         NSMutableArray *imageURLs = [NSMutableArray array];
         for (NSString *key in [info allKeys]) {
             if ([[key lowercaseString] hasSuffix:@"image"] && [[info objectForKey:key] isKindOfClass:[NSString class]]) {
-                if (![MPNativeAdUtils addURLString:[info objectForKey:key] toURLArray:imageURLs]) {
+                NSString * urlString = [info objectForKey:key];
+                // Empty URL string is acceptable. We only care about non-empty string that is not a valid URL.
+                if (urlString.length != 0
+                    && ![MPNativeAdUtils addURLString:urlString toURLArray:imageURLs]) {
                     NSError * error = MPNativeAdNSErrorForInvalidImageURL();
                     MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], adUnitId);
                     [self.delegate nativeCustomEvent:self didFailToLoadAdWithError:error];

@@ -438,6 +438,10 @@ Copyright 2019 Google
    limitations under the License.
 
 
+## Google-Mobile-Ads-SDK
+
+Copyright 2019 Google
+
 ## GoogleAppMeasurement
 
 Copyright 2019 Google
@@ -646,6 +650,41 @@ Copyright 2019 Google
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+
+## MoPub-AdColony-Adapters
+
+ The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+
+
+## MoPub-AdMob-Adapters
+
+ The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+
+
+## MoPub-Applovin-Adapters
+
+ The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+
+
+## MoPub-Chartboost-Adapters
+
+ The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
+
+
+## MoPub-Vungle-Adapters
+
+ The MoPub SDK License can be found at http://www.mopub.com/legal/sdk-license-agreement/
+
+
 
 
 ## VungleSDK-iOS

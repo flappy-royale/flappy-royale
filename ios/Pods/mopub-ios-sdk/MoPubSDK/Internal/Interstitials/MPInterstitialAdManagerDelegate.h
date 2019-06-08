@@ -10,6 +10,7 @@
 
 @class MPInterstitialAdManager;
 @class MPInterstitialAdController;
+@class MPImpressionData;
 @class CLLocation;
 
 @protocol MPInterstitialAdManagerDelegate <NSObject>
@@ -26,6 +27,7 @@ didFailToLoadInterstitialWithError:(NSError *)error;
 - (void)managerWillDismissInterstitial:(MPInterstitialAdManager *)manager;
 - (void)managerDidDismissInterstitial:(MPInterstitialAdManager *)manager;
 - (void)managerDidExpireInterstitial:(MPInterstitialAdManager *)manager;
+- (void)interstitialAdManager:(MPInterstitialAdManager *)manager didReceiveImpressionEventWithImpressionData:(MPImpressionData *)impressionData;
 - (void)managerDidReceiveTapEventFromInterstitial:(MPInterstitialAdManager *)manager;
 
 @end

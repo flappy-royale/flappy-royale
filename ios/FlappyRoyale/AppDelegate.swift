@@ -1,13 +1,8 @@
-//
-//  AppDelegate.swift
-//  Gorli
-//
-//  Created by Mike Lazer-Walker on 15.01.19.
-//  Copyright © 2019 Mike Lazer-Walker. All rights reserved.
-//
-
 import UIKit
 import Firebase
+import GoogleMobileAds
+import AppLovinSDK
+import MoPub
 
 @UIApplicationMain
 
@@ -19,6 +14,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        
+        let sdk:VungleSDK = VungleSDK.shared()
+        do {
+            try sdk.start(withAppId: AdConstants.vungleAppID)
+        }
+        catch let error as NSError {
+            print("Error while starting VungleSDK : \(error.domain)")
+        }
+        
+        let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.testBannerMoPub)
+        config.loggingLevel = .debug
+        MoPub.sharedInstance().initializeSdk(with: config) {
+            GADMobileAds.sharedInstance().start(completionHandler: nil)
+            ALSdk.initializeSdk()
+        }
+        
+//        [[MPAdConversionTracker sharedConversionTracker] reportApplicationOpenForApplicationID:@"112358"];
+
+        
         return true
     }
 

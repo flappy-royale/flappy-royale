@@ -1,14 +1,10 @@
-//
-//  ViewController.swift
-//  FlappyRoyale
-//
-//  Created by Mike Lazer-Walker on 15.01.19.
-//  Copyright © 2019 Mike Lazer-Walker. All rights reserved.
-//
-
 import UIKit
 import SafariServices
 import WebKit
+import MoPub
+
+//import AppLovinSDK
+
 
 class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UIScrollViewDelegate, SFSafariViewControllerDelegate {
     let haptics = HapticManager()
@@ -48,9 +44,36 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         webView.navigationDelegate = self
         webView.scrollView.isScrollEnabled = false
         webView.scrollView.delegate = self
+        webView.bounds = CGRect(x: 0, y: 0, width: 320, height: 240)
+        view.addSubview(webView)
+        
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            webView.heightAnchor.constraint(equalTo: self.view.heightAnchor, constant: -60),
+            webView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            webView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        ])
 
-        view = webView
+        let adView = MPAdView(adUnitId: AdConstants.testBannerMoPub, size: MOPUB_BANNER_SIZE)!
+        view.addSubview(adView)
+        adView.loadAd()
 
+        adView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            adView.heightAnchor.constraint(equalToConstant: 50),
+            adView.widthAnchor.constraint(equalToConstant: 320),
+            adView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            adView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20),
+        ])
+        
+        let button = UIButton(type: .roundedRect)
+        view.addSubview(button)
+        button.frame = CGRect(x: 20,y: 620, width: 60, height: 60)
+        button.setTitle("5 Lives", for: .normal)
+        button.backgroundColor = .green
+        button.addTarget(self, action: #selector(show5ad), for: .touchUpInside)
+        
 //        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
 //        webView.loadFileURL(url, allowingReadAccessTo: url)
 
@@ -67,8 +90,18 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             webView.evaluateJavaScript("var evt = new Event('appResume'); window.dispatchEvent(evt);", completionHandler: nil)
         }
 
+        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.testRewardMoPub, withMediationSettings: [])
+
     }
 
+    @objc func show5ad() {
+
+        let reward = MPRewardedVideo.availableRewards(forAdUnitID:AdConstants.testRewardMoPub)
+        if reward != nil {
+            MPRewardedVideo.presentAd(forAdUnitID: AdConstants.testRewardMoPub, from: self, with: reward?.first! as! MPRewardedVideoReward)
+        }
+    }
+    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print(error)
     }
@@ -129,4 +162,24 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         controller.dismiss(animated: true, completion: nil)
     }
 }
+//
+//extension ViewController : ALAdLoadDelegate
+//{
+//    func adService(_ adService: ALAdService, didLoad ad: ALAd) {
+//        // We now have an interstitial ad we can show!
+////        self.ad = ad
+//        ALInterstitialAd.shared().show(ad)
+//    }
+//
+//    func adService(_ adService: ALAdService, didFailToLoadAdWithError code: Int32) {
+//        // Look at ALErrorCodes.h for list of error codes.
+//        print("Error with applovin: \(code)")
+//    }
+//}
 
+
+extension ViewController: MPAdViewDelegate {
+    func viewControllerForPresentingModalView() -> UIViewController! {
+        return self
+    }
+}

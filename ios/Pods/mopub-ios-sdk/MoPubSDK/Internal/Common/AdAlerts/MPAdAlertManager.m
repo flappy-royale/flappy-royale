@@ -31,14 +31,12 @@
 
 @implementation MPAdAlertManager
 
+// synthesize for `MPAdAlertManagerProtocol` protocol
 @synthesize delegate = _delegate;
 @synthesize adConfiguration = _adConfiguration;
-@synthesize processedAlert = _processedAlert;
-@synthesize adAlertGestureRecognizer = _adAlertGestureRecognizer;
 @synthesize adUnitId = _adUnitId;
 @synthesize targetAdView = _targetAdView;
 @synthesize location = _location;
-@synthesize currentOpenMailVC = _currentOpenMailVC;
 
 - (id)init
 {

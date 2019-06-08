@@ -28,13 +28,6 @@ NSInteger const kMPAdAlertGestureMaxAllowedYAxisMovement = 50;
 
 @implementation MPAdAlertGestureRecognizer
 
-@synthesize currentAlertGestureState = _currentAlertGestureState;
-@synthesize inflectionPoint = _inflectionPoint;
-@synthesize thresholdReached = _thresholdReached;
-@synthesize curNumZigZags = _curNumZigZags;
-@synthesize numZigZagsForRecognition = _numZigZagsForRecognition;
-@synthesize minTrackedDistanceForZigZag = _minTrackedDistanceForZigZag;
-
 - (id)init
 {
     self = [super init];

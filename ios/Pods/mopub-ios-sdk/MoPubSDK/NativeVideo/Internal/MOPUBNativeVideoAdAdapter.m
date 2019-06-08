@@ -25,6 +25,7 @@
 
 @implementation MOPUBNativeVideoAdAdapter
 
+// synthesize for `MPNativeAdAdapter` protocol
 @synthesize properties = _properties;
 @synthesize defaultActionURL = _defaultActionURL;
 

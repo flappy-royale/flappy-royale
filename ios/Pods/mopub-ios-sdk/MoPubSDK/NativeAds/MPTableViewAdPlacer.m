@@ -146,6 +146,14 @@ static NSString * const kTableViewAdPlacerReuseIdentifier = @"MPTableViewAdPlace
     }
 }
 
+- (void)mopubAdPlacer:(id<MPMoPubAdPlacer>)adPlacer didTrackImpressionForAd:(id<MPMoPubAd>)ad withImpressionData:(MPImpressionData *)impressionData {
+    if ([self.delegate respondsToSelector:@selector(mopubAdPlacer:didTrackImpressionForAd:withImpressionData:)]) {
+        [self.delegate mopubAdPlacer:self
+             didTrackImpressionForAd:ad
+                  withImpressionData:impressionData];
+    }
+}
+
 #pragma mark - <UITableViewDataSource>
 
 // Default is 1 if not implemented

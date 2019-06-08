@@ -18,7 +18,6 @@
 #import "MPUserInteractionGestureRecognizer.h"
 #import "NSJSONSerialization+MPAdditions.h"
 #import "NSURL+MPAdditions.h"
-#import "MPInternalUtils.h"
 #import "MPAPIEndPoints.h"
 #import "MoPub.h"
 #import "MPViewabilityTracker.h"
@@ -40,6 +39,7 @@
 @property (nonatomic, strong) MPUserInteractionGestureRecognizer *userInteractionRecognizer;
 @property (nonatomic, assign) CGRect frame;
 @property (nonatomic, strong, readwrite) MPViewabilityTracker *viewabilityTracker;
+@property (nonatomic, assign) BOOL didFireClickImpression;
 
 - (void)performActionForMoPubSpecificURL:(NSURL *)URL;
 - (BOOL)shouldIntercept:(NSURL *)URL navigationType:(UIWebViewNavigationType)navigationType;
@@ -48,15 +48,6 @@
 @end
 
 @implementation MPAdWebViewAgent
-
-@synthesize configuration = _configuration;
-@synthesize delegate = _delegate;
-@synthesize destinationDisplayAgent = _destinationDisplayAgent;
-@synthesize shouldHandleRequests = _shouldHandleRequests;
-@synthesize view = _view;
-@synthesize adAlertManager = _adAlertManager;
-@synthesize userInteractedWithWebView = _userInteractedWithWebView;
-@synthesize userInteractionRecognizer = _userInteractionRecognizer;
 
 - (id)initWithAdWebViewFrame:(CGRect)frame delegate:(id<MPAdWebViewAgentDelegate>)delegate;
 {
@@ -67,6 +58,7 @@
         self.destinationDisplayAgent = [MPAdDestinationDisplayAgent agentWithDelegate:self];
         self.delegate = delegate;
         self.shouldHandleRequests = YES;
+        self.didFireClickImpression = NO;
         self.adAlertManager = [[MPCoreInstanceProvider sharedProvider] buildMPAdAlertManagerWithDelegate:self];
 
         self.userInteractionRecognizer = [[MPUserInteractionGestureRecognizer alloc] initWithTarget:self action:@selector(handleInteraction:)];
@@ -289,7 +281,9 @@
 - (void)interceptURL:(NSURL *)URL
 {
     NSURL *redirectedURL = URL;
-    if (self.configuration.clickTrackingURL) {
+    if (self.configuration.clickTrackingURL && !self.didFireClickImpression) {
+        self.didFireClickImpression = YES; // fire click impression only once
+
         NSString *path = [NSString stringWithFormat:@"%@&r=%@",
                           self.configuration.clickTrackingURL.absoluteString,
                           [[URL absoluteString] mp_URLEncodedString]];

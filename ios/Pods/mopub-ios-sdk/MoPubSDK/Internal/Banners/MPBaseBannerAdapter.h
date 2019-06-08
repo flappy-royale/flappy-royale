@@ -81,7 +81,7 @@
 /**
  * Fires when the impression tracker has been sent.
  */
-- (void)adapter:(MPBaseBannerAdapter *)adapter didTrackImpressionForAd:(UIView *)ad;
+- (void)adapterDidTrackImpressionForAd:(MPBaseBannerAdapter *)adapter;
 
 /**
  * Fires when the banner ad is expanding/resizing and collapsing.

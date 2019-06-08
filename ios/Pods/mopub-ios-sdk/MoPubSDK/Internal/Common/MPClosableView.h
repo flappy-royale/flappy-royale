@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+extern const CGSize kCloseRegionSize;
+
 @class MPWebView;
 
 enum {

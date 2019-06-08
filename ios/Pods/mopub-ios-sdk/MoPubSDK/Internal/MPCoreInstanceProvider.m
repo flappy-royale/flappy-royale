@@ -47,10 +47,6 @@ typedef enum
 
 @implementation MPCoreInstanceProvider
 
-@synthesize singletons = _singletons;
-@synthesize carrierInfo = _carrierInfo;
-@synthesize twitterDeepLinkStatus = _twitterDeepLinkStatus;
-
 static MPCoreInstanceProvider *sharedProvider = nil;
 
 + (instancetype)sharedProvider

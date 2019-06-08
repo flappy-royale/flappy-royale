@@ -6,13 +6,15 @@
 //  http://www.mopub.com/legal/sdk-license-agreement/
 //
 
+#import "MPMoPubAd.h"
+
 /**
  * The delegate of an `MPNativeAd` object must adopt the `MPNativeAdDelegate` protocol. It must
  * implement `viewControllerForPresentingModalView` to provide a root view controller from which
  * the ad view should present modal content.
  */
 @class MPNativeAd;
-@protocol MPNativeAdDelegate <NSObject>
+@protocol MPNativeAdDelegate <MPMoPubAdDelegate>
 
 @optional
 
