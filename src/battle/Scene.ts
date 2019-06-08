@@ -509,8 +509,8 @@ export class BattleScene extends Phaser.Scene {
             // No more new pipes
             if (this.newPipeTimer) this.newPipeTimer.destroy()
             // Stop the pipes and scores from scrolling
-            this.pipes.forEach(pg => pg.setVelocity(0, 0, 0))
-            this.scoreLines.forEach(pg => pg.setVelocity(0, 0))
+            this.pipes.forEach(pg => pg && pg.setVelocity(0, 0, 0))
+            this.scoreLines.forEach(sl => sl && sl.setVelocity(0, 0))
 
             // Make your bird go through the death animation
             this.bird.die()
@@ -527,7 +527,11 @@ export class BattleScene extends Phaser.Scene {
             this.birdsLeft.destroy()
             this.backButton.destroy()
 
-            const deathOverlay = new RoyaleDeath("death", { score: this.score, position: birdsAlive.length })
+            const deathOverlay = new RoyaleDeath("death", {
+                score: this.score,
+                position: birdsAlive.length,
+                battle: this
+            })
             this.scene.add("deathoverlay", deathOverlay, true)
         }
     }

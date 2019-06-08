@@ -43,6 +43,13 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        // To make sure we clean up after ourselves
+        const existingScenes = this.game.scene.scenes
+        if (existingScenes.length > 1) {
+            console.error("Scenes:", existingScenes)
+            throw "Too many scenes"
+        }
+
         this.battleBG = new BattleScene({ key: "menu-bg", seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })
         this.game.scene.add("battlebg", this.battleBG, true)
         this.game.scene.bringToTop("MainMenu")

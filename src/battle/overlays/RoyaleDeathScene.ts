@@ -1,7 +1,7 @@
 import { APIVersion, GameWidth, GameHeight } from "../../constants"
 import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
-import { getNumberWithOrdinal } from "../Scene"
+import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import { getSeedsFromAPI } from "../../firebase"
 import { getAndBumpUserCycleSeedIndex } from "../../user/userManager"
@@ -10,6 +10,7 @@ import { RoyaleLobby } from "../../menus/RoyaleLobby"
 export interface RoyaleDeathProps {
     score: number
     position: number
+    battle: BattleScene
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
@@ -81,11 +82,13 @@ export class RoyaleDeath extends Phaser.Scene {
 
     private backToMainMenu() {
         this.game.scene.remove(this)
+        this.game.scene.remove(this.props.battle)
         launchMainMenu(this.game)
     }
 
     private async goToRoyaleLobby() {
         this.game.scene.remove(this)
+        this.game.scene.remove(this.props.battle)
 
         const seeds = await getSeedsFromAPI(APIVersion)
         const index = getAndBumpUserCycleSeedIndex(seeds.royale.length)
