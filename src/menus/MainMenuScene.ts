@@ -9,9 +9,9 @@ import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
 import { getAndBumpUserCycleSeedIndex, getUserSettings, getUserStatistics } from "../user/userManager"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
-import _ = require("lodash")
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
+import { defer } from "lodash"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
@@ -123,7 +123,7 @@ export class MainMenuScene extends Phaser.Scene {
         // We get a JS error if we just remove the scene before the new scene has started (finished?) loading
         // Phaser's docs claim scene.remove() will process the operation, but that seems to not be the case
         // Manually pushing the remove action til the next update loop seems to fix it /shrug
-        _.defer(() => {
+        defer(() => {
             this.game.scene.remove(this)
             this.game.scene.remove(this.battleBG)
         })

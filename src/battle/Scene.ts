@@ -1,6 +1,5 @@
 import * as Phaser from "phaser"
 import * as Seed from "seed-random"
-import * as _ from "lodash"
 import * as constants from "../constants"
 import * as game from "./utils/gameMode"
 
@@ -17,6 +16,7 @@ import { recordGamePlayed, getUserSettings, subtractALife } from "../user/userMa
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
+import { cloneDeep } from "lodash"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -206,7 +206,7 @@ export class BattleScene extends Phaser.Scene {
 
         // If there's a datastore of recorded inputs, then make a fresh clone of those
         if (this.seedData && this.seedData.replays) {
-            this.recordedInput = _.cloneDeep(this.seedData.replays || [])
+            this.recordedInput = cloneDeep(this.seedData.replays || [])
         }
 
         this.bus = createBus(this)

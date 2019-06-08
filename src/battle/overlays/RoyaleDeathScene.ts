@@ -67,14 +67,17 @@ export class RoyaleDeath extends Phaser.Scene {
         becomeButton(share, this.shareStats, this, [shareText])
     }
 
-    private shareStats(won: boolean) {
+    private shareStats() {
+        const won = this.props.position === 0
+
         if (navigator && "share" in navigator) {
             const n = navigator as any
             const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`
-            const winMessaage = `I won on Flappy Royale!`
+            const winMessage = `I won on Flappy Royale!`
+
             n.share({
                 title: "Flappy Royale",
-                text: won ? winMessaage : lossMessage,
+                text: won ? winMessage : lossMessage,
                 url: "https://flappyroyale.io"
             })
         }
@@ -83,6 +86,7 @@ export class RoyaleDeath extends Phaser.Scene {
     private backToMainMenu() {
         this.game.scene.remove(this)
         this.game.scene.remove(this.props.battle)
+
         launchMainMenu(this.game)
     }
 

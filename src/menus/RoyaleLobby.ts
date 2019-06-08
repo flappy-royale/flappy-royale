@@ -6,7 +6,8 @@ import { fetchRecordingsForSeed, SeedData } from "../firebase"
 import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
-import _ = require("lodash");
+import _ = require("lodash")
+import { random, shuffle } from "lodash"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -44,7 +45,7 @@ export class RoyaleLobby extends Phaser.Scene {
         this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("RoyaleLobby")
 
         // Number of seconds until the game starts
-        let countdownTime = _.random(4, 6) + 1
+        let countdownTime = random(4, 6) + 1
 
         const createUserImage = (user: UserSettings) => {
             const root = document.createElement("div")
@@ -78,7 +79,7 @@ export class RoyaleLobby extends Phaser.Scene {
             let duration = _.random(countdownTime - 2, countdownTime) * 1000
 
             const birdCount = document.getElementById("you-vs")
-            console.log(seedData)
+
             this.tweens.addCounter({
                 from: 0,
                 to: seedData.replays.length,
@@ -90,7 +91,7 @@ export class RoyaleLobby extends Phaser.Scene {
             })
 
             const birds = document.getElementById("birds")
-            seedData.replays.forEach(score => {
+            shuffle(seedData.replays).forEach(score => {
                 preloadBirdAttire(this, score.user)
 
                 const birdLi = document.createElement("li")
@@ -141,6 +142,7 @@ export class RoyaleLobby extends Phaser.Scene {
                 if (this.seedData) {
                     // Load the game!
                     this.game.scene.remove(this)
+
                     const scene = new BattleScene({ seed: this.seed, data: this.seedData, gameMode: GameMode.Royale })
                     this.game.scene.add("BattleScene" + this.seed, scene, true, {})
                     scene.playBusCrash()
@@ -148,7 +150,9 @@ export class RoyaleLobby extends Phaser.Scene {
                 } else {
                     countdownButton.innerText = `hold on${period}`
                     period += "."
-                    if (period === "....") { period = "" }
+                    if (period === "....") {
+                        period = ""
+                    }
                 }
             } else {
                 countdownTimerText.innerText = `${countdownTime}`
@@ -156,7 +160,6 @@ export class RoyaleLobby extends Phaser.Scene {
             setTimeout(updateTimer, 1000)
         }
         updateTimer()
-
     }
 }
 
