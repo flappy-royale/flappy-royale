@@ -1,0 +1,186 @@
+img,
+#sky h1,
+#clouds,
+#city,
+#trees,
+#ground {
+    image-rendering: optimizeSpeed;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+@font-face {
+    font-family: "Fipps";
+    src: url("../assets/fonts/Fipps-Regular.otf") format("opentype");
+}
+
+body {
+    background-color: #311706;
+    padding: 0;
+    margin: 0;
+}
+
+#sky {
+    background-color: #ebf6ff;
+    padding-top: 60px;
+}
+
+#sky h1 {
+    /* Hide the text and replace it with an image */
+    background-image: url("../assets/menu/logo.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 318px;
+    height: 180px;
+    text-overflow: clip;
+    text-indent: -9999999px;
+    margin: 0 auto;
+}
+
+nav {
+    width: 420px;
+    margin: 20px auto;
+}
+
+nav a {
+    background-color: black;
+    color: white;
+
+    border-radius: 8px;
+    width: 180px;
+    height: 36px;
+    display: inline-block;
+    text-align: center;
+    font-family: "Fipps";
+    text-decoration: none;
+}
+
+#sky #clouds {
+    background-image: url("../assets/battle/clouds.png");
+    background-repeat: repeat-x;
+    background-size: 296px 86px;
+    height: 86px;
+}
+
+#sky #city {
+    background-image: url("../assets/battle/city.png");
+    background-repeat: repeat-x;
+    background-size: 296px 58px;
+
+    height: 58px;
+    margin-top: -58px;
+}
+
+#sky #trees {
+    background-image: url("../assets/battle/bushes.png");
+    background-repeat: repeat-x;
+    background-size: 296px 36px;
+
+    height: 36px;
+    margin-top: -36px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#ground {
+    background: url("../assets/battle/ground.png") repeat-x;
+
+    /* 160 × 89 */
+    background-size: 480px 267px;
+    padding-top: 60px;
+    padding-bottom: 14px;
+}
+
+#ground .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#ground #who,
+#ground #what {
+    font-family: Fipps;
+    font-size: 16px;
+    color: #ffffff;
+    width: 320px;
+}
+
+#ground #who span,
+#ground #what span,
+h5 {
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: bolder;
+    font-size: 12px;
+}
+
+#ground #who a,
+#ground #what a {
+    color: white;
+}
+
+#underground {
+    background: url("../assets/battle/ground-under.png") repeat-x;
+
+    /* 160 × 47 */
+    background-size: 480px 141px;
+
+    padding: 200px;
+    color: white;
+}
+
+.thumbs {
+    display: flex;
+}
+
+.thumbs a {
+    flex: 1;
+}
+
+#underground h3 {
+    margin-top: 30px;
+    margin-bottom: 0px;
+    font-size: 24px;
+}
+
+#underground h5 {
+    margin-top: 0px;
+}
+
+h1,
+h2,
+h3 {
+    font-family: "Fipps";
+}
+
+#stylish-flappers {
+    margin-top: 128px;
+}
+
+#stylish-flappers li {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+}
+
+ul li {
+    /* position: relative; */
+    list-style: none;
+}
+
+ul li img {
+    position: absolute;
+}
+
+#stylish-flappers li div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -44,9 +44,6 @@ module.exports = {
         path: path.resolve(__dirname, "dist")
     },
     plugins: [
-        // @ts-ignore
-        // Resets the build folder each time you run webpack
-
         // Get notifications about failed builds as messages in the top left
         new WebpackNotifierPlugin(),
 

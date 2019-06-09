@@ -1,22 +1,5 @@
-import { defaultAttire } from "../attire"
+import { defaultAttire, Attire } from "../attire"
 import { unzip, zippedObj } from "../zip"
-
-/** Things that are needed for showing stuff to a user */
-export interface PresentationAttire extends Attire {
-    /** A text description for the UI  */
-    description: string
-}
-
-export interface Attire {
-    /** Things that are needed for the game */
-    fit: "loose" | "tight"
-    /** The ID in the cache manager */
-    id: string
-    /** The url to the url */
-    href: string
-    /** Is this something that can be used as the base (e.g. represents the whole bird)  */
-    base: boolean
-}
 
 interface Aesthetics {
     // Strings of stored keys for hats

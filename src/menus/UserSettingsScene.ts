@@ -1,10 +1,9 @@
 import * as Phaser from "phaser"
-import { getUserSettings, changeSettings, Attire, getUserStatistics } from "../user/userManager"
+import { getUserSettings, changeSettings, getUserStatistics } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
-import { builtInAttire } from "../attire"
+import { builtInAttire, Attire } from "../attire"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
-import { runInThisContext } from "vm"
 
 export const UserSettingsKey = "UserSettings"
 

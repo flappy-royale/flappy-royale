@@ -5,7 +5,7 @@ import * as pako from "pako"
 import { SeedDataZipped, SeedData } from "../../src/firebase"
 import { GameMode } from "../../src/battle/utils/gameMode"
 
-const numberOfDifferentRoyaleReplays = 50
+const numberOfDifferentRoyaleReplays = 3
 const maxNumberOfReplays = 100
 
 // So we can access the db
@@ -104,7 +104,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             const isFull = seedData.replays.length === maxNumberOfReplays
             if (isFull) {
                 // Removes the last element
-                // TODO:erify this isn't removing the top score
+                // TODO: verify this isn't removing the top score
                 sortedReplays.pop()
             }
             // Adds the new one

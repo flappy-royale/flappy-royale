@@ -13,8 +13,9 @@ code .
 yarn start
 ```
 
-To build this app you will need access to our assets git submodule, feel free to DM any contributor to get access to
-that repo.
+To build this app you will need access to our assets git submodule, I'm afraid we're not giving out access to that. So,
+think of this as a resource for learning from and not really for sending PRs to. Sorry, but games are just too easily
+cloned when the bar is that low.
 
 ## Key Tech
 
@@ -33,3 +34,7 @@ To grok the codebase entirely, you'll see:
 -   Update all functions
 -   Compile your app in webpack
 -   Ship the webpack build to firebase hosting
+
+## Microsite
+
+The site for the app lives inside the `web/` folder.

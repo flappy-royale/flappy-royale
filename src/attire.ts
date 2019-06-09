@@ -1,4 +1,22 @@
-import { PresentationAttire } from "./user/userManager"
+// Careful now! Please don't import the game code into this module
+// so that site's webpack run only imports our code
+
+/** Things that are needed for showing stuff to a user */
+export interface PresentationAttire extends Attire {
+    /** A text description for the UI  */
+    description: string
+}
+
+export interface Attire {
+    /** Things that are needed for the game */
+    fit: "loose" | "tight"
+    /** The ID in the cache manager */
+    id: string
+    /** The url to the url */
+    href: string
+    /** Is this something that can be used as the base (e.g. represents the whole bird)  */
+    base: boolean
+}
 
 // The gray bird itself
 export const defaultAttire: PresentationAttire = {
@@ -201,3 +219,6 @@ export const builtInAttire: PresentationAttire[] = [
         href: require("../assets/bases/Hedgehog.png")
     }
 ]
+
+// One day these will be different
+export const allAttire = builtInAttire
