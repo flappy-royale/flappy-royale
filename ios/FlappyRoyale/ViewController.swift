@@ -12,10 +12,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // For previous projects, streaming games have needed to preload massive amounts of
-        // media, whereas that wasn't necessary for locally-served copies.
-        // We probably don't care about this here, but leaving it here can't hurt.
-        let userScript = WKUserScript(source: "window.isNativeApp = true;",
+        let userScript = WKUserScript(source: "window.isAppleApp = true;",
                                       injectionTime: .atDocumentStart,
                                       forMainFrameOnly: true)
 

@@ -11,6 +11,8 @@ import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
 
+import { loadHaptics } from "./haptics"
+
 declare var PRODUCTION: boolean
 
 // Ensures that webpack picks up the CSS
@@ -92,6 +94,8 @@ const loadUpIntoSettings = () => {
 
 window.onload = async () => {
     const seed = "1-royale-0"
+
+    loadHaptics()
 
     switch (startupScreen) {
         case StartupScreen.TrialBattle:

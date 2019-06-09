@@ -87,17 +87,7 @@ extension HapticManager : WebViewInteropProvider {
         hapticsMap[type]?()
     }
 
-    func userScript() -> WKUserScript {
-        let path = Bundle.main.path(forResource: "haptics", ofType: "js", inDirectory: "JS")
-        let text = try! String(contentsOfFile: path!, encoding: .utf8)
-
-        print(text)
-
-        return WKUserScript(source: text, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-    }
-
     func inject(_ controller: WKUserContentController) {
-        controller.addUserScript(userScript())
         controller.add(self, name: "prepareHaptics")
         controller.add(self, name: "playHaptics")
     }

@@ -11,5 +11,4 @@ import WebKit
 
 protocol WebViewInteropProvider : WKScriptMessageHandler {
     func inject(_: WKUserContentController)
-    func userScript() -> WKUserScript
 }
