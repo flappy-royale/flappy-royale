@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		127243B3B042825660633491 /* Pods_FlappyRoyale.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4D29A2DC207E9AB7FEB15EF /* Pods_FlappyRoyale.framework */; };
 		6067812822AB0A830036A5FC /* AdConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067812722AB0A830036A5FC /* AdConstants.swift */; };
+		6067813322AC81F90036A5FC /* Fipps-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6067813222AC81F80036A5FC /* Fipps-Regular.otf */; };
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
 		C626522622AAA1C100720FE0 /* JS in Resources */ = {isa = PBXBuildFile; fileRef = C626522522AAA1C100720FE0 /* JS */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		6067812722AB0A830036A5FC /* AdConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdConstants.swift; path = ../../assets/config/AdConstants.swift; sourceTree = "<group>"; };
 		6067812922AB29B70036A5FC /* FlappyRoyale-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlappyRoyale-Bridging-Header.h"; sourceTree = "<group>"; };
+		6067813222AC81F80036A5FC /* Fipps-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fipps-Regular.otf"; sourceTree = "<group>"; };
 		8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				C653149021EE7BB80068609E /* AppDelegate.swift */,
 				C653149221EE7BB80068609E /* ViewController.swift */,
 				C653149421EE7BB80068609E /* Main.storyboard */,
+				6067813222AC81F80036A5FC /* Fipps-Regular.otf */,
 				C653149721EE7BBA0068609E /* Assets.xcassets */,
 				C653149921EE7BBA0068609E /* LaunchScreen.storyboard */,
 				C653149C21EE7BBA0068609E /* Info.plist */,
@@ -169,6 +172,7 @@
 				C626522622AAA1C100720FE0 /* JS in Resources */,
 				C653149B21EE7BBA0068609E /* LaunchScreen.storyboard in Resources */,
 				C637388422A874B700E5A33D /* GoogleService-Info.plist in Resources */,
+				6067813322AC81F90036A5FC /* Fipps-Regular.otf in Resources */,
 				C653149821EE7BBA0068609E /* Assets.xcassets in Resources */,
 				C653149621EE7BB80068609E /* Main.storyboard in Resources */,
 			);
