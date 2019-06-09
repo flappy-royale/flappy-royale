@@ -136,8 +136,10 @@ export class RoyaleLobby extends Phaser.Scene {
         const countdownButton = document.getElementById("countdown-description")
         const countdownTimerText = document.getElementById("countdown-time")
 
+        let timeout: NodeJS.Timeout | undefined
         const updateTimer = () => {
             countdownTime -= 1
+
             if (countdownTime <= 0) {
                 if (this.seedData) {
                     // Load the game!
@@ -157,9 +159,13 @@ export class RoyaleLobby extends Phaser.Scene {
             } else {
                 countdownTimerText.innerText = `${countdownTime}`
             }
-            setTimeout(updateTimer, 1000)
+            timeout = setTimeout(updateTimer, 1000)
         }
         updateTimer()
+
+        this.events.on('destroy', () => {
+            clearTimeout(timeout)
+        })
     }
 }
 
