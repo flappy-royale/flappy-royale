@@ -141,8 +141,11 @@ export class BattleScene extends Phaser.Scene {
             console.log("Not recording inputs, because a dev option is set")
         }
 
-        window.addEventListener("touchstart", () => {
-            this.userFlap()
+        const flap = this.userFlap.bind(this)
+        window.addEventListener("touchstart", flap)
+
+        this.events.on('destroy', () => {
+            window.removeEventListener("touchstart", flap)
         })
     }
 
