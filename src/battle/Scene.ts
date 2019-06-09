@@ -441,6 +441,9 @@ export class BattleScene extends Phaser.Scene {
     }
 
     userFlap() {
+        // Trying to flap on the main menu is just silly!
+        if (this.mode === game.GameMode.Menu) { return }
+
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return
 
