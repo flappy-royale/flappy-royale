@@ -12,6 +12,7 @@
 		6067813322AC81F90036A5FC /* Fipps-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6067813222AC81F80036A5FC /* Fipps-Regular.otf */; };
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
+		C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */; };
 		C637388422A874B700E5A33D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C637388322A874B700E5A33D /* GoogleService-Info.plist */; };
 		C653149121EE7BB80068609E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149021EE7BB80068609E /* AppDelegate.swift */; };
 		C653149321EE7BB80068609E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149221EE7BB80068609E /* ViewController.swift */; };
@@ -27,6 +28,7 @@
 		8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
+		C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewer.swift; sourceTree = "<group>"; };
 		C637388322A874B700E5A33D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../assets/config/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C653148D21EE7BB80068609E /* FlappyRoyale.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyRoyale.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C653149021EE7BB80068609E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +70,16 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		C6309E4522AD1FE300D0E0E1 /* JS Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */,
+				C626521F22AA9C1400720FE0 /* HapticManager.swift */,
+				C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */,
+			);
+			path = "JS Extensions";
+			sourceTree = "<group>";
+		};
 		C653148421EE7BB80068609E = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +102,7 @@
 		C653148F21EE7BB80068609E /* FlappyRoyale */ = {
 			isa = PBXGroup;
 			children = (
+				C6309E4522AD1FE300D0E0E1 /* JS Extensions */,
 				C637388322A874B700E5A33D /* GoogleService-Info.plist */,
 				C653149021EE7BB80068609E /* AppDelegate.swift */,
 				C653149221EE7BB80068609E /* ViewController.swift */,
@@ -98,8 +111,6 @@
 				C653149721EE7BBA0068609E /* Assets.xcassets */,
 				C653149921EE7BBA0068609E /* LaunchScreen.storyboard */,
 				C653149C21EE7BBA0068609E /* Info.plist */,
-				C626521F22AA9C1400720FE0 /* HapticManager.swift */,
-				C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */,
 				6067812722AB0A830036A5FC /* AdConstants.swift */,
 			);
 			path = FlappyRoyale;
@@ -226,6 +237,7 @@
 				C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */,
 				6067812822AB0A830036A5FC /* AdConstants.swift in Sources */,
 				C653149321EE7BB80068609E /* ViewController.swift in Sources */,
+				C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */,
 				C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */,
 				C653149121EE7BB80068609E /* AppDelegate.swift in Sources */,
 			);

@@ -4,8 +4,9 @@ import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import { getSeedsFromAPI } from "../../firebase"
-import { getAndBumpUserCycleSeedIndex } from "../../user/userManager"
+import { getAndBumpUserCycleSeedIndex, getRoyales } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
+import { requestReview } from "../../requestReview";
 
 export interface RoyaleDeathProps {
     score: number
@@ -65,6 +66,13 @@ export class RoyaleDeath extends Phaser.Scene {
         const share = this.add.image(120, GameHeight - 20, "button-bg")
         const shareText = this.add.bitmapText(100, GameHeight - 27, "fipps-bit", "SHARE", 8)
         becomeButton(share, this.shareStats, this, [shareText])
+
+        // Decide whether to show a rating screen
+        // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
+        // When building this out for Android, it's likely that won't be the case.
+        if (this.props.score > 0 && getRoyales().length >= 10) {
+            requestReview()
+        }
     }
 
     private shareStats() {

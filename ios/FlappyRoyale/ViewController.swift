@@ -8,6 +8,7 @@ import MoPub
 
 class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UIScrollViewDelegate, SFSafariViewControllerDelegate {
     let haptics = HapticManager()
+    let storeReviews = AppStoreReviewer()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
 
-        haptics.inject(userContentController)
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews]
+        interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
 
