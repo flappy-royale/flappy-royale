@@ -6,7 +6,7 @@ import { SeedDataZipped, SeedData } from "../../src/firebase"
 import { GameMode } from "../../src/battle/utils/gameMode"
 
 const numberOfDifferentRoyaleReplays = 50
-const maxNumberOfReplays = 250
+const maxNumberOfReplays = 100
 
 // So we can access the db
 admin.initializeApp()
@@ -96,12 +96,25 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         // Do we want to keep the top of all time
         const highScoresOnly = mode === GameMode.Royale
         if (highScoresOnly) {
-            const lowest = seedData.replays.map(r => r.score).sort()[0]
-            if (lowest > data.score) return
+            const sortedReplays = seedData.replays.sort((l, r) => l.score - r.score)
+            const lowest = sortedReplays[0]
+            // Bail early because we won't want to save anything
+            if (lowest.score > data.score) return
+
+            const isFull = seedData.replays.length === maxNumberOfReplays
+            if (isFull) {
+                // Removes the last element
+                // TODO:erify this isn't removing the top score
+                sortedReplays.pop()
+            }
+            // Adds the new one
+            sortedReplays.push(data)
+            // Sets it to be saved
+            seedData.replays = sortedReplays
         }
 
         // We want to cap the number of recordings overall
-        if (hasOverHalfData && shouldUpdateNotAdd) {
+        else if (hasOverHalfData && shouldUpdateNotAdd) {
             // One user can ship many replays until there is over half
             // the number of max replays
             // TODO: Add a real UUID for the user?

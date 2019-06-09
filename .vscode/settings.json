@@ -13,6 +13,7 @@
         "datastore",
         "firebaseapp",
         "firestore",
+        "haptics",
         "invis",
         "keypresses",
         "localstorage",
