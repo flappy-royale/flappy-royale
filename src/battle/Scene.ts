@@ -543,7 +543,8 @@ export class BattleScene extends Phaser.Scene {
             const deathOverlay = new RoyaleDeath("death", {
                 score: this.score,
                 position: birdsAlive.length,
-                battle: this
+                battle: this,
+                totalPlayers: this.ghostBirds.length + 1
             })
             this.scene.add("deathoverlay", deathOverlay, true)
         }
