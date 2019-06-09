@@ -14,10 +14,6 @@ export const haptics = {
   playWarning: () => { play("warning") }
 }
 
-export function loadHaptics() {
-  window.haptics = haptics
-}
-
 let prepare = (type: string) => { }
 let play = (type: string) => {
   // While Apple's haptics give us nuanced vibrations, the web API just gives us ms times

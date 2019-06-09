@@ -3,6 +3,7 @@ import { Scene } from "phaser"
 
 import { UserSettings, getUserSettings } from "../user/userManager"
 import { BattleScene } from "./Scene"
+import { haptics } from "../haptics";
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -160,10 +161,8 @@ export class BirdSprite {
         if (this.isPlayer) {
             this.scene.sound.play("flap")
 
-            if (window.haptics) {
-                window.haptics.playSelection()
-                window.haptics.prepareHeavy()
-            }
+            haptics.playSelection()
+            haptics.prepareHeavy()
         }
         else this.scene.sound.play("other_flap")
     }
@@ -202,10 +201,8 @@ export class BirdSprite {
 
         if (this.isPlayer) {
             this.scene.sound.play("hit")
-            if (window.haptics) {
-                window.haptics.playHeavy()
-                window.haptics.prepareHeavy()
-            }
+            haptics.playHeavy()
+            haptics.prepareHeavy()
         } else {
             this.scene.sound.play("other_hit")
         }
@@ -240,9 +237,7 @@ export class BirdSprite {
             this.sprite.setGravityY(constants.gravity * -1)
             this.sprite.setVelocityY(0)
 
-            if (window.haptics) {
-                window.haptics.playHeavy()
-            }
+            haptics.playHeavy()
         }
     }
 
