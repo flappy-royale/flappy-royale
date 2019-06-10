@@ -141,8 +141,11 @@ export class BattleScene extends Phaser.Scene {
             console.log("Not recording inputs, because a dev option is set")
         }
 
-        window.addEventListener("touchstart", () => {
-            this.userFlap()
+        const flap = this.userFlap.bind(this)
+        window.addEventListener("touchstart", flap)
+
+        this.events.on('destroy', () => {
+            window.removeEventListener("touchstart", flap)
         })
     }
 
@@ -438,6 +441,9 @@ export class BattleScene extends Phaser.Scene {
     }
 
     userFlap() {
+        // Trying to flap on the main menu is just silly!
+        if (this.mode === game.GameMode.Menu) { return }
+
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return
 
@@ -537,7 +543,8 @@ export class BattleScene extends Phaser.Scene {
             const deathOverlay = new RoyaleDeath("death", {
                 score: this.score,
                 position: birdsAlive.length,
-                battle: this
+                battle: this,
+                totalPlayers: this.ghostBirds.length + 1
             })
             this.scene.add("deathoverlay", deathOverlay, true)
         }

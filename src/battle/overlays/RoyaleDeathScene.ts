@@ -12,6 +12,7 @@ export interface RoyaleDeathProps {
     score: number
     position: number
     battle: BattleScene
+    totalPlayers: number
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
@@ -20,7 +21,8 @@ export const deathPreload = (game: Phaser.Scene) => {
     game.load.image("green-sash-small", require("../../../assets/menu/GreenSashSmall.png"))
     game.load.image("footer-bg", require("../../../assets/menu/BottomSash.png"))
     game.load.image("back", require("../../../assets/menu/Back2.png"))
-    game.load.image("button-bg", require("../../../assets/menu/ButtonSmallBG.png"))
+    game.load.image("button-small-bg", require("../../../assets/menu/ButtonSmallBG.png"))
+    game.load.image("button-bg", require("../../../assets/menu/ButtonBG.png"))
     game.load.bitmapFont(
         "fipps-bit",
         require("../../../assets/fonts/fipps.png"),
@@ -52,19 +54,19 @@ export class RoyaleDeath extends Phaser.Scene {
 
         if (!won) {
             this.add.image(60, 152, "green-sash-small")
-            this.add.bitmapText(10, 148, "fipps-bit", `${getNumberWithOrdinal(this.props.position)} place`, 8)
+            this.add.bitmapText(10, 148, "fipps-bit", `${getNumberWithOrdinal(this.props.position)} out of ${this.props.totalPlayers}`, 8)
         }
 
         this.add.image(80, GameHeight - 8, "footer-bg")
         const back = this.add.image(16, GameHeight - 20, "back")
         becomeButton(back, this.backToMainMenu, this)
 
-        const newGame = this.add.image(60, GameHeight - 20, "button-bg")
-        const newGameText = this.add.bitmapText(41, GameHeight - 27, "fipps-bit", "AGAIN", 8)
+        const newGame = this.add.image(90, GameHeight - 20, "button-bg")
+        const newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
         becomeButton(newGame, this.goToRoyaleLobby, this, [newGameText])
 
-        const share = this.add.image(120, GameHeight - 20, "button-bg")
-        const shareText = this.add.bitmapText(100, GameHeight - 27, "fipps-bit", "SHARE", 8)
+        const share = this.add.image(130, GameHeight - 60, "button-small-bg")
+        const shareText = this.add.bitmapText(110, GameHeight - 67, "fipps-bit", "SHARE", 8)
         becomeButton(share, this.shareStats, this, [shareText])
 
         // Decide whether to show a rating screen
