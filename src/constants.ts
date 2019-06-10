@@ -21,8 +21,11 @@ if (CSS.supports('padding-top: env(safe-area-inset-top)')) {
 export const GameWidth = 160
 export const GameHeight = screen.height / window.devicePixelRatio + NotchOffset
 
-// The HTML canvas is as tall as the device, but the playable vertical area is fixedx
+// The HTML canvas is as tall as the device, but the playable vertical area is fixed
 export const GameAreaHeight = 240
+
+// To center the game canvas
+export const GameAreaTopOffset = (GameHeight - GameAreaHeight) / 2
 
 // Battle Constants
 

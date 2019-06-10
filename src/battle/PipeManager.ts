@@ -8,9 +8,7 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
     // This will be the hole positioning
     const slots = 7
 
-    // we have a height of 240 to work with ATM
-    const windowHeight = 240
-    // const windowHeight = scene.game.canvas.height
+    const windowHeight = constants.GameAreaHeight
 
     // Distance from the top / bottom of the space
     const pipeEdgeBuffer = 170
@@ -24,8 +22,8 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
     const pipeIntervals = (windowHeight - pipeEdgeBuffer / 2 - gapHeight / 2) / slots
 
     const holeSlot = Math.floor(scene.rng() * 5) + 1
-    const holeTop = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 - gapHeight / 2 - floorAvoidanceHeight)
-    const holeBottom = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 + gapHeight / 2 - floorAvoidanceHeight)
+    const holeTop = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 - gapHeight / 2 - floorAvoidanceHeight + constants.GameAreaTopOffset)
+    const holeBottom = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 + gapHeight / 2 - floorAvoidanceHeight + constants.GameAreaTopOffset)
 
     const pipeTop = createSprite(x, holeTop, "pipe-top", scene)
     const pipeBottom = createSprite(x, holeBottom, "pipe-bottom", scene)

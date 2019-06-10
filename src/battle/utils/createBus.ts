@@ -12,7 +12,7 @@ export const preloadBusImages = (game: BattleScene) => {
 }
 
 export const createBus = (scene: BattleScene) => {
-    const bus = scene.physics.add.sprite(-10, 40, "bus")
+    const bus = scene.physics.add.sprite(-10, 40 + constants.GameAreaTopOffset, "bus")
     bus.setGravityY(-450)
     bus.setAccelerationX(20)
     bus.setDepth(constants.zLevels.birdWings + 1)

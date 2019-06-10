@@ -218,7 +218,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Set up the competitor birds
         this.recordedInput.forEach(input => {
-            const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, {
+            const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition + constants.GameAreaTopOffset, {
                 isPlayer: false,
                 settings: input.user
             })
@@ -234,7 +234,7 @@ export class BattleScene extends Phaser.Scene {
         if (game.showPlayerBird(this.mode)) {
             const settings = getUserSettings()
             const birdConfig = { isPlayer: true, settings }
-            this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition, birdConfig)
+            this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition + constants.GameAreaTopOffset, birdConfig)
             this.bird.setupForBeingInBus()
             this.bird.addCollideForSprite(this, this.floorPhysics)
 
@@ -255,11 +255,11 @@ export class BattleScene extends Phaser.Scene {
         }
         this.time.delayedCall(constants.timeBeforeFirstPipeLoads, startPipeTimer, [], this)
 
-        this.debugLabel = this.add.text(10, 200, "", { fontFamily: "PT Mono", fontSize: "12px" })
+        this.debugLabel = this.add.text(10, 200 + constants.GameAreaTopOffset, "", { fontFamily: "PT Mono", fontSize: "12px" })
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
         if (game.shouldShowScoreLabel(this.mode)) {
-            this.scoreLabel = this.add.bitmapText(constants.GameWidth - 30, 0, "nokia16", "0", 32)
+            this.scoreLabel = this.add.bitmapText(constants.GameWidth - 30, constants.GameAreaTopOffset, "nokia16", "0", 32)
             this.scoreLabel.setRightAlign()
             this.scoreLabel.setDepth(constants.zLevels.ui)
             this.updateScoreLabel()
@@ -269,13 +269,13 @@ export class BattleScene extends Phaser.Scene {
             const livesNum = getLives(this.seed)
             const copy = livesNum == 1 ? "life" : "lives"
             const lives = `${livesNum} ${copy}`
-            const livesText = this.add.bitmapText(4, 22, "nokia16", lives, 16)
+            const livesText = this.add.bitmapText(4, 22 + constants.GameAreaTopOffset, "nokia16", lives, 16)
             livesText.setDepth(constants.zLevels.ui)
         }
 
         // When we want to show a countdown, set it up with defaults
         if (game.shouldShowBirdsLeftLabel(this.mode)) {
-            this.birdsLeft = this.add.bitmapText(4, 4, "nokia16", "0", 16)
+            this.birdsLeft = this.add.bitmapText(4, 4 + constants.GameAreaTopOffset, "nokia16", "0", 16)
             this.birdsLeft.setDepth(constants.zLevels.ui)
             this.ghostBirdHasDied()
         }
@@ -310,7 +310,7 @@ export class BattleScene extends Phaser.Scene {
 
     setupPhysicsFloor() {
         /** the physics floor, so that the bus + bird can land on it */
-        this.floorPhysics = this.physics.add.staticImage(0, constants.GameAreaHeight - 50, "invis")
+        this.floorPhysics = this.physics.add.staticImage(0, constants.GameAreaHeight - 50 + constants.GameAreaTopOffset, "invis")
         this.floorPhysics.setGravityY(-1 * constants.gravity)
         this.floorPhysics.body.setSize(constants.GameWidth, 20)
         this.floorPhysics.setBounce(0.3)
@@ -360,7 +360,7 @@ export class BattleScene extends Phaser.Scene {
                 if (event.action === "flap") {
                     ghostBird.flap()
                 } else if (event.action === "sync" && event.value !== undefined) {
-                    ghostBird.position.y = event.value
+                    ghostBird.position.y = event.value + constants.GameAreaTopOffset
                 } else if (event.action === "died") {
                     // If the player isn't dead, then this
                     // bird will now be moving at the pipes speed
@@ -383,13 +383,13 @@ export class BattleScene extends Phaser.Scene {
                 this.userInput.push({
                     action: "sync",
                     timestamp: adjustedTime,
-                    value: Math.round(this.bird.position.y)
+                    value: Math.round(this.bird.position.y - constants.GameAreaTopOffset)
                 })
                 this.lastSyncedTimestamp = timestamp
             }
 
             // If the bird hits the floor
-            if (!devSettings.skipBottomCollision && this.bird.position.y > 171) {
+            if (!devSettings.skipBottomCollision && this.bird.position.y > 171 + constants.GameAreaTopOffset) {
                 if (!this.bird.isDead) this.userDied()
 
                 this.bird.hasHitFloor()

@@ -18,16 +18,16 @@ var clouds: Phaser.GameObjects.TileSprite,
 
 export const createBackgroundSprites = (scene: BattleScene) => {
     // 148 px wide
-    clouds = scene.add.tileSprite(74, 164, 164, 0, "clouds")
-    clouds2 = scene.add.tileSprite(74 + 148, 164, 160, 0, "clouds")
+    clouds = scene.add.tileSprite(74, 164 + constants.GameAreaTopOffset, 164, 0, "clouds")
+    clouds2 = scene.add.tileSprite(74 + 148, 164 + constants.GameAreaTopOffset, 160, 0, "clouds")
     // 114 px
-    city = scene.add.tileSprite(57, 171, 0, 0, "city")
-    city2 = scene.add.tileSprite(57 + 114, 171, 0, 0, "city")
+    city = scene.add.tileSprite(57, 171 + constants.GameAreaTopOffset, 0, 0, "city")
+    city2 = scene.add.tileSprite(57 + 114, 171 + constants.GameAreaTopOffset, 0, 0, "city")
     // 147 px
-    bushes = scene.add.tileSprite(74, 176, 0, 0, "bushes")
-    bushes2 = scene.add.tileSprite(74 + 147, 176, 0, 0, "bushes")
+    bushes = scene.add.tileSprite(74, 176 + constants.GameAreaTopOffset, 0, 0, "bushes")
+    bushes2 = scene.add.tileSprite(74 + 147, 176 + constants.GameAreaTopOffset, 0, 0, "bushes")
 
-    ground = scene.add.tileSprite(80, 230, 0, 0, "ground")
+    ground = scene.add.tileSprite(80, 230 + constants.GameAreaTopOffset, 0, 0, "ground")
     ground.setDepth(constants.zLevels.ground)
 }
 

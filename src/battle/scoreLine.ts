@@ -5,7 +5,7 @@ import * as constants from "../constants"
 // for the pipe gaps, set devSettings.debugPhysics to true to see it
 //
 export const addScoreLine = (x: number, scene: BattleScene, sprite: any) => {
-    const line = scene.physics.add.sprite(x, 160, "invis")
+    const line = scene.physics.add.sprite(x, 160 + constants.GameAreaTopOffset, "invis")
     const body = line.body as Phaser.Physics.Arcade.Body
 
     body.setSize(1, 300)
