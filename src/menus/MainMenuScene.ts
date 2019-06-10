@@ -64,14 +64,14 @@ export class MainMenuScene extends Phaser.Scene {
             0.4
         )
 
-        const logo = this.add.image(84, 50, "logo")
+        const logo = this.add.image(84, 50 + constants.NotchOffset, "logo")
         becomeButton(logo, this.loadRoyale, this)
 
-        setupBackgroundBlobImages(this, { min: 100, allColors: true })
+        setupBackgroundBlobImages(this, { min: 100 + constants.NotchOffset, allColors: true })
 
         const stats = getUserStatistics()
 
-        const wins = this.add.bitmapText(constants.GameWidth, 0, "nokia16", "wins: " + stats.royaleWins, 0)
+        const wins = this.add.bitmapText(constants.GameWidth, constants.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
         const rightAligned = constants.GameWidth - wins.getTextBounds(true).local.width
         wins.setX(rightAligned - 1)
         //this.add.bitmapText(10, 0, "nokia16", "wins: 0", 0)
@@ -88,13 +88,13 @@ export class MainMenuScene extends Phaser.Scene {
         })
         player.actAsImage()
 
-        const royaleButton = this.add.image(84, 110, "royale-button")
+        const royaleButton = this.add.image(84, 110 + constants.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
-        const trial = this.add.image(74, 146, "trial-button")
+        const trial = this.add.image(74, 146 + constants.NotchOffset, "trial-button")
         becomeButton(trial, this.loadTrial, this)
 
-        const settingsButton = this.add.image(76, 200, "settings-button")
+        const settingsButton = this.add.image(76, 200 + constants.NotchOffset, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
     }
 

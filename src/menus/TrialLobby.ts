@@ -6,6 +6,7 @@ import { fetchRecordingsForSeed } from "../firebase"
 import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
+import { resizeToFullScreen } from "./utils/resizeToFullScreen";
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -37,7 +38,10 @@ export class TrialLobby extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xeb9599)
 
         // Make a HTML form
-        this.add.dom(GameWidth / 2, GameHeight / 2).createFromCache("Lobby")
+        const domEl = this.add.dom(0, 0)
+            .setOrigin(0, 0)
+            .createFromCache("Lobby")
+        resizeToFullScreen(domEl)
 
         const lives = getLives(this.seed)
 

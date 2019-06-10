@@ -48,10 +48,9 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            webView.heightAnchor.constraint(equalTo: self.view.heightAnchor, constant: -60),
+            webView.topAnchor.constraint(equalTo: self.view.topAnchor),
             webView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
             webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            webView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
         ])
 
         let adView = MPAdView(adUnitId: AdConstants.testBannerMoPub, size: MOPUB_BANNER_SIZE)!
@@ -63,9 +62,10 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             adView.heightAnchor.constraint(equalToConstant: 50),
             adView.widthAnchor.constraint(equalToConstant: 320),
             adView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            adView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20),
+            adView.topAnchor.constraint(equalTo: webView.bottomAnchor),
+            adView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
         ])
-        
+
         let button = UIButton(type: .roundedRect)
         view.addSubview(button)
         button.frame = CGRect(x: 20,y: 620, width: 60, height: 60)

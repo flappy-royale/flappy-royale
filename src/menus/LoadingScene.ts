@@ -47,13 +47,13 @@ export class LoadingScene extends Phaser.Scene {
             0x000000
         )
 
-        const lobby = this.add.bitmapText(40, 80, "nokia16", "Loading...")
+        const lobby = this.add.bitmapText(40, 80 + constants.NotchOffset, "nokia16", "Loading...")
 
         const loadingHeight = constants.GameHeight - 10
         // Add loading box
         this.add.rectangle(
             constants.GameWidth / 2 - 2,
-            constants.GameHeight / 2 - 10,
+            constants.GameHeight / 2 - 10 + constants.NotchOffset,
             constants.GameWidth / 2,
             14,
             0xffffff,
@@ -62,7 +62,7 @@ export class LoadingScene extends Phaser.Scene {
 
         this.progressBar = this.add.rectangle(
             constants.GameWidth / 4 - 2,
-            constants.GameHeight / 2 - 10,
+            constants.GameHeight / 2 - 10 + constants.NotchOffset,
             0,
             14,
             0xffffff

@@ -45,7 +45,7 @@ const config: Phaser.Types.Core.GameConfig = {
         parent: "game",
         width: constants.GameWidth,
         height: constants.GameHeight,
-        zoom: 4
+        zoom: devicePixelRatio
     },
     dom: {
         createContainer: true

@@ -4,8 +4,25 @@ export const APIVersion = "1"
 // Are you working in a dev build?
 export const isInDevMode = document.location.port === "8085"
 
+/** All methods of getting the window height in JS exclude the iPhone notch.
+ * The best way we have to calculate notch height is to add a fake element,
+ * and then grab the calculated safe area insets off of.
+ * [insert sounds of exasperation] */
+export let NotchOffset = 0
+if (CSS.supports('padding-top: env(safe-area-inset-top)')) {
+    let div = document.createElement('div');
+    div.style.paddingTop = 'env(safe-area-inset-top)';
+    document.body.appendChild(div);
+    let calculatedPadding = parseInt(window.getComputedStyle(div).paddingTop, 10);
+    document.body.removeChild(div);
+    NotchOffset = calculatedPadding / window.devicePixelRatio
+}
+
 export const GameWidth = 160
-export const GameHeight = 240
+export const GameHeight = screen.height / window.devicePixelRatio + NotchOffset
+
+// The HTML canvas is as tall as the device, but the playable vertical area is fixedx
+export const GameAreaHeight = 240
 
 // Battle Constants
 

@@ -7,7 +7,6 @@
     <head>
         <meta charset="UTF-8" />
         <title><%= htmlWebpackPlugin.options.title %></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     </head>
     <body>
         <div style="font-family:Fipps; position:absolute; left:-1000px; visibility:hidden;">.</div>

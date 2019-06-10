@@ -1,4 +1,4 @@
-import { GameWidth, GameHeight } from "../../constants"
+import { GameWidth, GameHeight, NotchOffset } from "../../constants"
 import { Scene } from "phaser"
 
 export const preloadBackgroundBlobImages = (scene: Scene) => {
@@ -50,10 +50,10 @@ export const setupBackgroundBlobImages = (scene: Scene, settings: { min: number;
         scene.add.image(40, h - 20, "bottom-left")
         scene.add.image(130, h - 8, "bottom-right")
 
-        scene.add.image(shuffle(25), shuffle(16), "red-top-left")
-        scene.add.image(shuffle(134), shuffle(24), "red-top-right")
-        scene.add.image(shuffle(25), shuffle(80), "red-bottom-left")
-        scene.add.image(shuffle(134), shuffle(80), "red-bottom-right")
+        scene.add.image(shuffle(25), shuffle(16 + NotchOffset), "red-top-left")
+        scene.add.image(shuffle(134), shuffle(24 + NotchOffset), "red-top-right")
+        scene.add.image(shuffle(25), shuffle(80 + NotchOffset), "red-bottom-left")
+        scene.add.image(shuffle(134), shuffle(80 + NotchOffset), "red-bottom-right")
     }
 }
 
