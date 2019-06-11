@@ -30,50 +30,51 @@ enum StartupScreen {
     TrialLobby
 }
 
-// Change this to have it load up into a different screen on save
-const startupScreen = StartupScreen.MainMenu as StartupScreen
-
-const config: Phaser.Types.Core.GameConfig = {
-    title: "Flappy Royale",
-    width: constants.GameWidth,
-    height: constants.GameHeight,
-    parent: "game",
-    backgroundColor: "#62CBE0",
-    seed: ["consistent", "physics", "thanks"],
-    scale: {
-        mode: Phaser.Scale.FIT,
-        parent: "game",
+function newGame(): FlappyGame {
+    const config: Phaser.Types.Core.GameConfig = {
+        title: "Flappy Royale",
         width: constants.GameWidth,
         height: constants.GameHeight,
-        zoom: devicePixelRatio
-    },
-    dom: {
-        createContainer: true
-    },
-    type: Phaser.CANVAS,
-    physics: {
-        default: "arcade",
-        arcade: {
-            gravity: {
-                y: constants.gravity
+        parent: "game",
+        backgroundColor: "#62CBE0",
+        seed: ["consistent", "physics", "thanks"],
+        scale: {
+            mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
+            parent: "game",
+            width: constants.GameWidth,
+            height: constants.GameHeight,
+            zoom: 4
+        },
+        dom: {
+            createContainer: true
+        },
+        type: Phaser.CANVAS,
+        physics: {
+            default: "arcade",
+            arcade: {
+                gravity: {
+                    y: constants.gravity
+                }
             }
+        },
+        render: {
+            pixelArt: true
         }
-    },
-    render: {
-        pixelArt: true
     }
+
+    return new FlappyGame(config)
 }
+
 
 export class FlappyGame extends Phaser.Game {
     constructor(config: Phaser.Types.Core.GameConfig) {
         super(config)
     }
 }
-const game = new FlappyGame(config)
 
 // The normal game flow
 
-const loadUpIntoTraining = async (settings: { offline: boolean; mode: GameMode }) => {
+const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean; mode: GameMode }) => {
     let seed = "0-royale-1"
     let data = emptySeedData
 
@@ -85,25 +86,31 @@ const loadUpIntoTraining = async (settings: { offline: boolean; mode: GameMode }
     game.scene.add("Battle", scene, true)
 }
 
-const loadUpIntoSettings = () => {
+const loadUpIntoSettings = (game: FlappyGame) => {
     const settings = new UserSettings()
     game.scene.add(UserSettingsKey, settings, true)
 }
 
 window.onload = async () => {
+    constants.setDeviceSize()
+    const game = newGame()
+
     const seed = "1-royale-0"
+
+    // Change this to have it load up into a different screen on save
+    const startupScreen = StartupScreen.MainMenu as StartupScreen
 
     switch (startupScreen) {
         case StartupScreen.TrialBattle:
-            loadUpIntoTraining({ offline: false, mode: GameMode.Trial })
+            loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
             break
 
         case StartupScreen.RoyalBattle:
-            loadUpIntoTraining({ offline: false, mode: GameMode.Royale })
+            loadUpIntoTraining(game, { offline: false, mode: GameMode.Royale })
             break
 
         case StartupScreen.Settings:
-            loadUpIntoSettings()
+            loadUpIntoSettings(game)
             break
 
         case StartupScreen.MainMenu:
