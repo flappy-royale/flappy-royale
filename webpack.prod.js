@@ -13,7 +13,7 @@ module.exports = merge(common, {
         // Creates the HTML files
         new HtmlWebpackPlugin({
             title: "Flappy Royale",
-            meta: { viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" },
+            meta: { viewport: "width=160, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" },
             production: true,
             template: "src/index.template"
         }),
