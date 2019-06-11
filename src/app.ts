@@ -39,7 +39,9 @@ function newGame(): FlappyGame {
         backgroundColor: "#62CBE0",
         seed: ["consistent", "physics", "thanks"],
         scale: {
-            mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
+            mode: (screen.width < screen.height ?
+                Phaser.Scale.WIDTH_CONTROLS_HEIGHT :
+                Phaser.Scale.FIT),
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,

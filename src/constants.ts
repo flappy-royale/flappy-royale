@@ -34,6 +34,11 @@ export function setDeviceSize() {
 
     GameHeight = window.innerHeight * scale + NotchOffset
     GameAreaTopOffset = (GameHeight - GameAreaHeight) / 2
+
+    // Handle landscape / desktop separately
+    if (screen.width > screen.height) {
+        GameHeight = GameAreaHeight
+    }
 }
 
 // Battle Constants
