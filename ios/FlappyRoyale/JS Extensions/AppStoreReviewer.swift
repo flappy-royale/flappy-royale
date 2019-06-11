@@ -11,11 +11,8 @@ import WebKit
 
 class AppStoreReviewer : NSObject, WebViewInteropProvider {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if #available(iOS 10.3, *) {
-            SKStoreReviewController.requestReview()
-        } else {
-            // TODO: I don't think we actually care about supporting earlier versions?
-        }
+        print("Request review!")
+//        SKStoreReviewController.requestReview()
     }
 
     func inject(_ controller: WKUserContentController) {
