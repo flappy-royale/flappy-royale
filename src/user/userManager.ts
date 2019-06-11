@@ -168,6 +168,25 @@ export const getLives = (seed: string): number => {
     return livesNum
 }
 
+export const getHighScore = (seed: string): number => {
+    const highScoreData = localStorage.getItem("highScore")
+
+    let scoreNum = highScoreData && JSON.parse(highScoreData)[seed]
+
+    if (!scoreNum) {
+        const newData = { [seed]: 0 }
+        localStorage.setItem("highScore", JSON.stringify(newData))
+    }
+
+    return scoreNum || 0
+}
+
+export const setHighScore = (seed: string, score: number) => {
+    // Warning: This doesn't verify that the high score is actually higher than the old one!
+    const data = { [seed]: score }
+    localStorage.setItem("highScore", JSON.stringify(data))
+}
+
 export const subtractALife = (seed: string) => addLives(seed, -1)
 
 export const addLives = (seed: string, val: number): number => {

@@ -12,7 +12,7 @@ import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
-import { recordGamePlayed, getUserSettings, subtractALife, getLives } from "../user/userManager"
+import { recordGamePlayed, getUserSettings, subtractALife, getLives, getHighScore, setHighScore } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
@@ -281,8 +281,9 @@ export class BattleScene extends Phaser.Scene {
         }
 
         if (game.shouldShowHighScoreLabel(this.mode)) {
-            let highScore = `Best: ${this.highScore}`
-            this.highScoreLabel = this.add.bitmapText(constants.GameWidth - 60, constants.GameAreaTopOffset + 33, "nokia16", highScore, 16)
+            this.highScore = getHighScore(this.seed)
+            let highScoreText = `Best: ${this.highScore}`
+            this.highScoreLabel = this.add.bitmapText(constants.GameWidth - 60, constants.GameAreaTopOffset + 33, "nokia16", highScoreText, 16)
             this.highScoreLabel.setRightAlign()
             this.highScoreLabel.setDepth(constants.zLevels.ui)
             alignTextLabel(this.highScoreLabel, 2)
@@ -324,6 +325,7 @@ export class BattleScene extends Phaser.Scene {
             this.highScore = this.score
             this.highScoreLabel.text = `Best: ${this.highScore}`
             alignTextLabel(this.highScoreLabel, 2)
+            setHighScore(this.seed, this.highScore)
         }
     }
 
