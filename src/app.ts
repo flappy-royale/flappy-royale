@@ -93,7 +93,17 @@ const loadUpIntoSettings = (game: FlappyGame) => {
     game.scene.add(UserSettingsKey, settings, true)
 }
 
+const wait = async (delay: number) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(true), delay)
+    })
+}
+
 window.onload = async () => {
+    // This very silly delay fixes the issues where notch-detection code sometimes doesn't work properly.
+    // TODO: Our splash screen can happen in not-Phaser DOM land and use that to mask this waiting period.
+    await wait(100)
+
     constants.setDeviceSize()
     const game = newGame()
 
