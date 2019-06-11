@@ -161,8 +161,7 @@ export const getLives = (seed: string): number => {
 
     // Cleans up old lives data every time you grab one,
     // mainly just keeps the amount of space in localstorage small
-    const newData = {}
-    newData[seed] = livesNum
+    const newData = { [seed]: livesNum }
     localStorage.setItem("lives", JSON.stringify(newData))
 
     return livesNum
@@ -193,8 +192,7 @@ export const addLives = (seed: string, val: number): number => {
     const livesData = localStorage.getItem("lives")
     const lives = (livesData && JSON.parse(livesData)[seed]) || defaultLives
 
-    const newData = {}
-    newData[seed] = lives + val
+    const newData = { [seed]: lives + val }
     localStorage.setItem("lives", JSON.stringify(newData))
 
     return newData[seed]

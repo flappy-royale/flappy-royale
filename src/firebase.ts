@@ -51,7 +51,7 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
         console.log(`Fetched recordings from server for seed ${seed}`, seeds)
         try {
             cache.setRecordings(seed, seeds)
-        } catch (error) {}
+        } catch (error) { }
         return seeds
     } catch (e) {
         console.log("Could not fetch recordings over the network. Falling back on local cache", e)
@@ -71,6 +71,11 @@ export const getSeedsFromAPI = (apiVersion: string) => {
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/seeds?version=${apiVersion}`)
         .then(r => r.json() as Promise<SeedsResponse | undefined>)
         .then(seeds => {
+            if (!seeds) {
+                console.log("Could not fetch seeds (received undefined), falling back to local cache")
+                return cache.getSeeds(apiVersion)
+            }
+
             // Store a local copy of the seeds
             cache.setSeeds(apiVersion, seeds)
             console.log("Got seeds from server", apiVersion, seeds)

@@ -140,7 +140,7 @@ export class RoyaleLobby extends Phaser.Scene {
         const countdownButton = document.getElementById("countdown-description")
         const countdownTimerText = document.getElementById("countdown-time")
 
-        let timeout: NodeJS.Timeout | undefined
+        let timeout: number | undefined
         const updateTimer = () => {
             countdownTime -= 1
 
@@ -163,7 +163,7 @@ export class RoyaleLobby extends Phaser.Scene {
             } else {
                 countdownTimerText.innerText = `${countdownTime}`
             }
-            timeout = setTimeout(updateTimer, 1000)
+            timeout = <number><unknown>setTimeout(updateTimer, 1000)
         }
         updateTimer()
 

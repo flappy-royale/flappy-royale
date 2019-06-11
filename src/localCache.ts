@@ -53,5 +53,7 @@ export const cache = {
         if (result && result.apiVersion === apiVersion) {
             return result.seeds
         }
+
+        return undefined
     }
 }
