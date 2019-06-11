@@ -24,6 +24,9 @@ export const shouldShowScoreLabel = (mode: GameMode) => mode !== GameMode.Menu
 /** Should we show many lives you have? */
 export const shouldShowLivesLabel = (mode: GameMode) => mode === GameMode.Trial
 
+/** Should we show your highest trial score? */
+export const shouldShowHighScoreLabel = (mode: GameMode) => mode === GameMode.Trial
+
 /** Should we show the birds left? */
 export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
 

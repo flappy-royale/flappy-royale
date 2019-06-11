@@ -17,6 +17,7 @@ import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
+import { alignTextLabel } from "./utils/alignTextLabel";
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -96,8 +97,14 @@ export class BattleScene extends Phaser.Scene {
     // What score did someone just get
     public score: number
 
+    // What the player's current high score for this seed is
+    public highScore: number = 0
+
     /** How we show your score */
     private scoreLabel: Phaser.GameObjects.BitmapText | undefined
+
+    /** How we show your daily high score in Trial */
+    private highScoreLabel: Phaser.GameObjects.BitmapText | undefined
 
     /** Where we tell you how many are left */
     private birdsLeft: Phaser.GameObjects.BitmapText | undefined
@@ -273,6 +280,14 @@ export class BattleScene extends Phaser.Scene {
             livesText.setDepth(constants.zLevels.ui)
         }
 
+        if (game.shouldShowHighScoreLabel(this.mode)) {
+            let highScore = `Best: ${this.highScore}`
+            this.highScoreLabel = this.add.bitmapText(constants.GameWidth - 60, constants.GameAreaTopOffset + 33, "nokia16", highScore, 16)
+            this.highScoreLabel.setRightAlign()
+            this.highScoreLabel.setDepth(constants.zLevels.ui)
+            alignTextLabel(this.highScoreLabel, 2)
+        }
+
         // When we want to show a countdown, set it up with defaults
         if (game.shouldShowBirdsLeftLabel(this.mode)) {
             this.birdsLeft = this.add.bitmapText(4, 4 + constants.GameAreaTopOffset, "nokia16", "0", 16)
@@ -303,9 +318,13 @@ export class BattleScene extends Phaser.Scene {
 
     updateScoreLabel() {
         this.scoreLabel.text = `${this.score}`
-        // Right alignment doesn't work in phaser, so we fake it
-        const rightAligned = constants.GameWidth - this.scoreLabel.getTextBounds(true).local.width
-        this.scoreLabel.setX(rightAligned)
+        alignTextLabel(this.scoreLabel)
+
+        if (this.score > this.highScore) {
+            this.highScore = this.score
+            this.highScoreLabel.text = `Best: ${this.highScore}`
+            alignTextLabel(this.highScoreLabel, 2)
+        }
     }
 
     setupPhysicsFloor() {
