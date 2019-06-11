@@ -96,20 +96,20 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         // Do we want to keep the top of all time
         const highScoresOnly = mode === GameMode.Royale
         if (highScoresOnly) {
-            const sortedReplays = seedData.replays.sort((l, r) => l.score - r.score)
-            const lowest = sortedReplays[0]
-            // Bail early because we won't want to save anything
-            if (lowest.score > data.score) return
+            const currentPlayersReplays = seedData.replays
+                .filter(replay => replay.user === data.user)
+                .concat(data)
+                .sort((l, r) => l.score - r.score)
 
-            const isFull = seedData.replays.length === maxNumberOfReplays
-            if (isFull) {
-                // Removes the last element
-                // TODO: verify this isn't removing the top score
-                sortedReplays.pop()
-            }
-            // Adds the new one
-            sortedReplays.push(data)
-            // Sets it to be saved
+            const personalBest = currentPlayersReplays[currentPlayersReplays.length - 1]
+
+            const sortedReplays = seedData.replays
+                .filter(replay => replay.user !== data.user)
+                .concat(personalBest)
+                .sort((l, r) => l.score - r.score)
+                .reverse()
+                .slice(0, maxNumberOfReplays)
+
             seedData.replays = sortedReplays
         }
 
