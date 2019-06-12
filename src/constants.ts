@@ -15,25 +15,25 @@ export const GameAreaHeight = 240
 /** All methods of getting the window height in JS exclude the iPhone notch.
  * The best way we have to calculate notch height is to add a fake element,
  * and then grab the calculated safe area insets off of.
- * [insert sounds of exasperation] 
- * 
- * (This also needs to happen after document load, but before other things, 
+ * [insert sounds of exasperation]
+ *
+ * (This also needs to happen after document load, but before other things,
  * so we export this fn to let others control the flow)
  */
 export function setDeviceSize() {
     const scale = GameWidth / screen.width
 
-    if (CSS.supports('padding-top: env(safe-area-inset-top)')) {
-        let div = document.createElement('div');
-        div.style.paddingTop = 'env(safe-area-inset-top)';
-        document.body.appendChild(div);
-        let calculatedPadding = parseInt(window.getComputedStyle(div).paddingTop, 10);
-        document.body.removeChild(div);
+    if (CSS.supports("padding-top: env(safe-area-inset-top)")) {
+        let div = document.createElement("div")
+        div.style.paddingTop = "env(safe-area-inset-top)"
+        document.body.appendChild(div)
+        let calculatedPadding = parseInt(window.getComputedStyle(div).paddingTop, 10)
+        document.body.removeChild(div)
         NotchOffset = calculatedPadding * scale
     }
 
     GameHeight = window.innerHeight * scale + NotchOffset
-    GameAreaTopOffset = (GameHeight - GameAreaHeight) / 2
+    GameAreaTopOffset = NotchOffset && (GameHeight - GameAreaHeight) / 2
 
     // Handle landscape / desktop separately
     if (screen.width > screen.height) {
