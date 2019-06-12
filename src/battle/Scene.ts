@@ -12,12 +12,19 @@ import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
-import { recordGamePlayed, getUserSettings, subtractALife, getLives, getHighScore, setHighScore } from "../user/userManager"
+import {
+    recordGamePlayed,
+    getUserSettings,
+    subtractALife,
+    getLives,
+    getHighScore,
+    setHighScore
+} from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
-import { alignTextLabel } from "./utils/alignTextLabel";
+import { alignTextLabel } from "./utils/alignTextLabel"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -151,7 +158,7 @@ export class BattleScene extends Phaser.Scene {
         const flap = this.userFlap.bind(this)
         window.addEventListener("touchstart", flap)
 
-        this.events.on('destroy', () => {
+        this.events.on("destroy", () => {
             window.removeEventListener("touchstart", flap)
         })
     }
@@ -225,10 +232,15 @@ export class BattleScene extends Phaser.Scene {
 
         // Set up the competitor birds
         this.recordedInput.forEach(input => {
-            const ghost = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition + constants.GameAreaTopOffset, {
-                isPlayer: false,
-                settings: input.user
-            })
+            const ghost = new BirdSprite(
+                this,
+                constants.birdXPosition,
+                constants.birdYPosition + constants.GameAreaTopOffset,
+                {
+                    isPlayer: false,
+                    settings: input.user
+                }
+            )
             ghost.setupForBeingInBus()
             ghost.addCollideForSprite(this, this.floorPhysics)
             this.ghostBirds.push(ghost)
@@ -241,7 +253,13 @@ export class BattleScene extends Phaser.Scene {
         if (game.showPlayerBird(this.mode)) {
             const settings = getUserSettings()
             const birdConfig = { isPlayer: true, settings }
-            this.bird = new BirdSprite(this, constants.birdXPosition, constants.birdYPosition + constants.GameAreaTopOffset, birdConfig)
+            this.bird = new BirdSprite(
+                this,
+                constants.birdXPosition,
+                constants.birdYPosition + constants.GameAreaTopOffset,
+                birdConfig
+            )
+
             this.bird.setupForBeingInBus()
             this.bird.addCollideForSprite(this, this.floorPhysics)
 
@@ -262,11 +280,20 @@ export class BattleScene extends Phaser.Scene {
         }
         this.time.delayedCall(constants.timeBeforeFirstPipeLoads, startPipeTimer, [], this)
 
-        this.debugLabel = this.add.text(10, 200 + constants.GameAreaTopOffset, "", { fontFamily: "PT Mono", fontSize: "12px" })
+        this.debugLabel = this.add.text(10, 200 + constants.GameAreaTopOffset, "", {
+            fontFamily: "PT Mono",
+            fontSize: "12px"
+        })
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
         if (game.shouldShowScoreLabel(this.mode)) {
-            this.scoreLabel = this.add.bitmapText(constants.GameWidth - 30, constants.GameAreaTopOffset, "nokia16", "0", 32)
+            this.scoreLabel = this.add.bitmapText(
+                constants.GameWidth - 30,
+                constants.GameAreaTopOffset,
+                "nokia16",
+                "0",
+                32
+            )
             this.scoreLabel.setRightAlign()
             this.scoreLabel.setDepth(constants.zLevels.ui)
             this.updateScoreLabel()
@@ -283,7 +310,13 @@ export class BattleScene extends Phaser.Scene {
         if (game.shouldShowHighScoreLabel(this.mode)) {
             this.highScore = getHighScore(this.seed)
             let highScoreText = `Best: ${this.highScore}`
-            this.highScoreLabel = this.add.bitmapText(constants.GameWidth - 60, constants.GameAreaTopOffset + 33, "nokia16", highScoreText, 16)
+            this.highScoreLabel = this.add.bitmapText(
+                constants.GameWidth - 60,
+                constants.GameAreaTopOffset + 33,
+                "nokia16",
+                highScoreText,
+                16
+            )
             this.highScoreLabel.setRightAlign()
             this.highScoreLabel.setDepth(constants.zLevels.ui)
             alignTextLabel(this.highScoreLabel, 2)
@@ -331,7 +364,11 @@ export class BattleScene extends Phaser.Scene {
 
     setupPhysicsFloor() {
         /** the physics floor, so that the bus + bird can land on it */
-        this.floorPhysics = this.physics.add.staticImage(0, constants.GameAreaHeight - 50 + constants.GameAreaTopOffset, "invis")
+        this.floorPhysics = this.physics.add.staticImage(
+            0,
+            constants.GameAreaHeight - 50 + constants.GameAreaTopOffset,
+            "invis"
+        )
         this.floorPhysics.setGravityY(-1 * constants.gravity)
         this.floorPhysics.body.setSize(constants.GameWidth, 20)
         this.floorPhysics.setBounce(0.3)
@@ -463,7 +500,9 @@ export class BattleScene extends Phaser.Scene {
 
     userFlap() {
         // Trying to flap on the main menu is just silly!
-        if (this.mode === game.GameMode.Menu) { return }
+        if (this.mode === game.GameMode.Menu) {
+            return
+        }
 
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return

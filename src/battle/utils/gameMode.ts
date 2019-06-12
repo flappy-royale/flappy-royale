@@ -4,7 +4,7 @@ export enum GameMode {
     /** Compete for attire */
     Royale,
     /** Compete against top scores */
-    Trial,
+    Trial = 2, // This needs to stay as 2, for the function to work reliably
     /** Infinite loop  */
     Training
 }

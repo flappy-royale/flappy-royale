@@ -71,7 +71,13 @@ export class MainMenuScene extends Phaser.Scene {
 
         const stats = getUserStatistics()
 
-        const wins = this.add.bitmapText(constants.GameWidth, constants.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
+        const wins = this.add.bitmapText(
+            constants.GameWidth,
+            constants.NotchOffset,
+            "nokia16",
+            "wins: " + stats.royaleWins,
+            0
+        )
         const rightAligned = constants.GameWidth - wins.getTextBounds(true).local.width
         wins.setX(rightAligned - 1)
         //this.add.bitmapText(10, 0, "nokia16", "wins: 0", 0)

@@ -3,7 +3,6 @@ import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData } from "../../src/firebase"
-import { GameMode } from "../../src/battle/utils/gameMode"
 
 const numberOfDifferentRoyaleReplays = 3
 const maxNumberOfReplays = 100
@@ -94,9 +93,9 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         const hasOverHalfData = existingCount > maxNumberOfReplays / 2
 
         // Do we want to keep the top of all time
-        const highScoresOnly = mode === GameMode.Royale
+        const highScoresOnly = mode === 2 
         if (highScoresOnly) {
-            // Contains the single best score this user has submitted, 
+            // Contains the single best score this user has submitted,
             // whether it's the one we're trying to submit now or a previous one
             // (although they _should_ have at most 1 previous entry in the list)
             const currentPlayersReplays = seedData.replays
