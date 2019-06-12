@@ -2,7 +2,7 @@ import * as Phaser from "phaser"
 import { UserSettings, UserSettingsKey } from "./UserSettingsScene"
 import { getSeedsFromAPI, emptySeedData } from "../firebase"
 import { BattleScene } from "../battle/Scene"
-import * as constants from "../constants"
+import * as c from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
@@ -55,52 +55,37 @@ export class MainMenuScene extends Phaser.Scene {
         this.game.scene.bringToTop("MainMenu")
 
         // Fill the BG
-        this.add.rectangle(
-            constants.GameWidth / 2,
-            constants.GameHeight / 2,
-            constants.GameWidth,
-            constants.GameHeight,
-            0x000000,
-            0.4
-        )
+        this.add.rectangle(c.GameWidth / 2, c.GameHeight / 2, c.GameWidth, c.GameHeight, 0x000000, 0.4)
 
-        const logo = this.add.image(84, 50 + constants.NotchOffset, "logo")
+        const logo = this.add.image(84, 50 + c.NotchOffset, "logo")
         becomeButton(logo, this.loadRoyale, this)
 
-        setupBackgroundBlobImages(this, { min: 100 + constants.NotchOffset, allColors: true })
+        setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
 
         const stats = getUserStatistics()
 
-        const wins = this.add.bitmapText(
-            constants.GameWidth,
-            constants.NotchOffset,
-            "nokia16",
-            "wins: " + stats.royaleWins,
-            0
-        )
-        const rightAligned = constants.GameWidth - wins.getTextBounds(true).local.width
+        const wins = this.add.bitmapText(c.GameWidth, c.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
+
+        const rightAligned = c.GameWidth - wins.getTextBounds(true).local.width
         wins.setX(rightAligned - 1)
-        //this.add.bitmapText(10, 0, "nokia16", "wins: 0", 0)
 
         // NOTE: ASYNC!
-        getSeedsFromAPI(constants.APIVersion).then(seeds => {
+        getSeedsFromAPI(c.APIVersion).then(seeds => {
             this.seeds = seeds
         })
 
         const settings = getUserSettings()
-        const player = new BirdSprite(this, 6, constants.GameHeight - 12, {
-            isPlayer: false,
-            settings: settings
-        })
+        const player = new BirdSprite(this, 6, c.GameHeight - 12, { isPlayer: false, settings: settings })
         player.actAsImage()
+        this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
 
-        const royaleButton = this.add.image(84, 110 + constants.NotchOffset, "royale-button")
+        const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
-        const trial = this.add.image(74, 146 + constants.NotchOffset, "trial-button")
+        const trial = this.add.image(74, 146 + c.NotchOffset, "trial-button")
         becomeButton(trial, this.loadTrial, this)
 
-        const settingsButton = this.add.image(76, 200 + constants.NotchOffset, "settings-button")
+        const settingsButton = this.add.image(76, 200 + c.NotchOffset, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
     }
 
