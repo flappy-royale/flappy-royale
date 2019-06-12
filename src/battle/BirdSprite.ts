@@ -3,7 +3,8 @@ import { Scene } from "phaser"
 
 import { UserSettings, getUserSettings } from "../user/userManager"
 import { BattleScene } from "./Scene"
-import { haptics } from "../haptics";
+import { haptics } from "../haptics"
+import { becomeButton } from "../menus/utils/becomeButton"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -163,8 +164,7 @@ export class BirdSprite {
 
             haptics.playSelection()
             haptics.prepareHeavy()
-        }
-        else this.scene.sound.play("other_flap")
+        } else this.scene.sound.play("other_flap")
     }
 
     rotateSprite() {
@@ -282,6 +282,11 @@ export class BirdSprite {
             item.setPosition(this.bodySprite.x - 1, this.bodySprite.y + 1)
             item.rotation = this.bodySprite.rotation
         })
+    }
+
+    /** Lets you pass a func through for when the image is tapped */
+    makeClickable(func: Function, context?: any) {
+        becomeButton(this.bodySprite, func, context)
     }
 }
 

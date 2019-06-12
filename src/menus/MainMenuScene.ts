@@ -77,6 +77,7 @@ export class MainMenuScene extends Phaser.Scene {
         const settings = getUserSettings()
         const player = new BirdSprite(this, 6, c.GameHeight - 12, { isPlayer: false, settings: settings })
         player.actAsImage()
+        player.makeClickable(this.loadSettings, this)
         this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
 
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
