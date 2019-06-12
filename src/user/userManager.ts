@@ -197,3 +197,33 @@ export const addLives = (seed: string, val: number): number => {
 
     return newData[seed]
 }
+
+export enum LifeStateForSeed {
+    FirstSet,
+    ExtraFive,
+    ExtraTen,
+    ExtraFifteen
+}
+
+/** Get the current state of whether you've got extra lives for particular seed */
+export const livesExtensionStateForSeed = (seed: string): LifeStateForSeed => {
+    const highScoreData = localStorage.getItem("lives-state")
+
+    let scoreNum = highScoreData && JSON.parse(highScoreData)[seed]
+
+    if (scoreNum === undefined || scoreNum === null) {
+        const newData = { [seed]: 0 }
+        localStorage.setItem("lives-state", JSON.stringify(newData))
+    }
+
+    return scoreNum || LifeStateForSeed.FirstSet
+}
+
+/** Moves up through the enum above */
+export const bumpLivesExtensionState = (seed: string) => {
+    const livesData = localStorage.getItem("lives-state")
+    const state = (livesData && JSON.parse(livesData)[seed]) || LifeStateForSeed.FirstSet
+
+    const newData = { [seed]: state + 1 }
+    localStorage.setItem("lives-state", JSON.stringify(newData))
+}

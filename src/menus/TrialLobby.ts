@@ -1,12 +1,20 @@
 import * as Phaser from "phaser"
-import { UserSettings, getLives } from "../user/userManager"
+import {
+    UserSettings,
+    getLives,
+    livesExtensionStateForSeed,
+    LifeStateForSeed,
+    bumpLivesExtensionState,
+    addLives
+} from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { fetchRecordingsForSeed } from "../firebase"
 import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
-import { resizeToFullScreen } from "./utils/resizeToFullScreen";
+import { resizeToFullScreen } from "./utils/resizeToFullScreen"
+import { requestModalAd } from "../nativeComms/requestModalAd"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -38,7 +46,8 @@ export class TrialLobby extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xeb9599)
 
         // Make a HTML form
-        const domEl = this.add.dom(0, 0)
+        const domEl = this.add
+            .dom(0, 0)
             .setOrigin(0, 0)
             .createFromCache("Lobby")
         resizeToFullScreen(domEl)
@@ -71,6 +80,31 @@ export class TrialLobby extends Phaser.Scene {
             return root
         }
 
+        const outOfLives = lives === 0
+        const livesState = livesExtensionStateForSeed(this.seed)
+
+        // Changes the button at the bottom to note about how you can add more lives
+        // which triggers and ad
+        if (outOfLives) {
+            switch (livesState) {
+                case LifeStateForSeed.FirstSet:
+                    document.getElementById("button-text").textContent = "+5 Lives"
+                    break
+
+                case LifeStateForSeed.ExtraFive:
+                    document.getElementById("button-text").textContent = "+10 Lives"
+                    break
+
+                case LifeStateForSeed.ExtraTen:
+                    document.getElementById("button-text").textContent = "+15 Lives"
+                    break
+
+                case LifeStateForSeed.ExtraFifteen:
+                    document.getElementById("button-text").textContent = "No more lives"
+                    break
+            }
+        }
+
         fetchRecordingsForSeed(this.seed).then(seedData => {
             const birds = document.getElementById("birds")
             seedData.replays
@@ -92,12 +126,20 @@ export class TrialLobby extends Phaser.Scene {
                 const goButton = document.getElementById("button")
 
                 goButton.onclick = () => {
-                    if (lives === 0) return
+                    const playGame = () => {
+                        this.game.scene.remove(this)
+                        const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
+                        this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                        scene.playBusCrash()
+                    }
 
-                    this.game.scene.remove(this)
-                    const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
-                    this.game.scene.add("BattleScene" + this.seed, scene, true, {})
-                    scene.playBusCrash()
+                    if (lives !== 0) {
+                        playGame()
+                        return
+                    } else {
+                        requestModalAd(livesState)
+                    }
+                    // Show an ad modal for lives, then play the game again
                 }
             }
 
@@ -131,8 +173,38 @@ export class TrialLobby extends Phaser.Scene {
         const info = document.getElementById("info")
         info.innerHTML = `Daily scoreboard<br />You have ${lives} lives`
 
-        if (lives === 0) {
+        /// NOOP
+        if (lives === 0 && livesState === LifeStateForSeed.ExtraFifteen) {
             buttonBG.style.opacity = "0.3"
+        }
+    }
+
+    adsHaveBeenUnlocked() {
+        bumpLivesExtensionState(this.seed)
+
+        switch (livesExtensionStateForSeed(this.seed)) {
+            case LifeStateForSeed.ExtraFive:
+                addLives(this.seed, 5)
+                break
+
+            case LifeStateForSeed.ExtraTen:
+                addLives(this.seed, 10)
+                break
+
+            case LifeStateForSeed.ExtraFifteen:
+                addLives(this.seed, 15)
+                break
+        }
+
+        const goButton = document.getElementById("button")
+
+        goButton.onclick = () => {
+            fetchRecordingsForSeed(this.seed).then(seedData => {
+                this.game.scene.remove(this)
+                const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
+                this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                scene.playBusCrash()
+            })
         }
     }
 }

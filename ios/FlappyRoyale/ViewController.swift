@@ -9,9 +9,11 @@ import MoPub
 class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UIScrollViewDelegate, SFSafariViewControllerDelegate {
     let haptics = HapticManager()
     let storeReviews = AppStoreReviewer()
+    let adPresentor = AdPresentor()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        adPresentor.presentationVC = self
 
         let userScript = WKUserScript(source: "window.isAppleApp = true;",
                                       injectionTime: .atDocumentStart,
@@ -21,7 +23,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
@@ -66,18 +68,18 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             adView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
         ])
 
-        let button = UIButton(type: .roundedRect)
-        view.addSubview(button)
-        button.frame = CGRect(x: 20,y: 620, width: 60, height: 60)
-        button.setTitle("5 Lives", for: .normal)
-        button.backgroundColor = .green
-        button.addTarget(self, action: #selector(show5ad), for: .touchUpInside)
+//        let button = UIButton(type: .roundedRect)
+//        view.addSubview(button)
+//        button.frame = CGRect(x: 20,y: 620, width: 60, height: 60)
+//        button.setTitle("5 Lives", for: .normal)
+//        button.backgroundColor = .green
+//        button.addTarget(self, action: #selector(show5ad), for: .touchUpInside)
         
 //        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
 //        webView.loadFileURL(url, allowingReadAccessTo: url)
 
-        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
-//        guard let url = URL(string: "http://localhost:8085") else { return }
+//        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
+        guard let url = URL(string: "http://localhost:8085") else { return }
         webView.load(URLRequest(url: url))
 
         // Dispatch app pause/resume events to JS, so we can manually pause/resume gameplay
@@ -94,7 +96,6 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     }
 
     @objc func show5ad() {
-
         let reward = MPRewardedVideo.availableRewards(forAdUnitID:AdConstants.testRewardMoPub)
         if reward != nil {
             MPRewardedVideo.presentAd(forAdUnitID: AdConstants.testRewardMoPub, from: self, with: reward?.first! as! MPRewardedVideoReward)

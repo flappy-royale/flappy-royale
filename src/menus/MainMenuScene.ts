@@ -46,8 +46,8 @@ export class MainMenuScene extends Phaser.Scene {
         // To make sure we clean up after ourselves
         const existingScenes = this.game.scene.scenes
         if (existingScenes.length > 1) {
+            console.error("Too many scenes when creating a menu, you might be leaking scenes!")
             console.error("Scenes:", existingScenes)
-            throw "Too many scenes"
         }
 
         this.battleBG = new BattleScene({ key: "menu-bg", seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })

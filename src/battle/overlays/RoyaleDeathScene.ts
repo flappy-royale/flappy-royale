@@ -6,7 +6,7 @@ import { becomeButton } from "../../menus/utils/becomeButton"
 import { getSeedsFromAPI } from "../../firebase"
 import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
-import { requestReview } from "../../requestReview"
+import { requestReview } from "../../nativeComms/requestReview"
 
 export interface RoyaleDeathProps {
     score: number
@@ -62,6 +62,9 @@ export class RoyaleDeath extends Phaser.Scene {
             this.add.image(60, 152, "green-sash-small")
             const copy = `${getNumberWithOrdinal(this.props.position)} out of ${this.props.totalPlayers}`
             this.add.bitmapText(10, 148, "fipps-bit", copy, 8)
+        }
+
+        if (this.props.score === 0) {
         }
 
         this.add.image(80, GameHeight - 8, "footer-bg")

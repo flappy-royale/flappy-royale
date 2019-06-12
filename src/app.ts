@@ -104,10 +104,14 @@ window.onload = async () => {
     constants.setDeviceSize()
     const game = newGame()
 
+    // @ts-ignore
+    // This is used by Ads manager etc to get to our game
+    window.currentGame = game
+
     const seed = "1-royale-0"
 
     // Change this to have it load up into a different screen on save
-    const startupScreen = StartupScreen.RoyalBattle as StartupScreen
+    const startupScreen = StartupScreen.MainMenu as StartupScreen
 
     switch (startupScreen) {
         case StartupScreen.TrialBattle:

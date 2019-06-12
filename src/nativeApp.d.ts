@@ -1,14 +1,14 @@
-import { haptics } from "./haptics";
+import { haptics } from "./haptics"
 
 declare global {
-  interface Window {
-    isAppleApp: boolean
-    webkit: {
-      messageHandlers: { [key: string]: WebkitHandler }
+    interface Window {
+        isAppleApp: boolean
+        webkit: {
+            messageHandlers: { [key: string]: WebkitHandler }
+        }
     }
-  }
 }
 
 interface WebkitHandler {
-  postMessage: (args: any) => void
+    postMessage: (args: any) => void
 }

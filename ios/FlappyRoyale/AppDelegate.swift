@@ -15,20 +15,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         
-//        let sdk:VungleSDK = VungleSDK.shared()
-//        do {
-//            try sdk.start(withAppId: AdConstants.vungleAppID)
-//        }
-//        catch let error as NSError {
-//            print("Error while starting VungleSDK : \(error.domain)")
-//        }
-//        
-//        let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.testBannerMoPub)
-//        config.loggingLevel = .debug
-//        MoPub.sharedInstance().initializeSdk(with: config) {
-//            GADMobileAds.sharedInstance().start(completionHandler: nil)
-//            ALSdk.initializeSdk()
-//        }
+        let sdk:VungleSDK = VungleSDK.shared()
+        do {
+            try sdk.start(withAppId: AdConstants.vungleAppID)
+        }
+        catch let error as NSError {
+            print("Error while starting VungleSDK : \(error.domain)")
+        }
+        
+        let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.testBannerMoPub)
+        config.loggingLevel = .debug
+        MoPub.sharedInstance().initializeSdk(with: config) {
+            GADMobileAds.sharedInstance().start(completionHandler: nil)
+            ALSdk.initializeSdk()
+        }
         
 //        [[MPAdConversionTracker sharedConversionTracker] reportApplicationOpenForApplicationID:@"112358"];
 
