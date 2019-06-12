@@ -354,7 +354,7 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLabel.text = `${this.score}`
         alignTextLabel(this.scoreLabel)
 
-        if (this.score > this.highScore) {
+        if (this.highScoreLabel && this.score > this.highScore) {
             this.highScore = this.score
             this.highScoreLabel.text = `Best: ${this.highScore}`
             alignTextLabel(this.highScoreLabel, 2)

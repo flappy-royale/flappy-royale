@@ -39,9 +39,7 @@ function newGame(): FlappyGame {
         backgroundColor: "#62CBE0",
         seed: ["consistent", "physics", "thanks"],
         scale: {
-            mode: (screen.width < screen.height ?
-                Phaser.Scale.WIDTH_CONTROLS_HEIGHT :
-                Phaser.Scale.FIT),
+            mode: screen.width < screen.height ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT : Phaser.Scale.FIT,
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,
@@ -66,7 +64,6 @@ function newGame(): FlappyGame {
 
     return new FlappyGame(config)
 }
-
 
 export class FlappyGame extends Phaser.Game {
     constructor(config: Phaser.Types.Core.GameConfig) {
@@ -110,7 +107,7 @@ window.onload = async () => {
     const seed = "1-royale-0"
 
     // Change this to have it load up into a different screen on save
-    const startupScreen = StartupScreen.MainMenu as StartupScreen
+    const startupScreen = StartupScreen.RoyalBattle as StartupScreen
 
     switch (startupScreen) {
         case StartupScreen.TrialBattle:

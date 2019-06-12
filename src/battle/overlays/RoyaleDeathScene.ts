@@ -1,12 +1,12 @@
-import { APIVersion, GameWidth, GameHeight } from "../../constants"
+import { APIVersion, GameWidth, GameHeight, zLevels } from "../../constants"
 import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import { getSeedsFromAPI } from "../../firebase"
-import { getAndBumpUserCycleSeedIndex, getRoyales } from "../../user/userManager"
+import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
-import { requestReview } from "../../requestReview";
+import { requestReview } from "../../requestReview"
 
 export interface RoyaleDeathProps {
     score: number
@@ -21,6 +21,7 @@ export const deathPreload = (game: Phaser.Scene) => {
     game.load.image("green-sash-small", require("../../../assets/menu/GreenSashSmall.png"))
     game.load.image("footer-bg", require("../../../assets/menu/BottomSash.png"))
     game.load.image("back", require("../../../assets/menu/Back2.png"))
+    game.load.image("medal", require("../../../assets/battle/best-medal.png"))
     game.load.image("button-small-bg", require("../../../assets/menu/ButtonSmallBG.png"))
     game.load.image("button-bg", require("../../../assets/menu/ButtonBG.png"))
     game.load.bitmapFont(
@@ -52,9 +53,15 @@ export class RoyaleDeath extends Phaser.Scene {
         this.add.image(60, 120, "green-sash-small")
         this.add.bitmapText(10, 117, "fipps-bit", `${this.props.score} pipes`, 8)
 
+        const settings = getUserStatistics()
+        if (this.props.score >= settings.bestScore) {
+            this.time.delayedCall(300, this.addTopMedal, [], this)
+        }
+
         if (!won) {
             this.add.image(60, 152, "green-sash-small")
-            this.add.bitmapText(10, 148, "fipps-bit", `${getNumberWithOrdinal(this.props.position)} out of ${this.props.totalPlayers}`, 8)
+            const copy = `${getNumberWithOrdinal(this.props.position)} out of ${this.props.totalPlayers}`
+            this.add.bitmapText(10, 148, "fipps-bit", copy, 8)
         }
 
         this.add.image(80, GameHeight - 8, "footer-bg")
@@ -109,5 +116,48 @@ export class RoyaleDeath extends Phaser.Scene {
         const seed = seeds.royale[index]
         const lobby = new RoyaleLobby({ seed })
         this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+    }
+
+    private addTopMedal() {
+        this.add.image(90, 117, "medal")
+        this.add.bitmapText(114, 110, "fipps-bit", "BEST", 8)
+
+        // Do some cute little trash bounces
+        const trash1 = this.physics.add.image(90, 120, "trash-1")
+        trash1.setVelocity(70, -150)
+        trash1.setDepth(zLevels.birdWings + 2)
+
+        const trash2 = this.physics.add.image(90, 120, "trash-2")
+        trash2.setVelocity(-80, -70)
+        trash2.setDepth(zLevels.birdWings + 2)
+
+        const trash3 = this.physics.add.image(90, 120, "trash-3")
+        trash3.setVelocity(-60, -20)
+        trash3.setDepth(zLevels.birdWings + 2)
+
+        const trash4 = this.physics.add.image(90, 120, "trash-3")
+        trash4.setVelocity(-75, -100)
+        trash4.setDepth(zLevels.birdWings + 2)
+        trash4.setAngle(90)
+
+        const trash5 = this.physics.add.image(90, 120, "trash-2")
+        trash5.setVelocity(-75, -150)
+        trash5.setDepth(zLevels.birdWings + 2)
+        trash5.setAngle(180)
+
+        const trash6 = this.physics.add.image(90, 120, "trash-3")
+        trash6.setVelocity(10, -160)
+        trash6.setDepth(zLevels.birdWings + 2)
+        trash6.setAngle(90)
+
+        // give them a hint of spin
+        const trash1Body = trash1.body as Phaser.Physics.Arcade.Body
+        trash1Body.setAngularVelocity(2)
+
+        const trash2body = trash2.body as Phaser.Physics.Arcade.Body
+        trash2body.setAngularVelocity(4)
+
+        const trash3Body = trash3.body as Phaser.Physics.Arcade.Body
+        trash3Body.setAngularVelocity(-6)
     }
 }
