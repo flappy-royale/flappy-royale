@@ -147,8 +147,8 @@ export class TrialDeath extends Phaser.Scene {
   }
 
   private addTopMedal() {
-    this.add.image(90, 77, "medal")
-    this.add.bitmapText(114, 70, "fipps-bit", "BEST", 8)
+    this.add.image(90, 107, "medal")
+    this.add.bitmapText(114, 100, "fipps-bit", "BEST", 8)
 
     // Do some cute little trash bounces
     const trash1 = this.physics.add.image(90, 80, "trash-1")
