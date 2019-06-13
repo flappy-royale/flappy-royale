@@ -54,7 +54,7 @@ export class RoyaleDeath extends Phaser.Scene {
         this.add.bitmapText(10, 117, "fipps-bit", `${this.props.score} pipes`, 8)
 
         const settings = getUserStatistics()
-        if (this.props.score >= settings.bestScore) {
+        if (this.props.score >= settings.bestScore && this.props.score > 0) {
             this.time.delayedCall(300, this.addTopMedal, [], this)
         }
 
