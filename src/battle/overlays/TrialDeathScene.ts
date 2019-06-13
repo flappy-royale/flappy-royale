@@ -216,8 +216,9 @@ export class TrialDeath extends Phaser.Scene {
 
     addLives(seed, livesToAdd)
 
-    alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
-
+    setTimeout(() => {
+      alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
+    }, 100)
     this.againButton.setText("again")
     centerAlignTextLabel(this.againButton, -10)
   }

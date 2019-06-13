@@ -186,7 +186,9 @@ export class TrialLobby extends Phaser.Scene {
 
         addLives(this.seed, livesToAdd)
 
-        alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
+        setTimeout(() => {
+            alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
+        }, 100)
 
         const info = document.getElementById("info")
         info.innerHTML = `Daily scoreboard<br />${livesToAdd} tries left`
