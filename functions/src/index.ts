@@ -2,7 +2,7 @@ import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
-import { SeedDataZipped, SeedData, PlayerData } from "../../src/firebase"
+import { SeedDataZipped, SeedData } from "../../src/firebase"
 import { processNewRecording } from "./processNewRecording";
 
 const numberOfDifferentRoyaleReplays = 3
