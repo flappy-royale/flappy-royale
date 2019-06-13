@@ -44,6 +44,6 @@ class AdPresentor : NSObject, WebViewInteropProvider, MPRewardedVideoDelegate {
     
     func rewardedVideoAdShouldReward(forAdUnitID adUnitID: String!, reward: MPRewardedVideoReward!) {
         guard let adWebView = webView else { return }
-        adWebView.evaluateJavaScript("window.currentGame.scene.scenes[0].adsHaveBeenUnlocked()", completionHandler: nil)
+        adWebView.evaluateJavaScript("window.currentGame.adsHaveBeenUnlocked()", completionHandler: nil)
     }
 }

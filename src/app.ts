@@ -70,6 +70,13 @@ export class FlappyGame extends Phaser.Game {
     constructor(config: Phaser.Types.Core.GameConfig) {
         super(config)
     }
+
+    adsHaveBeenUnlocked() {
+        const adUnlocker = this.scene.scenes.find(s => !!s.adsHaveBeenUnlocked)
+        if (adUnlocker) {
+            adUnlocker.adsHaveBeenUnlocked()
+        }
+    }
 }
 
 // The normal game flow
