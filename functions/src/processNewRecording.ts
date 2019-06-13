@@ -1,25 +1,33 @@
 import { SeedData, PlayerData } from "../../src/firebase";
 
-const maxNumberOfReplays = 100
+export const maxNumberOfReplays = 100
 
 export const processNewRecording = (seedData: SeedData, data: PlayerData, uuid: string, mode: number): SeedData => {
   const existingCount = seedData.replays.length
-  const shouldUpdateNotAdd = existingCount < maxNumberOfReplays
-  const hasOverHalfData = existingCount > maxNumberOfReplays / 2
+  const hasAtLeastHalfReplays = existingCount > maxNumberOfReplays / 2
+  const hasMaxReplays = existingCount >= maxNumberOfReplays
 
-  // Do we want to keep the top of all time
   const highScoresOnly = mode === 2
   if (highScoresOnly) {
     seedData.replays = processHighScore(seedData, data)
-  } else if (hasOverHalfData && shouldUpdateNotAdd) {
-    // One user can ship many replays until there is over half
-    // the number of max replays
-    // TODO: Add a real UUID for the user?
-    const hasUserInData = seedData.replays.findIndex(d => d.user.name == uuid)
-    const randomIndexToDrop = Math.floor(Math.random() * existingCount)
-    const index = hasOverHalfData && hasUserInData !== -1 ? hasUserInData : randomIndexToDrop
-    seedData.replays[index] = data
-  } else {
+  } else if (hasAtLeastHalfReplays && !hasMaxReplays) {
+    const previousContributionByPlayer = seedData.replays.findIndex(d => d.user.name == uuid)
+    if (previousContributionByPlayer === -1) {
+      // Player hasn't contributed yet, just add it!
+      seedData.replays.push(data)
+    } else {
+      // Wipe out one of the player's previous recordings
+      seedData.replays[previousContributionByPlayer] = data
+    }
+  } else if (hasMaxReplays) {
+    const previousContributionByPlayer = seedData.replays.findIndex(d => d.user.name == uuid)
+    if (previousContributionByPlayer === -1) {
+      const randomIndex = Math.floor(Math.random() * existingCount)
+      seedData.replays[randomIndex] = data
+    } else {
+      seedData.replays[previousContributionByPlayer] = data
+    }
+  } else { // When < 50% of recordings exist, always just push it on
     seedData.replays.push(data)
   }
 
