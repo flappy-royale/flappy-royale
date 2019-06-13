@@ -168,21 +168,30 @@ export class TrialLobby extends Phaser.Scene {
     adsHaveBeenUnlocked() {
         bumpLivesExtensionState(this.seed)
 
+        let livesToAdd = 0
         switch (livesExtensionStateForSeed(this.seed)) {
             case LifeStateForSeed.ExtraFive:
-                addLives(this.seed, 5)
+                livesToAdd = 5
                 break
 
             case LifeStateForSeed.ExtraTen:
-                addLives(this.seed, 10)
+                livesToAdd = 10
                 break
 
             case LifeStateForSeed.ExtraFifteen:
-                addLives(this.seed, 15)
+                livesToAdd = 15
                 break
         }
 
+        addLives(this.seed, livesToAdd)
+
+        alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} Trial attempts for today.`)
+
+        const info = document.getElementById("info")
+        info.innerHTML = `Daily scoreboard<br />${livesToAdd} attempts remaining`
+
         const goButton = document.getElementById("button")
+        goButton.innerText = "start"
 
         goButton.onclick = () => {
             fetchRecordingsForSeed(this.seed).then(seedData => {
