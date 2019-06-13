@@ -88,19 +88,19 @@ export class TrialLobby extends Phaser.Scene {
         if (outOfLives) {
             switch (livesState) {
                 case LifeStateForSeed.FirstSet:
-                    document.getElementById("button-text").textContent = "+5 Lives"
+                    document.getElementById("button-text").textContent = "+5 attemps"
                     break
 
                 case LifeStateForSeed.ExtraFive:
-                    document.getElementById("button-text").textContent = "+10 Lives"
+                    document.getElementById("button-text").textContent = "+10 attemps"
                     break
 
                 case LifeStateForSeed.ExtraTen:
-                    document.getElementById("button-text").textContent = "+15 Lives"
+                    document.getElementById("button-text").textContent = "+15 attemps"
                     break
 
                 case LifeStateForSeed.ExtraFifteen:
-                    document.getElementById("button-text").textContent = "No more lives"
+                    document.getElementById("button-text").textContent = "No more extra attempts"
                     break
             }
         }
@@ -171,7 +171,7 @@ export class TrialLobby extends Phaser.Scene {
         }
 
         const info = document.getElementById("info")
-        info.innerHTML = `Daily scoreboard<br />You have ${lives} lives`
+        info.innerHTML = `Daily scoreboard<br />${lives} attempts remaining`
 
         /// NOOP
         if (lives === 0 && livesState === LifeStateForSeed.ExtraFifteen) {

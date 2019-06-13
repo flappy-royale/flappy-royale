@@ -31,7 +31,7 @@ export const shouldShowHighScoreLabel = (mode: GameMode) => mode === GameMode.Tr
 export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
 
 /** Should we show the birds left? */
-export const shouldRestartWhenPlayerDies = (mode: GameMode) => mode === GameMode.Trial || mode === GameMode.Training
+export const shouldRestartWhenPlayerDies = (mode: GameMode) => mode === GameMode.Training
 
 /** Should we boot you out if you're out of lives? */
 export const usesLives = (mode: GameMode) => mode === GameMode.Trial

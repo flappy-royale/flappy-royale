@@ -25,6 +25,7 @@ import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
 import { alignTextLabel } from "./utils/alignTextLabel"
+import { TrialDeath } from "./overlays/TrialDeathScene";
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -301,8 +302,7 @@ export class BattleScene extends Phaser.Scene {
 
         if (game.shouldShowLivesLabel(this.mode)) {
             const livesNum = getLives(this.seed)
-            const copy = livesNum == 1 ? "life" : "lives"
-            const lives = `${livesNum} ${copy}`
+            const lives = livesNum == 1 ? "last try!" : `${livesNum} tries left`
             const livesText = this.add.bitmapText(4, 22 + constants.GameAreaTopOffset, "nokia16", lives, 16)
             livesText.setDepth(constants.zLevels.ui)
         }
@@ -557,25 +557,23 @@ export class BattleScene extends Phaser.Scene {
                 .then(r => console.log(r))
         }
 
-        if (game.shouldRestartWhenPlayerDies(this.mode)) {
-            if (!game.usesLives(this.mode)) {
-                // Training is still in the code
-                // better to be prepared
-                this.restartTheGame()
-            } else {
-                // This is only in trial mode
-                const newLives = subtractALife(this.seed)
-                if (newLives === 0) {
-                    // TODO: Modal instead
-                    this.game.scene.remove(this)
-                    launchMainMenu(this.game)
-                } else {
-                    this.restartTheGame()
-                }
+        if (game.usesLives(this.mode)) {
+            // This is (currently) only in trial mode
+            const newLives = subtractALife(this.seed)
+            if (newLives === 0) {
+                // TODO: Modal instead
+                console.log("Out of lives :(")
             }
+        }
+
+        if (game.shouldRestartWhenPlayerDies(this.mode)) {
+            console.log("Restarting!")
+            // Currently only used for the non-exposed Training mode. Shrug.
+            this.restartTheGame()
         } else {
             // Could be hitting this on a loop
             if (this.bird.isDead) return
+            console.log("not in a loop")
 
             // Stop everything!
             this.cameras.main.shake(20, 0.1)
@@ -600,13 +598,24 @@ export class BattleScene extends Phaser.Scene {
             this.birdsLeft.destroy()
             this.backButton.destroy()
 
-            const deathOverlay = new RoyaleDeath("death", {
-                score: this.score,
-                position: birdsAlive.length,
-                battle: this,
-                totalPlayers: this.ghostBirds.length + 1
-            })
-            this.scene.add("deathoverlay", deathOverlay, true)
+            if (this.mode === game.GameMode.Royale) {
+                const deathOverlay = new RoyaleDeath("death", {
+                    score: this.score,
+                    position: birdsAlive.length,
+                    battle: this,
+                    totalPlayers: this.ghostBirds.length + 1
+                })
+                this.scene.add("deathoverlay", deathOverlay, true)
+            } else if (this.mode === game.GameMode.Trial) {
+                const deathOverlay = new TrialDeath("death", {
+                    score: this.score,
+                    lives: getLives(this.seed),
+                    position: birdsAlive.length,
+                    battle: this,
+                    totalPlayers: this.ghostBirds.length + 1
+                })
+                this.scene.add("deathoverlay", deathOverlay, true)
+            }
         }
     }
 
