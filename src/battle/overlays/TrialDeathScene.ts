@@ -59,8 +59,8 @@ export class TrialDeath extends Phaser.Scene {
     this.add.bitmapText(10, 77, "fipps-bit", `${this.props.score} ${pipes}`, 8)
 
     const settings = getUserStatistics()
-    this.time.delayedCall(300, this.addTopMedal, [], this)
-    if (this.props.score >= settings.bestScore) {
+    if (this.props.score >= settings.bestScore && this.props.score > 0) {
+      this.time.delayedCall(300, this.addTopMedal, [], this)
     }
 
     this.add.image(60, 112, "green-sash-small")
