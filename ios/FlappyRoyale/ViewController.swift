@@ -55,7 +55,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
 
-        let adView = MPAdView(adUnitId: AdConstants.testBannerMoPub, size: MOPUB_BANNER_SIZE)!
+        let adView = MPAdView(adUnitId: AdConstants.bottomBannerMoPub, size: MOPUB_BANNER_SIZE)!
         view.addSubview(adView)
         adView.loadAd()
 
@@ -67,19 +67,12 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             adView.topAnchor.constraint(equalTo: webView.bottomAnchor),
             adView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
         ])
-
-//        let button = UIButton(type: .roundedRect)
-//        view.addSubview(button)
-//        button.frame = CGRect(x: 20,y: 620, width: 60, height: 60)
-//        button.setTitle("5 Lives", for: .normal)
-//        button.backgroundColor = .green
-//        button.addTarget(self, action: #selector(show5ad), for: .touchUpInside)
         
 //        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
 //        webView.loadFileURL(url, allowingReadAccessTo: url)
 
-//        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
-        guard let url = URL(string: "http://localhost:8085") else { return }
+        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
+//        guard let url = URL(string: "http://localhost:8085") else { return }
         webView.load(URLRequest(url: url))
 
         // Dispatch app pause/resume events to JS, so we can manually pause/resume gameplay
@@ -91,17 +84,12 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             webView.evaluateJavaScript("var evt = new Event('appResume'); window.dispatchEvent(evt);", completionHandler: nil)
         }
 
-        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.testRewardMoPub, withMediationSettings: [])
+        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fiveLivesMoPub, withMediationSettings: [])
+        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.testBannerMoPub, withMediationSettings: [])
+        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fifteenLivesMobPub, withMediationSettings: [])
 
     }
 
-    @objc func show5ad() {
-        let reward = MPRewardedVideo.availableRewards(forAdUnitID:AdConstants.testRewardMoPub)
-        if reward != nil {
-            MPRewardedVideo.presentAd(forAdUnitID: AdConstants.testRewardMoPub, from: self, with: reward?.first! as! MPRewardedVideoReward)
-        }
-    }
-    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print(error)
     }

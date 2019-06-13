@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Error while starting VungleSDK : \(error.domain)")
         }
         
-        let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.testBannerMoPub)
+        let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.bottomBannerMoPub)
         config.loggingLevel = .debug
         MoPub.sharedInstance().initializeSdk(with: config) {
             GADMobileAds.sharedInstance().start(completionHandler: nil)
