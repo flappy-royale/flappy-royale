@@ -9,8 +9,10 @@ export interface LoadingProps {
 
 export const showLoadingScreen = (game: Phaser.Game) => {
     const loadingScene = new LoadingScene()
+    game.scene.scenes.forEach(s => game.scene.remove(s))
     game.scene.add("LoadingScene", loadingScene, true)
 }
+
 export class LoadingScene extends Phaser.Scene {
     progressBar: Phaser.GameObjects.Rectangle
 
