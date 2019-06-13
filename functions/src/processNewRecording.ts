@@ -31,18 +31,18 @@ const processHighScore = (seedData: SeedData, data: PlayerData): PlayerData[] =>
   // Contains the single best score this user has submitted,
   // whether it's the one we're trying to submit now or a previous one
   // (although they _should_ have at most 1 previous entry in the list)
-  const currentPlayersReplays = seedData.replays
-    .filter(replay => replay.user === data.user)
+  const currentPlayerReplays = seedData.replays
+    .filter(replay => replay.user.name === data.user.name)
     .concat(data)
     .sort((l, r) => l.score - r.score)
-  const personalBest = currentPlayersReplays[currentPlayersReplays.length - 1]
+  const personalBest = currentPlayerReplays[currentPlayerReplays.length - 1]
 
   // Grab all replays that aren't by this user,
   // add in their best (which might or might not have been previously there),
   // sort it in descending order,
   // then truncate it to the length we want the list to be.
   const sortedReplays = seedData.replays
-    .filter(replay => replay.user !== data.user)
+    .filter(replay => replay.user.name !== data.user.name)
     .concat(personalBest)
     .sort((l, r) => l.score - r.score)
     .reverse()
