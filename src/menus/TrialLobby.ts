@@ -5,7 +5,8 @@ import {
     livesExtensionStateForSeed,
     LifeStateForSeed,
     bumpLivesExtensionState,
-    addLives
+    addLives,
+    livesExtensionsButtonTitleForState
 } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
@@ -86,23 +87,7 @@ export class TrialLobby extends Phaser.Scene {
         // Changes the button at the bottom to note about how you can add more lives
         // which triggers and ad
         if (outOfLives) {
-            switch (livesState) {
-                case LifeStateForSeed.FirstSet:
-                    document.getElementById("button-text").textContent = "+5 attemps"
-                    break
-
-                case LifeStateForSeed.ExtraFive:
-                    document.getElementById("button-text").textContent = "+10 attemps"
-                    break
-
-                case LifeStateForSeed.ExtraTen:
-                    document.getElementById("button-text").textContent = "+15 attemps"
-                    break
-
-                case LifeStateForSeed.ExtraFifteen:
-                    document.getElementById("button-text").textContent = "No more extra attempts"
-                    break
-            }
+            document.getElementById("button-text").textContent = livesExtensionsButtonTitleForState(livesState)
         }
 
         fetchRecordingsForSeed(this.seed).then(seedData => {

@@ -18,7 +18,8 @@ import {
     subtractALife,
     getLives,
     getHighScore,
-    setHighScore
+    setHighScore,
+    livesExtensionStateForSeed
 } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
@@ -610,9 +611,11 @@ export class BattleScene extends Phaser.Scene {
                 const deathOverlay = new TrialDeath("death", {
                     score: this.score,
                     lives: getLives(this.seed),
+                    livesState: livesExtensionStateForSeed(this.seed),
                     position: birdsAlive.length,
                     battle: this,
-                    totalPlayers: this.ghostBirds.length + 1
+                    totalPlayers: this.ghostBirds.length + 1,
+                    seed: this.seed
                 })
                 this.scene.add("deathoverlay", deathOverlay, true)
             }

@@ -199,7 +199,7 @@ export const addLives = (seed: string, val: number): number => {
 }
 
 export enum LifeStateForSeed {
-    FirstSet,
+    FirstSet = 1,
     ExtraFive,
     ExtraTen,
     ExtraFifteen
@@ -217,6 +217,17 @@ export const livesExtensionStateForSeed = (seed: string): LifeStateForSeed => {
     }
 
     return scoreNum || LifeStateForSeed.FirstSet
+}
+
+export const livesExtensionsButtonTitleForState = (state: LifeStateForSeed): string => {
+    const map = {
+        [LifeStateForSeed.FirstSet]: "+5 attemps",
+        [LifeStateForSeed.ExtraFive]: "+10 attempts",
+        [LifeStateForSeed.ExtraTen]: "+15 attempts",
+        [LifeStateForSeed.ExtraFifteen]: "No more extra attempts"
+    }
+
+    return map[state]
 }
 
 /** Moves up through the enum above */

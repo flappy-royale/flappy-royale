@@ -3,9 +3,11 @@ import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
-import { getSeedsFromAPI } from "../../firebase"
-import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics } from "../../user/userManager"
+import { getSeedsFromAPI, fetchRecordingsForSeed } from "../../firebase"
+import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics, livesExtensionStateForSeed, livesExtensionsButtonTitleForState, LifeStateForSeed, bumpLivesExtensionState, addLives } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
+import { GameMode } from "../utils/gameMode";
+import { requestModalAd } from "../../nativeComms/requestModalAd";
 
 export interface TrialDeathProps {
   score: number
@@ -13,6 +15,8 @@ export interface TrialDeathProps {
   position: number
   battle: BattleScene
   totalPlayers: number
+  livesState: LifeStateForSeed
+  seed: string
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
@@ -74,7 +78,13 @@ export class TrialDeath extends Phaser.Scene {
     becomeButton(back, this.backToMainMenu, this)
 
     const newGame = this.add.image(90, GameHeight - 20, "button-bg")
-    const newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
+
+    let againText = "again"
+    const outOfLives = this.props.lives === 0
+    if (outOfLives) {
+      againText = livesExtensionsButtonTitleForState(this.props.livesState)
+    }
+    const newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", againText, 8)
     becomeButton(newGame, this.again, this, [newGameText])
 
     const share = this.add.image(130, GameHeight - 60, "button-small-bg")
@@ -91,9 +101,8 @@ export class TrialDeath extends Phaser.Scene {
 
   private again() {
     if (this.props.lives <= 0) {
-      // TODO: Prompt to watch an ad!
-      this.game.scene.remove(this)
-      launchMainMenu(this.game)
+      requestModalAd(this.props.livesState)
+      return
     }
 
     this.game.scene.remove(this)
@@ -164,5 +173,30 @@ export class TrialDeath extends Phaser.Scene {
 
     const trash3Body = trash3.body as Phaser.Physics.Arcade.Body
     trash3Body.setAngularVelocity(-6)
+  }
+
+  adsHaveBeenUnlocked() {
+    const seed = this.props.seed
+    bumpLivesExtensionState(seed)
+
+    switch (livesExtensionStateForSeed(seed)) {
+      case LifeStateForSeed.ExtraFive:
+        addLives(seed, 5)
+        break
+
+      case LifeStateForSeed.ExtraTen:
+        addLives(seed, 10)
+        break
+
+      case LifeStateForSeed.ExtraFifteen:
+        addLives(seed, 15)
+        break
+    }
+
+    const goButton = document.getElementById("button")
+
+    goButton.onclick = () => {
+      this.again()
+    }
   }
 }
