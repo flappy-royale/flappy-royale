@@ -76,8 +76,8 @@ export class TrialDeath extends Phaser.Scene {
     this.add.bitmapText(10, 138, "fipps-bit", place, 8)
 
     this.add.image(60, 172, "green-sash-small")
-    const attempts = this.props.lives === 1 ? "attempt" : "attempts"
-    const copy = `${this.props.lives} ${attempts} left`
+    const tries = this.props.lives === 1 ? "try" : "tries"
+    const copy = `${this.props.lives} ${tries} left`
     this.add.bitmapText(10, 168, "fipps-bit", copy, 8)
 
 

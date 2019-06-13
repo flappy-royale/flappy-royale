@@ -221,10 +221,10 @@ export const livesExtensionStateForSeed = (seed: string): LifeStateForSeed => {
 
 export const livesExtensionsButtonTitleForState = (state: LifeStateForSeed): string => {
     const map = {
-        [LifeStateForSeed.FirstSet]: "+5 attemps",
-        [LifeStateForSeed.ExtraFive]: "+10 attempts",
-        [LifeStateForSeed.ExtraTen]: "+15 attempts",
-        [LifeStateForSeed.ExtraFifteen]: "No more extra attempts"
+        [LifeStateForSeed.FirstSet]: "+5 tries",
+        [LifeStateForSeed.ExtraFive]: "+10 tries",
+        [LifeStateForSeed.ExtraTen]: "+15 tries",
+        [LifeStateForSeed.ExtraFifteen]: "No more extra tries"
     }
 
     return map[state]

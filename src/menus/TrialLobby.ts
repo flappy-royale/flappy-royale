@@ -157,7 +157,7 @@ export class TrialLobby extends Phaser.Scene {
         }
 
         const info = document.getElementById("info")
-        info.innerHTML = `Daily scoreboard<br />${lives} attempts remaining`
+        info.innerHTML = `Daily scoreboard<br />${lives} tries left`
 
         /// NOOP
         if (lives === 0 && livesState === LifeStateForSeed.ExtraFifteen) {
@@ -185,10 +185,10 @@ export class TrialLobby extends Phaser.Scene {
 
         addLives(this.seed, livesToAdd)
 
-        alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} Trial attempts for today.`)
+        alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
 
         const info = document.getElementById("info")
-        info.innerHTML = `Daily scoreboard<br />${livesToAdd} attempts remaining`
+        info.innerHTML = `Daily scoreboard<br />${livesToAdd} tries left`
 
         const goButton = document.getElementById("button")
         goButton.innerText = "start"
