@@ -3,5 +3,8 @@
         "target": "es2015",
         "module": "commonjs",
         "removeComments": true
-    }
+    },
+    "exclude": [
+        "functions/__tests__"
+    ]
 }
