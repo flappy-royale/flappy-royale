@@ -59,26 +59,26 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     const sash = won ? "green-sash" : "red-sash"
-    this.add.image(80, 40, sash)
-    this.add.bitmapText(10, 14, "fipps-bit", message, 24)
+    this.add.image(80, 70, sash)
+    this.add.bitmapText(10, 44, "fipps-bit", message, 24)
 
     let pipes = (this.props.score === 1 ? "pipe" : "pipes")
-    this.add.image(60, 80, "green-sash-small")
-    this.add.bitmapText(10, 77, "fipps-bit", `${this.props.score} ${pipes}`, 8)
+    this.add.image(60, 110, "green-sash-small")
+    this.add.bitmapText(10, 107, "fipps-bit", `${this.props.score} ${pipes}`, 8)
 
     const settings = getUserStatistics()
     if (this.props.score >= settings.bestScore && this.props.score > 0) {
       this.time.delayedCall(300, this.addTopMedal, [], this)
     }
 
-    this.add.image(60, 112, "green-sash-small")
-    const place = `${getNumberWithOrdinal(this.props.position)} place`
-    this.add.bitmapText(10, 108, "fipps-bit", place, 8)
-
     this.add.image(60, 142, "green-sash-small")
+    const place = `${getNumberWithOrdinal(this.props.position)} place`
+    this.add.bitmapText(10, 138, "fipps-bit", place, 8)
+
+    this.add.image(60, 172, "green-sash-small")
     const attempts = this.props.lives === 1 ? "attempt" : "attempts"
     const copy = `${this.props.lives} ${attempts} left`
-    this.add.bitmapText(10, 138, "fipps-bit", copy, 8)
+    this.add.bitmapText(10, 168, "fipps-bit", copy, 8)
 
 
     this.add.image(80, GameHeight - 8, "footer-bg")
