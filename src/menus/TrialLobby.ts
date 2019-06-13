@@ -157,7 +157,8 @@ export class TrialLobby extends Phaser.Scene {
         }
 
         const info = document.getElementById("info")
-        info.innerHTML = `Daily scoreboard<br />${lives} tries left`
+        const tries = lives === 1 ? "try" : "tries"
+        info.innerHTML = `Daily scoreboard<br />${lives} ${tries} left`
 
         /// NOOP
         if (lives === 0 && livesState === LifeStateForSeed.ExtraFifteen) {
@@ -190,9 +191,9 @@ export class TrialLobby extends Phaser.Scene {
         const info = document.getElementById("info")
         info.innerHTML = `Daily scoreboard<br />${livesToAdd} tries left`
 
-        const goButton = document.getElementById("button")
-        goButton.innerText = "start"
+        document.getElementById("button-text").textContent = "start"
 
+        const goButton = document.getElementById("button")
         goButton.onclick = () => {
             fetchRecordingsForSeed(this.seed).then(seedData => {
                 this.game.scene.remove(this)
