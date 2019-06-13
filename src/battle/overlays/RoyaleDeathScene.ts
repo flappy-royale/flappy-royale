@@ -45,13 +45,22 @@ export class RoyaleDeath extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
 
         const won = this.props.position === 0
-        const message = won ? "Win!!!" : "Splat!"
+        const firstPipeFail = this.props.score === 0
+
+        let message = "Splat!"
+        if (firstPipeFail) {
+            message = "Fail!"
+        } else if (won) {
+            message = "Win!!!"
+        }
+
         const sash = won ? "green-sash" : "red-sash"
         this.add.image(80, 80, sash)
         this.add.bitmapText(10, 54, "fipps-bit", message, 24)
 
         this.add.image(60, 120, "green-sash-small")
-        this.add.bitmapText(10, 117, "fipps-bit", `${this.props.score} pipes`, 8)
+        const pipes = (this.props.score === 1 ? "pipe" : "pipes")
+        this.add.bitmapText(10, 117, "fipps-bit", `${this.props.score} ${pipes}`, 8)
 
         const settings = getUserStatistics()
         if (this.props.score >= settings.bestScore && this.props.score > 0) {
@@ -60,11 +69,8 @@ export class RoyaleDeath extends Phaser.Scene {
 
         if (!won) {
             this.add.image(60, 152, "green-sash-small")
-            const copy = `${getNumberWithOrdinal(this.props.position)} out of ${this.props.totalPlayers}`
+            const copy = `#${this.props.position} / ${this.props.totalPlayers}`
             this.add.bitmapText(10, 148, "fipps-bit", copy, 8)
-        }
-
-        if (this.props.score === 0) {
         }
 
         this.add.image(80, GameHeight - 8, "footer-bg")
@@ -89,15 +95,21 @@ export class RoyaleDeath extends Phaser.Scene {
 
     private shareStats() {
         const won = this.props.position === 0
+        const firstPipeFail = this.props.score === 0
 
         if (navigator && "share" in navigator) {
             const n = navigator as any
             const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`
             const winMessage = `I won on Flappy Royale!`
+            const firstPipeFailMessage = "I died on the first pipe in Flappy Royale!"
+
+            let text = lossMessage
+            if (won) { text = winMessage }
+            if (firstPipeFail) { text = firstPipeFailMessage }
 
             n.share({
                 title: "Flappy Royale",
-                text: won ? winMessage : lossMessage,
+                text: text,
                 url: "https://flappyroyale.io"
             })
         }

@@ -49,7 +49,15 @@ export class TrialDeath extends Phaser.Scene {
     this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
 
     const won = this.props.position === 0
-    const message = won ? "You're #1!!!" : "Splat!"
+    const firstPipeFail = this.props.score === 0
+
+    let message = "Splat!"
+    if (firstPipeFail) {
+      message = "Fail!"
+    } else if (won) {
+      message = "You're #1!!!"
+    }
+
     const sash = won ? "green-sash" : "red-sash"
     this.add.image(80, 40, sash)
     this.add.bitmapText(10, 14, "fipps-bit", message, 24)
@@ -111,15 +119,21 @@ export class TrialDeath extends Phaser.Scene {
 
   private shareStats() {
     const won = this.props.position === 0
+    const firstPipeFail = this.props.score === 0
 
     if (navigator && "share" in navigator) {
       const n = navigator as any
-      const lossMessage = `I managed to get past ${this.props.score} pipes on today's daily Flappy Royale Trial!`
-      const winMessage = `I got the high score on Flappy Royale's daily Trial!`
+      const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale daily Trial!`
+      const winMessage = `I have the high score for today's Flappy Royale daily Trial! Think you can beat ${this.props.score}?`
+      const firstPipeFailMessage = "I died on the first pipe in today's Flappy Royale daily trial!"
+
+      let text = lossMessage
+      if (won) { text = winMessage }
+      if (firstPipeFail) { text = firstPipeFailMessage }
 
       n.share({
         title: "Flappy Royale",
-        text: won ? winMessage : lossMessage,
+        text: text,
         url: "https://flappyroyale.io"
       })
     }
