@@ -227,7 +227,7 @@ export const livesExtensionsButtonTitleForState = (state: LifeStateForSeed): str
         [LifeStateForSeed.FirstSet]: "+5 tries",
         [LifeStateForSeed.ExtraFive]: "+10 tries",
         [LifeStateForSeed.ExtraTen]: "+15 tries",
-        [LifeStateForSeed.ExtraFifteen]: "No more extra tries"
+        [LifeStateForSeed.ExtraFifteen]: "out of tries"
     }
 
     return map[state]

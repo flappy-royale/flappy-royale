@@ -5,3 +5,8 @@ export function rightAlignTextLabel(label: Phaser.GameObjects.BitmapText, offset
   const rightAligned = constants.GameWidth - label.getTextBounds(true).local.width - offset
   label.setX(rightAligned)
 }
+
+export function centerAlignTextLabel(label: Phaser.GameObjects.BitmapText, offset: number = 0) {
+  const centerAligned = (constants.GameWidth - label.getTextBounds(true).local.width) / 2 - offset
+  label.setX(centerAligned)
+}
