@@ -16,6 +16,7 @@ import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { requestModalAd } from "../nativeComms/requestModalAd"
+import { addScene } from "./utils/addScene";
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -114,7 +115,7 @@ export class TrialLobby extends Phaser.Scene {
                     const playGame = () => {
                         this.game.scene.remove(this)
                         const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
-                        this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                        addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                         scene.playBusCrash()
                     }
 
@@ -187,7 +188,7 @@ export class TrialLobby extends Phaser.Scene {
             fetchRecordingsForSeed(this.seed).then(seedData => {
                 this.game.scene.remove(this)
                 const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
-                this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                 scene.playBusCrash()
             })
         }

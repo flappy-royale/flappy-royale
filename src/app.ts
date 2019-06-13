@@ -10,6 +10,7 @@ import { showLoadingScreen } from "./menus/LoadingScene"
 import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
+import { addScene } from "./menus/utils/addScene";
 
 declare var PRODUCTION: boolean
 
@@ -82,12 +83,12 @@ const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean
     }
 
     const scene = new BattleScene({ seed, data, gameMode: settings.mode })
-    game.scene.add("Battle", scene, true)
+    addScene(game, "Battle", scene, true)
 }
 
 const loadUpIntoSettings = (game: FlappyGame) => {
     const settings = new UserSettings()
-    game.scene.add(UserSettingsKey, settings, true)
+    addScene(game, UserSettingsKey, settings, true)
 }
 
 const wait = async (delay: number) => {
@@ -132,12 +133,12 @@ window.onload = async () => {
 
         case StartupScreen.RoyaleLobby:
             const lobby = new RoyaleLobby({ seed })
-            game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+            addScene(game, "RoyaleLobby" + seed, lobby, true, {})
             break
 
         case StartupScreen.TrialLobby:
             const trial = new TrialLobby({ seed })
-            game.scene.add("TrialLobby" + seed, trial, true, {})
+            addScene(game, "TrialLobby" + seed, trial, true, {})
             break
     }
 
