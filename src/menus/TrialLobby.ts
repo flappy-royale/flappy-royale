@@ -16,6 +16,7 @@ import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { requestModalAd } from "../nativeComms/requestModalAd"
+import { addScene } from "./utils/addScene";
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -114,7 +115,7 @@ export class TrialLobby extends Phaser.Scene {
                     const playGame = () => {
                         this.game.scene.remove(this)
                         const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
-                        this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                        addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                         scene.playBusCrash()
                     }
 
@@ -156,7 +157,8 @@ export class TrialLobby extends Phaser.Scene {
         }
 
         const info = document.getElementById("info")
-        info.innerHTML = `Daily scoreboard<br />${lives} attempts remaining`
+        const tries = lives === 1 ? "try" : "tries"
+        info.innerHTML = `Daily scoreboard<br />${lives} ${tries} left`
 
         /// NOOP
         if (lives === 0 && livesState === LifeStateForSeed.ExtraFifteen) {
@@ -167,27 +169,38 @@ export class TrialLobby extends Phaser.Scene {
     adsHaveBeenUnlocked() {
         bumpLivesExtensionState(this.seed)
 
+        let livesToAdd = 0
         switch (livesExtensionStateForSeed(this.seed)) {
             case LifeStateForSeed.ExtraFive:
-                addLives(this.seed, 5)
+                livesToAdd = 5
                 break
 
             case LifeStateForSeed.ExtraTen:
-                addLives(this.seed, 10)
+                livesToAdd = 10
                 break
 
             case LifeStateForSeed.ExtraFifteen:
-                addLives(this.seed, 15)
+                livesToAdd = 15
                 break
         }
 
-        const goButton = document.getElementById("button")
+        addLives(this.seed, livesToAdd)
 
+        setTimeout(() => {
+            alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
+        }, 100)
+
+        const info = document.getElementById("info")
+        info.innerHTML = `Daily scoreboard<br />${livesToAdd} tries left`
+
+        document.getElementById("button-text").textContent = "start"
+
+        const goButton = document.getElementById("button")
         goButton.onclick = () => {
             fetchRecordingsForSeed(this.seed).then(seedData => {
                 this.game.scene.remove(this)
                 const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
-                this.game.scene.add("BattleScene" + this.seed, scene, true, {})
+                addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                 scene.playBusCrash()
             })
         }

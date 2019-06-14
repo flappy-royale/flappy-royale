@@ -25,7 +25,7 @@ import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
-import { alignTextLabel } from "./utils/alignTextLabel"
+import { rightAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene";
 
 export interface BattleSceneSettings {
@@ -320,7 +320,7 @@ export class BattleScene extends Phaser.Scene {
             )
             this.highScoreLabel.setRightAlign()
             this.highScoreLabel.setDepth(constants.zLevels.ui)
-            alignTextLabel(this.highScoreLabel, 2)
+            rightAlignTextLabel(this.highScoreLabel, 2)
         }
 
         // When we want to show a countdown, set it up with defaults
@@ -353,12 +353,12 @@ export class BattleScene extends Phaser.Scene {
 
     updateScoreLabel() {
         this.scoreLabel.text = `${this.score}`
-        alignTextLabel(this.scoreLabel)
+        rightAlignTextLabel(this.scoreLabel)
 
         if (this.highScoreLabel && this.score > this.highScore) {
             this.highScore = this.score
             this.highScoreLabel.text = `Best: ${this.highScore}`
-            alignTextLabel(this.highScoreLabel, 2)
+            rightAlignTextLabel(this.highScoreLabel, 2)
             setHighScore(this.seed, this.highScore)
         }
     }

@@ -31,7 +31,11 @@ class AdPresentor : NSObject, WebViewInteropProvider, MPRewardedVideoDelegate {
             MPRewardedVideo.setDelegate(self, forAdUnitId: adUnitID)
             MPRewardedVideo.presentAd(forAdUnitID: adUnitID, from: presentationVC, with: reward?.first! as! MPRewardedVideoReward)
         } else {
-            // Fallback for when ads fails (just add it anyway?)
+            let alert = UIAlertController(title: "Sorry!", message: "We couldn't fetch any video ads for you. Try again later?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                self.presentationVC.dismiss(animated: true, completion: nil)
+            }))
+            presentationVC.present(alert, animated: true, completion: nil)
         }
 
         
@@ -44,6 +48,6 @@ class AdPresentor : NSObject, WebViewInteropProvider, MPRewardedVideoDelegate {
     
     func rewardedVideoAdShouldReward(forAdUnitID adUnitID: String!, reward: MPRewardedVideoReward!) {
         guard let adWebView = webView else { return }
-        adWebView.evaluateJavaScript("window.currentGame.scene.scenes[0].adsHaveBeenUnlocked()", completionHandler: nil)
+        adWebView.evaluateJavaScript("window.currentGame.adsHaveBeenUnlocked()", completionHandler: nil)
     }
 }

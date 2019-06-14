@@ -12,11 +12,12 @@ import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
+import { addScene } from "./utils/addScene";
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
     const mainMenu = new MainMenuScene()
-    game.scene.add("MainMenu", mainMenu, true)
+    addScene(game, "MainMenu", mainMenu, true)
 }
 
 export class MainMenuScene extends Phaser.Scene {
@@ -51,7 +52,7 @@ export class MainMenuScene extends Phaser.Scene {
         }
 
         this.battleBG = new BattleScene({ key: "menu-bg", seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })
-        this.game.scene.add("battlebg", this.battleBG, true)
+        addScene(this.game, "battlebg", this.battleBG, true)
         this.game.scene.bringToTop("MainMenu")
 
         // Fill the BG
@@ -93,14 +94,14 @@ export class MainMenuScene extends Phaser.Scene {
     private loadSettings() {
         this.removeMenu()
         const settings = new UserSettings()
-        this.game.scene.add(UserSettingsKey, settings, true)
+        addScene(this.game, UserSettingsKey, settings, true)
     }
 
     private loadTrial() {
         this.removeMenu()
         const seed = this.seeds.daily.production
         const lobby = new TrialLobby({ seed })
-        this.game.scene.add("TrialLobby" + seed, lobby, true, {})
+        addScene(this.game, "TrialLobby" + seed, lobby, true, {})
     }
 
     private loadRoyale() {
@@ -108,7 +109,7 @@ export class MainMenuScene extends Phaser.Scene {
         const index = getAndBumpUserCycleSeedIndex(this.seeds.royale.length)
         const seed = this.seeds.royale[index]
         const lobby = new RoyaleLobby({ seed })
-        this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+        addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
     }
 
     private removeMenu() {

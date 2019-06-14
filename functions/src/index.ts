@@ -3,9 +3,9 @@ import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData } from "../../src/firebase"
+import { processNewRecording } from "./processNewRecording";
 
 const numberOfDifferentRoyaleReplays = 3
-const maxNumberOfReplays = 100
 
 // So we can access the db
 admin.initializeApp()
@@ -86,57 +86,15 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         const document = { replaysZipped: zippedObj([data]) }
         await saveToDB(document)
     } else {
-        // We need to amend the data instead
         const seedData = unzipSeedData(zippedSeedData)
-        const existingCount = seedData.replays.length
-        const shouldUpdateNotAdd = existingCount < maxNumberOfReplays
-        const hasOverHalfData = existingCount > maxNumberOfReplays / 2
-
-        // Do we want to keep the top of all time
-        const highScoresOnly = mode === 2 
-        if (highScoresOnly) {
-            // Contains the single best score this user has submitted,
-            // whether it's the one we're trying to submit now or a previous one
-            // (although they _should_ have at most 1 previous entry in the list)
-            const currentPlayersReplays = seedData.replays
-                .filter(replay => replay.user === data.user)
-                .concat(data)
-                .sort((l, r) => l.score - r.score)
-            const personalBest = currentPlayersReplays[currentPlayersReplays.length - 1]
-
-            // Grab all replays that aren't by this user,
-            // add in their best (which might or might not have been previously there),
-            // sort it in descending order,
-            // then truncate it to the length we want the list to be.
-            const sortedReplays = seedData.replays
-                .filter(replay => replay.user !== data.user)
-                .concat(personalBest)
-                .sort((l, r) => l.score - r.score)
-                .reverse()
-                .slice(0, maxNumberOfReplays)
-
-            seedData.replays = sortedReplays
-        }
-
-        // We want to cap the number of recordings overall
-        else if (hasOverHalfData && shouldUpdateNotAdd) {
-            // One user can ship many replays until there is over half
-            // the number of max replays
-            // TODO: Add a real UUID for the user?
-            const hasUserInData = seedData.replays.findIndex(d => d.user.name == uuid)
-            const randomIndexToDrop = Math.floor(Math.random() * existingCount)
-            const index = hasOverHalfData && hasUserInData !== -1 ? hasUserInData : randomIndexToDrop
-            seedData.replays[index] = data
-        } else {
-            seedData.replays.push(data)
-        }
-
-        await saveToDB({ replaysZipped: zippedObj(seedData.replays) })
+        const newData = processNewRecording(seedData, data, uuid, mode)
+        await saveToDB({ replaysZipped: zippedObj(newData.replays) })
     }
 
     const responseJSON = { success: true }
     return response.status(200).send(responseJSON)
 })
+
 
 /**
  * Converts from the db representation where the seed data is gzipped into

@@ -7,6 +7,7 @@ import { getSeedsFromAPI } from "../../firebase"
 import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
 import { requestReview } from "../../nativeComms/requestReview"
+import { addScene } from "../../menus/utils/addScene";
 
 export interface RoyaleDeathProps {
     score: number
@@ -130,7 +131,7 @@ export class RoyaleDeath extends Phaser.Scene {
         const index = getAndBumpUserCycleSeedIndex(seeds.royale.length)
         const seed = seeds.royale[index]
         const lobby = new RoyaleLobby({ seed })
-        this.game.scene.add("RoyaleLobby" + seed, lobby, true, {})
+        addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
     }
 
     private addTopMedal() {

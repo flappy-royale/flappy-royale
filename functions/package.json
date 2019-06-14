@@ -18,10 +18,13 @@
         "pako": "^1.0.10"
     },
     "devDependencies": {
+        "@types/jest": "^24.0.14",
         "@types/pako": "^1.0.1",
         "firebase": "^6.0.2",
         "firebase-functions-test": "^0.1.6",
         "firebase-tools": "^6.10.0",
+        "jest": "^24.8.0",
+        "ts-jest": "^24.0.2",
         "typescript": "^3.2.2"
     },
     "private": true

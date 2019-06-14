@@ -4,10 +4,11 @@ import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import { getSeedsFromAPI, fetchRecordingsForSeed } from "../../firebase"
-import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics, livesExtensionStateForSeed, livesExtensionsButtonTitleForState, LifeStateForSeed, bumpLivesExtensionState, addLives } from "../../user/userManager"
+import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics, livesExtensionStateForSeed, livesExtensionsButtonTitleForState, LifeStateForSeed, bumpLivesExtensionState, addLives, getLives } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
 import { GameMode } from "../utils/gameMode";
 import { requestModalAd } from "../../nativeComms/requestModalAd";
+import { centerAlignTextLabel } from "../utils/alignTextLabel";
 
 export interface TrialDeathProps {
   score: number
@@ -40,6 +41,8 @@ export class TrialDeath extends Phaser.Scene {
     super(id)
   }
 
+  againButton: Phaser.GameObjects.BitmapText
+
   preload() {
     deathPreload(this)
   }
@@ -59,26 +62,26 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     const sash = won ? "green-sash" : "red-sash"
-    this.add.image(80, 40, sash)
-    this.add.bitmapText(10, 14, "fipps-bit", message, 24)
+    this.add.image(80, 70, sash)
+    this.add.bitmapText(10, 44, "fipps-bit", message, 24)
 
     let pipes = (this.props.score === 1 ? "pipe" : "pipes")
-    this.add.image(60, 80, "green-sash-small")
-    this.add.bitmapText(10, 77, "fipps-bit", `${this.props.score} ${pipes}`, 8)
+    this.add.image(60, 110, "green-sash-small")
+    this.add.bitmapText(10, 107, "fipps-bit", `${this.props.score} ${pipes}`, 8)
 
     const settings = getUserStatistics()
     if (this.props.score >= settings.bestScore && this.props.score > 0) {
       this.time.delayedCall(300, this.addTopMedal, [], this)
     }
 
-    this.add.image(60, 112, "green-sash-small")
-    const place = `${getNumberWithOrdinal(this.props.position)} place`
-    this.add.bitmapText(10, 108, "fipps-bit", place, 8)
-
     this.add.image(60, 142, "green-sash-small")
-    const attempts = this.props.lives === 1 ? "attempt" : "attempts"
-    const copy = `${this.props.lives} ${attempts} left`
-    this.add.bitmapText(10, 138, "fipps-bit", copy, 8)
+    const place = `${getNumberWithOrdinal(this.props.position)} place`
+    this.add.bitmapText(10, 138, "fipps-bit", place, 8)
+
+    this.add.image(60, 172, "green-sash-small")
+    const tries = this.props.lives === 1 ? "try" : "tries"
+    const copy = `${this.props.lives} ${tries} left`
+    this.add.bitmapText(10, 168, "fipps-bit", copy, 8)
 
 
     this.add.image(80, GameHeight - 8, "footer-bg")
@@ -88,12 +91,15 @@ export class TrialDeath extends Phaser.Scene {
     const newGame = this.add.image(90, GameHeight - 20, "button-bg")
 
     let againText = "again"
-    const outOfLives = this.props.lives === 0
+    const outOfLives = this.props.lives <= 0
     if (outOfLives) {
       againText = livesExtensionsButtonTitleForState(this.props.livesState)
     }
-    const newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", againText, 8)
+    const newGameText = this.add.bitmapText(GameWidth / 2, GameHeight - 27, "fipps-bit", againText, 8)
+    centerAlignTextLabel(newGameText, -10)
+    console.log(againText, this.props.livesState)
     becomeButton(newGame, this.again, this, [newGameText])
+    this.againButton = newGameText
 
     const share = this.add.image(130, GameHeight - 60, "button-small-bg")
     const shareText = this.add.bitmapText(110, GameHeight - 67, "fipps-bit", "SHARE", 8)
@@ -108,7 +114,7 @@ export class TrialDeath extends Phaser.Scene {
   }
 
   private again() {
-    if (this.props.lives <= 0) {
+    if (getLives(this.props.seed) <= 0) {
       requestModalAd(this.props.livesState)
       return
     }
@@ -147,8 +153,8 @@ export class TrialDeath extends Phaser.Scene {
   }
 
   private addTopMedal() {
-    this.add.image(90, 77, "medal")
-    this.add.bitmapText(114, 70, "fipps-bit", "BEST", 8)
+    this.add.image(90, 107, "medal")
+    this.add.bitmapText(114, 100, "fipps-bit", "BEST", 8)
 
     // Do some cute little trash bounces
     const trash1 = this.physics.add.image(90, 80, "trash-1")
@@ -193,24 +199,28 @@ export class TrialDeath extends Phaser.Scene {
     const seed = this.props.seed
     bumpLivesExtensionState(seed)
 
+    let livesToAdd = 0
     switch (livesExtensionStateForSeed(seed)) {
       case LifeStateForSeed.ExtraFive:
-        addLives(seed, 5)
+        livesToAdd = 5
         break
 
       case LifeStateForSeed.ExtraTen:
-        addLives(seed, 10)
+        livesToAdd = 10
         break
 
       case LifeStateForSeed.ExtraFifteen:
-        addLives(seed, 15)
+        livesToAdd = 15
         break
     }
 
-    const goButton = document.getElementById("button")
+    addLives(seed, livesToAdd)
 
-    goButton.onclick = () => {
-      this.again()
-    }
+    setTimeout(() => {
+      alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
+    }, 200)
+
+    this.againButton.setText("again")
+    centerAlignTextLabel(this.againButton, -10)
   }
 }

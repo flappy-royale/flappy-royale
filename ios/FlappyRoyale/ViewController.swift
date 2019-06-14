@@ -11,6 +11,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let storeReviews = AppStoreReviewer()
     let adPresentor = AdPresentor()
 
+    var webView: WKWebView?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         adPresentor.presentationVC = self
@@ -71,9 +73,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 //        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
 //        webView.loadFileURL(url, allowingReadAccessTo: url)
 
-        guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
-//        guard let url = URL(string: "http://localhost:8085") else { return }
-        webView.load(URLRequest(url: url))
+        self.webView = webView
+        loadGameURL()
 
         // Dispatch app pause/resume events to JS, so we can manually pause/resume gameplay
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) {_ in
@@ -90,20 +91,45 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
     }
 
+    private func loadGameURL() {
+        guard let webView = self.webView else { return }
+                guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
+//        guard let url = URL(string: "http://localhost:8085") else { return }
+        webView.load(URLRequest(url: url))
+    }
+
+    @objc func show5ad() {
+        let reward = MPRewardedVideo.availableRewards(forAdUnitID:AdConstants.testRewardMoPub)
+        if reward != nil {
+            MPRewardedVideo.presentAd(forAdUnitID: AdConstants.testRewardMoPub, from: self, with: reward?.first! as! MPRewardedVideoReward)
+        }
+    }
+    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        print("[WEBVIEW]: Did fail")
         print(error)
     }
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("Did start provisional")
+        print("[WEBVIEW]: Did start provisional")
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("Finished")
+        print("[WEBVIEW]: Finished")
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print("Fail provisional", error)
+        print("[WEBVIEW]: Fail provisional", error)
+        let alert = UIAlertController(title: "Uh oh!", message: "You don't seem to be online. Reconnect in order to download the latest game data!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { (_) in
+            self.dismiss(animated: true, completion: nil)
+            self.loadGameURL()
+        }))
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     // Open `target="_blank"` links in Safari
@@ -125,6 +151,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
         completionHandler()
+    }
+
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completionHandler(true) }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in completionHandler(false) }))
+        present(alert, animated: true, completion: nil)
     }
 
     // Open normal links in a modal SFSafariViewContrller
