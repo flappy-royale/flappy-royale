@@ -1,13 +1,10 @@
-import { APIVersion, GameWidth, GameHeight, zLevels } from "../../constants"
+import { GameWidth, GameHeight, zLevels } from "../../constants"
 import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
-import { getSeedsFromAPI, fetchRecordingsForSeed } from "../../firebase"
 import {
-    getAndBumpUserCycleSeedIndex,
     getRoyales,
-    getUserSettings,
     getUserStatistics,
     livesExtensionStateForSeed,
     livesExtensionsButtonTitleForState,
@@ -17,7 +14,6 @@ import {
     getLives
 } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
-import { GameMode } from "../utils/gameMode"
 import { requestModalAd } from "../../nativeComms/requestModalAd"
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 

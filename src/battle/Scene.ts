@@ -492,9 +492,12 @@ export class BattleScene extends Phaser.Scene {
             const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
             if (birdsAlive) {
                 this.birdsLeft.text = `${getNumberWithOrdinal(birdsAlive + 1)}`
-            } else {
+            } else if (this.ghostBirds.length) {
+                // You were actually against other folk
                 this.birdsLeft.text = "1st"
                 this.sound.play("win")
+            } else {
+                this.birdsLeft.text = "Solo"
             }
         }
     }
