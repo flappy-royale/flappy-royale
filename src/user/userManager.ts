@@ -2,6 +2,9 @@ import { defaultAttire, Attire } from "../attire"
 import { unzip, zippedObj } from "../zip"
 import _ = require("lodash")
 import { GameMode } from "../battle/utils/gameMode"
+import { getSeedsFromAPI, SeedData } from "../firebase";
+import { APIVersion } from "../constants";
+import { cache } from "../localCache";
 
 interface Aesthetics {
     // Strings of stored keys for hats
@@ -100,7 +103,7 @@ export const recordGamePlayed = (results: GameResults) => {
 }
 
 /** Will get the seed index + 1 or 0 if it's at the cap */
-export const getAndBumpUserCycleSeedIndex = (cap: number) => {
+export const getAndBumpUserCycleSeedIndex = (cap: number): number => {
     const settings = getUserSettings()
     if (!settings.royale) settings.royale = defaultSettings.royale
 
@@ -109,6 +112,12 @@ export const getAndBumpUserCycleSeedIndex = (cap: number) => {
 
     changeSettings({ royale: { seedIndex: index } })
     return index
+}
+
+export const getAndBumpUserCycleSeed = async (): Promise<string> => {
+    const seeds = cache.getSeeds(APIVersion) || await getSeedsFromAPI(APIVersion)
+    const newIndex = getAndBumpUserCycleSeedIndex(seeds.royale.length)
+    return seeds.royale[newIndex]
 }
 
 /** The stats from all your runs */

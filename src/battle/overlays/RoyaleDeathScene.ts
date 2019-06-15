@@ -3,11 +3,12 @@ import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
-import { getSeedsFromAPI } from "../../firebase"
-import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics } from "../../user/userManager"
+import { getSeedsFromAPI, fetchRecordingsForSeed } from "../../firebase"
+import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
 import { requestReview } from "../../nativeComms/requestReview"
 import { addScene } from "../../menus/utils/addScene"
+import { GameMode } from "../utils/gameMode";
 
 export interface RoyaleDeathProps {
     score: number
@@ -80,7 +81,7 @@ export class RoyaleDeath extends Phaser.Scene {
 
         const newGame = this.add.image(90, GameHeight - 20, "button-bg")
         const newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
-        becomeButton(newGame, this.goToRoyaleLobby, this, [newGameText])
+        becomeButton(newGame, this.startNewRound, this, [newGameText])
 
         const share = this.add.image(130, GameHeight - 60, "button-small-bg")
         const shareText = this.add.bitmapText(110, GameHeight - 67, "fipps-bit", "SHARE", 8)
@@ -127,15 +128,16 @@ export class RoyaleDeath extends Phaser.Scene {
         launchMainMenu(this.game)
     }
 
-    private async goToRoyaleLobby() {
+    private async startNewRound() {
+        const seed = await getAndBumpUserCycleSeed()
+        const seedData = await fetchRecordingsForSeed(seed)
+
         this.game.scene.remove(this)
         this.game.scene.remove(this.props.battle)
 
-        const seeds = await getSeedsFromAPI(APIVersion)
-        const index = getAndBumpUserCycleSeedIndex(seeds.royale.length)
-        const seed = seeds.royale[index]
-        const lobby = new RoyaleLobby({ seed })
-        addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+        const scene = new BattleScene({ seed: seed, data: seedData, gameMode: GameMode.Royale })
+        addScene(this.game, "BattleScene" + seed, scene, true, {})
+        scene.playBusCrash()
     }
 
     private addTopMedal() {
