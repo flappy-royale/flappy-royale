@@ -3,12 +3,14 @@ import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { getNumberWithOrdinal, BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
-import { getSeedsFromAPI, fetchRecordingsForSeed } from "../../firebase"
+import { getSeedsFromAPI, fetchRecordingsForSeed, SeedData } from "../../firebase"
 import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
 import { requestReview } from "../../nativeComms/requestReview"
 import { addScene } from "../../menus/utils/addScene"
 import { GameMode } from "../utils/gameMode";
+import _ = require("lodash");
+import { centerAlignTextLabel } from "../utils/alignTextLabel";
 
 export interface RoyaleDeathProps {
     score: number
@@ -34,6 +36,12 @@ export const deathPreload = (game: Phaser.Scene) => {
 }
 
 export class RoyaleDeath extends Phaser.Scene {
+    seed: string
+    seedData: SeedData
+
+    newGameText: Phaser.GameObjects.BitmapText
+    newGameBG: Phaser.GameObjects.Image
+
     constructor(id: string, public props: RoyaleDeathProps) {
         super(id)
     }
@@ -43,6 +51,13 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     create() {
+        getAndBumpUserCycleSeed().then((seed) => {
+            this.seed = seed
+            fetchRecordingsForSeed(seed).then((seedData) => {
+                this.seedData = seedData
+            })
+        })
+
         // Fill the BG
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
 
@@ -79,9 +94,9 @@ export class RoyaleDeath extends Phaser.Scene {
         const back = this.add.image(16, GameHeight - 20, "back")
         becomeButton(back, this.backToMainMenu, this)
 
-        const newGame = this.add.image(90, GameHeight - 20, "button-bg")
-        const newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
-        becomeButton(newGame, this.startNewRound, this, [newGameText])
+        this.newGameBG = this.add.image(90, GameHeight - 20, "button-bg")
+        this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
+        becomeButton(this.newGameBG, this.startNewRound, this, [this.newGameText])
 
         const share = this.add.image(130, GameHeight - 60, "button-small-bg")
         const shareText = this.add.bitmapText(110, GameHeight - 67, "fipps-bit", "SHARE", 8)
@@ -93,6 +108,30 @@ export class RoyaleDeath extends Phaser.Scene {
         if (this.props.score > 0 && getRoyales().length >= 10) {
             requestReview()
         }
+
+        // Start the countdown timer
+
+        let countdownTime = _.random(2, 3) + 1
+        let timeout: number | undefined
+        const updateTimer = () => {
+            countdownTime -= 1
+
+            if (countdownTime <= 0) {
+                this.newGameText.setText("AGAIN")
+                this.newGameBG.setAlpha(1.0)
+                centerAlignTextLabel(this.newGameText, -9)
+            } else {
+                this.newGameText.setText(`ready in ${countdownTime}`)
+                this.newGameBG.setAlpha(0.3)
+                centerAlignTextLabel(this.newGameText, -9)
+                timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
+            }
+        }
+        updateTimer()
+
+        this.events.on("destroy", () => {
+            clearTimeout(timeout)
+        })
     }
 
     private shareStats() {
@@ -129,14 +168,11 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     private async startNewRound() {
-        const seed = await getAndBumpUserCycleSeed()
-        const seedData = await fetchRecordingsForSeed(seed)
-
         this.game.scene.remove(this)
         this.game.scene.remove(this.props.battle)
 
-        const scene = new BattleScene({ seed: seed, data: seedData, gameMode: GameMode.Royale })
-        addScene(this.game, "BattleScene" + seed, scene, true, {})
+        const scene = new BattleScene({ seed: this.seed, data: this.seedData, gameMode: GameMode.Royale })
+        addScene(this.game, "BattleScene" + this.seed, scene, true, {})
         scene.playBusCrash()
     }
 
