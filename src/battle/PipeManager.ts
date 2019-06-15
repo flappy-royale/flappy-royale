@@ -22,8 +22,20 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
     const pipeIntervals = (windowHeight - pipeEdgeBuffer / 2 - gapHeight / 2) / slots
 
     const holeSlot = Math.floor(scene.rng() * 5) + 1
-    const holeTop = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 - gapHeight / 2 - floorAvoidanceHeight + constants.GameAreaTopOffset)
-    const holeBottom = Math.round(pipeIntervals * holeSlot + pipeEdgeBuffer / 2 + gapHeight / 2 - floorAvoidanceHeight + constants.GameAreaTopOffset)
+    const holeTop = Math.round(
+        pipeIntervals * holeSlot +
+            pipeEdgeBuffer / 2 -
+            gapHeight / 2 -
+            floorAvoidanceHeight +
+            constants.GameAreaTopOffset
+    )
+    const holeBottom = Math.round(
+        pipeIntervals * holeSlot +
+            pipeEdgeBuffer / 2 +
+            gapHeight / 2 -
+            floorAvoidanceHeight +
+            constants.GameAreaTopOffset
+    )
 
     const pipeTop = createSprite(x, holeTop, "pipe-top", scene)
     const pipeBottom = createSprite(x, holeBottom, "pipe-bottom", scene)

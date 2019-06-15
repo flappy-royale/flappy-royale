@@ -7,7 +7,7 @@ import { getSeedsFromAPI } from "../../firebase"
 import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics } from "../../user/userManager"
 import { RoyaleLobby } from "../../menus/RoyaleLobby"
 import { requestReview } from "../../nativeComms/requestReview"
-import { addScene } from "../../menus/utils/addScene";
+import { addScene } from "../../menus/utils/addScene"
 
 export interface RoyaleDeathProps {
     score: number
@@ -60,7 +60,7 @@ export class RoyaleDeath extends Phaser.Scene {
         this.add.bitmapText(10, 54, "fipps-bit", message, 24)
 
         this.add.image(60, 120, "green-sash-small")
-        const pipes = (this.props.score === 1 ? "pipe" : "pipes")
+        const pipes = this.props.score === 1 ? "pipe" : "pipes"
         this.add.bitmapText(10, 117, "fipps-bit", `${this.props.score} ${pipes}`, 8)
 
         const settings = getUserStatistics()
@@ -105,8 +105,12 @@ export class RoyaleDeath extends Phaser.Scene {
             const firstPipeFailMessage = "I died on the first pipe in Flappy Royale!"
 
             let text = lossMessage
-            if (won) { text = winMessage }
-            if (firstPipeFail) { text = firstPipeFailMessage }
+            if (won) {
+                text = winMessage
+            }
+            if (firstPipeFail) {
+                text = firstPipeFailMessage
+            }
 
             n.share({
                 title: "Flappy Royale",

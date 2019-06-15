@@ -26,7 +26,7 @@ import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
 import { rightAlignTextLabel } from "./utils/alignTextLabel"
-import { TrialDeath } from "./overlays/TrialDeathScene";
+import { TrialDeath } from "./overlays/TrialDeathScene"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */

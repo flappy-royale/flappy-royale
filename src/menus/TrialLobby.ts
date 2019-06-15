@@ -16,7 +16,7 @@ import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { requestModalAd } from "../nativeComms/requestModalAd"
-import { addScene } from "./utils/addScene";
+import { addScene } from "./utils/addScene"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -187,7 +187,9 @@ export class TrialLobby extends Phaser.Scene {
         addLives(this.seed, livesToAdd)
 
         setTimeout(() => {
-            alert(`Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`)
+            alert(
+                `Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`
+            )
         }, 100)
 
         const info = document.getElementById("info")

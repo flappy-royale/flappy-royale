@@ -1,6 +1,6 @@
 import { defaultAttire, Attire } from "../attire"
 import { unzip, zippedObj } from "../zip"
-import _ = require("lodash");
+import _ = require("lodash")
 
 interface Aesthetics {
     // Strings of stored keys for hats
@@ -193,7 +193,9 @@ export const addLives = (seed: string, val: number): number => {
     const livesData = localStorage.getItem("lives")
 
     let lives = livesData && JSON.parse(livesData)[seed]
-    if (_.isUndefined(lives)) { lives = defaultLives }
+    if (_.isUndefined(lives)) {
+        lives = defaultLives
+    }
 
     const newData = { [seed]: lives + val }
     localStorage.setItem("lives", JSON.stringify(newData))

@@ -12,7 +12,7 @@ import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
-import { addScene } from "./utils/addScene";
+import { addScene } from "./utils/addScene"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {

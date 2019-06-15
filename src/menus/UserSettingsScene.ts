@@ -4,7 +4,7 @@ import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { builtInAttire, Attire } from "../attire"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
-import { resizeToFullScreen } from './utils/resizeToFullScreen'
+import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 
 export const UserSettingsKey = "UserSettings"
 
@@ -32,7 +32,8 @@ export class UserSettings extends Phaser.Scene {
         setupBackgroundBlobImages(this, { min: 30 })
 
         // Make a HTML form
-        var element = this.add.dom(0, 0)
+        var element = this.add
+            .dom(0, 0)
             .setOrigin(0, 0)
             .createFromCache("Settings")
         resizeToFullScreen(element)
@@ -49,7 +50,7 @@ export class UserSettings extends Phaser.Scene {
         const settings = getUserSettings()
         usernameInput.value = settings.name
         // Make changes propagate to settings
-        usernameInput.onchange = function () {
+        usernameInput.onchange = function() {
             changeSettings({ name: usernameInput.value })
         }
 
@@ -138,7 +139,7 @@ export class UserSettings extends Phaser.Scene {
         }
 
         // Click handling
-        element.on("click", function (event) {
+        element.on("click", function(event) {
             const target = event.target as Element
 
             // Getting a potential attire is tricky, you could hit

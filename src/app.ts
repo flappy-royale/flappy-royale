@@ -10,7 +10,7 @@ import { showLoadingScreen } from "./menus/LoadingScene"
 import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
-import { addScene } from "./menus/utils/addScene";
+import { addScene } from "./menus/utils/addScene"
 
 declare var PRODUCTION: boolean
 

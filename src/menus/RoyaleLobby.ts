@@ -8,8 +8,8 @@ import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import _ = require("lodash")
 import { random, shuffle } from "lodash"
-import { resizeToFullScreen } from "./utils/resizeToFullScreen";
-import { addScene } from "./utils/addScene";
+import { resizeToFullScreen } from "./utils/resizeToFullScreen"
+import { addScene } from "./utils/addScene"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -44,7 +44,8 @@ export class RoyaleLobby extends Phaser.Scene {
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xacd49d)
 
         // Make a HTML form
-        const el = this.add.dom(0, 0)
+        const el = this.add
+            .dom(0, 0)
             .setOrigin(0, 0)
             .createFromCache("RoyaleLobby")
         resizeToFullScreen(el)
@@ -164,11 +165,11 @@ export class RoyaleLobby extends Phaser.Scene {
             } else {
                 countdownTimerText.innerText = `${countdownTime}`
             }
-            timeout = <number><unknown>setTimeout(updateTimer, 1000)
+            timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
         }
         updateTimer()
 
-        this.events.on('destroy', () => {
+        this.events.on("destroy", () => {
             clearTimeout(timeout)
         })
     }
