@@ -27,6 +27,7 @@ import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
 import { rightAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene"
+import { analyticsEvent } from "../nativeComms/analytics"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -541,24 +542,25 @@ export class BattleScene extends Phaser.Scene {
 
         // Check if they did enough for us to record the run
         // in the future we'll want to show the death animation etc
-        if (this.isRecording() && hasJumped) {
+        if (this.isRecording()) {
             // Store what happened
             this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
             recordGamePlayed(this.analytics.getResults())
+            analyticsEvent("game-played", this.analytics.getResults())
 
-            // TODO: Generate a UUID?
-            this.debug("Uploading replay")
-
-            const settings = getUserSettings()
-            uploadReplayForSeed({
-                seed: this.seed,
-                uuid: settings.name,
-                version: constants.APIVersion,
-                mode: this.mode,
-                data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
-            })
-                .then(a => a.json())
-                .then(r => console.log(r))
+            if (hasJumped) {
+                this.debug("Uploading replay")
+                const settings = getUserSettings()
+                uploadReplayForSeed({
+                    seed: this.seed,
+                    uuid: settings.name,
+                    version: constants.APIVersion,
+                    mode: this.mode,
+                    data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
+                })
+                    .then(a => a.json())
+                    .then(r => console.log(r))
+            }
         }
 
         if (game.usesLives(this.mode)) {

@@ -10,6 +10,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let haptics = HapticManager()
     let storeReviews = AppStoreReviewer()
     let adPresentor = AdPresentor()
+    let analytics = AnalyticsPresentor()
 
     var webView: WKWebView?
 
@@ -25,7 +26,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
@@ -93,8 +94,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
     private func loadGameURL() {
         guard let webView = self.webView else { return }
-                guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
-//        guard let url = URL(string: "http://localhost:8085") else { return }
+//                guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
+        guard let url = URL(string: "http://localhost:8085") else { return }
         webView.load(URLRequest(url: url))
     }
 

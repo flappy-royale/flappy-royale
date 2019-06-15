@@ -5,10 +5,14 @@ import { launchMainMenu } from "./MainMenuScene"
 import { builtInAttire, Attire } from "../attire"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
+import { isEqual } from "lodash"
+import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
 
 export const UserSettingsKey = "UserSettings"
 
 export class UserSettings extends Phaser.Scene {
+    didChangeName: boolean = false
+
     constructor() {
         super(UserSettingsKey)
     }
@@ -48,9 +52,12 @@ export class UserSettings extends Phaser.Scene {
         const usernameInput = element.node.getElementsByTagName("input").item(0)
         // Set the default value
         const settings = getUserSettings()
+        const attireIDsWhenOpening = settings.aesthetics.attire.map(a => a.id)
+
         usernameInput.value = settings.name
         // Make changes propagate to settings
-        usernameInput.onchange = function() {
+        usernameInput.onchange = () => {
+            this.didChangeName = true
             changeSettings({ name: usernameInput.value })
         }
 
@@ -144,11 +151,11 @@ export class UserSettings extends Phaser.Scene {
 
             // Getting a potential attire is tricky, you could hit
             // either the li, the div or the img, so always get to the li.
+            const settings = getUserSettings()
             const maybeLI = findUpTag(target, "LI")
             if (maybeLI && maybeLI.id) {
                 const attire = maybeLI as Element
 
-                const settings = getUserSettings()
                 const currentAttire = settings.aesthetics.attire
                 const clickedAttire = builtInAttire.find(att => att.id === attire.id)
 
@@ -174,12 +181,6 @@ export class UserSettings extends Phaser.Scene {
 
                 showUser()
                 updateWearables()
-            }
-
-            if (event.target.name === "loginButton") {
-                const usernameInput = element.node.getElementsByTagName("input").item(0)
-                changeSettings({ name: usernameInput.value })
-                this.removeListener("click")
             }
         })
 
@@ -209,6 +210,16 @@ export class UserSettings extends Phaser.Scene {
         back.src = require("../../assets/menu/Back2.png")
 
         back.onclick = () => {
+            const newSettings = getUserSettings()
+            const newAttireIDs = newSettings.aesthetics.attire.map(a => a.id)
+            if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
+                analyticsEvent("new-attire", { ids: newAttireIDs })
+            }
+
+            if (this.didChangeName) {
+                analyticsSetID(newSettings.name)
+            }
+
             this.game.scene.remove(this)
             launchMainMenu(this.game)
         }
