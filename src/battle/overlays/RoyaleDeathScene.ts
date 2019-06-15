@@ -38,6 +38,7 @@ export const deathPreload = (game: Phaser.Scene) => {
 export class RoyaleDeath extends Phaser.Scene {
     seed: string
     seedData: SeedData
+    countdownComplete: boolean
 
     newGameText: Phaser.GameObjects.BitmapText
     newGameBG: Phaser.GameObjects.Image
@@ -117,6 +118,7 @@ export class RoyaleDeath extends Phaser.Scene {
             countdownTime -= 1
 
             if (countdownTime <= 0) {
+                this.countdownComplete = true
                 this.newGameText.setText("AGAIN")
                 this.newGameBG.setAlpha(1.0)
                 centerAlignTextLabel(this.newGameText, -9)
@@ -168,6 +170,9 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     private async startNewRound() {
+        if (!this.countdownComplete) return
+        if (!(this.seed && this.seedData)) return
+
         this.game.scene.remove(this)
         this.game.scene.remove(this.props.battle)
 
