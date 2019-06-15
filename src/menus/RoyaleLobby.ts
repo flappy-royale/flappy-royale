@@ -51,7 +51,7 @@ export class RoyaleLobby extends Phaser.Scene {
         resizeToFullScreen(el)
 
         // Number of seconds until the game starts
-        let countdownTime = random(4, 6) + 1
+        let countdownTime = random(3, 5) + 1
 
         const createUserImage = (user: UserSettings) => {
             const root = document.createElement("div")
