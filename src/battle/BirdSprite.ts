@@ -123,9 +123,7 @@ export class BirdSprite {
         this.position = this.body.position
         const allAttire = this.tightAttire.concat(this.looseAttire)
         if (!meta.isPlayer) {
-            this.bodySprite.setAlpha(0.3)
-            this.sprite.setAlpha(0.3)
-            allAttire.forEach(a => a.setAlpha(0.3))
+            this.setOpacity(0.3)
         } else {
             this.bodySprite.setDepth(constants.zLevels.playerBird)
             if (this.isPlayer) this.focusSprite.setDepth(constants.zLevels.focusBackdrop)
@@ -165,6 +163,14 @@ export class BirdSprite {
             haptics.playSelection()
             haptics.prepareHeavy()
         } else this.scene.sound.play("other_flap")
+    }
+
+    setOpacity(opacity: number) {
+        this.bodySprite.setAlpha(opacity)
+        this.sprite.setAlpha(opacity)
+
+        const allAttire = this.tightAttire.concat(this.looseAttire)
+        allAttire.forEach(a => a.setAlpha(opacity))
     }
 
     rotateSprite() {

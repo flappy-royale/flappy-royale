@@ -335,7 +335,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // Keep track of stats for using later
-        this.analytics.startRecording({ totalBirds: this.ghostBirds.length })
+        this.analytics.startRecording({ totalBirds: this.ghostBirds.length, mode: this.mode })
 
         if (this.mode !== game.GameMode.Menu) {
             const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
@@ -618,7 +618,8 @@ export class BattleScene extends Phaser.Scene {
                     position: birdsAlive.length,
                     battle: this,
                     totalPlayers: this.ghostBirds.length + 1,
-                    seed: this.seed
+                    seed: this.seed,
+                    replays: this.seedData.replays
                 })
                 this.scene.add("deathoverlay", deathOverlay, true)
             }

@@ -2,7 +2,7 @@ import * as Phaser from "phaser"
 
 import * as constants from "./constants"
 import { launchMainMenu } from "./menus/MainMenuScene"
-import { emptySeedData, fetchRecordingsForSeed } from "./firebase"
+import { emptySeedData, fetchRecordingsForSeed, PlayerData } from "./firebase"
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
@@ -11,6 +11,8 @@ import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
 import { addScene } from "./menus/utils/addScene"
+import { TrialDeath } from "./battle/overlays/TrialDeathScene"
+import { getUserSettings } from "./user/userManager"
 
 declare var PRODUCTION: boolean
 
@@ -149,6 +151,69 @@ window.onload = async () => {
             break
     }
 
+    setTimeout(() => {
+        const one: PlayerData = {
+            score: 334,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const two: PlayerData = {
+            score: 21,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const three: PlayerData = {
+            score: 22,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const four: PlayerData = {
+            score: 22,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const five: PlayerData = {
+            score: 22,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const six: PlayerData = {
+            score: 22,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const seven: PlayerData = {
+            score: 22,
+            actions: [],
+            timestamp: 0,
+            user: getUserSettings()
+        }
+
+        const deathOverlay = new TrialDeath("death", {
+            score: 20,
+            lives: 10,
+            livesState: 1,
+            position: 4,
+            battle: {} as any,
+            totalPlayers: 128,
+            seed: this.seed,
+            replays: [one, two, three, four, five, six, seven]
+        })
+
+        game.scene.add("over", deathOverlay, true)
+    }, 300)
     // appCache.fakeLoadingScreen()
 
     if (!PRODUCTION) {

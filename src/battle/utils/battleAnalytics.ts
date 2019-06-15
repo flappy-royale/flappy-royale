@@ -20,6 +20,7 @@ export class BattleAnalytics {
         this.data.score = 0
         this.data.position = -1
         this.data.flaps = 0
+        this.data.mode = input.mode
     }
 
     flap() {

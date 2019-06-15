@@ -12,6 +12,7 @@
         "appspot",
         "clonedeep",
         "datastore",
+        "didnt",
         "firebaseapp",
         "firestore",
         "haptics",
