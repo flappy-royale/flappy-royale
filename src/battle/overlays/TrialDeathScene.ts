@@ -256,8 +256,8 @@ export class TrialDeath extends Phaser.Scene {
         this.add.rectangle(84, 4, 160, 110, 0xd49d9d)
         this.add.rectangle(96, 6, 160, 110, 0xd49d9d)
 
-        this.drawPlayerRow({ position: 0, white: true, x: 10, y: top + 10, opacity: 1 }, sorted[0])
-        this.drawPlayerRow({ position: 1, white: true, x: 10, y: top + 30, opacity: 1 }, sorted[1])
+        this.drawPlayerRow({ position: 0, white: true, x: 4, y: top + 10, opacity: 1 }, sorted[0])
+        this.drawPlayerRow({ position: 1, white: true, x: 7, y: top + 30, opacity: 1 }, sorted[1])
         this.drawPlayerRow({ position: 2, white: true, x: 10, y: top + 50, opacity: 1 }, sorted[2])
 
         // MIDDLE

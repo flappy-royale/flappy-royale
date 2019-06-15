@@ -95,62 +95,7 @@ const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean
     addScene(game, "Battle", scene, true)
 }
 
-const loadUpIntoSettings = (game: FlappyGame) => {
-    const settings = new UserSettings()
-    addScene(game, UserSettingsKey, settings, true)
-}
-
-const wait = async (delay: number) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(true), delay)
-    })
-}
-
-window.onload = async () => {
-    // This very silly delay fixes the issues where notch-detection code sometimes doesn't work properly.
-    // TODO: Our splash screen can happen in not-Phaser DOM land and use that to mask this waiting period.
-    await wait(100)
-
-    constants.setDeviceSize()
-    const game = newGame()
-
-    // @ts-ignore
-    // This is used by Ads manager etc to get to our game
-    window.currentGame = game
-
-    const seed = "1-royale-0"
-
-    // Change this to have it load up into a different screen on save
-    const startupScreen = StartupScreen.MainMenu as StartupScreen
-
-    switch (startupScreen) {
-        case StartupScreen.TrialBattle:
-            loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
-            break
-
-        case StartupScreen.RoyalBattle:
-            loadUpIntoTraining(game, { offline: false, mode: GameMode.Royale })
-            break
-
-        case StartupScreen.Settings:
-            loadUpIntoSettings(game)
-            break
-
-        case StartupScreen.MainMenu:
-            launchMainMenu(game)
-            break
-
-        case StartupScreen.RoyaleLobby:
-            const lobby = new RoyaleLobby({ seed })
-            addScene(game, "RoyaleLobby" + seed, lobby, true, {})
-            break
-
-        case StartupScreen.TrialLobby:
-            const trial = new TrialLobby({ seed })
-            addScene(game, "TrialLobby" + seed, trial, true, {})
-            break
-    }
-
+const testTrialDeathScreen = (game: FlappyGame) => {
     setTimeout(() => {
         const one: PlayerData = {
             score: 334,
@@ -214,6 +159,64 @@ window.onload = async () => {
 
         game.scene.add("over", deathOverlay, true)
     }, 300)
+}
+
+const loadUpIntoSettings = (game: FlappyGame) => {
+    const settings = new UserSettings()
+    addScene(game, UserSettingsKey, settings, true)
+}
+
+const wait = async (delay: number) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(true), delay)
+    })
+}
+
+window.onload = async () => {
+    // This very silly delay fixes the issues where notch-detection code sometimes doesn't work properly.
+    // TODO: Our splash screen can happen in not-Phaser DOM land and use that to mask this waiting period.
+    await wait(100)
+
+    constants.setDeviceSize()
+    const game = newGame()
+
+    // @ts-ignore
+    // This is used by Ads manager etc to get to our game
+    window.currentGame = game
+
+    const seed = "1-royale-0"
+
+    // Change this to have it load up into a different screen on save
+    const startupScreen = StartupScreen.MainMenu as StartupScreen
+
+    switch (startupScreen) {
+        case StartupScreen.TrialBattle:
+            loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
+            break
+
+        case StartupScreen.RoyalBattle:
+            loadUpIntoTraining(game, { offline: false, mode: GameMode.Royale })
+            break
+
+        case StartupScreen.Settings:
+            loadUpIntoSettings(game)
+            break
+
+        case StartupScreen.MainMenu:
+            launchMainMenu(game)
+            break
+
+        case StartupScreen.RoyaleLobby:
+            const lobby = new RoyaleLobby({ seed })
+            addScene(game, "RoyaleLobby" + seed, lobby, true, {})
+            break
+
+        case StartupScreen.TrialLobby:
+            const trial = new TrialLobby({ seed })
+            addScene(game, "TrialLobby" + seed, trial, true, {})
+            break
+    }
+
     // appCache.fakeLoadingScreen()
 
     if (!PRODUCTION) {
