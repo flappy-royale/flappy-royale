@@ -90,7 +90,7 @@ export class TrialLobby extends Phaser.Scene {
         // which triggers and ad
         if (outOfLives) {
             document.getElementById("button-text").textContent = livesExtensionsButtonTitleForState(livesState)
-            analyticsEvent("out-of-lives", { livesState })
+            analyticsEvent("out_of_lives", { livesState })
         }
 
         fetchRecordingsForSeed(this.seed).then(seedData => {

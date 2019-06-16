@@ -546,7 +546,7 @@ export class BattleScene extends Phaser.Scene {
             // Store what happened
             this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
             recordGamePlayed(this.analytics.getResults())
-            analyticsEvent("game-played", this.analytics.getResults())
+            analyticsEvent("game_played", this.analytics.getResults())
 
             if (hasJumped) {
                 this.debug("Uploading replay")

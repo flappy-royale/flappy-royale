@@ -19,6 +19,7 @@ import { requestModalAd } from "../../nativeComms/requestModalAd"
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { BirdSprite } from "../BirdSprite"
 import { PlayerData } from "../../firebase"
+import { shareNatively } from "../../nativeComms/share";
 
 export interface TrialDeathProps {
     score: number
@@ -308,28 +309,15 @@ export class TrialDeath extends Phaser.Scene {
         const won = this.props.position === 0
         const firstPipeFail = this.props.score === 0
 
-        if (navigator && "share" in navigator) {
-            const n = navigator as any
-            const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale daily Trial!`
-            const winMessage = `I have the high score for today's Flappy Royale daily Trial! Think you can beat ${
-                this.props.score
-            }?`
-            const firstPipeFailMessage = "I died on the first pipe in today's Flappy Royale daily trial!"
+        const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale daily Trial!`
+        const winMessage = `I have the high score for today's Flappy Royale daily Trial! Think you can beat ${this.props.score}?`
+        const firstPipeFailMessage = "I died on the first pipe in today's Flappy Royale daily trial!"
 
-            let text = lossMessage
-            if (won) {
-                text = winMessage
-            }
-            if (firstPipeFail) {
-                text = firstPipeFailMessage
-            }
+        let text = lossMessage
+        if (won) text = winMessage
+        if (firstPipeFail) text = firstPipeFailMessage
 
-            n.share({
-                title: "Flappy Royale",
-                text: text,
-                url: "https://flappyroyale.io"
-            })
-        }
+        shareNatively(text)
     }
 
     private backToMainMenu() {

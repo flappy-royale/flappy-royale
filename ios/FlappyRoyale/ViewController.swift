@@ -11,12 +11,14 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let storeReviews = AppStoreReviewer()
     let adPresentor = AdPresentor()
     let analytics = AnalyticsPresentor()
-
+    let share = ShareManager()
+    
     var webView: WKWebView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         adPresentor.presentationVC = self
+        share.presentationVC = self
 
         let userScript = WKUserScript(source: "window.isAppleApp = true;",
                                       injectionTime: .atDocumentStart,
@@ -26,7 +28,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
@@ -95,7 +97,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     private func loadGameURL() {
         guard let webView = self.webView else { return }
 //                guard let url = URL(string: "https://flappy-royale-3377a.firebaseapp.com") else { return }
-        guard let url = URL(string: "http://localhost:8085") else { return }
+        guard let url = URL(string: "http://localhost:8085/") else { return }
         webView.load(URLRequest(url: url))
     }
 

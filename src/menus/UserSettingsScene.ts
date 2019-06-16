@@ -213,7 +213,7 @@ export class UserSettings extends Phaser.Scene {
             const newSettings = getUserSettings()
             const newAttireIDs = newSettings.aesthetics.attire.map(a => a.id)
             if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
-                analyticsEvent("new-attire", { ids: newAttireIDs })
+                analyticsEvent("new_attire", { ids: newAttireIDs })
             }
 
             if (this.didChangeName) {

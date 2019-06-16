@@ -10,6 +10,7 @@ import { addScene } from "../../menus/utils/addScene"
 import { GameMode } from "../utils/gameMode"
 import _ = require("lodash")
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
+import { shareNatively } from "../../nativeComms/share"
 
 export interface RoyaleDeathProps {
     score: number
@@ -141,26 +142,16 @@ export class RoyaleDeath extends Phaser.Scene {
         const won = this.props.position === 0
         const firstPipeFail = this.props.score === 0
 
-        if (navigator && "share" in navigator) {
-            const n = navigator as any
-            const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`
-            const winMessage = `I won on Flappy Royale!`
-            const firstPipeFailMessage = "I died on the first pipe in Flappy Royale!"
+        const n = navigator as any
+        const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`
+        const winMessage = `I won on Flappy Royale!`
+        const firstPipeFailMessage = "I died on the first pipe in Flappy Royale!"
 
-            let text = lossMessage
-            if (won) {
-                text = winMessage
-            }
-            if (firstPipeFail) {
-                text = firstPipeFailMessage
-            }
+        let text = lossMessage
+        if (won) text = winMessage
+        if (firstPipeFail) text = firstPipeFailMessage
 
-            n.share({
-                title: "Flappy Royale",
-                text: text,
-                url: "https://flappyroyale.io"
-            })
-        }
+        shareNatively(text)
     }
 
     private backToMainMenu() {
