@@ -166,11 +166,11 @@ export class TrialDeath extends Phaser.Scene {
         /// MIDDLE BIT
 
         if (sortedReplays[0])
-            this.drawPlayerRow({ position: 2, white: true, x: 14, y: top + 90, opacity: 0.6 }, sortedReplays[0])
+            this.drawPlayerRow({ position: 1, white: true, x: 14, y: top + 90, opacity: 0.6 }, sortedReplays[0])
         if (sortedReplays[1])
-            this.drawPlayerRow({ position: 3, white: true, x: 14, y: top + 110, opacity: 0.4 }, sortedReplays[1])
+            this.drawPlayerRow({ position: 2, white: true, x: 14, y: top + 110, opacity: 0.4 }, sortedReplays[1])
         if (sortedReplays[2])
-            this.drawPlayerRow({ position: 4, white: true, x: 14, y: top + 130, opacity: 0.2 }, sortedReplays[2])
+            this.drawPlayerRow({ position: 3, white: true, x: 14, y: top + 130, opacity: 0.2 }, sortedReplays[2])
 
         /// BOTTOM BIT
 
