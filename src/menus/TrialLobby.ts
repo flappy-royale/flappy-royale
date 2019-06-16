@@ -40,7 +40,7 @@ export class TrialLobby extends Phaser.Scene {
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
         this.load.image("purple-sash", require("../../assets/menu/PurpleishSash.png"))
-        this.load.image("white-sash", require("../../assets/menu/WhiteTriangleShapeTrials.png"))
+        this.load.image("white-triangle-sash", require("../../assets/menu/WhiteTriangleShapeTrials.png"))
         this.load.image("attire-selected", require("../../assets/menu/AttireSelected.png"))
     }
 

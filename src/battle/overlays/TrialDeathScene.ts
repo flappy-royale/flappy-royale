@@ -12,8 +12,7 @@ import {
     addLives,
     getLives,
     getUserSettings,
-    getUserStatistics,
-    UserSettings
+    getUserStatistics
 } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
 import { requestModalAd } from "../../nativeComms/requestModalAd"
@@ -76,6 +75,8 @@ export class TrialDeath extends Phaser.Scene {
             user: getUserSettings()
         }
 
+        const sortedReplays = this.props.replays.sort((l, r) => r.score - l.score)
+
         // Fill the BG
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
 
@@ -83,41 +84,17 @@ export class TrialDeath extends Phaser.Scene {
         const firstPipeFail = this.props.score === 0
 
         if (this.props.position === 0) {
-            this.cameInFirst(userData)
+            this.cameInFirst(userData, sortedReplays)
         } else if (this.props.position <= 2) {
-            this.cameInTopThree(userData)
+            this.cameInTopThree(userData, sortedReplays)
         } else {
-            this.didntComeTopThree(userData)
+            this.didntComeTopThree(userData, sortedReplays)
         }
-
-        let message = "Splat!"
-        if (firstPipeFail) {
-            message = "Fail!"
-        } else if (won) {
-            message = "You're #1!!!"
-        }
-
-        // const sash = won ? "green-sash" : "red-sash"
-        // this.add.image(80, 70, sash)
-        // this.add.bitmapText(10, 44, "fipps-bit", message, 24)
-
-        // let pipes = this.props.score === 1 ? "pipe" : "pipes"
-        // this.add.image(60, 110, "green-sash-small")
-        // this.add.bitmapText(10, 107, "fipps-bit", `${this.props.score} ${pipes}`, 8)
 
         const settings = getUserStatistics()
         if (this.props.score >= settings.bestScore && this.props.score > 0) {
             this.time.delayedCall(500, this.addTopMedal, [], this)
         }
-
-        // this.add.image(60, 142, "green-sash-small")
-        // const place = `${getNumberWithOrdinal(this.props.position)} place`
-        // this.add.bitmapText(10, 138, "fipps-bit", place, 8)
-
-        // this.add.image(60, 172, "green-sash-small")
-        // const tries = this.props.lives === 1 ? "try" : "tries"
-        // const copy = `${this.props.lives} ${tries} left`
-        // this.add.bitmapText(10, 168, "fipps-bit", copy, 8)
 
         this.addFooter()
 
@@ -154,7 +131,7 @@ export class TrialDeath extends Phaser.Scene {
         becomeButton(share, this.shareStats, this, [shareIcon])
     }
 
-    private cameInFirst(player: PlayerData) {
+    private cameInFirst(player: PlayerData, sortedReplays: PlayerData[]) {
         const top = GameAreaTopOffset
 
         // TOP BIT
@@ -188,9 +165,12 @@ export class TrialDeath extends Phaser.Scene {
 
         /// MIDDLE BIT
 
-        this.drawPlayerRow({ position: 2, white: true, x: 14, y: top + 90, opacity: 0.6 }, player)
-        this.drawPlayerRow({ position: 3, white: true, x: 14, y: top + 110, opacity: 0.4 }, player)
-        this.drawPlayerRow({ position: 4, white: true, x: 14, y: top + 130, opacity: 0.2 }, player)
+        if (sortedReplays[0])
+            this.drawPlayerRow({ position: 2, white: true, x: 14, y: top + 90, opacity: 0.6 }, sortedReplays[0])
+        if (sortedReplays[1])
+            this.drawPlayerRow({ position: 3, white: true, x: 14, y: top + 110, opacity: 0.4 }, sortedReplays[1])
+        if (sortedReplays[2])
+            this.drawPlayerRow({ position: 4, white: true, x: 14, y: top + 130, opacity: 0.2 }, sortedReplays[2])
 
         /// BOTTOM BIT
 
@@ -204,7 +184,7 @@ export class TrialDeath extends Phaser.Scene {
         this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${pos} trial win`, 8)
     }
 
-    private cameInTopThree(player: PlayerData) {
+    private cameInTopThree(player: PlayerData, sortedReplays: PlayerData[]) {
         const top = GameAreaTopOffset
         const playerIsTwo = this.props.position === 1
         const playerIsThree = this.props.position === 2
@@ -222,11 +202,9 @@ export class TrialDeath extends Phaser.Scene {
         const circle = this.add.image(48, top + 70 + yOffset, "white-circle")
         circle.setScale(0.8, 0.8)
 
-        const sorted = this.props.replays.sort((l, r) => r.score - l.score)
-
-        const one = sorted[0]
-        const two = playerIsTwo ? player : sorted[1]
-        const three = playerIsThree ? player : sorted[1]
+        const one = sortedReplays[0]
+        const two = playerIsTwo ? player : sortedReplays[1]
+        const three = playerIsThree ? player : sortedReplays[1]
 
         this.drawPlayerRow({ position: 0, white: true, x: 14, y: top + 50, opacity: 1 }, one)
         this.drawPlayerRow({ position: 1, white: !playerIsTwo, x: 14, y: top + 70, opacity: 1 }, two)
@@ -245,20 +223,18 @@ export class TrialDeath extends Phaser.Scene {
         this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8)
     }
 
-    private didntComeTopThree(player: PlayerData) {
+    private didntComeTopThree(player: PlayerData, sortedReplays: PlayerData[]) {
         const top = GameAreaTopOffset
 
-        const sorted = this.props.replays.sort((l, r) => r.score - l.score)
-
         // TOP BIT
-        this.add.rectangle(80, 0, 160, 110, 0xd49d9d)
-        this.add.rectangle(82, 2, 160, 110, 0xd49d9d)
-        this.add.rectangle(84, 4, 160, 110, 0xd49d9d)
-        this.add.rectangle(96, 6, 160, 110, 0xd49d9d)
+        this.add.rectangle(80, top + 0, 160, 110, 0xd49d9d)
+        this.add.rectangle(82, top + 2, 160, 110, 0xd49d9d)
+        this.add.rectangle(84, top + 4, 160, 110, 0xd49d9d)
+        this.add.rectangle(96, top + 6, 160, 110, 0xd49d9d)
 
-        this.drawPlayerRow({ position: 0, white: true, x: 4, y: top + 10, opacity: 1 }, sorted[0])
-        this.drawPlayerRow({ position: 1, white: true, x: 7, y: top + 30, opacity: 1 }, sorted[1])
-        this.drawPlayerRow({ position: 2, white: true, x: 10, y: top + 50, opacity: 1 }, sorted[2])
+        this.drawPlayerRow({ position: 0, white: true, x: 4, y: top + 10, opacity: 1 }, sortedReplays[0])
+        this.drawPlayerRow({ position: 1, white: true, x: 7, y: top + 30, opacity: 1 }, sortedReplays[1])
+        this.drawPlayerRow({ position: 2, white: true, x: 10, y: top + 50, opacity: 1 }, sortedReplays[2])
 
         // MIDDLE
 
@@ -273,8 +249,8 @@ export class TrialDeath extends Phaser.Scene {
         const circle = this.add.image(48, top + 70 + yOffset, "white-circle")
         circle.setScale(0.8, 0.8)
 
-        const abovePlayer = sorted[this.props.position - 1]
-        const belowPlayer = sorted[this.props.position]
+        const abovePlayer = sortedReplays[this.props.position - 1]
+        const belowPlayer = sortedReplays[this.props.position]
 
         this.drawPlayerRow(
             { position: this.props.position - 1, white: true, x: 14, y: top + 50 + yOffset, opacity: 1 },

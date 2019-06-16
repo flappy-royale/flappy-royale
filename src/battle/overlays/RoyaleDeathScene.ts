@@ -1,16 +1,15 @@
-import { APIVersion, GameWidth, GameHeight, zLevels } from "../../constants"
+import { GameWidth, GameHeight, zLevels } from "../../constants"
 import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
-import { getNumberWithOrdinal, BattleScene } from "../Scene"
+import { BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
-import { getSeedsFromAPI, fetchRecordingsForSeed, SeedData } from "../../firebase"
-import { getAndBumpUserCycleSeedIndex, getRoyales, getUserSettings, getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
-import { RoyaleLobby } from "../../menus/RoyaleLobby"
+import { fetchRecordingsForSeed, SeedData } from "../../firebase"
+import { getRoyales, getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
 import { addScene } from "../../menus/utils/addScene"
-import { GameMode } from "../utils/gameMode";
-import _ = require("lodash");
-import { centerAlignTextLabel } from "../utils/alignTextLabel";
+import { GameMode } from "../utils/gameMode"
+import _ = require("lodash")
+import { centerAlignTextLabel } from "../utils/alignTextLabel"
 
 export interface RoyaleDeathProps {
     score: number
@@ -20,6 +19,7 @@ export interface RoyaleDeathProps {
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
+    game.load.image("share-ios", require("../../../assets/menu/share-ios.png"))
     game.load.image("green-sash", require("../../../assets/menu/GreenSash.png"))
     game.load.image("red-sash", require("../../../assets/menu/RedSash.png"))
     game.load.image("green-sash-small", require("../../../assets/menu/GreenSashSmall.png"))
@@ -52,9 +52,9 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     create() {
-        getAndBumpUserCycleSeed().then((seed) => {
+        getAndBumpUserCycleSeed().then(seed => {
             this.seed = seed
-            fetchRecordingsForSeed(seed).then((seedData) => {
+            fetchRecordingsForSeed(seed).then(seedData => {
                 this.seedData = seedData
             })
         })
@@ -99,9 +99,10 @@ export class RoyaleDeath extends Phaser.Scene {
         this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
         becomeButton(this.newGameBG, this.startNewRound, this, [this.newGameText])
 
-        const share = this.add.image(130, GameHeight - 60, "button-small-bg")
-        const shareText = this.add.bitmapText(110, GameHeight - 67, "fipps-bit", "SHARE", 8)
-        becomeButton(share, this.shareStats, this, [shareText])
+        const share = this.add.image(125, GameHeight - 51, "button-small-bg")
+        share.setScale(0.6, 1)
+        const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
+        becomeButton(share, this.shareStats, this, [shareIcon])
 
         // Decide whether to show a rating screen
         // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely

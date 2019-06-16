@@ -95,7 +95,7 @@ const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean
     addScene(game, "Battle", scene, true)
 }
 
-const testTrialDeathScreen = (game: FlappyGame) => {
+const testTrialDeathScreen = (game: FlappyGame, position: number) => {
     setTimeout(() => {
         const one: PlayerData = {
             score: 334,
@@ -150,7 +150,7 @@ const testTrialDeathScreen = (game: FlappyGame) => {
             score: 20,
             lives: 10,
             livesState: 1,
-            position: 4,
+            position,
             battle: {} as any,
             totalPlayers: 128,
             seed: this.seed,
@@ -218,6 +218,7 @@ window.onload = async () => {
     }
 
     // appCache.fakeLoadingScreen()
+    // testTrialDeathScreen(game, 1)
 
     if (!PRODUCTION) {
         console.log("Skipping app cache")
