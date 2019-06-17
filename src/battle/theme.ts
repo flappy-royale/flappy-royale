@@ -37,4 +37,16 @@ export const themeMap: { [key: number]: Theme } = {
         bottom: ["night-pipe-bottom", require("../../assets/battle/themes/night-mode/pipebottom.png")],
         bgColor: 0x3a7986
     }
+    // So people don't have to download it
+    //
+    // [GameTheme.cave]: {
+    //     ground: ["cave-ground", require("../../assets/battle/themes/cave/ground.png")],
+    //     bushes: ["cave-bushes", require("../../assets/battle/themes/cave/bushes.png")],
+    //     city: ["cave-city", require("../../assets/battle/themes/cave/city.png")],
+    //     clouds: ["cave-clouds", require("../../assets/battle/themes/cave/clouds.png")],
+    //     top: ["cave-pipe-top", require("../../assets/battle/themes/cave/pipetop.png")],
+    //     body: ["cave-pipe-body", require("../../assets/battle/themes/cave/pipelength.png")],
+    //     bottom: ["cave-pipe-bottom", require("../../assets/battle/themes/cave/pipebottom.png")],
+    //     bgColor: 0x311706
+    // }
 }

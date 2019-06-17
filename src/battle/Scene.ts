@@ -53,7 +53,9 @@ const devSettings = {
     // Show bounding boxes for physics objs
     debugPhysics: false,
     // Events + info
-    debugMessages: true
+    debugMessages: true,
+    // Lets you easily hide all UI elements
+    showUI: true
 }
 
 export class BattleScene extends Phaser.Scene {
@@ -296,7 +298,7 @@ export class BattleScene extends Phaser.Scene {
         })
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
-        if (game.shouldShowScoreLabel(this.mode)) {
+        if (devSettings.showUI && game.shouldShowScoreLabel(this.mode)) {
             this.scoreLabel = this.add.bitmapText(
                 constants.GameWidth - 30,
                 constants.GameAreaTopOffset,
@@ -309,14 +311,14 @@ export class BattleScene extends Phaser.Scene {
             this.updateScoreLabel()
         }
 
-        if (game.shouldShowLivesLabel(this.mode)) {
+        if (devSettings.showUI && game.shouldShowLivesLabel(this.mode)) {
             const livesNum = getLives(this.seed)
             const lives = livesNum == 1 ? "last try!" : `${livesNum} tries left`
             const livesText = this.add.bitmapText(4, 22 + constants.GameAreaTopOffset, "nokia16", lives, 16)
             livesText.setDepth(constants.zLevels.ui)
         }
 
-        if (game.shouldShowHighScoreLabel(this.mode)) {
+        if (devSettings.showUI && game.shouldShowHighScoreLabel(this.mode)) {
             this.highScore = getHighScore(this.seed)
             let highScoreText = `Best: ${this.highScore}`
             this.highScoreLabel = this.add.bitmapText(
@@ -332,7 +334,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // When we want to show a countdown, set it up with defaults
-        if (game.shouldShowBirdsLeftLabel(this.mode)) {
+        if (devSettings.showUI && game.shouldShowBirdsLeftLabel(this.mode)) {
             this.birdsLeft = this.add.bitmapText(4, 4 + constants.GameAreaTopOffset, "nokia16", "0", 16)
             this.birdsLeft.setDepth(constants.zLevels.ui)
             this.ghostBirdHasDied()
@@ -345,7 +347,7 @@ export class BattleScene extends Phaser.Scene {
         // Keep track of stats for using later
         this.analytics.startRecording({ totalBirds: this.ghostBirds.length, mode: this.mode })
 
-        if (this.mode !== game.GameMode.Menu) {
+        if (devSettings.showUI && this.mode !== game.GameMode.Menu) {
             const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
             becomeButton(back, this.goBackToMainMenu, this)
 
@@ -360,6 +362,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     updateScoreLabel() {
+        if (!devSettings.showUI) return
         this.scoreLabel.text = `${this.score}`
         rightAlignTextLabel(this.scoreLabel)
 
@@ -496,6 +499,7 @@ export class BattleScene extends Phaser.Scene {
             this.restartTheGame()
         } else {
             if (this.bird && this.bird.isDead) return
+            if (!this.birdsLeft) return
 
             const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
             if (birdsAlive) {

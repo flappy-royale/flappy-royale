@@ -21,7 +21,7 @@ export const createBackgroundSprites = (scene: BattleScene, theme: GameTheme) =>
 
     // 148 px wide
     scene.add.tileSprite(74, 164 + constants.GameAreaTopOffset, 164, 0, bg.clouds[0])
-    scene.add.tileSprite(74 + 148, 164 + constants.GameAreaTopOffset, 160, 0, bg.clouds[0])
+    scene.add.tileSprite(74 + 147, 164 + constants.GameAreaTopOffset, 160, 0, bg.clouds[0])
     // 114 px
     city = scene.add.tileSprite(57, 171 + constants.GameAreaTopOffset, 0, 0, bg.city[0])
     city2 = scene.add.tileSprite(57 + 114, 171 + constants.GameAreaTopOffset, 0, 0, bg.city[0])

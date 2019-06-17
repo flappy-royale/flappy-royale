@@ -20,11 +20,11 @@ export interface Attire {
 
 // The gray bird itself
 export const defaultAttire: PresentationAttire = {
-    id: "default-body",
-    description: "It flaps",
+    id: "hedgehog",
+    description: "Bird got punk'd",
     fit: "tight",
     base: true,
-    href: require("../assets/bases/BirdBody.png")
+    href: require("../assets/bases/Hedgehog.png")
 }
 
 export const builtInAttire: PresentationAttire[] = [
@@ -49,6 +49,20 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Dog1.png")
+    },
+    {
+        id: "cave",
+        description: "It flaps",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/CaveBody.png")
+    },
+    {
+        id: "default-body",
+        description: "It flaps",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/BirdBody.png")
     },
     {
         id: "bad-beard",
@@ -210,13 +224,6 @@ export const builtInAttire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Robin.png")
-    },
-    {
-        id: "hedgehog",
-        description: "Bird got punk'd",
-        fit: "tight",
-        base: true,
-        href: require("../assets/bases/Hedgehog.png")
     }
 ]
 

@@ -84,6 +84,7 @@ export class BirdSprite {
         // Setup the base body
         const base = meta.settings.aesthetics.attire.find(a => a.base)
         if (!base) throw "No base attire found"
+
         this.bodySprite = scene.add.sprite(x, y, base.id)
         this.bodySprite.setOrigin(0.13, 0.5)
 
