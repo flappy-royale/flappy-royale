@@ -144,9 +144,9 @@ export class RoyaleDeath extends Phaser.Scene {
         const firstPipeFail = this.props.score === 0
 
         const n = navigator as any
-        const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale`
-        const winMessage = `I won on Flappy Royale!`
-        const firstPipeFailMessage = "I died on the first pipe in Flappy Royale!"
+        const lossMessage = `I managed to get past ${this.props.score} pipes on Flappy Royale https://flappyroyale.io`
+        const winMessage = `I won on Flappy Royale! https://flappyroyale.io`
+        const firstPipeFailMessage = "I died on the first pipe in Flappy Royale! https://flappyroyale.io"
 
         let text = lossMessage
         if (won) text = winMessage

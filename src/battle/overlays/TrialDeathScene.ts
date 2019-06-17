@@ -309,9 +309,9 @@ export class TrialDeath extends Phaser.Scene {
         const won = this.props.position === 0
         const firstPipeFail = this.props.score === 0
 
-        const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale daily Trial!`
-        const winMessage = `I have the high score for today's Flappy Royale daily Trial! Think you can beat ${this.props.score}?`
-        const firstPipeFailMessage = "I died on the first pipe in today's Flappy Royale daily trial!"
+        const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale Daily Trial! https://flappyroyale.io`
+        const winMessage = `I have the high score for today's Flappy Royale Daily Trial! Think you can beat ${this.props.score}? https://flappyroyale.io`
+        const firstPipeFailMessage = "I died on the first pipe in today's Flappy Royale Daily Trial! https://flappyroyale.io"
 
         let text = lossMessage
         if (won) text = winMessage
