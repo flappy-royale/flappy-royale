@@ -3,7 +3,11 @@ import * as constants from "../constants"
 import * as Phaser from "phaser"
 import { createSprite } from "./utils/createSprite"
 
-export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arcade.Group => {
+import { themeMap, GameTheme } from "./theme"
+
+export const addRowOfPipes = (x: number, scene: BattleScene, theme: GameTheme): Phaser.Physics.Arcade.Group => {
+    const sprites = themeMap[theme]
+
     // Randomly pick a number between 1 and 7
     // This will be the hole positioning
     const slots = 7
@@ -37,13 +41,13 @@ export const addRowOfPipes = (x: number, scene: BattleScene): Phaser.Physics.Arc
             constants.GameAreaTopOffset
     )
 
-    const pipeTop = createSprite(x, holeTop, "pipe-top", scene)
-    const pipeBottom = createSprite(x, holeBottom, "pipe-bottom", scene)
+    const pipeTop = createSprite(x, holeTop, sprites.top[0], scene)
+    const pipeBottom = createSprite(x, holeBottom, sprites.bottom[0], scene)
 
-    const pipeTopBody = createSprite(x, holeTop - 5, "pipe-body", scene)
+    const pipeTopBody = createSprite(x, holeTop - 5, sprites.body[0], scene)
     pipeTopBody.setScale(1, 4000)
 
-    const pipeBottomBody = createSprite(x, windowHeight, "pipe-body", scene)
+    const pipeBottomBody = createSprite(x, windowHeight, sprites.body[0], scene)
     pipeBottomBody.setScale(1, windowHeight - holeBottom - 5)
 
     pipeTop.setDepth(constants.zLevels.pipe)
@@ -84,8 +88,10 @@ export const nudgePipesOntoPixelGrid = (pipes: Phaser.Physics.Arcade.Group[]) =>
     })
 }
 
-export const preloadPipeSprites = (scene: Phaser.Scene) => {
-    scene.load.image("pipe-top", require("../../assets/battle/PipeTop.png"))
-    scene.load.image("pipe-body", require("../../assets/battle/PipeLength.png"))
-    scene.load.image("pipe-bottom", require("../../assets/battle/PipeBottom.png"))
+export const preloadPipeSprites = (scene: Phaser.Scene, theme: GameTheme) => {
+    const sprites = themeMap[theme]
+
+    scene.load.image(sprites.top[0], sprites.top[1])
+    scene.load.image(sprites.body[0], sprites.body[1])
+    scene.load.image(sprites.bottom[0], sprites.bottom[1])
 }

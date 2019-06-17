@@ -18,6 +18,7 @@ import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { requestModalAd } from "../nativeComms/requestModalAd"
 import { addScene } from "./utils/addScene"
 import { analyticsEvent } from "../nativeComms/analytics"
+import { GameTheme } from "../battle/theme"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -116,7 +117,12 @@ export class TrialLobby extends Phaser.Scene {
                 goButton.onclick = () => {
                     const playGame = () => {
                         this.game.scene.remove(this)
-                        const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
+                        const scene = new BattleScene({
+                            seed: this.seed,
+                            data: seedData,
+                            gameMode: GameMode.Trial,
+                            theme: GameTheme.default
+                        })
                         addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                         scene.playBusCrash()
                     }
@@ -203,7 +209,12 @@ export class TrialLobby extends Phaser.Scene {
         goButton.onclick = () => {
             fetchRecordingsForSeed(this.seed).then(seedData => {
                 this.game.scene.remove(this)
-                const scene = new BattleScene({ seed: this.seed, data: seedData, gameMode: GameMode.Trial })
+                const scene = new BattleScene({
+                    seed: this.seed,
+                    data: seedData,
+                    gameMode: GameMode.Trial,
+                    theme: GameTheme.default
+                })
                 addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                 scene.playBusCrash()
             })

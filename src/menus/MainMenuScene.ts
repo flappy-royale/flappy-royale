@@ -13,6 +13,7 @@ import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
+import { GameTheme } from "../battle/theme"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
@@ -51,7 +52,13 @@ export class MainMenuScene extends Phaser.Scene {
             console.error("Scenes:", existingScenes)
         }
 
-        this.battleBG = new BattleScene({ key: "menu-bg", seed: "menu", data: emptySeedData, gameMode: GameMode.Menu })
+        this.battleBG = new BattleScene({
+            key: "menu-bg",
+            seed: "menu",
+            data: emptySeedData,
+            gameMode: GameMode.Menu,
+            theme: GameTheme.night
+        })
         addScene(this.game, "battlebg", this.battleBG, true)
         this.game.scene.bringToTop("MainMenu")
 

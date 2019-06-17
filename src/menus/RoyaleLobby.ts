@@ -10,6 +10,7 @@ import _ = require("lodash")
 import { random, shuffle } from "lodash"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { addScene } from "./utils/addScene"
+import { GameTheme } from "../battle/theme"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -151,7 +152,12 @@ export class RoyaleLobby extends Phaser.Scene {
                     // Load the game!
                     this.game.scene.remove(this)
 
-                    const scene = new BattleScene({ seed: this.seed, data: this.seedData, gameMode: GameMode.Royale })
+                    const scene = new BattleScene({
+                        seed: this.seed,
+                        data: this.seedData,
+                        gameMode: GameMode.Royale,
+                        theme: GameTheme.default
+                    })
                     addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                     scene.playBusCrash()
                     return

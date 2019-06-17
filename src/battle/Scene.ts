@@ -28,6 +28,7 @@ import { cloneDeep } from "lodash"
 import { rightAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
+import { GameTheme, themeMap } from "./theme"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -38,6 +39,8 @@ export interface BattleSceneSettings {
     gameMode: game.GameMode
     /** a UUID for the game scene  */
     key?: string
+    /** What is the current theme? */
+    theme: GameTheme
 }
 
 const devSettings = {
@@ -131,6 +134,9 @@ export class BattleScene extends Phaser.Scene {
     /** The thing that represents the floor (birds/the bus sit on this) */
     public floorPhysics: Phaser.Physics.Arcade.Image
 
+    /** How to render the BG */
+    private theme: GameTheme
+
     constructor(opts: BattleSceneSettings) {
         super(
             Object.assign(
@@ -146,6 +152,7 @@ export class BattleScene extends Phaser.Scene {
         this.seed = opts.seed
         this.seedData = opts.data
         this.mode = opts.gameMode
+        this.theme = opts.theme
     }
 
     // This happens when the scene is being played by the game (more
@@ -175,9 +182,9 @@ export class BattleScene extends Phaser.Scene {
         )
 
         preloadBusImages(this)
-        preloadPipeSprites(this)
+        preloadPipeSprites(this, this.theme)
         preloadBirdSprites(this)
-        preloadBackgroundSprites(this)
+        preloadBackgroundSprites(this, this.theme)
         deathPreload(this)
 
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
@@ -212,7 +219,7 @@ export class BattleScene extends Phaser.Scene {
             constants.GameHeight / 2,
             constants.GameWidth,
             constants.GameHeight,
-            0x62cbe0
+            themeMap[this.theme].bgColor
         )
 
         if (devSettings.debugPhysics) {
@@ -220,7 +227,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // setup bg + animations
-        createBackgroundSprites(this)
+        createBackgroundSprites(this, this.theme)
         setupBirdAnimations(this)
         this.setupPhysicsFloor()
 
@@ -377,7 +384,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     addPipe() {
-        this.pipes.push(addRowOfPipes(181, this))
+        this.pipes.push(addRowOfPipes(181, this, this.theme))
 
         // When we have a bird, add lines to score from
         if (game.showPlayerBird(this.mode)) {

@@ -13,6 +13,7 @@ import { TrialLobby } from "./menus/TrialLobby"
 import { addScene } from "./menus/utils/addScene"
 import { TrialDeath } from "./battle/overlays/TrialDeathScene"
 import { getUserSettings } from "./user/userManager"
+import { GameTheme } from "./battle/theme"
 
 declare var PRODUCTION: boolean
 
@@ -91,7 +92,7 @@ const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean
         data = await fetchRecordingsForSeed(seed)
     }
 
-    const scene = new BattleScene({ seed, data, gameMode: settings.mode })
+    const scene = new BattleScene({ seed, data, gameMode: settings.mode, theme: GameTheme.default })
     addScene(game, "Battle", scene, true)
 }
 

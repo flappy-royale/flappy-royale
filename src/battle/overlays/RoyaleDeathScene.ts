@@ -11,6 +11,7 @@ import { GameMode } from "../utils/gameMode"
 import _ = require("lodash")
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { shareNatively } from "../../nativeComms/share"
+import { GameTheme } from "../theme"
 
 export interface RoyaleDeathProps {
     score: number
@@ -168,7 +169,12 @@ export class RoyaleDeath extends Phaser.Scene {
         this.game.scene.remove(this)
         this.game.scene.remove(this.props.battle)
 
-        const scene = new BattleScene({ seed: this.seed, data: this.seedData, gameMode: GameMode.Royale })
+        const scene = new BattleScene({
+            seed: this.seed,
+            data: this.seedData,
+            gameMode: GameMode.Royale,
+            theme: GameTheme.default
+        })
         addScene(this.game, "BattleScene" + this.seed, scene, true, {})
         scene.playBusCrash()
     }
