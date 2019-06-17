@@ -72,4 +72,7 @@ const addSomeButtsToThoseSeats = () => {
 
 document.onreadystatechange = e => {
     addSomeButtsToThoseSeats()
+    setInterval(() => {
+        addSomeButtsToThoseSeats()
+    }, 10000)
 }
