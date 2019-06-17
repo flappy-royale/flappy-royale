@@ -15,7 +15,8 @@ class ShareManager : NSObject, WebViewInteropProvider {
         if message.name == "shareScreenshot" {
             let config = WKSnapshotConfiguration()
             message.webView?.takeSnapshot(with: config) { (image, err) in
-                
+                message.webView?.evaluateJavaScript("window.dispatchEvent(new Event('screenshotComplete'));", completionHandler: nil)
+
                 let shareItems =  image != nil ? [image!, text] : [text]
                 let activityViewController = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
                 activityViewController.excludedActivityTypes = [.addToReadingList]

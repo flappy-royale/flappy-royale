@@ -57,5 +57,15 @@ export const setupBackgroundBlobImages = (scene: Scene, settings: { min: number;
     }
 }
 
+export const setupLogoCornerImages = (scene: Scene, offset: number = 0): Phaser.GameObjects.Image[] => {
+    let results = []
+    results.push(scene.add.image(shuffle(25), shuffle(offset - 34), "red-top-left"))
+    results.push(scene.add.image(shuffle(134), shuffle(offset - 26), "red-top-right"))
+    results.push(scene.add.image(shuffle(25), shuffle(offset + 30), "red-bottom-left"))
+    results.push(scene.add.image(shuffle(134), shuffle(offset + 30), "red-bottom-right"))
+
+    return results
+}
+
 const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 const shuffle = (num: number) => rand(num - 3, num + 3)

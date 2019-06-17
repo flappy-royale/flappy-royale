@@ -12,6 +12,7 @@ import _ = require("lodash")
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { shareNatively } from "../../nativeComms/share"
 import { GameTheme } from "../theme"
+import { setupLogoCornerImages } from "../../menus/utils/backgroundColors";
 
 export interface RoyaleDeathProps {
     score: number
@@ -45,6 +46,9 @@ export class RoyaleDeath extends Phaser.Scene {
     newGameText: Phaser.GameObjects.BitmapText
     newGameBG: Phaser.GameObjects.Image
 
+    footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
+    shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
+
     constructor(id: string, public props: RoyaleDeathProps) {
         super(id)
     }
@@ -62,7 +66,8 @@ export class RoyaleDeath extends Phaser.Scene {
         })
 
         // Fill the BG
-        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
+        const bg = this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
+        this.footerObjects.push(bg)
 
         const won = this.props.position === 0
         const firstPipeFail = this.props.score === 0
@@ -93,18 +98,23 @@ export class RoyaleDeath extends Phaser.Scene {
             this.add.bitmapText(10, 148, "fipps-bit", copy, 8)
         }
 
-        this.add.image(80, GameHeight - 8, "footer-bg")
+        this.footerObjects.push(this.add.image(80, GameHeight - 8, "footer-bg"))
         const back = this.add.image(16, GameHeight - 20, "back")
         becomeButton(back, this.backToMainMenu, this)
+        this.footerObjects.push(back)
 
         this.newGameBG = this.add.image(90, GameHeight - 20, "button-bg")
         this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
         becomeButton(this.newGameBG, this.startNewRound, this, [this.newGameText])
+        this.footerObjects.push(this.newGameBG)
+        this.footerObjects.push(this.newGameText)
 
         const share = this.add.image(125, GameHeight - 51, "button-small-bg")
         share.setScale(0.6, 1)
         const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
         becomeButton(share, this.shareStats, this, [shareIcon])
+        this.footerObjects.push(share)
+        this.footerObjects.push(shareIcon)
 
         // Decide whether to show a rating screen
         // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
@@ -152,7 +162,22 @@ export class RoyaleDeath extends Phaser.Scene {
         if (won) text = winMessage
         if (firstPipeFail) text = firstPipeFailMessage
 
-        shareNatively(text)
+        shareNatively(text, this)
+    }
+
+    public showScreenshotUI() {
+        this.footerObjects.forEach(o => o.setVisible(false))
+
+        const offset = GameHeight - 70
+        const logo = this.add.image(84, offset, "logo")
+        const images = setupLogoCornerImages(this, offset)
+
+        this.shareLogoObjects = [logo, ...images]
+    }
+
+    public removeScreenshotUI() {
+        this.footerObjects.forEach(o => o.setVisible(true))
+        this.shareLogoObjects.forEach(o => o.destroy())
     }
 
     private backToMainMenu() {

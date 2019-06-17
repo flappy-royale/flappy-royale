@@ -1,4 +1,4 @@
-import { GameWidth, GameHeight, zLevels, GameAreaTopOffset } from "../../constants"
+import { GameWidth, GameHeight, zLevels, GameAreaTopOffset, NotchOffset } from "../../constants"
 import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { BattleScene, getNumberWithOrdinal } from "../Scene"
@@ -20,6 +20,7 @@ import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { BirdSprite } from "../BirdSprite"
 import { PlayerData } from "../../firebase"
 import { shareNatively } from "../../nativeComms/share";
+import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors";
 
 export interface TrialDeathProps {
     score: number
@@ -63,9 +64,12 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     againButton: Phaser.GameObjects.BitmapText
+    footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
+    shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
 
     preload() {
         deathPreload(this)
+        preloadBackgroundBlobImages(this)
     }
 
     create() {
@@ -79,7 +83,8 @@ export class TrialDeath extends Phaser.Scene {
         const sortedReplays = this.props.replays.sort((l, r) => r.score - l.score)
 
         // Fill the BG
-        this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
+        const bg = this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
+        this.footerObjects.push(bg)
 
         const won = this.props.position === 0
         const firstPipeFail = this.props.score === 0
@@ -108,12 +113,16 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     private addFooter() {
-        this.add.image(80, GameHeight - 8, "footer-bg")
+        const bg = this.add.image(80, GameHeight - 8, "footer-bg")
+        this.footerObjects.push(bg)
 
         const back = this.add.image(16, GameHeight - 20, "back")
         becomeButton(back, this.backToMainMenu, this)
+        this.footerObjects.push(back)
 
         const newGame = this.add.image(90, GameHeight - 20, "button-bg")
+        this.footerObjects.push(newGame)
+
         let againText = "AGAIN"
 
         const outOfLives = this.props.lives <= 0
@@ -122,14 +131,17 @@ export class TrialDeath extends Phaser.Scene {
         }
 
         const newGameText = this.add.bitmapText(GameWidth / 2, GameHeight - 27, "fipps-bit", againText, 8)
+        this.footerObjects.push(newGameText)
         centerAlignTextLabel(newGameText, -10)
         becomeButton(newGame, this.again, this, [newGameText])
         this.againButton = newGameText
 
         const share = this.add.image(125, GameHeight - 51, "button-small-bg")
         share.setScale(0.6, 1)
+        this.footerObjects.push(share)
         const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
         becomeButton(share, this.shareStats, this, [shareIcon])
+        this.footerObjects.push(shareIcon)
     }
 
     private cameInFirst(player: PlayerData, sortedReplays: PlayerData[]) {
@@ -216,12 +228,12 @@ export class TrialDeath extends Phaser.Scene {
 
         /// BOTTOM BIT
 
-        this.add.image(-16, GameHeight - 70, "red-sash")
-        this.add.bitmapText(8, GameHeight - 86, "fipps-bit", "FAIL", 16)
+        this.footerObjects.push(this.add.image(-16, GameHeight - 70, "red-sash"))
+        this.footerObjects.push(this.add.bitmapText(8, GameHeight - 86, "fipps-bit", "FAIL", 16))
 
-        this.add.image(20, GameHeight - 48, "red-sash")
+        this.footerObjects.push(this.add.image(20, GameHeight - 48, "red-sash"))
         const lives = getLives(this.props.seed)
-        this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8)
+        this.footerObjects.push(this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8))
     }
 
     private didntComeTopThree(player: PlayerData, sortedReplays: PlayerData[]) {
@@ -270,12 +282,12 @@ export class TrialDeath extends Phaser.Scene {
         }
 
         // END
-        this.add.image(-16, GameHeight - 70, "red-sash")
-        this.add.bitmapText(8, GameHeight - 86, "fipps-bit", "FAIL", 16)
+        this.footerObjects.push(this.add.image(-16, GameHeight - 70, "red-sash"))
+        this.footerObjects.push(this.add.bitmapText(8, GameHeight - 86, "fipps-bit", "FAIL", 16))
 
-        this.add.image(20, GameHeight - 48, "red-sash")
+        this.footerObjects.push(this.add.image(20, GameHeight - 48, "red-sash"))
         const lives = getLives(this.props.seed)
-        this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8)
+        this.footerObjects.push(this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8))
     }
 
     private drawPlayerRow(
@@ -317,7 +329,22 @@ export class TrialDeath extends Phaser.Scene {
         if (won) text = winMessage
         if (firstPipeFail) text = firstPipeFailMessage
 
-        shareNatively(text)
+        shareNatively(text, this)
+    }
+
+    public showScreenshotUI() {
+        this.footerObjects.forEach(o => o.setVisible(false))
+
+        const offset = GameHeight - 70
+        const logo = this.add.image(84, offset, "logo")
+        const images = setupLogoCornerImages(this, offset)
+
+        this.shareLogoObjects = [logo, ...images]
+    }
+
+    public removeScreenshotUI() {
+        this.footerObjects.forEach(o => o.setVisible(true))
+        this.shareLogoObjects.forEach(o => o.destroy())
     }
 
     private backToMainMenu() {
