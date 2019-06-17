@@ -4,7 +4,7 @@ import "./index.html"
 
 import { allAttire, PresentationAttire } from "../src/attire"
 
-const shuffleAttires = () => {
+const addSomeButtsToThoseSeats = () => {
     const bases = allAttire.filter(a => a.base)
     const hatsIsh = allAttire.filter(a => !a.base)
 
@@ -17,9 +17,9 @@ const shuffleAttires = () => {
     }
 
     const createBirdHTML = (attire: PresentationAttire[]) => {
-        const root = document.createElement("li")
+        const root = document.createElement("div")
         const angle = Math.floor(Math.random() * 12) - 6
-        root.style.transform = `rotate(${angle}deg) scale(4)`
+        root.style.transform = `rotate(${angle}deg) scale(3.6) `
 
         const div = document.createElement("div")
         const userBase = attire.find(a => a.base)
@@ -47,19 +47,29 @@ const shuffleAttires = () => {
         return root
     }
 
-    const root = document.getElementById("stylish-flappers")
-    while (root.hasChildNodes()) {
-        root.removeChild(root.lastChild)
-    }
+    const seats = document.getElementsByClassName("seats")
+    for (const seatRow of seats) {
+        while (seatRow.hasChildNodes()) {
+            seatRow.removeChild(seatRow.lastChild)
+        }
 
-    const indexes = [...Array(8).keys()]
-    indexes.forEach(i => {
-        const attire = getRandomBird()
-        const bird = createBirdHTML(attire)
-        root.append(bird)
-    })
+        const indexes = [...Array(4).keys()]
+        indexes.forEach(i => {
+            const li = document.createElement("li")
+            const attire = getRandomBird()
+            const bird = createBirdHTML(attire)
+            li.append(bird)
+
+            const seatPic = document.createElement("img")
+            seatPic.src = require("./assets/chair.png")
+            seatPic.style.left = "10px"
+
+            li.append(seatPic)
+            seatRow.append(li)
+        })
+    }
 }
 
 document.onreadystatechange = e => {
-    shuffleAttires()
+    addSomeButtsToThoseSeats()
 }

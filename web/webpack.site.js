@@ -27,8 +27,13 @@ module.exports = {
             // Ensures that hashing works, but means you have to require
             // images etc for their path, and not hard-code them.
             {
-                test: /\.(wav|ogg|png|svg|jpg|gif|html|xml|otf|fnt)$/,
+                test: /\.(wav|ogg|png|svg|jpg|gif|xml|otf|fnt|mp4)$/,
                 use: ["file-loader"]
+            },
+            {
+                // https://webpack.js.org/loaders/html-loader/#export-into-html-files
+                test: /\.html$/,
+                use: ["file-loader?name=[name].[ext]", "extract-loader", "html-loader"]
             },
             // CSS hookup
             {
@@ -56,7 +61,7 @@ module.exports = {
         // Get notifications about failed builds as messages in the top left
         new WebpackNotifierPlugin(),
 
-        new CopyPlugin([{ from: path.resolve(__dirname, "index.html") }, { from: path.resolve(__dirname, "assets") }]),
+        new CopyPlugin([{ from: path.resolve(__dirname, "assets") }]),
 
         // This must come after HTML, generates the CSS
         new MiniCssExtractPlugin({ filename: "site.css" })
