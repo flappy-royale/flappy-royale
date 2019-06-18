@@ -18,7 +18,8 @@ module.exports = merge(common, {
 
         // It seems odd we're stringifying instead of just inlining `false`, but this is actually necessary!
         new webpack.DefinePlugin({
-            PRODUCTION: JSON.stringify(false)
+            PRODUCTION: JSON.stringify(false),
+            DEMO: JSON.stringify(false)
         })
     ]
 })

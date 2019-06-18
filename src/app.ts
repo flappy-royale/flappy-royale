@@ -22,9 +22,8 @@ declare var DEMO: boolean
 // and adds it to the HTML
 require("../style.css")
 
-if (PRODUCTION) {
-    appCache.configure()
-}
+if (PRODUCTION) appCache.configure()
+if (DEMO) document.body.className = "demo"
 
 enum StartupScreen {
     MainMenu,
@@ -44,7 +43,11 @@ function newGame(): FlappyGame {
         backgroundColor: "#62CBE0",
         seed: ["consistent", "physics", "thanks"],
         scale: {
-            mode: screen.width < screen.height ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT : Phaser.Scale.FIT,
+            mode: DEMO
+                ? Phaser.Scale.NONE
+                : screen.width < screen.height
+                ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT
+                : Phaser.Scale.FIT,
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,

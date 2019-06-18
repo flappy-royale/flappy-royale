@@ -13,6 +13,11 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+body.demo {
+    width: 480px;
+    margin: 60px auto;
+}
+
 @font-face {
     font-family: "Fipps";
     src: url("./assets/fonts/Fipps-Regular.otf") format("opentype");

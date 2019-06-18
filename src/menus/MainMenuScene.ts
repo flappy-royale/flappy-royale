@@ -15,6 +15,8 @@ import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
 
+declare const DEMO: boolean
+
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game) => {
     const mainMenu = new MainMenuScene()
@@ -91,10 +93,12 @@ export class MainMenuScene extends Phaser.Scene {
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
-        const trial = this.add.image(74, 152 + c.NotchOffset, "trial-button")
-        becomeButton(trial, this.loadTrial, this)
+        if (!DEMO) {
+            const trial = this.add.image(74, 152 + c.NotchOffset, "trial-button")
+            becomeButton(trial, this.loadTrial, this)
+        }
 
-        const settingsButton = this.add.image(76, 200 + c.NotchOffset, "settings-button")
+        const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
     }
 

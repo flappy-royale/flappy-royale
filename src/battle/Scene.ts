@@ -169,6 +169,7 @@ export class BattleScene extends Phaser.Scene {
 
         const flap = this.userFlap.bind(this)
         window.addEventListener("touchstart", flap)
+        window.addEventListener("mousedown", flap)
 
         this.events.on("destroy", () => {
             window.removeEventListener("touchstart", flap)
