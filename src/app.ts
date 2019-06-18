@@ -16,6 +16,7 @@ import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
 
 declare var PRODUCTION: boolean
+declare var DEMO: boolean
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
@@ -47,7 +48,7 @@ function newGame(): FlappyGame {
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,
-            zoom: 4
+            zoom: DEMO ? 3 : 4
         },
         dom: {
             createContainer: true

@@ -94,7 +94,7 @@ nav a.disabled {
 }
 
 .container {
-    max-width: 600px;
+    width: 600px;
     margin: 0 auto;
     position: relative;
 }
@@ -105,7 +105,7 @@ nav a.disabled {
     /* 160 × 89 */
     background-size: 480px 267px;
     padding-top: 60px;
-    padding-bottom: 14px;
+    padding-bottom: 21px;
 }
 
 #ground .container {
@@ -143,7 +143,7 @@ h5 {
     /* 160 × 47 */
     background-size: 480px 141px;
 
-    padding: 200px;
+    padding: 200px 0;
     color: white;
 }
 
