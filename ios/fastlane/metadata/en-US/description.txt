@@ -1,7 +1,0 @@
-You find a strange game on an old disused phone. It's some sort of adventure game, but it seems to be loading some sort of save file that's already mid-game. You have no idea what your goal is, and nobody seems to be speaking a language you understand. What are you supposed to do?
-
-ｚｅｐｈｙｒ is a game about the joy of exploring and getting lost in incomprehensible systems. The game's goal, and the written language it uses, are procedurally generated for each playthrough.
-
-It was made in (more or less) 52 hours on Train Jam 2019 (http://trainjam.com). All game art is processed FMV (full-motion video) captured on the train. 
-
-Game by @lazerwalker, music, by @MaizeWallin, sound design by @AliCedroni, 

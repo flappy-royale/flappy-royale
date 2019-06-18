@@ -16,7 +16,7 @@
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
 		C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */; };
-		C637388422A874B700E5A33D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C637388322A874B700E5A33D /* GoogleService-Info.plist */; };
+		C64C01C922B9068D0037150D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C64C01C822B9068D0037150D /* GoogleService-Info.plist */; };
 		C653149121EE7BB80068609E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149021EE7BB80068609E /* AppDelegate.swift */; };
 		C653149321EE7BB80068609E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149221EE7BB80068609E /* ViewController.swift */; };
 		C653149621EE7BB80068609E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C653149421EE7BB80068609E /* Main.storyboard */; };
@@ -35,7 +35,7 @@
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
 		C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewer.swift; sourceTree = "<group>"; };
-		C637388322A874B700E5A33D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../assets/config/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C64C01C822B9068D0037150D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../assets/config/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C653148D21EE7BB80068609E /* FlappyRoyale.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyRoyale.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C653149021EE7BB80068609E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C653149221EE7BB80068609E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -111,8 +111,8 @@
 		C653148F21EE7BB80068609E /* FlappyRoyale */ = {
 			isa = PBXGroup;
 			children = (
+				C64C01C822B9068D0037150D /* GoogleService-Info.plist */,
 				C6309E4522AD1FE300D0E0E1 /* JS Extensions */,
-				C637388322A874B700E5A33D /* GoogleService-Info.plist */,
 				C653149021EE7BB80068609E /* AppDelegate.swift */,
 				C653149221EE7BB80068609E /* ViewController.swift */,
 				C653149421EE7BB80068609E /* Main.storyboard */,
@@ -187,8 +187,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C653149B21EE7BBA0068609E /* LaunchScreen.storyboard in Resources */,
-				C637388422A874B700E5A33D /* GoogleService-Info.plist in Resources */,
 				6067813322AC81F90036A5FC /* Fipps-Regular.otf in Resources */,
+				C64C01C922B9068D0037150D /* GoogleService-Info.plist in Resources */,
 				C653149821EE7BBA0068609E /* Assets.xcassets in Resources */,
 				C653149621EE7BB80068609E /* Main.storyboard in Resources */,
 			);
@@ -400,17 +400,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = DL8L9H58NG;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 48WB56AE4K;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.Flappy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyRoyale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.lazerwalker.FlappyRoyale";
 				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -424,18 +424,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = DL8L9H58NG;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 48WB56AE4K;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.Flappy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyRoyale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.lazerwalker.FlappyRoyale";
 				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;

@@ -16,9 +16,25 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new release build to the App Store"
-  lane :release do
-    build_app(scheme: "TrainJam")
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    ensure_git_status_clean
+
+    increment_build_number(xcodeproj: "FlappyRoyale.xcodeproj")
+    commit_version_bump(xcodeproj: "FlappyRoyale.xcodeproj")
+
+    build_app(workspace: "FlappyRoyale.xcworkspace", scheme: "FlappyRoyale")
+    upload_to_testflight
+  end
+
+  desc "Submit a new build and metadata to the App Store"
+  lane :appstore do
+    ensure_git_status_clean
+
+    increment_build_number(xcodeproj: "FlappyRoyale.xcworkspace")
+    commit_version_bump(xcodeproj: "FlappyRoyale.xcworkspace")
+
+    build_app(workspace: "FlappyRoyale.xcworkspace", scheme: "FlappyRoyale")
     upload_to_app_store
   end
 end
