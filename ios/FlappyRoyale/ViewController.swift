@@ -96,7 +96,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
     private func loadGameURL() {
         guard let webView = self.webView else { return }
-        guard let url = URL(string: "https://flappyroyale.com/prod") else { return }
+        guard let url = URL(string: "https://flappyroyale.io/prod") else { return }
 
 //        guard let url = URL(string: "http://localhost:8085/") else { return }
         webView.load(URLRequest(url: url))
