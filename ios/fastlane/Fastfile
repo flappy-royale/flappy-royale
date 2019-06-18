@@ -16,9 +16,9 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new release build to the App Store"
-  lane :release do
-    build_app(scheme: "TrainJam")
-    upload_to_app_store
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    build_app(workspace: "FlappyRoyale.xcworkspace", scheme: "FlappyRoyale")
+    upload_to_testflight
   end
 end

@@ -1,4 +1,4 @@
-app_identifier("lazerwalker.Train") # The bundle identifier of your app
+app_identifier("com.lazerwalker.FlappyRoyale") # The bundle identifier of your app
 apple_id("michael@lazerwalker.com") # Your Apple email address
 
 itc_team_id("370051") # App Store Connect Team ID
