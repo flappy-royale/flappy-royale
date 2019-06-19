@@ -21,6 +21,10 @@ export interface RoyaleLobbyProps {
 export class RoyaleLobby extends Phaser.Scene {
     private seed: string
 
+    private countdownTime: number = 0
+
+    snapshotMode: boolean = false
+
     // If true, we can safely start the game
     private seedData?: SeedData
 
@@ -52,67 +56,9 @@ export class RoyaleLobby extends Phaser.Scene {
         resizeToFullScreen(el)
 
         // Number of seconds until the game starts
-        let countdownTime = random(3, 5) + 1
+        this.countdownTime = random(3, 5) + 1
 
-        const createUserImage = (user: UserSettings) => {
-            const root = document.createElement("div")
-
-            const userBase = user.aesthetics.attire.find(a => a.base)
-            const img = document.createElement("img")
-            img.src = userBase.href
-            img.className = "you-attire"
-            root.appendChild(img)
-
-            user.aesthetics.attire
-                .filter(a => !a.base)
-                .forEach(a => {
-                    const attireImg = document.createElement("img")
-                    attireImg.src = a.href
-                    attireImg.className = "you-attire"
-                    root.appendChild(attireImg)
-                })
-
-            const wings = document.createElement("img")
-            wings.src = require("../../assets/battle/flap-gif.gif")
-            wings.className = "you-attire"
-            root.appendChild(wings)
-
-            return root
-        }
-
-        fetchRecordingsForSeed(this.seed).then(seedData => {
-            this.seedData = seedData
-
-            let duration = _.random(countdownTime - 2, countdownTime) * 1000
-
-            const birdCount = document.getElementById("you-vs")
-
-            this.tweens.addCounter({
-                from: 0,
-                to: seedData.replays.length,
-                ease: "Cubic",
-                duration: duration,
-                repeat: 0,
-                onUpdate: (v: Phaser.Tweens.Tween) =>
-                    (birdCount.innerHTML = `You vs <span>${pad(Math.round(v.getValue()), 2)}</span> birds`)
-            })
-
-            const birds = document.getElementById("birds")
-            shuffle(seedData.replays).forEach(score => {
-                preloadBirdAttire(this, score.user)
-
-                const birdLi = document.createElement("li")
-                const previewDiv = createUserImage(score.user)
-                const theirName = document.createElement("p")
-                theirName.innerText = score.user.name
-
-                birdLi.appendChild(previewDiv)
-                birdLi.appendChild(theirName)
-                birds.appendChild(birdLi)
-            })
-
-            this.load.start()
-        })
+        fetchRecordingsForSeed(this.seed).then(this.processSeedData)
 
         const header = document.getElementById("header") as HTMLImageElement
         header.src = require("../../assets/menu/PurpleishSash.png")
@@ -145,9 +91,9 @@ export class RoyaleLobby extends Phaser.Scene {
 
         let timeout: number | undefined
         const updateTimer = () => {
-            countdownTime -= 1
+            this.countdownTime -= 1
 
-            if (countdownTime <= 0) {
+            if (this.countdownTime <= 0) {
                 if (this.seedData) {
                     // Load the game!
                     this.game.scene.remove(this)
@@ -169,15 +115,84 @@ export class RoyaleLobby extends Phaser.Scene {
                     }
                 }
             } else {
-                countdownTimerText.innerText = `${countdownTime}`
+                countdownTimerText.innerText = `${this.countdownTime}`
             }
-            timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
+
+            if (!this.snapshotMode) {
+                timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
+            }
         }
         updateTimer()
 
         this.events.on("destroy", () => {
             clearTimeout(timeout)
         })
+    }
+
+    processSeedData = (seedData: SeedData) => {
+        this.seedData = seedData
+
+        var numberOfEnemies = seedData.replays.length
+        var duration = _.random(this.countdownTime - 2, this.countdownTime) * 1000
+
+        if (this.snapshotMode) {
+            duration = 0
+            numberOfEnemies = 99
+        }
+
+        const birdCount = document.getElementById("you-vs")
+
+        this.tweens.addCounter({
+            from: 0,
+            to: numberOfEnemies,
+            ease: "Cubic",
+            duration: duration,
+            repeat: 0,
+            onUpdate: (v: Phaser.Tweens.Tween) =>
+                (birdCount.innerHTML = `You vs <span>${pad(Math.round(v.getValue()), 2)}</span> birds`)
+        })
+
+        const birds = document.getElementById("birds")
+        shuffle(seedData.replays).forEach(score => {
+            preloadBirdAttire(this, score.user)
+
+            const birdLi = document.createElement("li")
+            const previewDiv = this.createUserImage(score.user)
+            const theirName = document.createElement("p")
+            theirName.innerText = score.user.name
+
+            birdLi.appendChild(previewDiv)
+            birdLi.appendChild(theirName)
+            birds.appendChild(birdLi)
+        })
+
+        this.load.start()
+    }
+
+    createUserImage(user: UserSettings) {
+        const root = document.createElement("div")
+
+        const userBase = user.aesthetics.attire.find(a => a.base)
+        const img = document.createElement("img")
+        img.src = userBase.href
+        img.className = "you-attire"
+        root.appendChild(img)
+
+        user.aesthetics.attire
+            .filter(a => !a.base)
+            .forEach(a => {
+                const attireImg = document.createElement("img")
+                attireImg.src = a.href
+                attireImg.className = "you-attire"
+                root.appendChild(attireImg)
+            })
+
+        const wings = document.createElement("img")
+        wings.src = require("../../assets/battle/flap-gif.gif")
+        wings.className = "you-attire"
+        root.appendChild(wings)
+
+        return root
     }
 }
 

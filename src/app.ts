@@ -14,6 +14,7 @@ import { addScene } from "./menus/utils/addScene"
 import { TrialDeath } from "./battle/overlays/TrialDeathScene"
 import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
+import { wait } from "./battle/utils/wait";
 
 declare var PRODUCTION: boolean
 declare var DEMO: boolean
@@ -21,6 +22,10 @@ declare var DEMO: boolean
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
 require("../style.css")
+console.log("uh hi")
+if (!PRODUCTION) {
+    require('./setUpAppStoreScreenshots.ts')
+}
 
 if (PRODUCTION) appCache.configure()
 if (DEMO) document.body.className = "demo"
@@ -46,8 +51,8 @@ function newGame(): FlappyGame {
             mode: DEMO
                 ? Phaser.Scale.NONE
                 : screen.width < screen.height
-                ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT
-                : Phaser.Scale.FIT,
+                    ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT
+                    : Phaser.Scale.FIT,
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,
@@ -88,7 +93,7 @@ export class FlappyGame extends Phaser.Game {
 
 // The normal game flow
 
-const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean; mode: GameMode }) => {
+export const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean; mode: GameMode }) => {
     let seed = "0-royale-1"
     let data = emptySeedData
 
@@ -98,6 +103,7 @@ const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean
 
     const scene = new BattleScene({ seed, data, gameMode: settings.mode, theme: GameTheme.default })
     addScene(game, "Battle", scene, true)
+    return scene
 }
 
 const testTrialDeathScreen = (game: FlappyGame, position: number) => {
@@ -166,15 +172,9 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
     }, 300)
 }
 
-const loadUpIntoSettings = (game: FlappyGame) => {
+export const loadUpIntoSettings = (game: FlappyGame) => {
     const settings = new UserSettings()
     addScene(game, UserSettingsKey, settings, true)
-}
-
-const wait = async (delay: number) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(true), delay)
-    })
 }
 
 window.onload = async () => {

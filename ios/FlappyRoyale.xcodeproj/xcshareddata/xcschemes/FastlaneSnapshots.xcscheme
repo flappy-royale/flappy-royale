@@ -9,14 +9,14 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C653148C21EE7BB80068609E"
-               BuildableName = "FlappyRoyale.app"
-               BlueprintName = "FlappyRoyale"
+               BlueprintIdentifier = "C6557C4022BA3EF300F78E06"
+               BuildableName = "FlappyRoyaleUITests.xctest"
+               BlueprintName = "FlappyRoyaleUITests"
                ReferencedContainer = "container:FlappyRoyale.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -39,15 +39,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C653148C21EE7BB80068609E"
-            BuildableName = "FlappyRoyale.app"
-            BlueprintName = "FlappyRoyale"
-            ReferencedContainer = "container:FlappyRoyale.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -61,16 +52,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C653148C21EE7BB80068609E"
-            BuildableName = "FlappyRoyale.app"
-            BlueprintName = "FlappyRoyale"
+            BlueprintIdentifier = "C6557C4022BA3EF300F78E06"
+            BuildableName = "FlappyRoyaleUITests.xctest"
+            BlueprintName = "FlappyRoyaleUITests"
             ReferencedContainer = "container:FlappyRoyale.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -80,16 +70,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C653148C21EE7BB80068609E"
-            BuildableName = "FlappyRoyale.app"
-            BlueprintName = "FlappyRoyale"
+            BlueprintIdentifier = "C6557C4022BA3EF300F78E06"
+            BuildableName = "FlappyRoyaleUITests.xctest"
+            BlueprintName = "FlappyRoyaleUITests"
             ReferencedContainer = "container:FlappyRoyale.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

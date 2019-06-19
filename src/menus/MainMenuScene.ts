@@ -14,6 +14,7 @@ import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
+import { rightAlignTextLabel } from "../battle/utils/alignTextLabel";
 
 declare const DEMO: boolean
 
@@ -26,6 +27,9 @@ export const launchMainMenu = (game: Phaser.Game) => {
 export class MainMenuScene extends Phaser.Scene {
     seeds: SeedsResponse
     battleBG: BattleScene
+
+    playerNameText: Phaser.GameObjects.BitmapText
+    winsLabel: Phaser.GameObjects.BitmapText
 
     constructor() {
         super("MainMenu")
@@ -74,10 +78,8 @@ export class MainMenuScene extends Phaser.Scene {
 
         const stats = getUserStatistics()
 
-        const wins = this.add.bitmapText(c.GameWidth, c.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
-
-        const rightAligned = c.GameWidth - wins.getTextBounds(true).local.width
-        wins.setX(rightAligned - 1)
+        this.winsLabel = this.add.bitmapText(c.GameWidth, c.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
+        rightAlignTextLabel(this.winsLabel, 1)
 
         // NOTE: ASYNC!
         getSeedsFromAPI(c.APIVersion).then(seeds => {
@@ -88,7 +90,7 @@ export class MainMenuScene extends Phaser.Scene {
         const player = new BirdSprite(this, 6, c.GameHeight - 12, { isPlayer: false, settings: settings })
         player.actAsImage()
         player.makeClickable(this.loadSettings, this)
-        this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
+        this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
 
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
@@ -100,6 +102,9 @@ export class MainMenuScene extends Phaser.Scene {
 
         const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
+
+        // This is just used for taking snapshots
+        window.dispatchEvent(new Event("gameloaded"))
     }
 
     private loadSettings() {
@@ -123,7 +128,7 @@ export class MainMenuScene extends Phaser.Scene {
         addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
     }
 
-    private removeMenu() {
+    removeMenu() {
         // We get a JS error if we just remove the scene before the new scene has started (finished?) loading
         // Phaser's docs claim scene.remove() will process the operation, but that seems to not be the case
         // Manually pushing the remove action til the next update loop seems to fix it /shrug

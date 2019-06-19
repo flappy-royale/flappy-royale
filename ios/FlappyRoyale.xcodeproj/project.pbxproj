@@ -22,7 +22,19 @@
 		C653149621EE7BB80068609E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C653149421EE7BB80068609E /* Main.storyboard */; };
 		C653149821EE7BBA0068609E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C653149721EE7BBA0068609E /* Assets.xcassets */; };
 		C653149B21EE7BBA0068609E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C653149921EE7BBA0068609E /* LaunchScreen.storyboard */; };
+		C6557C4422BA3EF300F78E06 /* FlappyRoyaleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6557C4322BA3EF300F78E06 /* FlappyRoyaleUITests.swift */; };
+		C6557C4C22BA3F5900F78E06 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6557C4B22BA3F5900F78E06 /* SnapshotHelper.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C6557C4622BA3EF300F78E06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C653148521EE7BB80068609E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C653148C21EE7BB80068609E;
+			remoteInfo = FlappyRoyale;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		605A160B22B5AEDB008A7AFD /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
@@ -43,6 +55,10 @@
 		C653149721EE7BBA0068609E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C653149A21EE7BBA0068609E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C653149C21EE7BBA0068609E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C6557C4122BA3EF300F78E06 /* FlappyRoyaleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlappyRoyaleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6557C4322BA3EF300F78E06 /* FlappyRoyaleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyRoyaleUITests.swift; sourceTree = "<group>"; };
+		C6557C4522BA3EF300F78E06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C6557C4B22BA3F5900F78E06 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		E934DCF54BFC91DD5DFDCCA0 /* Pods-FlappyRoyale.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.release.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.release.xcconfig"; sourceTree = "<group>"; };
 		F4D29A2DC207E9AB7FEB15EF /* Pods_FlappyRoyale.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlappyRoyale.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -53,6 +69,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				127243B3B042825660633491 /* Pods_FlappyRoyale.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C6557C3E22BA3EF300F78E06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				C653148F21EE7BB80068609E /* FlappyRoyale */,
+				C6557C4222BA3EF300F78E06 /* FlappyRoyaleUITests */,
 				C653148E21EE7BB80068609E /* Products */,
 				B8CE5A8B137FCA8B62F8579A /* Pods */,
 				116FE70DA20A244CB108EBBA /* Frameworks */,
@@ -104,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				C653148D21EE7BB80068609E /* FlappyRoyale.app */,
+				C6557C4122BA3EF300F78E06 /* FlappyRoyaleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,6 +148,16 @@
 				6067812722AB0A830036A5FC /* AdConstants.swift */,
 			);
 			path = FlappyRoyale;
+			sourceTree = "<group>";
+		};
+		C6557C4222BA3EF300F78E06 /* FlappyRoyaleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				C6557C4B22BA3F5900F78E06 /* SnapshotHelper.swift */,
+				C6557C4322BA3EF300F78E06 /* FlappyRoyaleUITests.swift */,
+				C6557C4522BA3EF300F78E06 /* Info.plist */,
+			);
+			path = FlappyRoyaleUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -147,19 +182,41 @@
 			productReference = C653148D21EE7BB80068609E /* FlappyRoyale.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C6557C4022BA3EF300F78E06 /* FlappyRoyaleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C6557C4A22BA3EF300F78E06 /* Build configuration list for PBXNativeTarget "FlappyRoyaleUITests" */;
+			buildPhases = (
+				C6557C3D22BA3EF300F78E06 /* Sources */,
+				C6557C3E22BA3EF300F78E06 /* Frameworks */,
+				C6557C3F22BA3EF300F78E06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C6557C4722BA3EF300F78E06 /* PBXTargetDependency */,
+			);
+			name = FlappyRoyaleUITests;
+			productName = FlappyRoyaleUITests;
+			productReference = C6557C4122BA3EF300F78E06 /* FlappyRoyaleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		C653148521EE7BB80068609E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1010;
+				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Mike Lazer-Walker";
 				TargetAttributes = {
 					C653148C21EE7BB80068609E = {
 						CreatedOnToolsVersion = 10.1;
 						LastSwiftMigration = 1020;
+					};
+					C6557C4022BA3EF300F78E06 = {
+						CreatedOnToolsVersion = 10.2;
+						TestTargetID = C653148C21EE7BB80068609E;
 					};
 				};
 			};
@@ -177,6 +234,7 @@
 			projectRoot = "";
 			targets = (
 				C653148C21EE7BB80068609E /* FlappyRoyale */,
+				C6557C4022BA3EF300F78E06 /* FlappyRoyaleUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -191,6 +249,13 @@
 				C64C01C922B9068D0037150D /* GoogleService-Info.plist in Resources */,
 				C653149821EE7BBA0068609E /* Assets.xcassets in Resources */,
 				C653149621EE7BB80068609E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C6557C3F22BA3EF300F78E06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +320,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C6557C3D22BA3EF300F78E06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6557C4422BA3EF300F78E06 /* FlappyRoyaleUITests.swift in Sources */,
+				C6557C4C22BA3F5900F78E06 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C6557C4722BA3EF300F78E06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C653148C21EE7BB80068609E /* FlappyRoyale */;
+			targetProxy = C6557C4622BA3EF300F78E06 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C653149421EE7BB80068609E /* Main.storyboard */ = {
@@ -442,6 +524,46 @@
 			};
 			name = Release;
 		};
+		C6557C4822BA3EF300F78E06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 48WB56AE4K;
+				INFOPLIST_FILE = FlappyRoyaleUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = lazerwalker.FlappyRoyaleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = FlappyRoyale;
+			};
+			name = Debug;
+		};
+		C6557C4922BA3EF300F78E06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 48WB56AE4K;
+				INFOPLIST_FILE = FlappyRoyaleUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = lazerwalker.FlappyRoyaleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = FlappyRoyale;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -459,6 +581,15 @@
 			buildConfigurations = (
 				C65314A021EE7BBA0068609E /* Debug */,
 				C65314A121EE7BBA0068609E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C6557C4A22BA3EF300F78E06 /* Build configuration list for PBXNativeTarget "FlappyRoyaleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C6557C4822BA3EF300F78E06 /* Debug */,
+				C6557C4922BA3EF300F78E06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
