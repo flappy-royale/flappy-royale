@@ -12,6 +12,14 @@
 
             android:id="@+id/webview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@+id/adview"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="0dp"
     />
+    <com.mopub.mobileads.MoPubView
+            android:id="@+id/adview"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>

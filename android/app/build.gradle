@@ -4,11 +4,18 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+repositories {
+    jcenter() // includes the MoPub SDK and AVID library
+    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+    maven { url 'https://adcolony.bintray.com/AdColony' }
+    maven { url 'https://jitpack.io' }
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.flappyroyale"
-        minSdkVersion 15
+        minSdkVersion 28
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -26,8 +33,37 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:customtabs:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation project(path: ':flappyAdConstants')
+
+    implementation('com.mopub:mopub-sdk:+@aar') {
+        transitive = true
+    }
+
+    // Chartboost
+    // This mediated network SDK is not available on JCenter. Ensure you have downloaded and imported it manually into your app project.
+    implementation 'com.mopub.mediation:chartboost:7.3.1.4'
+
+    // AppLovin
+    implementation 'com.applovin:applovin-sdk:9.7.1'
+    implementation 'com.mopub.mediation:applovin:9.7.1.0'
+
+    // AdColony
+    implementation 'com.adcolony:sdk:3.3.10'
+    implementation 'com.mopub.mediation:adcolony:3.3.10.0'
+
+    // Google (AdMob)
+    // TODO: Currently blows up the app unless it's properly initialized, but I don't have credentials
+//    implementation 'com.google.android.gms:play-services-ads:17.2.1'
+//    implementation 'com.mopub.mediation:admob:17.2.1.0'
+
+    // Vungle
+    implementation 'com.github.vungle:vungle-android-sdk:6.3.24'
+    implementation 'com.mopub.mediation:vungle:6.3.24.3'
+
+    // Google Play Services needed by Chartboost
+//    implementation "com.google.android.gms:play-services-base:$project.ext.googlePlayServicesVersion"
+//    implementation "com.google.android.gms:play-services-ads-identifier:$project.ext.googlePlayServicesVersion"
 }
