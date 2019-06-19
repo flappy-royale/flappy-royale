@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.setAppCacheEnabled(true)
-        webview.loadUrl("https://flappy-royale-3377a.firebaseapp.com")
-
+        webview.loadUrl("https://flappyroyale.io/prod")
     }
 }
