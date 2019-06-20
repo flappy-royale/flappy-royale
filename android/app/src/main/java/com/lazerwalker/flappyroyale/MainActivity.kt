@@ -1,4 +1,4 @@
-package com.example.flappyroyale
+package com.lazerwalker.flappyroyale
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.flappyroyale
+package com.lazerwalker.flappyroyale
 
 import android.app.AlertDialog
 import android.content.Context

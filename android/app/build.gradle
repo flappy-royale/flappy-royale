@@ -21,7 +21,7 @@ repositories {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.flappyroyale"
+        applicationId "com.lazerwalker.flappyroyale"
         minSdkVersion 28
         targetSdkVersion 28
         versionCode 1
