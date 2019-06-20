@@ -24,12 +24,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="applovin.sdk.key"
-                   android:value="${ApplovinSdkKey}" />
-
-        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
-                   android:value="${AdmobAppID}]"/>
-
         <!-- MoPub's consent dialog -->
         <activity android:name="com.mopub.common.privacy.ConsentDialogActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
 
@@ -46,11 +40,7 @@
 
         <!--<meta-data android:name="com.google.android.gms.version"-->
                    <!--android:value="@integer/google_play_services_version" />-->
-
-        <activity android:name="com.chartboost.sdk.CBImpressionActivity"
-                  android:excludeFromRecents="true"
-                  android:hardwareAccelerated="true"
-        />
+        
     </application>
 
 </manifest>
