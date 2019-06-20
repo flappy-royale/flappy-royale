@@ -15,7 +15,7 @@ import {
     getUserStatistics
 } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
-import { requestModalAd } from "../../nativeComms/requestModalAd"
+import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { BirdSprite } from "../BirdSprite"
 import { PlayerData } from "../../firebase"
@@ -128,6 +128,7 @@ export class TrialDeath extends Phaser.Scene {
         const outOfLives = this.props.lives <= 0
         if (outOfLives) {
             againText = livesExtensionsButtonTitleForState(this.props.livesState)
+            prepareModalAd(this.props.livesState)
         }
 
         const newGameText = this.add.bitmapText(GameWidth / 2, GameHeight - 27, "fipps-bit", againText, 8)

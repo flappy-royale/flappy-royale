@@ -15,7 +15,7 @@ import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
-import { requestModalAd } from "../nativeComms/requestModalAd"
+import { requestModalAd, prepareModalAd } from "../nativeComms/requestModalAd"
 import { addScene } from "./utils/addScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme } from "../battle/theme"
@@ -113,6 +113,10 @@ export class TrialLobby extends Phaser.Scene {
 
             const preloadAssetsDone = () => {
                 const goButton = document.getElementById("button")
+
+                if (lives <= 0) {
+                    prepareModalAd(livesState)
+                }
 
                 goButton.onclick = () => {
                     const playGame = () => {

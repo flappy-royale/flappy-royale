@@ -11,6 +11,7 @@ declare global {
         // Android
         ModalAdPresenter?: {
             requestAd: (currentState: number) => void
+            prepareAd: (currentState: number) => void
         }
     }
 }
