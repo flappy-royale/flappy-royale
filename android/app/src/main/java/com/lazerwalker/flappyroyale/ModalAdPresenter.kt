@@ -76,8 +76,6 @@ class ModalAdPresenter(private val mContext: Context, val webview: WebView) {
     }
 
     private fun adUnitForState(state: Int): String? {
-        return AdConstants.testRewardMoPub
-
         if (state == 0) {
             return AdConstants.fiveLivesMoPub
 

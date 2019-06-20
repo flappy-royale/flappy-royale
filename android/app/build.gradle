@@ -26,7 +26,6 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
                 ApplovinSdkKey: constants["ApplovinSdkKey"],
                 AdmobAppId: constants["AdmobAppId"]
@@ -52,6 +51,8 @@ dependencies {
     implementation('com.mopub:mopub-sdk:+@aar') {
         transitive = true
     }
+
+    implementation 'com.google.firebase:firebase-core:16.0.9'
 
     // Chartboost
     // This mediated network SDK is not available on JCenter. Ensure you have downloaded and imported it manually into your app project.
