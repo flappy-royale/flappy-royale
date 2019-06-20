@@ -20,6 +20,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                ApplovinSdkKey:"flappy royale",
+                AdmobAppID: "id goes here"
+        ]
     }
     buildTypes {
         release {
@@ -56,8 +60,8 @@ dependencies {
 
     // Google (AdMob)
     // TODO: Currently blows up the app unless it's properly initialized, but I don't have credentials
-//    implementation 'com.google.android.gms:play-services-ads:17.2.1'
-//    implementation 'com.mopub.mediation:admob:17.2.1.0'
+    implementation 'com.google.android.gms:play-services-ads:17.2.1'
+    implementation 'com.mopub.mediation:admob:17.2.1.0'
 
     // Vungle
     implementation 'com.github.vungle:vungle-android-sdk:6.3.24'

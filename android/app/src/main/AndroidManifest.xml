@@ -15,6 +15,7 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning"
             android:networkSecurityConfig="@xml/network_security_config">
+
          <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data android:name="applovin.sdk.key"
+                   android:value="${ApplovinSdkKey}" />
+
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+                   android:value="${AdmobAppID}]"/>
 
         <!-- MoPub's consent dialog -->
         <activity android:name="com.mopub.common.privacy.ConsentDialogActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
