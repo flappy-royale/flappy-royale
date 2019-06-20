@@ -16,23 +16,15 @@ import com.mopub.mobileads.MoPubRewardedVideoListener
 
 class ModalAdPresenter(private val mContext: Context, val webview: WebView) {
     @JavascriptInterface
+    fun prepareAd(currentState: Int) {
+        val adUnitID = adUnitForState(currentState) ?: return
+
+        MoPubRewardedVideos.loadRewardedVideo(adUnitID);
+    }
+
+    @JavascriptInterface
     fun requestAd(currentState: Int) {
-
-        val adUnitID: String
-        if (currentState == 0) {
-            adUnitID = AdConstants.fiveLivesMoPub
-
-        } else if (currentState == 1) {
-            adUnitID = AdConstants.tenLivesMoPub
-
-        } else if (currentState == 2) {
-            adUnitID = AdConstants.fifteenLivesMobPub
-
-        } else {
-            assert(currentState == 4) {  -> "Somehow ended up sending for too many ads" }
-            print("Got into a bad state")
-            return
-        }
+        val adUnitID = adUnitForState(currentState) ?: return
 
         val hasReward = MoPubRewardedVideos.hasRewardedVideo(adUnitID)
 
@@ -81,23 +73,24 @@ class ModalAdPresenter(private val mContext: Context, val webview: WebView) {
 
             return
         }
+    }
 
+    private fun adUnitForState(state: Int): String? {
+        return AdConstants.testRewardMoPub
 
-        /*
-        let reward = MPRewardedVideo.availableRewards(forAdUnitID:adUnitID)
-        if reward != nil {
-            MPRewardedVideo.setDelegate(self, forAdUnitId: adUnitID)
-            MPRewardedVideo.presentAd(forAdUnitID: adUnitID, from: presentationVC, with: reward?.first! as! MPRewardedVideoReward)
+        if (state == 0) {
+            return AdConstants.fiveLivesMoPub
+
+        } else if (state == 1) {
+            return AdConstants.tenLivesMoPub
+
+        } else if (state == 2) {
+            return AdConstants.fifteenLivesMobPub
+
         } else {
-            let alert = UIAlertController(title: "Sorry!", message: "We couldn't fetch any video ads for you. Try again later?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
-                    self.presentationVC.dismiss(animated: true, completion: nil)
-            }))
-            presentationVC.present(alert, animated: true, completion: nil)
+            assert(state == 4) {  -> "Somehow ended up sending for too many ads" }
+            print("Got into a bad state")
+            return null
         }
-        */
-
-        //window.currentGame.adsHaveBeenUnlocked()
-
     }
 }
