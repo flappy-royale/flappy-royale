@@ -20,14 +20,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Without this, our redirect immediately causes the game to be opened in a separate chrome browser
         webview.webViewClient = WebViewClient()
+
         val settings = webview.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.setAppCacheEnabled(true)
         webview.loadUrl("https://flappyroyale.io/prod")
 
-//        webview.addJavascriptInterface()
+        webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
 
         // TODO: setUpFirebase()
         setUpMoPub()
