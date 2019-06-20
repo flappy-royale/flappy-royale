@@ -4,6 +4,13 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+// Some of our secrets live in AdConstants.kt. Some of them need to live in the app manifest instead of code.
+// This lets us access secret keys stored in the private assets repo from within this build config,
+// which in turn can be used to set manifestPlaceholders below so we can read them in AndroidManifest.xml
+def constantsFile = rootProject.file("../assets/config/androidKeys.properties");
+def constants = new Properties()
+constants.load(new FileInputStream(constantsFile))
+
 repositories {
     jcenter() // includes the MoPub SDK and AVID library
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
@@ -20,8 +27,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                ApplovinSdkKey: constants["ApplovinSdkKey"],
+                AdmobAppId: constants["AdmobAppId"]
+        ]
     }
-
     buildTypes {
         release {
             minifyEnabled false

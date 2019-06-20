@@ -27,25 +27,24 @@ class MainActivity : AppCompatActivity() {
         settings.setAppCacheEnabled(true)
         webview.loadUrl("https://flappyroyale.io/prod")
 
+//        webview.addJavascriptInterface()
+
         // TODO: setUpFirebase()
         setUpMoPub()
-
-        /** Set up the bottom banner ad */
-        moPubView = findViewById(R.id.adview) as? MoPubView
-        moPubView?.adUnitId = AdConstants.bottomBannerMoPub
-        moPubView?.loadAd();
-
-
     }
 
     fun setUpMoPub() {
-        val moPubConfig = SdkConfiguration.Builder(AdConstants.bottomBannerMoPub)
+        val moPubConfig = SdkConfiguration.Builder(AdConstants.testBannerMoPub)
             .withLogLevel(MoPubLog.LogLevel.DEBUG)
             .build()
 
-
         val moPubCompletion = object : SdkInitializationListener {
-            override fun onInitializationFinished() {}
+            override fun onInitializationFinished() {
+                /** Set up the bottom banner ad */
+                moPubView = findViewById(R.id.adview) as? MoPubView
+                moPubView?.adUnitId = AdConstants.testBannerMoPub
+                moPubView?.loadAd();
+            }
         }
 
         MoPub.initializeSdk(
