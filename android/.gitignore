@@ -3,6 +3,8 @@
 
 /app/local.properties
 /app/.idea
+/app/debug
+/app/release
 
 /local.properties
 /.idea/caches
