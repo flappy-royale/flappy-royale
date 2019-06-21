@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "533580149860",
+    "firebase_url": "https://flappy-royale-3377a.firebaseio.com",
+    "project_id": "flappy-royale-3377a",
+    "storage_bucket": "flappy-royale-3377a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533580149860:android:0f79836e15cd9ad2",
+        "android_client_info": {
+          "package_name": "com.example.flappyroyale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533580149860-uqbr6s4shn52ne5nl1adiqs3tq7ogq1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOk1jCJgTb51YYFWGLYMc7CfKv6mwstFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533580149860-uqbr6s4shn52ne5nl1adiqs3tq7ogq1j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "533580149860-iegjmgbi2u3vl1osled475tghpkil928.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lazerwalker.FlappyRoyale"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533580149860:android:0841ae5704425053",
+        "android_client_info": {
+          "package_name": "com.lazerwalker.FlappyRoyale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533580149860-uqbr6s4shn52ne5nl1adiqs3tq7ogq1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOk1jCJgTb51YYFWGLYMc7CfKv6mwstFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533580149860-uqbr6s4shn52ne5nl1adiqs3tq7ogq1j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "533580149860-iegjmgbi2u3vl1osled475tghpkil928.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lazerwalker.FlappyRoyale"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533580149860:android:b74b0552359ebb6b",
+        "android_client_info": {
+          "package_name": "com.lazerwalker.flappyroyale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533580149860-uqbr6s4shn52ne5nl1adiqs3tq7ogq1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOk1jCJgTb51YYFWGLYMc7CfKv6mwstFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533580149860-uqbr6s4shn52ne5nl1adiqs3tq7ogq1j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "533580149860-iegjmgbi2u3vl1osled475tghpkil928.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lazerwalker.FlappyRoyale"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'
+
 // Some of our secrets live in AdConstants.kt. Some of them need to live in the app manifest instead of code.
 // This lets us access secret keys stored in the private assets repo from within this build config,
 // which in turn can be used to set manifestPlaceholders below so we can read them in AndroidManifest.xml
@@ -67,7 +69,6 @@ dependencies {
     implementation 'com.mopub.mediation:adcolony:3.3.10.0'
 
     // Google (AdMob)
-    // TODO: Currently blows up the app unless it's properly initialized, but I don't have credentials
     implementation 'com.google.android.gms:play-services-ads:17.2.1'
     implementation 'com.mopub.mediation:admob:17.2.1.0'
 
