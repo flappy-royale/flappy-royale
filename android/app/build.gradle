@@ -32,7 +32,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.lazerwalker.flappyroyale"
-        minSdkVersion 28
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 4
         versionName "1.0"
