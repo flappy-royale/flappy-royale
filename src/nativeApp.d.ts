@@ -13,6 +13,12 @@ declare global {
             requestAd: (currentState: number) => void
             prepareAd: (currentState: number) => void
         }
+
+        Analytics?: {
+            event: (name: string, params: any) => void
+            userProperty: (name: string, value: string) => void
+            setId: (id: string) => void
+        }
     }
 }
 

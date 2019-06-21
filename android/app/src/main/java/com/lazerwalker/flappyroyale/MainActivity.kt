@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         webview.loadUrl("https://flappyroyale.io/prod")
 
         webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
-
+        webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         // TODO: setUpFirebase()
         setUpMoPub()
     }
