@@ -485,7 +485,7 @@ export class BattleScene extends Phaser.Scene {
         // Let the bus collide
         const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
             busCrashed(bus, this)
-            if (this.bird && this.bird.isInBus) {
+            if (this.bird && this.bird.isInBus && !this.bird.isDead) {
                 this.userDied()
             }
         }
