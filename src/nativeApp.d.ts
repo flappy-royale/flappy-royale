@@ -19,6 +19,10 @@ declare global {
             userProperty: (name: string, value: string) => void
             setId: (id: string) => void
         }
+
+        Sharing?: {
+            shareScreenshot: (name: string) => void
+        }
     }
 }
 

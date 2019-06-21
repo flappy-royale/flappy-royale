@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() {
 
         webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
-        // TODO: setUpFirebase()
+        webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
+
+
         setUpMoPub()
     }
 

@@ -22,6 +22,19 @@ export function shareNatively(copy: string, scene: ScreenshotableScreen) {
             },
             { once: true }
         )
+    } else if (window.Sharing) {
+        scene.showScreenshotUI()
+        setTimeout(() => {
+            window.Sharing.shareScreenshot(copy)
+        }, 100)
+
+        window.addEventListener(
+            "screenshotComplete",
+            () => {
+                scene.removeScreenshotUI()
+            },
+            { once: true }
+        )
     } else {
         if (navigator && "share" in navigator) {
             const n = navigator as any
