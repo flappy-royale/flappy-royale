@@ -2,5 +2,5 @@
 # For more information, check out the docs
 # https://docs.fastlane.tools/actions/deliver/
 
-metadata_path "../../assets/fastlane/metadata"
-screenshots_path "../../assets/fastlane/screenshots"
+metadata_path "../../assets/fastlane/ios/metadata"
+screenshots_path "../../assets/fastlane/ios/screenshots"

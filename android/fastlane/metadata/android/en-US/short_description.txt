@@ -1,1 +1,0 @@
-A 99-player last-bird-flapping battle royale!

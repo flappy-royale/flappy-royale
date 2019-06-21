@@ -34,7 +34,7 @@ android {
         applicationId "com.lazerwalker.flappyroyale"
         minSdkVersion 28
         targetSdkVersion 28
-        versionCode 2
+        versionCode 4
         versionName "1.0"
         manifestPlaceholders = [
                 ApplovinSdkKey: constants["ApplovinSdkKey"],

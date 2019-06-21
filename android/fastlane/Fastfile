@@ -25,7 +25,10 @@ platform :android do
   lane :beta do
     increment_version_code(gradle_file_path: "app/build.gradle",)
     gradle(task: "clean assembleRelease")
-    upload_to_play_store(track: "beta")
+    upload_to_play_store(
+      track: "beta", 
+      metadata_path: "../assets/fastlane/android"
+    )
     
     # sh "your_script.sh"
     # You can also use other beta testing services here
@@ -34,6 +37,8 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    upload_to_play_store(
+      metadata_path: "../assets/fastlane/android"
+    )
   end
 end

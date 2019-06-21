@@ -2,10 +2,10 @@
 
 # A list of devices you want to take the screenshots from
 devices([
-  # "iPhone 8",
+  "iPhone 8",
   # "iPhone 8 Plus",
   "iPhone SE",
-  "iPhone X",
+  # "iPhone X",
   # "iPad Pro (12.9-inch)",
   # "iPad Pro (9.7-inch)",
 ])
@@ -18,7 +18,7 @@ languages([
 scheme("FastlaneSnapshots")
 
 # Where should the resulting screenshots be stored?
-output_directory("../../assets/fastlane/screenshots")
+output_directory("../assets/fastlane/ios/screenshots")
 
 # remove the '#' to clear all previously generated screenshots before creating new ones
 # clear_previous_screenshots(true)
