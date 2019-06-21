@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setUpMoPub() {
-        val moPubConfig = SdkConfiguration.Builder(AdConstants.testBannerMoPub)
+        val moPubConfig = SdkConfiguration.Builder(AdConstants.bottomBannerMoPub)
             .withLogLevel(MoPubLog.LogLevel.DEBUG)
             .build()
 
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             override fun onInitializationFinished() {
                 /** Set up the bottom banner ad */
                 moPubView = findViewById(R.id.adview) as? MoPubView
-                moPubView?.adUnitId = AdConstants.testBannerMoPub
+                moPubView?.adUnitId = AdConstants.bottomBannerMoPub
                 moPubView?.loadAd();
             }
         }
