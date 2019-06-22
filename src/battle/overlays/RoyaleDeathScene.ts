@@ -192,6 +192,7 @@ export class RoyaleDeath extends Phaser.Scene {
             this.startNewRound()
         } else {
             this.hasReadied = true
+            this.updateCounterLabel()
         }
     }
 
