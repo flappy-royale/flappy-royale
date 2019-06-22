@@ -46,7 +46,7 @@ export class AppLaunchScene extends Phaser.Scene {
 
         this.add.image((constants.GameWidth / 3) * 2, constants.NotchOffset + 80, "poster")
 
-        this.add.bitmapText(20, vCenter - offset - 80, "fipps-bit", "A game by", 6)
+        this.add.bitmapText(20, vCenter - offset - 80, "fipps-bit", "A game by", 8).setAlpha(0.6)
         const orta = this.add.bitmapText(20, vCenter - offset - 60, "fipps-bit", "Orta Therox", 8)
         becomeButton(orta, this.showOrta, this)
 
