@@ -106,6 +106,7 @@ nav a.disabled {
     background-size: 480px 267px;
     padding-top: 60px;
     padding-bottom: 21px;
+    margin-bottom: -2px;
 }
 
 #ground .container {
