@@ -17,8 +17,8 @@ import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
 
-declare var PRODUCTION: boolean
-declare var DEMO: boolean
+declare const PRODUCTION: boolean
+declare const DEMO: boolean
 
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
@@ -49,15 +49,12 @@ function newGame(): FlappyGame {
         backgroundColor: "#62CBE0",
         seed: ["consistent", "physics", "thanks"],
         scale: {
-            mode: DEMO
-                ? Phaser.Scale.NONE
-                : screen.width < screen.height
-                ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT
-                : Phaser.Scale.FIT,
+            mode: screen.width < screen.height ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT : Phaser.Scale.FIT,
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,
-            zoom: DEMO ? 3 : 4
+            zoom: 4,
+            autoCenter: Phaser.Scale.CENTER_BOTH
         },
         dom: {
             createContainer: true

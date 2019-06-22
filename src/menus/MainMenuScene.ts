@@ -96,9 +96,11 @@ export class MainMenuScene extends Phaser.Scene {
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
+        const trial = this.add.image(74, 152 + c.NotchOffset, "trial-button")
         if (!DEMO) {
-            const trial = this.add.image(74, 152 + c.NotchOffset, "trial-button")
             becomeButton(trial, this.loadTrial, this)
+        } else {
+            trial.setAlpha(0.3)
         }
 
         const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
