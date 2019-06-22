@@ -1,5 +1,5 @@
 /** Makes a phaser image act a bit more like a button*/
-export const becomeButton = (button: Phaser.GameObjects.Image, action: Function, context?: any, relateds?: any[]) =>
+export const becomeButton = (button: Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText, action: Function, context?: any, relateds?: any[]) =>
     button
         .setInteractive()
         .on("pointerover", () => {

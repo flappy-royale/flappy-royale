@@ -91,6 +91,8 @@ export class MainMenuScene extends Phaser.Scene {
         player.actAsImage()
         player.makeClickable(this.loadSettings, this)
         this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
+        becomeButton(this.playerNameText, this.loadSettings, this)
+
 
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
