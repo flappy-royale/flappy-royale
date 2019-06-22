@@ -12,7 +12,7 @@
     },
     "scripts": {
         "build": "yarn webpack-prod",
-        "start": "yarn webpack-dev --watch & yarn live-server --port=8085",
+        "start": "yarn webpack-dev --watch & yarn live-server --port=8085 --wait=1000",
         "start-site": "yarn webpack-site --watch & yarn live-server --port=8085",
         "type-check": "yarn tsc --noEmit",
         "deploy": "rm -rf dist && yarn danger-prepush && yarn build && firebase deploy",
