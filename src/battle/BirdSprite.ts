@@ -238,6 +238,13 @@ export class BirdSprite {
         this.sprite.setAngle(0)
     }
 
+    actAsUIElement() {
+        this.actAsImage()
+
+        const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
+        sprites.forEach(a => a.setDepth(constants.zLevels.ui))
+    }
+
     hasHitFloor() {
         if (!this.isAtRest) {
             this.isAtRest = true

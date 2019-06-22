@@ -25,7 +25,7 @@ import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
-import { rightAlignTextLabel } from "./utils/alignTextLabel"
+import { rightAlignTextLabel, centerAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
@@ -301,42 +301,44 @@ export class BattleScene extends Phaser.Scene {
 
         if (devSettings.showUI && game.shouldShowScoreLabel(this.mode)) {
             this.scoreLabel = this.add.bitmapText(
-                constants.GameWidth - 30,
-                constants.GameAreaTopOffset,
+                0,
+                constants.NotchOffset,
                 "nokia16",
                 "0",
                 32
             )
-            this.scoreLabel.setRightAlign()
             this.scoreLabel.setDepth(constants.zLevels.ui)
             this.updateScoreLabel()
         }
 
         if (devSettings.showUI && game.shouldShowLivesLabel(this.mode)) {
             const livesNum = getLives(this.seed)
-            const lives = livesNum == 1 ? "last try!" : `${livesNum} tries left`
-            const livesText = this.add.bitmapText(4, 22 + constants.GameAreaTopOffset, "nokia16", lives, 16)
+            const lives = livesNum - 1
+            const livesText = this.add.bitmapText(24, 22 + constants.NotchOffset, "nokia16", `${lives}`, 16)
             livesText.setDepth(constants.zLevels.ui)
+
+            const settings = getUserSettings()
+            const playerIcon = new BirdSprite(this, 4, constants.NotchOffset + 30, { isPlayer: false, settings: settings })
+            playerIcon.actAsUIElement()
         }
 
         if (devSettings.showUI && game.shouldShowHighScoreLabel(this.mode)) {
             this.highScore = getHighScore(this.seed)
             let highScoreText = `Best: ${this.highScore}`
             this.highScoreLabel = this.add.bitmapText(
-                constants.GameWidth - 60,
-                constants.GameAreaTopOffset + 33,
+                0,
+                constants.NotchOffset + 4,
                 "nokia16",
                 highScoreText,
                 16
             )
-            this.highScoreLabel.setRightAlign()
+            rightAlignTextLabel(this.highScoreLabel)
             this.highScoreLabel.setDepth(constants.zLevels.ui)
-            rightAlignTextLabel(this.highScoreLabel, 2)
         }
 
         // When we want to show a countdown, set it up with defaults
         if (devSettings.showUI && game.shouldShowBirdsLeftLabel(this.mode)) {
-            this.birdsLeft = this.add.bitmapText(4, 4 + constants.GameAreaTopOffset, "nokia16", "0", 16)
+            this.birdsLeft = this.add.bitmapText(4, constants.NotchOffset + 4, "nokia16", "0", 16)
             this.birdsLeft.setDepth(constants.zLevels.ui)
             this.ghostBirdHasDied()
         }
@@ -365,7 +367,8 @@ export class BattleScene extends Phaser.Scene {
     updateScoreLabel() {
         if (!devSettings.showUI) return
         this.scoreLabel.text = `${this.score}`
-        rightAlignTextLabel(this.scoreLabel)
+        this.scoreLabel.setCenterAlign()
+        centerAlignTextLabel(this.scoreLabel, -2)
 
         if (this.highScoreLabel && this.score > this.highScore) {
             this.highScore = this.score
