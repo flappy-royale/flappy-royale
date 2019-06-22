@@ -7,14 +7,14 @@ import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
-import { UserSettingsKey, UserSettings } from "./menus/UserSettingsScene"
+import { UserSettingsKey, UserSettingsScene } from "./menus/UserSettingsScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
 import { addScene } from "./menus/utils/addScene"
 import { TrialDeath } from "./battle/overlays/TrialDeathScene"
 import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
-import { wait } from "./battle/utils/wait";
+import { wait } from "./battle/utils/wait"
 
 declare var PRODUCTION: boolean
 declare var DEMO: boolean
@@ -22,9 +22,8 @@ declare var DEMO: boolean
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
 require("../style.css")
-console.log("uh hi")
 if (!PRODUCTION) {
-    require('./setUpAppStoreScreenshots.ts')
+    require("./setUpAppStoreScreenshots.ts")
 }
 
 if (PRODUCTION) appCache.configure()
@@ -51,8 +50,8 @@ function newGame(): FlappyGame {
             mode: DEMO
                 ? Phaser.Scale.NONE
                 : screen.width < screen.height
-                    ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT
-                    : Phaser.Scale.FIT,
+                ? Phaser.Scale.WIDTH_CONTROLS_HEIGHT
+                : Phaser.Scale.FIT,
             parent: "game",
             width: constants.GameWidth,
             height: constants.GameHeight,
@@ -173,7 +172,7 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
 }
 
 export const loadUpIntoSettings = (game: FlappyGame) => {
-    const settings = new UserSettings()
+    const settings = new UserSettingsScene()
     addScene(game, UserSettingsKey, settings, true)
 }
 
@@ -222,6 +221,7 @@ window.onload = async () => {
             break
     }
 
+    // showLoadingScreen(game)
     // appCache.fakeLoadingScreen()
     // testTrialDeathScreen(game, 1)
 

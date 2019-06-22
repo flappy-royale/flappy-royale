@@ -18,14 +18,31 @@ export interface Attire {
     base: boolean
 }
 
-// The gray bird itself
-export const defaultAttire: PresentationAttire = {
+export const hedgehog: PresentationAttire = {
     id: "hedgehog",
-    description: "Bird got punk'd",
+    description: "Whole hedgehog",
     fit: "tight",
     base: true,
     href: require("../assets/bases/Hedgehog.png")
 }
+
+export const dog: PresentationAttire = {
+    id: "dog-1",
+    description: "Woof woof",
+    fit: "tight",
+    base: true,
+    href: require("../assets/bases/Dog1.png")
+}
+
+export const sheep: PresentationAttire = {
+    id: "sheep",
+    description: "Bird got punk'd",
+    fit: "tight",
+    base: true,
+    href: require("../assets/bases/Sheep.png")
+}
+
+export const defaultAttire = hedgehog
 
 export const builtInAttire: PresentationAttire[] = [
     defaultAttire,
@@ -43,13 +60,7 @@ export const builtInAttire: PresentationAttire[] = [
         base: true,
         href: require("../assets/bases/Banana.png")
     },
-    {
-        id: "dog-1",
-        description: "Woof woof",
-        fit: "tight",
-        base: true,
-        href: require("../assets/bases/Dog1.png")
-    },
+    dog,
     {
         id: "cave",
         description: "It flaps",

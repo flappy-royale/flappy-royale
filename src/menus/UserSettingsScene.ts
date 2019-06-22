@@ -10,7 +10,7 @@ import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
 
 export const UserSettingsKey = "UserSettings"
 
-export class UserSettings extends Phaser.Scene {
+export class UserSettingsScene extends Phaser.Scene {
     didChangeName: boolean = false
 
     constructor() {
@@ -146,7 +146,7 @@ export class UserSettings extends Phaser.Scene {
         }
 
         // Click handling
-        element.on("click", function (event) {
+        element.on("click", function(event) {
             const target = event.target as Element
 
             // Getting a potential attire is tricky, you could hit
@@ -197,7 +197,7 @@ export class UserSettings extends Phaser.Scene {
         // Sets up the stats which lives under the settings
         setUpStatsHTML()
 
-        document.getElementById('button').addEventListener('click', () => {
+        document.getElementById("button").addEventListener("click", () => {
             if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
                 localStorage.clear()
                 window.location.reload()

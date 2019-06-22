@@ -1,11 +1,9 @@
 import * as Phaser from "phaser"
 import * as constants from "../constants"
-import { getUserSettings } from "../user/userManager"
+import { getUserSettings, UserSettings } from "../user/userManager"
 import * as appCache from "../appCache"
-
-export interface LoadingProps {
-    seed: string
-}
+import { preloadBirdSprites, setupBirdAnimations, BirdSprite, preloadBirdAttire } from "../battle/BirdSprite"
+import { dog, hedgehog, sheep } from "../attire"
 
 export const showLoadingScreen = (game: Phaser.Game) => {
     const loadingScene = new LoadingScene()
@@ -15,12 +13,29 @@ export const showLoadingScreen = (game: Phaser.Game) => {
 
 export class LoadingScene extends Phaser.Scene {
     progressBar: Phaser.GameObjects.Rectangle
+    birds: BirdSprite[]
+    possibleAttires: UserSettings[]
 
     constructor() {
         super("LoadingScene")
+
+        const userBird = getUserSettings()
+        this.possibleAttires = [
+            { name: "", aesthetics: { attire: [dog] }, royale: { seedIndex: 1 } },
+            { name: "", aesthetics: { attire: [hedgehog] }, royale: { seedIndex: 1 } },
+            { name: "", aesthetics: { attire: [sheep] }, royale: { seedIndex: 1 } },
+            userBird
+        ]
     }
 
     preload() {
+        preloadBirdSprites(this)
+        this.possibleAttires.forEach(a => preloadBirdAttire(this, a))
+
+        this.load.image("underground", require("../../assets/battle/ground-under.png"))
+        this.load.image("pipe-end", require("../../assets/battle/PipeBottom.png"))
+        this.load.audio("other_flap", require("../../assets/audio/silence.wav"))
+
         this.load.bitmapFont(
             "nokia16",
             require("../../assets/fonts/nokia16.png"),
@@ -37,37 +52,61 @@ export class LoadingScene extends Phaser.Scene {
         appCache.onDownloadEnd(() => {
             window.location.reload()
         })
+
+        this.birds = []
     }
 
     create() {
-        // Fill the BG
+        setupBirdAnimations(this)
+
         this.add.rectangle(
             constants.GameWidth / 2,
             constants.GameHeight / 2,
             constants.GameWidth,
             constants.GameHeight,
-            0x000000
+            0x53381f
         )
 
-        const lobby = this.add.bitmapText(40, 80 + constants.NotchOffset, "nokia16", "Loading...")
+        this.add.image(constants.GameWidth / 2, 20, "underground").setScale(2, 2)
+        const vCenter = constants.GameHeight / 2 + constants.NotchOffset
 
-        const loadingHeight = constants.GameHeight - 10
+        this.add
+            .image(14, vCenter, "pipe-end")
+            .setScale(2, 2)
+            .setAngle(90)
+            .setDepth(constants.zLevels.ui)
+
+        this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                const attire = this.possibleAttires[Math.floor(Math.random() * this.possibleAttires.length)]
+                const bird = new BirdSprite(this, 20, vCenter, { isPlayer: false, settings: attire })
+                bird.startMovingLeft()
+                bird.setOpacity(1)
+                bird.setScale(2)
+                this.birds.push(bird)
+            },
+            callbackScope: this,
+            loop: true
+        })
+
+        this.time.addEvent({
+            delay: 100,
+            callback: () => {
+                this.birds.forEach(b => {
+                    if (Math.floor(Math.random() * 4) !== 1) return
+                    b.flap()
+                    b.startMovingLeft()
+                })
+            },
+            callbackScope: this,
+            loop: true
+        })
+
+        this.add.bitmapText(40, constants.GameHeight / 2 + 50 + constants.NotchOffset, "nokia16", "Loading...")
+
         // Add loading box
-        this.add.rectangle(
-            constants.GameWidth / 2 - 2,
-            constants.GameHeight / 2 - 10 + constants.NotchOffset,
-            constants.GameWidth / 2,
-            14,
-            0xffffff,
-            0.3
-        )
-
-        this.progressBar = this.add.rectangle(
-            constants.GameWidth / 4 - 2,
-            constants.GameHeight / 2 - 10 + constants.NotchOffset,
-            0,
-            14,
-            0xffffff
-        )
+        this.add.rectangle(constants.GameWidth / 2 - 2, vCenter + 80, constants.GameWidth / 2, 14, 0xffffff, 0.3)
+        this.progressBar = this.add.rectangle(constants.GameWidth / 4 - 2, vCenter + 80, 0, 14, 0xffffff)
     }
 }

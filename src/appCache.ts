@@ -17,6 +17,7 @@ export const configure = () => {
                 "error",
                 e => {
                     console.log("AppCache error", e)
+                    downloadEnd()
                 },
                 false
             )
@@ -56,7 +57,7 @@ export const fakeLoadingScreen = () => {
     setTimeout(() => downloadProgress(0.75), 2700)
     setTimeout(() => downloadProgress(0.9), 2900)
     setTimeout(() => downloadProgress(1), 3000)
-    setTimeout(downloadEnd, 3100)
+    setTimeout(downloadEnd, 10100)
 }
 
 export const onDownloadStart = (handler: () => void) => {

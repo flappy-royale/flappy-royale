@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { UserSettings, UserSettingsKey } from "./UserSettingsScene"
+import { UserSettingsScene, UserSettingsKey } from "./UserSettingsScene"
 import { getSeedsFromAPI, emptySeedData } from "../firebase"
 import { BattleScene } from "../battle/Scene"
 import * as c from "../constants"
@@ -14,7 +14,7 @@ import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
-import { rightAlignTextLabel } from "../battle/utils/alignTextLabel";
+import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 
 declare const DEMO: boolean
 
@@ -93,7 +93,6 @@ export class MainMenuScene extends Phaser.Scene {
         this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
         becomeButton(this.playerNameText, this.loadSettings, this)
 
-
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
@@ -111,7 +110,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     private loadSettings() {
         this.removeMenu()
-        const settings = new UserSettings()
+        const settings = new UserSettingsScene()
         addScene(this.game, UserSettingsKey, settings, true)
     }
 

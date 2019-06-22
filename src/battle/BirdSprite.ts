@@ -163,7 +163,9 @@ export class BirdSprite {
 
             haptics.playSelection()
             haptics.prepareHeavy()
-        } else this.scene.sound.play("other_flap")
+        } else {
+            this.scene.sound.play("other_flap")
+        }
     }
 
     setOpacity(opacity: number) {
@@ -172,6 +174,14 @@ export class BirdSprite {
 
         const allAttire = this.tightAttire.concat(this.looseAttire)
         allAttire.forEach(a => a.setAlpha(opacity))
+    }
+
+    setScale(scale: number) {
+        this.bodySprite.setScale(scale, scale)
+        this.sprite.setScale(scale, scale)
+
+        const allAttire = this.tightAttire.concat(this.looseAttire)
+        allAttire.forEach(a => a.setScale(scale, scale))
     }
 
     rotateSprite() {
