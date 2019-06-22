@@ -24,6 +24,21 @@
 		C653149B21EE7BBA0068609E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C653149921EE7BBA0068609E /* LaunchScreen.storyboard */; };
 		C6557C4422BA3EF300F78E06 /* FlappyRoyaleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6557C4322BA3EF300F78E06 /* FlappyRoyaleUITests.swift */; };
 		C6557C4C22BA3F5900F78E06 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6557C4B22BA3F5900F78E06 /* SnapshotHelper.swift */; };
+		C6BA850522BE7AE500BCBCC6 /* AdPresentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6092CB4C22B0B56600D9480B /* AdPresentor.swift */; };
+		C6BA850622BE7AE500BCBCC6 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
+		C6BA850722BE7AE500BCBCC6 /* AdConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6067812722AB0A830036A5FC /* AdConstants.swift */; };
+		C6BA850822BE7AE500BCBCC6 /* ShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60961B6F22B6DEDC0070160A /* ShareManager.swift */; };
+		C6BA850922BE7AE500BCBCC6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149221EE7BB80068609E /* ViewController.swift */; };
+		C6BA850A22BE7AE500BCBCC6 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605A160B22B5AEDB008A7AFD /* AnalyticsManager.swift */; };
+		C6BA850B22BE7AE500BCBCC6 /* AppStoreReviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */; };
+		C6BA850C22BE7AE500BCBCC6 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
+		C6BA850D22BE7AE500BCBCC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149021EE7BB80068609E /* AppDelegate.swift */; };
+		C6BA850F22BE7AE500BCBCC6 /* Pods_FlappyRoyale.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4D29A2DC207E9AB7FEB15EF /* Pods_FlappyRoyale.framework */; };
+		C6BA851122BE7AE500BCBCC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C653149921EE7BBA0068609E /* LaunchScreen.storyboard */; };
+		C6BA851222BE7AE500BCBCC6 /* Fipps-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6067813222AC81F80036A5FC /* Fipps-Regular.otf */; };
+		C6BA851322BE7AE500BCBCC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C64C01C822B9068D0037150D /* GoogleService-Info.plist */; };
+		C6BA851422BE7AE500BCBCC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C653149721EE7BBA0068609E /* Assets.xcassets */; };
+		C6BA851522BE7AE500BCBCC6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C653149421EE7BB80068609E /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +74,8 @@
 		C6557C4322BA3EF300F78E06 /* FlappyRoyaleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyRoyaleUITests.swift; sourceTree = "<group>"; };
 		C6557C4522BA3EF300F78E06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C6557C4B22BA3F5900F78E06 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
+		C6BA851A22BE7AE500BCBCC6 /* Flappy Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flappy Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6BA851B22BE7AE500BCBCC6 /* FlappyRoyale copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FlappyRoyale copy-Info.plist"; path = "/Users/lazerwalker/Code/flappy-royale/ios/FlappyRoyale copy-Info.plist"; sourceTree = "<absolute>"; };
 		E934DCF54BFC91DD5DFDCCA0 /* Pods-FlappyRoyale.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.release.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.release.xcconfig"; sourceTree = "<group>"; };
 		F4D29A2DC207E9AB7FEB15EF /* Pods_FlappyRoyale.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlappyRoyale.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -76,6 +93,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C6BA850E22BE7AE500BCBCC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6BA850F22BE7AE500BCBCC6 /* Pods_FlappyRoyale.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +146,7 @@
 				B8CE5A8B137FCA8B62F8579A /* Pods */,
 				116FE70DA20A244CB108EBBA /* Frameworks */,
 				6067812922AB29B70036A5FC /* FlappyRoyale-Bridging-Header.h */,
+				C6BA851B22BE7AE500BCBCC6 /* FlappyRoyale copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,6 +155,7 @@
 			children = (
 				C653148D21EE7BB80068609E /* FlappyRoyale.app */,
 				C6557C4122BA3EF300F78E06 /* FlappyRoyaleUITests.xctest */,
+				C6BA851A22BE7AE500BCBCC6 /* Flappy Dev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,6 +227,25 @@
 			productReference = C6557C4122BA3EF300F78E06 /* FlappyRoyaleUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		C6BA850222BE7AE500BCBCC6 /* Flappy Dev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C6BA851722BE7AE500BCBCC6 /* Build configuration list for PBXNativeTarget "Flappy Dev" */;
+			buildPhases = (
+				C6BA850322BE7AE500BCBCC6 /* [CP] Check Pods Manifest.lock */,
+				C6BA850422BE7AE500BCBCC6 /* Sources */,
+				C6BA850E22BE7AE500BCBCC6 /* Frameworks */,
+				C6BA851022BE7AE500BCBCC6 /* Resources */,
+				C6BA851622BE7AE500BCBCC6 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Flappy Dev";
+			productName = Gorli;
+			productReference = C6BA851A22BE7AE500BCBCC6 /* Flappy Dev.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -235,6 +281,7 @@
 			targets = (
 				C653148C21EE7BB80068609E /* FlappyRoyale */,
 				C6557C4022BA3EF300F78E06 /* FlappyRoyaleUITests */,
+				C6BA850222BE7AE500BCBCC6 /* Flappy Dev */,
 			);
 		};
 /* End PBXProject section */
@@ -256,6 +303,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C6BA851022BE7AE500BCBCC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6BA851122BE7AE500BCBCC6 /* LaunchScreen.storyboard in Resources */,
+				C6BA851222BE7AE500BCBCC6 /* Fipps-Regular.otf in Resources */,
+				C6BA851322BE7AE500BCBCC6 /* GoogleService-Info.plist in Resources */,
+				C6BA851422BE7AE500BCBCC6 /* Assets.xcassets in Resources */,
+				C6BA851522BE7AE500BCBCC6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +360,45 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C6BA850322BE7AE500BCBCC6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FlappyRoyale-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C6BA851622BE7AE500BCBCC6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -326,6 +424,22 @@
 			files = (
 				C6557C4422BA3EF300F78E06 /* FlappyRoyaleUITests.swift in Sources */,
 				C6557C4C22BA3F5900F78E06 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C6BA850422BE7AE500BCBCC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6BA850522BE7AE500BCBCC6 /* AdPresentor.swift in Sources */,
+				C6BA850622BE7AE500BCBCC6 /* WebViewInteropProvider.swift in Sources */,
+				C6BA850722BE7AE500BCBCC6 /* AdConstants.swift in Sources */,
+				C6BA850822BE7AE500BCBCC6 /* ShareManager.swift in Sources */,
+				C6BA850922BE7AE500BCBCC6 /* ViewController.swift in Sources */,
+				C6BA850A22BE7AE500BCBCC6 /* AnalyticsManager.swift in Sources */,
+				C6BA850B22BE7AE500BCBCC6 /* AppStoreReviewer.swift in Sources */,
+				C6BA850C22BE7AE500BCBCC6 /* HapticManager.swift in Sources */,
+				C6BA850D22BE7AE500BCBCC6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,6 +678,55 @@
 			};
 			name = Release;
 		};
+		C6BA851822BE7AE500BCBCC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B53B032F43E6EF6F59E6346 /* Pods-FlappyRoyale.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 48WB56AE4K;
+				INFOPLIST_FILE = "FlappyRoyale copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyDev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C6BA851922BE7AE500BCBCC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E934DCF54BFC91DD5DFDCCA0 /* Pods-FlappyRoyale.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 48WB56AE4K;
+				INFOPLIST_FILE = "FlappyRoyale copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyDev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -590,6 +753,15 @@
 			buildConfigurations = (
 				C6557C4822BA3EF300F78E06 /* Debug */,
 				C6557C4922BA3EF300F78E06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C6BA851722BE7AE500BCBCC6 /* Build configuration list for PBXNativeTarget "Flappy Dev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C6BA851822BE7AE500BCBCC6 /* Debug */,
+				C6BA851922BE7AE500BCBCC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

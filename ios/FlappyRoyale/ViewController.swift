@@ -15,9 +15,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     
     var webView: WKWebView?
 
-    var isSnapshotTest: Bool {
+    var serverOverride: URL? {
         get {
-            return ProcessInfo.processInfo.arguments.contains("SNAPSHOT")
+            if let str = ProcessInfo.processInfo.environment["server"] {
+                return URL(string: str)
+            } else {
+                return nil
+            }
         }
     }
 
@@ -103,9 +107,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     private func loadGameURL() {
         guard let webView = self.webView else { return }
 
-        guard let url = isSnapshotTest
-            ? URL(string: "http://localhost:8085/")
-            : URL(string: "https://flappyroyale.io/prod")
+        guard let url = (serverOverride != nil) ? serverOverride : URL(string: "https://flappyroyale.io/prod")
             else { return }
 
         webView.load(URLRequest(url: url))
@@ -130,7 +132,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("[WEBVIEW]: Finished")
 
-        if isSnapshotTest, let page = ProcessInfo.processInfo.environment["pageToGo"] {
+        if let page = ProcessInfo.processInfo.environment["pageToGo"] {
             webView.evaluateJavaScript("window.setUpSnapshot('\(page)')", completionHandler: nil)
         }
     }

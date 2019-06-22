@@ -13,6 +13,7 @@ func takeSnapshot(name: String) {
     setupSnapshot(app)
 
     app.launchArguments += ["SNAPSHOT"]
+    app.launchEnvironment["server"] = "https://localhost:8085"
     app.launchEnvironment["pageToGo"] = name
 
     app.launch()
