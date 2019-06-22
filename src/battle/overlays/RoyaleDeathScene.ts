@@ -41,7 +41,9 @@ export const deathPreload = (game: Phaser.Scene) => {
 export class RoyaleDeath extends Phaser.Scene {
     seed: string
     seedData: SeedData
-    countdownComplete: boolean
+
+    countdownTime: number
+    hasReadied: boolean = false
 
     newGameText: Phaser.GameObjects.BitmapText
     newGameBG: Phaser.GameObjects.Image
@@ -104,8 +106,8 @@ export class RoyaleDeath extends Phaser.Scene {
         this.footerObjects.push(back)
 
         this.newGameBG = this.add.image(90, GameHeight - 20, "button-bg")
-        this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "AGAIN", 8)
-        becomeButton(this.newGameBG, this.startNewRound, this, [this.newGameText])
+        this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "READY", 8)
+        becomeButton(this.newGameBG, this.getReady, this, [this.newGameText])
         this.footerObjects.push(this.newGameBG)
         this.footerObjects.push(this.newGameText)
 
@@ -124,21 +126,19 @@ export class RoyaleDeath extends Phaser.Scene {
         }
 
         // Start the countdown timer
+        this.countdownTime = _.random(2, 3) + 1
 
-        let countdownTime = _.random(2, 3) + 1
         let timeout: number | undefined
         const updateTimer = () => {
-            countdownTime -= 1
+            this.countdownTime -= 1
 
-            if (countdownTime <= 0) {
-                this.countdownComplete = true
-                this.newGameText.setText("AGAIN")
-                this.newGameBG.setAlpha(1.0)
-                centerAlignTextLabel(this.newGameText, -9)
-            } else {
-                this.newGameText.setText(`ready in ${countdownTime}`)
-                this.newGameBG.setAlpha(0.3)
-                centerAlignTextLabel(this.newGameText, -9)
+            if (this.hasReadied) {
+                if (this.countdownTime <= 0) {
+                    return this.startNewRound()
+                }
+                this.updateCounterLabel()
+                timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
+            } else if (this.countdownTime > 0) {
                 timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
             }
         }
@@ -187,8 +187,24 @@ export class RoyaleDeath extends Phaser.Scene {
         launchMainMenu(this.game)
     }
 
+    private getReady() {
+        if (this.countdownTime <= 0) {
+            this.startNewRound()
+        } else {
+            this.hasReadied = true
+        }
+    }
+
+    private updateCounterLabel() {
+        if (this.hasReadied) {
+            this.newGameText.setText(`starts in ${this.countdownTime} s`)
+            this.newGameBG.setAlpha(0.3)
+            centerAlignTextLabel(this.newGameText, -9)
+        }
+    }
+
     private async startNewRound() {
-        if (!this.countdownComplete) return
+        if (this.countdownTime > 0) return
         if (!(this.seed && this.seedData)) return
 
         this.game.scene.remove(this)

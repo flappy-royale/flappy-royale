@@ -22,6 +22,7 @@ export class RoyaleLobby extends Phaser.Scene {
     private seed: string
 
     private countdownTime: number = 0
+    private hasReadied: boolean = false
 
     snapshotMode: boolean = false
 
@@ -83,40 +84,25 @@ export class RoyaleLobby extends Phaser.Scene {
             launchMainMenu(this.game)
         }
 
+        document.getElementById('button').addEventListener('click', () => {
+            this.hasReadied = true
+            if (this.countdownTime <= 0) {
+                this.startTheGame()
+            }
+            this.updateCountdownLabel()
+        }, { once: true })
+
         // Start the countdown timer
-        let period = "." // Tracks "hold on..." periods if we don't load seeds in time
-
-        const countdownButton = document.getElementById("countdown-description")
-        const countdownTimerText = document.getElementById("countdown-time")
-
         let timeout: number | undefined
         const updateTimer = () => {
             this.countdownTime -= 1
 
-            if (this.countdownTime <= 0) {
-                if (this.seedData) {
-                    // Load the game!
-                    this.game.scene.remove(this)
-
-                    const scene = new BattleScene({
-                        seed: this.seed,
-                        data: this.seedData,
-                        gameMode: GameMode.Royale,
-                        theme: GameTheme.default
-                    })
-                    addScene(this.game, "BattleScene" + this.seed, scene, true, {})
-                    scene.playBusCrash()
-                    return
-                } else {
-                    countdownButton.innerText = `hold on${period}`
-                    period += "."
-                    if (period === "....") {
-                        period = ""
-                    }
-                }
-            } else {
-                countdownTimerText.innerText = `${this.countdownTime}`
+            if (this.countdownTime <= 0 && this.seedData && this.hasReadied) {
+                this.startTheGame()
+                return
             }
+
+            this.updateCountdownLabel()
 
             if (!this.snapshotMode) {
                 timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
@@ -193,6 +179,37 @@ export class RoyaleLobby extends Phaser.Scene {
         root.appendChild(wings)
 
         return root
+    }
+
+    private startTheGame() {
+        this.game.scene.remove(this)
+
+        const scene = new BattleScene({
+            seed: this.seed,
+            data: this.seedData,
+            gameMode: GameMode.Royale,
+            theme: GameTheme.default
+        })
+        addScene(this.game, "BattleScene" + this.seed, scene, true, {})
+        scene.playBusCrash()
+    }
+
+    private updateCountdownLabel() {
+        const countdownButton = document.getElementById("countdown-description")
+        let period = "." // Tracks "hold on..." periods if we don't load seeds in time
+
+        if (!this.hasReadied) { return }
+
+        if (this.countdownTime > 0) {
+            countdownButton.innerHTML = `starts in <span id="countdown-time">${this.countdownTime}</span> s`
+            document.getElementById("button-bg").style.opacity = "0.3"
+        } else if (!this.seedData) {
+            countdownButton.innerText = `hold on${period}`
+            period += "."
+            if (period === "....") {
+                period = ""
+            }
+        }
     }
 }
 
