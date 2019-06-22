@@ -12,6 +12,9 @@ export enum GameMode {
 /** Should the scene include the player bird? */
 export const showPlayerBird = (mode: GameMode) => mode !== GameMode.Menu
 
+/** Should the scene show ghosts */
+export const showGhostBirds = (mode: GameMode) => mode === GameMode.Royale
+
 /** Should we upload player events? */
 export const shouldRecordScores = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
 
@@ -28,7 +31,7 @@ export const shouldShowLivesLabel = (mode: GameMode) => mode === GameMode.Trial
 export const shouldShowHighScoreLabel = (mode: GameMode) => mode === GameMode.Trial
 
 /** Should we show the birds left? */
-export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Royale || mode === GameMode.Trial
+export const shouldShowBirdsLeftLabel = (mode: GameMode) => mode === GameMode.Royale
 
 /** Should we show the birds left? */
 export const shouldRestartWhenPlayerDies = (mode: GameMode) => mode === GameMode.Training

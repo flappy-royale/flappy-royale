@@ -265,20 +265,22 @@ export class BattleScene extends Phaser.Scene {
         this.physics.add.collider(this.bus, this.floorPhysics)
 
         // Set up the competitor birds
-        this.recordedInput.forEach(input => {
-            const ghost = new BirdSprite(
-                this,
-                constants.birdXPosition,
-                constants.birdYPosition + constants.GameAreaTopOffset,
-                {
-                    isPlayer: false,
-                    settings: input.user
-                }
-            )
-            ghost.setupForBeingInBus()
-            ghost.addCollideForSprite(this, this.floorPhysics)
-            this.ghostBirds.push(ghost)
-        })
+        if (game.showGhostBirds(this.mode)) {
+            this.recordedInput.forEach(input => {
+                const ghost = new BirdSprite(
+                    this,
+                    constants.birdXPosition,
+                    constants.birdYPosition + constants.GameAreaTopOffset,
+                    {
+                        isPlayer: false,
+                        settings: input.user
+                    }
+                )
+                ghost.setupForBeingInBus()
+                ghost.addCollideForSprite(this, this.floorPhysics)
+                this.ghostBirds.push(ghost)
+            })
+        }
 
         if (this.bird) {
             this.bird.destroy()
@@ -333,12 +335,15 @@ export class BattleScene extends Phaser.Scene {
         }
 
         if (devSettings.showUI && game.shouldShowLivesLabel(this.mode)) {
+            const isTop = !game.shouldShowBirdsLeftLabel(this.mode)
+            const yPos = isTop ? constants.NotchOffset + 4 : constants.NotchOffset + 22
+
             const livesNum = getLives(this.seed)
             const lives = livesNum - 1
-            const livesText = this.add.bitmapText(24, 22 + constants.NotchOffset, "nokia16", `${lives}`, 16)
+            const livesText = this.add.bitmapText(24, yPos, "nokia16", `${lives}`, 16)
             livesText.setDepth(constants.zLevels.ui)
 
-            const livesIcon = new BirdSprite(this, 4, constants.NotchOffset + 30, { isPlayer: false, settings: this.userSettings })
+            const livesIcon = new BirdSprite(this, 4, yPos + 8, { isPlayer: false, settings: this.userSettings })
             livesIcon.actAsUIElement()
         }
 
@@ -497,30 +502,32 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // Replay all of the actions for the other players
-        this.recordedInput.forEach((input, index) => {
-            if (!input.actions) {
-                return
-            }
-
-            while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
-                const event = input.actions.shift()
-                const ghostBird = this.ghostBirds[index]
-                if (event.action === "flap") {
-                    ghostBird.flap()
-                } else if (event.action === "sync" && event.value !== undefined) {
-                    ghostBird.position.y = event.value + constants.GameAreaTopOffset
-                } else if (event.action === "died") {
-                    // If the player isn't dead, then this
-                    // bird will now be moving at the pipes speed
-                    // off the screen
-                    let pipeSpeed = constants.pipeSpeed
-                    if (this.bird.isDead) pipeSpeed = 0
-
-                    ghostBird.die(-1 * pipeSpeed)
-                    this.ghostBirdHasDied()
+        if (game.showGhostBirds(this.mode)) {
+            this.recordedInput.forEach((input, index) => {
+                if (!input.actions) {
+                    return
                 }
-            }
-        })
+
+                while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
+                    const event = input.actions.shift()
+                    const ghostBird = this.ghostBirds[index]
+                    if (event.action === "flap") {
+                        ghostBird.flap()
+                    } else if (event.action === "sync" && event.value !== undefined) {
+                        ghostBird.position.y = event.value + constants.GameAreaTopOffset
+                    } else if (event.action === "died") {
+                        // If the player isn't dead, then this
+                        // bird will now be moving at the pipes speed
+                        // off the screen
+                        let pipeSpeed = constants.pipeSpeed
+                        if (this.bird.isDead) pipeSpeed = 0
+
+                        ghostBird.die(-1 * pipeSpeed)
+                        this.ghostBirdHasDied()
+                    }
+                }
+            })
+        }
 
         // Player related game logic
         if (game.showPlayerBird(this.mode)) {
@@ -691,9 +698,9 @@ export class BattleScene extends Phaser.Scene {
 
             // Remove the UI
             // TODO: Fade?
-            this.scoreLabel.destroy()
-            this.birdsLeft.destroy()
-            this.backButton.destroy()
+            if (this.scoreLabel) this.scoreLabel.destroy()
+            if (this.birdsLeft) this.birdsLeft.destroy()
+            if (this.backButton) this.backButton.destroy()
 
             if (this.mode === game.GameMode.Royale) {
                 const deathOverlay = new RoyaleDeath("death", {
