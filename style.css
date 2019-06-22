@@ -18,6 +18,10 @@ body.demo {
     margin: 60px auto;
 }
 
+#button {
+    touch-action: manipulation;
+}
+
 @font-face {
     font-family: "Fipps";
     src: url("./assets/fonts/Fipps-Regular.otf") format("opentype");
