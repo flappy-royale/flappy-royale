@@ -99,6 +99,14 @@ nav a.disabled {
     position: relative;
 }
 
+.container a {
+    color: white;
+}
+
+.container a:hover {
+    font-weight: bold;
+}
+
 #ground {
     background: url("../assets/battle/ground.png") repeat-x;
 
