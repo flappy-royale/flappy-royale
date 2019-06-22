@@ -19,13 +19,14 @@ import {
     getLives,
     getHighScore,
     setHighScore,
-    livesExtensionStateForSeed
+    livesExtensionStateForSeed,
+    UserSettings
 } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { cloneDeep } from "lodash"
-import { rightAlignTextLabel } from "./utils/alignTextLabel"
+import { rightAlignTextLabel, centerAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
@@ -86,6 +87,12 @@ export class BattleScene extends Phaser.Scene {
     /** The data (user recordings etc) for this seed  */
     public seedData: SeedData
 
+    /** A sorted-by-score copy of the replays (for your score-to-beat) */
+    private sortedReplays: PlayerData[] | undefined
+
+    /** A copy of the current user */
+    private userSettings: UserSettings
+
     /** A copy (to be mutated) of the other players input events */
     private recordedInput: PlayerData[] = []
 
@@ -115,8 +122,20 @@ export class BattleScene extends Phaser.Scene {
     // What the player's current high score for this seed is
     public highScore: number = 0
 
+    // What the next high score for you to beat is
+    public scoreToBeat: number = 0
+
     /** How we show your score */
     private scoreLabel: Phaser.GameObjects.BitmapText | undefined
+
+    /** How we show the score to beat */
+    private scoreToBeatLabel: Phaser.GameObjects.BitmapText | undefined
+
+    /** Your avatar, for showing your high score */
+    private highScoreIcon: BirdSprite | undefined
+
+    /** The avatar of the bird who's directly beating your high score */
+    private scoreToBeatIcon: BirdSprite | undefined
 
     /** How we show your daily high score in Trial */
     private highScoreLabel: Phaser.GameObjects.BitmapText | undefined
@@ -229,6 +248,8 @@ export class BattleScene extends Phaser.Scene {
             enablePhysicsLogging(this)
         }
 
+        this.userSettings = getUserSettings()
+
         // setup bg + animations
         createBackgroundSprites(this, this.theme)
         setupBirdAnimations(this)
@@ -301,42 +322,34 @@ export class BattleScene extends Phaser.Scene {
 
         if (devSettings.showUI && game.shouldShowScoreLabel(this.mode)) {
             this.scoreLabel = this.add.bitmapText(
-                constants.GameWidth - 30,
-                constants.GameAreaTopOffset,
+                0,
+                constants.NotchOffset,
                 "nokia16",
                 "0",
                 32
             )
-            this.scoreLabel.setRightAlign()
             this.scoreLabel.setDepth(constants.zLevels.ui)
             this.updateScoreLabel()
         }
 
         if (devSettings.showUI && game.shouldShowLivesLabel(this.mode)) {
             const livesNum = getLives(this.seed)
-            const lives = livesNum == 1 ? "last try!" : `${livesNum} tries left`
-            const livesText = this.add.bitmapText(4, 22 + constants.GameAreaTopOffset, "nokia16", lives, 16)
+            const lives = livesNum - 1
+            const livesText = this.add.bitmapText(24, 22 + constants.NotchOffset, "nokia16", `${lives}`, 16)
             livesText.setDepth(constants.zLevels.ui)
+
+            const livesIcon = new BirdSprite(this, 4, constants.NotchOffset + 30, { isPlayer: false, settings: this.userSettings })
+            livesIcon.actAsUIElement()
         }
 
         if (devSettings.showUI && game.shouldShowHighScoreLabel(this.mode)) {
             this.highScore = getHighScore(this.seed)
-            let highScoreText = `Best: ${this.highScore}`
-            this.highScoreLabel = this.add.bitmapText(
-                constants.GameWidth - 60,
-                constants.GameAreaTopOffset + 33,
-                "nokia16",
-                highScoreText,
-                16
-            )
-            this.highScoreLabel.setRightAlign()
-            this.highScoreLabel.setDepth(constants.zLevels.ui)
-            rightAlignTextLabel(this.highScoreLabel, 2)
+            this.renderHighScores()
         }
 
         // When we want to show a countdown, set it up with defaults
         if (devSettings.showUI && game.shouldShowBirdsLeftLabel(this.mode)) {
-            this.birdsLeft = this.add.bitmapText(4, 4 + constants.GameAreaTopOffset, "nokia16", "0", 16)
+            this.birdsLeft = this.add.bitmapText(4, constants.NotchOffset + 4, "nokia16", "0", 16)
             this.birdsLeft.setDepth(constants.zLevels.ui)
             this.ghostBirdHasDied()
         }
@@ -362,16 +375,80 @@ export class BattleScene extends Phaser.Scene {
         launchMainMenu(this.game)
     }
 
+    private renderHighScores() {
+        [this.highScoreLabel, this.scoreToBeatLabel, this.highScoreIcon, this.scoreToBeatIcon]
+            .forEach(i => { if (i) { i.destroy() } })
+
+        this.sortedReplays = this.seedData.replays.sort((l, r) => r.score - l.score)
+        const toBeat = this.sortedReplays.reverse().find(r => r.score > this.highScore)
+
+        let highScoreText = `${this.highScore}`
+
+        if (toBeat) {
+            this.highScoreLabel = this.add.bitmapText(
+                0,
+                constants.NotchOffset + 20,
+                "nokia16",
+                highScoreText,
+                16
+            )
+            rightAlignTextLabel(this.highScoreLabel, 26)
+            this.highScoreLabel.setDepth(constants.zLevels.ui)
+
+            this.highScoreIcon = new BirdSprite(this,
+                constants.GameWidth - 20,
+                28 + constants.NotchOffset,
+                { isPlayer: false, settings: this.userSettings })
+            this.highScoreIcon.actAsUIElement()
+
+            this.scoreToBeat = toBeat.score
+
+            this.scoreToBeatLabel = this.add.bitmapText(
+                0,
+                4 + constants.NotchOffset,
+                "nokia16",
+                `${toBeat.score}`,
+                16
+            )
+            rightAlignTextLabel(this.scoreToBeatLabel, 26)
+            this.scoreToBeatLabel.setDepth(constants.zLevels.ui)
+
+            this.scoreToBeatIcon = new BirdSprite(this,
+                constants.GameWidth - 20,
+                12 + constants.NotchOffset,
+                { isPlayer: false, settings: toBeat.user })
+            this.scoreToBeatIcon.actAsUIElement()
+        } else {
+            this.highScoreLabel = this.add.bitmapText(
+                0,
+                constants.NotchOffset + 20,
+                "nokia16",
+                highScoreText,
+                16
+            )
+            rightAlignTextLabel(this.highScoreLabel, 26)
+            this.highScoreLabel.setDepth(constants.zLevels.ui)
+
+            const settings = getUserSettings()
+            this.highScoreIcon = new BirdSprite(this,
+                constants.GameWidth - 20,
+                28 + constants.NotchOffset,
+                { isPlayer: false, settings: settings })
+            this.highScoreIcon.actAsUIElement()
+        }
+
+    }
+
     updateScoreLabel() {
         if (!devSettings.showUI) return
         this.scoreLabel.text = `${this.score}`
-        rightAlignTextLabel(this.scoreLabel)
+        this.scoreLabel.setCenterAlign()
+        centerAlignTextLabel(this.scoreLabel, -2)
 
         if (this.highScoreLabel && this.score > this.highScore) {
             this.highScore = this.score
-            this.highScoreLabel.text = `Best: ${this.highScore}`
-            rightAlignTextLabel(this.highScoreLabel, 2)
-            setHighScore(this.seed, this.highScore)
+            setHighScore(this.seed, this.score)
+            this.renderHighScores()
         }
     }
 
@@ -506,7 +583,7 @@ export class BattleScene extends Phaser.Scene {
 
             const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
             if (birdsAlive) {
-                this.birdsLeft.text = `${getNumberWithOrdinal(birdsAlive + 1)}`
+                this.birdsLeft.text = `${(birdsAlive + 1)}/${this.ghostBirds.length + 1}`
             } else if (this.ghostBirds.length) {
                 // You were actually against other folk
                 this.birdsLeft.text = "1st"
