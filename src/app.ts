@@ -15,6 +15,7 @@ import { TrialDeath } from "./battle/overlays/TrialDeathScene"
 import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
+import { AppLaunchScene } from "./menus/AppLaunchScreen"
 
 declare var PRODUCTION: boolean
 declare var DEMO: boolean
@@ -30,6 +31,7 @@ if (PRODUCTION) appCache.configure()
 if (DEMO) document.body.className = "demo"
 
 enum StartupScreen {
+    Launcher,
     MainMenu,
     RoyalBattle,
     TrialBattle,
@@ -190,40 +192,49 @@ window.onload = async () => {
 
     const seed = "1-royale-0"
 
-    // Change this to have it load up into a different screen on save
+    // Change this to have it load up into a different screen on save in dev mode
     const startupScreen = StartupScreen.MainMenu as StartupScreen
 
-    switch (startupScreen) {
-        case StartupScreen.TrialBattle:
-            loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
-            break
+    if (PRODUCTION) {
+        const scene = new AppLaunchScene()
+        game.scene.add("launcher", scene, true)
+    } else {
+        switch (startupScreen) {
+            case StartupScreen.Launcher:
+                const scene = new AppLaunchScene()
+                game.scene.add("launcher", scene, true)
+                break
+            case StartupScreen.TrialBattle:
+                loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
+                break
 
-        case StartupScreen.RoyalBattle:
-            loadUpIntoTraining(game, { offline: false, mode: GameMode.Royale })
-            break
+            case StartupScreen.RoyalBattle:
+                loadUpIntoTraining(game, { offline: false, mode: GameMode.Royale })
+                break
 
-        case StartupScreen.Settings:
-            loadUpIntoSettings(game)
-            break
+            case StartupScreen.Settings:
+                loadUpIntoSettings(game)
+                break
 
-        case StartupScreen.MainMenu:
-            launchMainMenu(game)
-            break
+            case StartupScreen.MainMenu:
+                launchMainMenu(game)
+                break
 
-        case StartupScreen.RoyaleLobby:
-            const lobby = new RoyaleLobby({ seed })
-            addScene(game, "RoyaleLobby" + seed, lobby, true, {})
-            break
+            case StartupScreen.RoyaleLobby:
+                const lobby = new RoyaleLobby({ seed })
+                addScene(game, "RoyaleLobby" + seed, lobby, true, {})
+                break
 
-        case StartupScreen.TrialLobby:
-            const trial = new TrialLobby({ seed })
-            addScene(game, "TrialLobby" + seed, trial, true, {})
-            break
+            case StartupScreen.TrialLobby:
+                const trial = new TrialLobby({ seed })
+                addScene(game, "TrialLobby" + seed, trial, true, {})
+                break
+        }
+
+        // showLoadingScreen(game)
+        // appCache.fakeLoadingScreen()
+        // testTrialDeathScreen(game, 1)
     }
-
-    // showLoadingScreen(game)
-    // appCache.fakeLoadingScreen()
-    // testTrialDeathScreen(game, 1)
 
     if (!PRODUCTION) {
         console.log("Skipping app cache")

@@ -19,8 +19,8 @@ import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { BirdSprite } from "../BirdSprite"
 import { PlayerData } from "../../firebase"
-import { shareNatively } from "../../nativeComms/share";
-import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors";
+import { shareNatively } from "../../nativeComms/share"
+import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors"
 
 export interface TrialDeathProps {
     score: number
@@ -324,7 +324,8 @@ export class TrialDeath extends Phaser.Scene {
 
         const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale Daily Trial! https://flappyroyale.io`
         const winMessage = `I have the high score for today's Flappy Royale Daily Trial! Think you can beat ${this.props.score}? https://flappyroyale.io`
-        const firstPipeFailMessage = "I died on the first pipe in today's Flappy Royale Daily Trial! https://flappyroyale.io"
+        const firstPipeFailMessage =
+            "I died on the first pipe in today's Flappy Royale Daily Trial! https://flappyroyale.io"
 
         let text = lossMessage
         if (won) text = winMessage

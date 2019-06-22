@@ -266,8 +266,8 @@ export class BirdSprite {
     }
 
     // When a player dies in royale, the rest if the birds move forwards
-    startMovingLeft() {
-        this.sprite.setVelocityX(constants.pipeSpeed)
+    startMovingLeft(velocity = constants.pipeSpeed) {
+        this.sprite.setVelocityX(velocity)
     }
 
     updateRelatedSprites(settings: { tight: boolean }) {
