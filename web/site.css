@@ -41,8 +41,9 @@ body {
 }
 
 nav {
-    width: 420px;
+    width: 600px;
     margin: 20px auto;
+    text-align: center;
 }
 
 nav a {
@@ -50,7 +51,7 @@ nav a {
     color: white;
 
     border-radius: 8px;
-    width: 180px;
+    width: 195px;
     height: 36px;
     display: inline-block;
     text-align: center;
@@ -58,9 +59,17 @@ nav a {
     text-decoration: none;
 }
 
+nav a:hover {
+    background-color: #72360e;
+}
+
 #call-to-action nav a {
     background-color: #be743f;
     color: black;
+}
+
+#call-to-action nav a:hover {
+    background-color: #e47f37;
 }
 
 nav a.disabled {
@@ -99,12 +108,23 @@ nav a.disabled {
     position: relative;
 }
 
+.large {
+    width: auto;
+    max-width: 800px;
+    color: #fff;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.large h2 {
+    margin-top: 60px;
+}
+
 .container a {
     color: white;
 }
 
 .container a:hover {
-    font-weight: bold;
+    color: rgb(223, 164, 63);
 }
 
 #ground {
@@ -224,16 +244,17 @@ ul.seats li img {
 }
 
 #call-to-action {
-    display: flex;
-    flex-direction: column;
     margin-bottom: 90px;
-}
-
-#call-to-action nav {
-    display: flex;
-    margin: 10 auto;
 }
 
 #call-to-action nav a {
     margin: 0 10px;
+}
+
+.large h5 {
+    margin-bottom: 0;
+}
+
+.large h2 {
+    font-size: 32px;
 }
