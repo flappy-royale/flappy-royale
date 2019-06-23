@@ -15,6 +15,7 @@ import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
 import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
+import { launchTutorial } from "../battle/TutorialScene";
 
 declare const DEMO: boolean
 
@@ -106,6 +107,10 @@ export class MainMenuScene extends Phaser.Scene {
         const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
 
+        const howToPlayButton = this.add.bitmapText(0, c.GameHeight - 40, "nokia16", "?", 20)
+        rightAlignTextLabel(howToPlayButton, 10)
+        becomeButton(howToPlayButton, this.loadTutorial, this)
+
         // This is just used for taking snapshots
         window.dispatchEvent(new Event("gameloaded"))
     }
@@ -129,6 +134,11 @@ export class MainMenuScene extends Phaser.Scene {
         const seed = this.seeds.royale[index]
         const lobby = new RoyaleLobby({ seed })
         addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+    }
+
+    private loadTutorial() {
+        this.removeMenu()
+        launchTutorial(this.game)
     }
 
     removeMenu() {
