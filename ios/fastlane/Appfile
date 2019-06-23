@@ -1,5 +1,5 @@
-app_identifier("com.lazerwalker.FlappyRoyale") # The bundle identifier of your app
-apple_id("michael@lazerwalker.com") # Your Apple email address
+app_identifier("io.flappyroyale.prod") # The bundle identifier of your app
+# apple_id("michael@lazerwalker.com") # Your Apple email address
 
 itc_team_id("370051") # App Store Connect Team ID
 team_id("48WB56AE4K") # Developer Portal Team ID
