@@ -603,6 +603,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 48WB56AE4K;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -617,6 +618,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -628,6 +630,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 48WB56AE4K;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -641,6 +644,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
