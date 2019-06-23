@@ -12,7 +12,7 @@ import _ = require("lodash")
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { shareNatively } from "../../nativeComms/share"
 import { GameTheme } from "../theme"
-import { setupLogoCornerImages } from "../../menus/utils/backgroundColors";
+import { setupLogoCornerImages } from "../../menus/utils/backgroundColors"
 
 export interface RoyaleDeathProps {
     score: number
@@ -42,7 +42,7 @@ export class RoyaleDeath extends Phaser.Scene {
     seed: string
     seedData: SeedData
 
-    countdownTime: number
+    /** True if the user has pressed 'ready', but new seed data isn't available yet  */
     hasReadied: boolean = false
 
     newGameText: Phaser.GameObjects.BitmapText
@@ -67,6 +67,10 @@ export class RoyaleDeath extends Phaser.Scene {
                     seedData.replays = _.sampleSize(seedData.replays, 99)
                 }
                 this.seedData = seedData
+
+                if (this.hasReadied) {
+                    this.startNewRound()
+                }
             })
         })
 
@@ -105,19 +109,16 @@ export class RoyaleDeath extends Phaser.Scene {
 
         this.footerObjects.push(this.add.image(80, GameHeight - 8, "footer-bg"))
         const back = this.add.image(16, GameHeight - 20, "back")
-        becomeButton(back, this.backToMainMenu, this)
         this.footerObjects.push(back)
 
         this.newGameBG = this.add.image(90, GameHeight - 20, "button-bg")
         this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "READY", 8)
-        becomeButton(this.newGameBG, this.getReady, this, [this.newGameText])
         this.footerObjects.push(this.newGameBG)
         this.footerObjects.push(this.newGameText)
 
         const share = this.add.image(125, GameHeight - 51, "button-small-bg")
         share.setScale(0.6, 1)
         const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
-        becomeButton(share, this.shareStats, this, [shareIcon])
         this.footerObjects.push(share)
         this.footerObjects.push(shareIcon)
 
@@ -128,28 +129,11 @@ export class RoyaleDeath extends Phaser.Scene {
             requestReview()
         }
 
-        // Start the countdown timer
-        this.countdownTime = _.random(2, 3) + 1
-
-        let timeout: number | undefined
-        const updateTimer = () => {
-            this.countdownTime -= 1
-
-            if (this.hasReadied) {
-                if (this.countdownTime <= 0) {
-                    return this.startNewRound()
-                }
-                this.updateCounterLabel()
-                timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
-            } else if (this.countdownTime > 0) {
-                timeout = <number>(<unknown>setTimeout(updateTimer, 1000))
-            }
-        }
-        updateTimer()
-
-        this.events.on("destroy", () => {
-            clearTimeout(timeout)
-        })
+        setTimeout(() => {
+            becomeButton(back, this.backToMainMenu, this)
+            becomeButton(this.newGameBG, this.getReady, this, [this.newGameText])
+            becomeButton(share, this.shareStats, this, [shareIcon])
+        }, 200)
     }
 
     private shareStats() {
@@ -191,24 +175,23 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     private getReady() {
-        if (this.countdownTime <= 0) {
+        this.hasReadied = true
+        if (this.seed && this.seedData) {
             this.startNewRound()
         } else {
-            this.hasReadied = true
             this.updateCounterLabel()
         }
     }
 
     private updateCounterLabel() {
         if (this.hasReadied) {
-            this.newGameText.setText(`starts in ${this.countdownTime} s`)
+            this.newGameText.setText(`one sec...`)
             this.newGameBG.setAlpha(0.3)
             centerAlignTextLabel(this.newGameText, -9)
         }
     }
 
     private async startNewRound() {
-        if (this.countdownTime > 0) return
         if (!(this.seed && this.seedData)) return
 
         this.game.scene.remove(this)
