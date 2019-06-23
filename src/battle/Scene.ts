@@ -323,13 +323,7 @@ export class BattleScene extends Phaser.Scene {
         this.debugLabel.setDepth(constants.zLevels.debugText)
 
         if (devSettings.showUI && game.shouldShowScoreLabel(this.mode)) {
-            this.scoreLabel = this.add.bitmapText(
-                0,
-                constants.NotchOffset,
-                "nokia16",
-                "0",
-                32
-            )
+            this.scoreLabel = this.add.bitmapText(0, constants.NotchOffset, "nokia16", "0", 32)
             this.scoreLabel.setDepth(constants.zLevels.ui)
             this.updateScoreLabel()
         }
@@ -381,8 +375,11 @@ export class BattleScene extends Phaser.Scene {
     }
 
     private renderHighScores() {
-        [this.highScoreLabel, this.scoreToBeatLabel, this.highScoreIcon, this.scoreToBeatIcon]
-            .forEach(i => { if (i) { i.destroy() } })
+        ;[this.highScoreLabel, this.scoreToBeatLabel, this.highScoreIcon, this.scoreToBeatIcon].forEach(i => {
+            if (i) {
+                i.destroy()
+            }
+        })
 
         this.sortedReplays = this.seedData.replays.sort((l, r) => r.score - l.score)
         const toBeat = this.sortedReplays.reverse().find(r => r.score > this.highScore)
@@ -390,58 +387,39 @@ export class BattleScene extends Phaser.Scene {
         let highScoreText = `${this.highScore}`
 
         if (toBeat) {
-            this.highScoreLabel = this.add.bitmapText(
-                0,
-                constants.NotchOffset + 20,
-                "nokia16",
-                highScoreText,
-                16
-            )
+            this.highScoreLabel = this.add.bitmapText(0, constants.NotchOffset + 20, "nokia16", highScoreText, 16)
             rightAlignTextLabel(this.highScoreLabel, 26)
             this.highScoreLabel.setDepth(constants.zLevels.ui)
 
-            this.highScoreIcon = new BirdSprite(this,
-                constants.GameWidth - 20,
-                28 + constants.NotchOffset,
-                { isPlayer: false, settings: this.userSettings })
+            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 28 + constants.NotchOffset, {
+                isPlayer: false,
+                settings: this.userSettings
+            })
             this.highScoreIcon.actAsUIElement()
 
             this.scoreToBeat = toBeat.score
 
-            this.scoreToBeatLabel = this.add.bitmapText(
-                0,
-                4 + constants.NotchOffset,
-                "nokia16",
-                `${toBeat.score}`,
-                16
-            )
+            this.scoreToBeatLabel = this.add.bitmapText(0, 4 + constants.NotchOffset, "nokia16", `${toBeat.score}`, 16)
             rightAlignTextLabel(this.scoreToBeatLabel, 26)
             this.scoreToBeatLabel.setDepth(constants.zLevels.ui)
 
-            this.scoreToBeatIcon = new BirdSprite(this,
-                constants.GameWidth - 20,
-                12 + constants.NotchOffset,
-                { isPlayer: false, settings: toBeat.user })
+            this.scoreToBeatIcon = new BirdSprite(this, constants.GameWidth - 20, 12 + constants.NotchOffset, {
+                isPlayer: false,
+                settings: toBeat.user
+            })
             this.scoreToBeatIcon.actAsUIElement()
         } else {
-            this.highScoreLabel = this.add.bitmapText(
-                0,
-                constants.NotchOffset + 20,
-                "nokia16",
-                highScoreText,
-                16
-            )
+            this.highScoreLabel = this.add.bitmapText(0, constants.NotchOffset + 20, "nokia16", highScoreText, 16)
             rightAlignTextLabel(this.highScoreLabel, 26)
             this.highScoreLabel.setDepth(constants.zLevels.ui)
 
             const settings = getUserSettings()
-            this.highScoreIcon = new BirdSprite(this,
-                constants.GameWidth - 20,
-                28 + constants.NotchOffset,
-                { isPlayer: false, settings: settings })
+            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 28 + constants.NotchOffset, {
+                isPlayer: false,
+                settings: settings
+            })
             this.highScoreIcon.actAsUIElement()
         }
-
     }
 
     updateScoreLabel() {
@@ -544,7 +522,7 @@ export class BattleScene extends Phaser.Scene {
             }
 
             // If the bird hits the floor
-            if (!devSettings.skipBottomCollision && this.bird.position.y > 171 + constants.GameAreaTopOffset) {
+            if (!devSettings.skipBottomCollision && this.bird.position.y > 168 + constants.GameAreaTopOffset) {
                 if (!this.bird.isDead) this.userDied()
 
                 this.bird.hasHitFloor()
@@ -590,7 +568,7 @@ export class BattleScene extends Phaser.Scene {
 
             const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
             if (birdsAlive) {
-                this.birdsLeft.text = `${(birdsAlive + 1)}/${this.ghostBirds.length + 1}`
+                this.birdsLeft.text = `${birdsAlive + 1}/${this.ghostBirds.length + 1}`
             } else if (this.ghostBirds.length) {
                 // You were actually against other folk
                 this.birdsLeft.text = "1st"
@@ -715,12 +693,13 @@ export class BattleScene extends Phaser.Scene {
                     score: this.score,
                     lives: getLives(this.seed),
                     livesState: livesExtensionStateForSeed(this.seed),
-                    position: birdsAlive.length,
+                    position: this.seedData.replays.filter(r => r.score > this.score).length,
                     battle: this,
-                    totalPlayers: this.ghostBirds.length + 1,
+                    totalPlayers: this.seedData.replays.length + 1,
                     seed: this.seed,
                     replays: this.seedData.replays
                 })
+                debugger
                 this.scene.add("deathoverlay", deathOverlay, true)
             }
         }

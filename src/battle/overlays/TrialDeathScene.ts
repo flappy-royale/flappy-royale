@@ -357,9 +357,12 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     private addTopMedal() {
+        const cameFirst = this.props.position === 0
+
         const top = GameAreaTopOffset
         const medalX = GameWidth - 52
-        const medalY = top + 16
+        const medalY = cameFirst ? top + 16 : top + 160
+
         this.add.image(medalX, medalY, "medal").setScale(0.5, 0.5)
         this.add.bitmapText(GameWidth - 36, medalY - 6, "fipps-bit", "BEST", 8)
 

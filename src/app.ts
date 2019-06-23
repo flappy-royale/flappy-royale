@@ -236,7 +236,7 @@ window.onload = async () => {
 
         // showLoadingScreen(game)
         // appCache.fakeLoadingScreen()
-        // testTrialDeathScreen(game, 1)
+        // testTrialDeathScreen(game, 7)
     }
 
     if (!PRODUCTION) {
