@@ -41,8 +41,7 @@ export function shareNatively(copy: string, scene: ScreenshotableScreen) {
 
             n.share({
                 title: "Flappy Royale",
-                text: copy,
-                url: "https://flappyroyale.io"
+                text: copy
             })
         }
     }
