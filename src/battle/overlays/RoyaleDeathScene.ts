@@ -63,6 +63,9 @@ export class RoyaleDeath extends Phaser.Scene {
         getAndBumpUserCycleSeed().then(seed => {
             this.seed = seed
             fetchRecordingsForSeed(seed).then(seedData => {
+                if (seedData.replays.length > 99) {
+                    seedData.replays = _.sampleSize(seedData.replays, 99)
+                }
                 this.seedData = seedData
             })
         })
