@@ -1,8 +1,8 @@
 ### Implementation Details of the Networking
 
-You aren't connecting and playing in pure real-time against people. Considering you can't interact with another player
-anyway (we explored a lot of ideas at the start about how you might influence another game) but eventually couldn't find
-a game-design pattern that needed true real-time.
+You aren't connecting and playing in pure real-time against people. You can't interact with another player anyway in the
+game. We explored a lot of ideas at the start on how you might influence other players, but eventually couldn't find a
+game-design pattern that needed true real-time.
 
 Instead we create internally consistent seeded games, store the replays of people playing them, and those are what you
 can consider your opponents. Doing it this way drastically simplifies tech specs, but also frees you from the
