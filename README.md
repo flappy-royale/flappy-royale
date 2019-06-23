@@ -2,6 +2,11 @@
 
 A HTML5 Game, built to be embedded in apps using Phaser 3.
 
+<a href="./web/assets/1-full.png"><img src="./web/assets/1-thumb.png"></a>
+<a href="./web/assets/2-full.png"><img src="./web/assets/2-thumb.png"></a>
+<a href="./web/assets/3-full.png"><img src="./web/assets/3-thumb.png"></a>
+<a href="./web/assets/4-full.png"><img src="./web/assets/4-thumb.png"></a>
+
 ## Setup
 
 Clone, and run `yarn install`, run `yarn start` to load up into the app:

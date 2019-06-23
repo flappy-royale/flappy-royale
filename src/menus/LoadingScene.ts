@@ -47,6 +47,12 @@ export class LoadingScene extends Phaser.Scene {
         appCache.onDownloadProgress((percent: number) => {
             console.log("Download!", percent)
             this.progressBar.width = (percent * constants.GameWidth) / 2
+            // onDownloadEnd isn't 100% reliable
+            // so this is a backup, where it'll call it with a bit of a delay
+            // https://github.com/lazerwalker/flappy-royale/issues/102
+            if (percent === 1) {
+                setTimeout(() => window.location.reload(), 300)
+            }
         })
 
         appCache.onDownloadEnd(() => {
