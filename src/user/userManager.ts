@@ -128,7 +128,7 @@ export const getUserStatistics = () => {
         bestScore: 0,
         bestPosition: 500,
         royaleWins: 0,
-        trialSpecificWins: 0,
+        trialWins: 0,
         birdsBeaten: 0,
         crashes: 0,
         totalTime: 0,
@@ -144,10 +144,10 @@ export const getUserStatistics = () => {
         if (run.position < stats.bestPosition) stats.bestPosition = run.position
 
         // Position = 0, is a win
-        if (run.position === 0) stats.royaleWins += 1
+        if (run.position === 0 && run.mode === GameMode.Royale) stats.royaleWins += 1
 
         // So we can separately say how many trial wins you have
-        if (run.position === 0 && run.mode == GameMode.Trial) stats.trialSpecificWins += 1
+        if (run.position === 0 && run.mode == GameMode.Trial) stats.trialWins += 1
 
         // Birds you've gone past
         stats.birdsBeaten += run.totalBirds - run.position
@@ -163,7 +163,7 @@ export const getUserStatistics = () => {
     })
 
     // how many times did you not win
-    stats.crashes = stats.gamesPlayed - stats.royaleWins
+    stats.crashes = stats.gamesPlayed - (stats.royaleWins + stats.trialWins)
 
     return stats
 }

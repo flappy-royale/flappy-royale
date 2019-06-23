@@ -194,7 +194,7 @@ export class TrialDeath extends Phaser.Scene {
 
         this.add.image(20, GameHeight - 48, "green-sash")
         const userScores = getUserStatistics()
-        const pos = getNumberWithOrdinal(userScores.trialSpecificWins)
+        const pos = getNumberWithOrdinal(userScores.trialWins)
         this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${pos} daily trial win`, 8)
     }
 
