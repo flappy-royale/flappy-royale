@@ -228,12 +228,27 @@ ul.seats li img {
     justify-content: center;
 }
 
-#projected {
+#phone {
     position: absolute;
     right: -20px;
-    top: 112px;
+    top: 62px;
+    width: 260px;
+    height: 480px;
+    background-image: url("./assets//phone-bg.png");
+}
+
+#projected {
+    position: absolute;
+    right: 3px;
+    top: 60px;
     border: #be743f solid 2px;
     width: 249px;
+}
+
+#player {
+    position: absolute;
+    right: -54px;
+    top: 422px;
 }
 
 #seating {
