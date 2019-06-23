@@ -438,8 +438,8 @@ export class BattleScene extends Phaser.Scene {
     setupPhysicsFloor() {
         /** the physics floor, so that the bus + bird can land on it */
         this.floorPhysics = this.physics.add.staticImage(
-            0,
-            constants.GameAreaHeight - 50 + constants.GameAreaTopOffset,
+            80,
+            constants.GameAreaHeight - 42 + constants.GameAreaTopOffset,
             "invis"
         )
         this.floorPhysics.setGravityY(-1 * constants.gravity)
@@ -699,7 +699,7 @@ export class BattleScene extends Phaser.Scene {
                     seed: this.seed,
                     replays: this.seedData.replays
                 })
-                debugger
+
                 this.scene.add("deathoverlay", deathOverlay, true)
             }
         }
