@@ -5,6 +5,7 @@ import { preloadBirdSprites, setupBirdAnimations, BirdSprite } from "../battle/B
 import { launchMainMenu } from "./MainMenuScene"
 import { becomeButton } from "./utils/becomeButton"
 import { openURL } from "../nativeComms/openURL"
+import { launchTutorial } from "../battle/TutorialScene";
 
 export class AppLaunchScene extends Phaser.Scene {
     progressBar: Phaser.GameObjects.Rectangle
@@ -78,7 +79,13 @@ export class AppLaunchScene extends Phaser.Scene {
             3900,
             () => {
                 this.game.scene.remove(this)
-                launchMainMenu(this.game)
+
+                const settings = getUserSettings()
+                if (settings.hasCompletedTutorial) {
+                    launchMainMenu(this.game)
+                } else {
+                    launchTutorial(this.game)
+                }
             },
             [],
             this

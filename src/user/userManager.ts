@@ -42,6 +42,9 @@ export interface UserSettings {
          */
         seedIndex: number
     }
+
+    /** Whether or not the player has fully finished the onboarding */
+    hasCompletedTutorial: boolean
 }
 
 // What it is when you first join
@@ -53,7 +56,8 @@ export const defaultSettings: UserSettings = {
     royale: {
         // It'll auto-add one when you go into a royale
         seedIndex: -1
-    }
+    },
+    hasCompletedTutorial: false
 }
 
 // localStorage only works with text, so we need to marshall
@@ -68,6 +72,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 
     if ("name" in settings) existingSettings.name = settings.name!
     if ("royale" in settings) existingSettings.royale = settings.royale!
+    if ("hasCompletedTutorial" in settings) existingSettings.hasCompletedTutorial = settings.hasCompletedTutorial!
 
     if ("aesthetics" in settings) {
         const base = settings.aesthetics!.attire.filter(a => a.base)
@@ -75,6 +80,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 
         existingSettings.aesthetics = settings.aesthetics!
     }
+
 
     saveSettings(existingSettings)
 }
@@ -258,4 +264,8 @@ export const bumpLivesExtensionState = (seed: string) => {
 
     const newData = { [seed]: state + 1 }
     localStorage.setItem("lives-state", JSON.stringify(newData))
+}
+
+export const completeTutorial = (name: string) => {
+    changeSettings({ name, hasCompletedTutorial: true })
 }

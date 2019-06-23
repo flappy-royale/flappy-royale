@@ -21,9 +21,9 @@ export class LoadingScene extends Phaser.Scene {
 
         const userBird = getUserSettings()
         this.possibleAttires = [
-            { name: "", aesthetics: { attire: [dog] }, royale: { seedIndex: 1 } },
-            { name: "", aesthetics: { attire: [hedgehog] }, royale: { seedIndex: 1 } },
-            { name: "", aesthetics: { attire: [sheep] }, royale: { seedIndex: 1 } },
+            { ...userBird, name: "", aesthetics: { attire: [dog] }, royale: { seedIndex: 1 } },
+            { ...userBird, name: "", aesthetics: { attire: [hedgehog] }, royale: { seedIndex: 1 } },
+            { ...userBird, name: "", aesthetics: { attire: [sheep] }, royale: { seedIndex: 1 } },
             userBird
         ]
     }

@@ -5,7 +5,7 @@ import * as game from "./utils/gameMode"
 
 import { PlayerEvent, PlayerData, SeedData, uploadReplayForSeed } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
-import { addRowOfPipes, preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid } from "./PipeManager"
+import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addRowOfPipes } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"

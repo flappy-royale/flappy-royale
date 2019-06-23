@@ -6,6 +6,13 @@ import { createSprite } from "./utils/createSprite"
 import { themeMap, GameTheme } from "./theme"
 
 export const addRowOfPipes = (x: number, scene: BattleScene, theme: GameTheme): Phaser.Physics.Arcade.Group => {
+    const gapHeight = constants.gapHeight - Math.min(Math.floor(scene.score / 20), 6)
+    const holeSlot = Math.floor(scene.rng() * 5) + 1
+
+    return addRowOfPipesManual(x, scene, gapHeight, holeSlot, theme)
+}
+
+export const addRowOfPipesManual = (x: number, scene: Phaser.Scene, gapHeight: number, holeSlot: number, theme: GameTheme): Phaser.Physics.Arcade.Group => {
     const sprites = themeMap[theme]
 
     // Randomly pick a number between 1 and 7
@@ -20,25 +27,23 @@ export const addRowOfPipes = (x: number, scene: BattleScene, theme: GameTheme): 
     // Distance from the bottom
     const floorAvoidanceHeight = 40
 
-    const gapHeight = constants.gapHeight - Math.min(Math.floor(scene.score / 20), 6)
 
     // get the distance between each potential interval
     const pipeIntervals = (windowHeight - pipeEdgeBuffer / 2 - gapHeight / 2) / slots
 
-    const holeSlot = Math.floor(scene.rng() * 5) + 1
     const holeTop = Math.round(
         pipeIntervals * holeSlot +
-            pipeEdgeBuffer / 2 -
-            gapHeight / 2 -
-            floorAvoidanceHeight +
-            constants.GameAreaTopOffset
+        pipeEdgeBuffer / 2 -
+        gapHeight / 2 -
+        floorAvoidanceHeight +
+        constants.GameAreaTopOffset
     )
     const holeBottom = Math.round(
         pipeIntervals * holeSlot +
-            pipeEdgeBuffer / 2 +
-            gapHeight / 2 -
-            floorAvoidanceHeight +
-            constants.GameAreaTopOffset
+        pipeEdgeBuffer / 2 +
+        gapHeight / 2 -
+        floorAvoidanceHeight +
+        constants.GameAreaTopOffset
     )
 
     const pipeTop = createSprite(x, holeTop, sprites.top[0], scene)
@@ -88,7 +93,7 @@ export const nudgePipesOntoPixelGrid = (pipes: Phaser.Physics.Arcade.Group[]) =>
     })
 }
 
-export const preloadPipeSprites = (scene: Phaser.Scene, theme: GameTheme) => {
+export const preloadPipeSprites = (scene: Phaser.Scene, theme: GameTheme = GameTheme.default) => {
     const sprites = themeMap[theme]
 
     scene.load.image(sprites.top[0], sprites.top[1])

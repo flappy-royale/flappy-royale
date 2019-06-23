@@ -6,7 +6,8 @@ export enum GameMode {
     /** Compete against top scores */
     Trial = 2, // This needs to stay as 2, for the function to work reliably
     /** Infinite loop  */
-    Training
+    Training,
+    Tutorial
 }
 
 /** Should the scene include the player bird? */

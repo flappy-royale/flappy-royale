@@ -1,8 +1,9 @@
 import { BattleScene } from "./Scene"
 import * as constants from "../constants"
 import { themeMap, GameTheme } from "./theme"
+import { TutorialScene } from "./TutorialScene";
 
-export const preloadBackgroundSprites = (scene: BattleScene, theme: GameTheme) => {
+export const preloadBackgroundSprites = (scene: Phaser.Scene, theme: GameTheme = GameTheme.default) => {
     const bg = themeMap[theme]
     scene.load.image(bg.ground[0], bg.ground[1])
     scene.load.image(bg.bushes[0], bg.bushes[1])
@@ -16,7 +17,7 @@ var city: Phaser.GameObjects.TileSprite,
     bushes2: Phaser.GameObjects.TileSprite,
     ground: Phaser.GameObjects.TileSprite
 
-export const createBackgroundSprites = (scene: BattleScene, theme: GameTheme) => {
+export const createBackgroundSprites = (scene: BattleScene | TutorialScene, theme: GameTheme) => {
     const bg = themeMap[theme]
 
     // 148 px wide

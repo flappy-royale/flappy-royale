@@ -16,6 +16,7 @@ import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
+import { TutorialScene, launchTutorial } from "./battle/TutorialScene";
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -37,7 +38,8 @@ enum StartupScreen {
     TrialBattle,
     Settings,
     RoyaleLobby,
-    TrialLobby
+    TrialLobby,
+    Tutorial
 }
 
 function newGame(): FlappyGame {
@@ -170,7 +172,7 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
     }, 300)
 }
 
-export const loadUpIntoSettings = (game: FlappyGame) => {
+export const loadUpIntoSettings = (game: Phaser.Game) => {
     const settings = new UserSettingsScene()
     addScene(game, UserSettingsKey, settings, true)
 }
@@ -225,6 +227,10 @@ window.onload = async () => {
             case StartupScreen.TrialLobby:
                 const trial = new TrialLobby({ seed })
                 addScene(game, "TrialLobby" + seed, trial, true, {})
+                break
+
+            case StartupScreen.Tutorial:
+                launchTutorial(game)
                 break
         }
 

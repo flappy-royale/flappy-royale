@@ -62,8 +62,12 @@ export class BirdSprite {
 
     // The bird itself
     private bodySprite: Phaser.GameObjects.Sprite
+
     // Actually the wings
-    private sprite: Phaser.Physics.Arcade.Sprite
+    // NOTE: This is public so I can futz with it more easily in the tutorial
+    // but in general you shouldn't touch this ;)
+    public sprite: Phaser.Physics.Arcade.Sprite
+
     // Focus sprite
     private focusSprite: Phaser.GameObjects.Image
     // HATS

@@ -4,7 +4,7 @@ import * as constants from "../constants"
 // An invisible sprite with a physics body that covers the whole space
 // for the pipe gaps, set devSettings.debugPhysics to true to see it
 //
-export const addScoreLine = (x: number, scene: BattleScene, sprite: any) => {
+export const addScoreLine = (x: number, scene: Phaser.Scene, sprite: any) => {
     const line = scene.physics.add.sprite(x, 160 + constants.GameAreaTopOffset, "invis")
     const body = line.body as Phaser.Physics.Arcade.Body
 

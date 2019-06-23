@@ -1,8 +1,9 @@
 import * as constants from "../../constants"
 import { BattleScene } from "../Scene"
 import * as Phaser from "phaser"
+import { TutorialScene } from "../TutorialScene";
 
-export const preloadBusImages = (game: BattleScene) => {
+export const preloadBusImages = (game: BattleScene | TutorialScene) => {
     game.load.image("bus", require("../../../assets/battle/Bus.png"))
     game.load.image("bus-crashed", require("../../../assets/battle/BusCrashed.png"))
 
@@ -19,7 +20,7 @@ export const createBus = (scene: BattleScene) => {
     return bus
 }
 
-export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: BattleScene) => {
+export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: Phaser.Scene) => {
     if (bus.getData("dead")) return
 
     // Stop the bus, make it bounce back a bit
