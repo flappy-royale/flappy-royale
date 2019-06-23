@@ -179,6 +179,19 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         present(alert, animated: true, completion: nil)
     }
 
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+        let alert = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
+        alert.addTextField { (textField : UITextField!) -> Void in
+            textField.placeholder = defaultText
+        }
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            let text = alert.textFields![0].text
+            completionHandler(text)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in completionHandler(nil) }))
+        present(alert, animated: true, completion: nil)    }
+
     // Open normal links in a modal SFSafariViewContrller
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
