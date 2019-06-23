@@ -12,6 +12,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let adPresentor = AdPresentor()
     let analytics = AnalyticsPresentor()
     let share = ShareManager()
+    let urlOpener = URLManager()
     
     var webView: WKWebView?
 
@@ -29,16 +30,17 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         super.viewDidLoad()
         adPresentor.presentationVC = self
         share.presentationVC = self
-
-        let userScript = WKUserScript(source: "window.isAppleApp = true;",
+        urlOpener.presentationVC = self
+        
+        let username = NSUserName()
+        let userScript = WKUserScript(source: "window.isAppleApp = true; window.username = '\(username)';",
                                       injectionTime: .atDocumentStart,
                                       forMainFrameOnly: true)
-
 
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()

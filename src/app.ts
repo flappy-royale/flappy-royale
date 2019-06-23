@@ -16,7 +16,7 @@ import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
-import { TutorialScene, launchTutorial } from "./battle/TutorialScene";
+import { TutorialScene, launchTutorial } from "./battle/TutorialScene"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
