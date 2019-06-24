@@ -5,6 +5,7 @@ import { UserSettings, getUserSettings } from "../user/userManager"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
+import { builtInAttire } from "../attire"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -27,6 +28,12 @@ export const preloadBirdSprites = (scene: BattleScene | Scene) => {
 
 export const preloadBirdAttire = (scene: Phaser.Scene, bird: UserSettings) => {
     for (const attire of bird.aesthetics.attire) {
+        scene.load.image(attire.id, attire.href)
+    }
+}
+
+export const preloadAllBirdAttire = (scene: Phaser.Scene) => {
+    for (const attire of builtInAttire) {
         scene.load.image(attire.id, attire.href)
     }
 }
@@ -310,6 +317,44 @@ export class BirdSprite {
             item.setPosition(this.bodySprite.x - 1, this.bodySprite.y + 1)
             item.rotation = this.bodySprite.rotation
         })
+    }
+
+    changeAttireToRandom() {
+        const bases = builtInAttire.filter(a => a.base)
+        const base = bases[Math.floor(Math.random() * bases.length)]
+
+        this.bodySprite.destroy()
+        this.bodySprite = this.scene.add.sprite(this.sprite.x, this.sprite.y, base.id)
+        this.bodySprite.setOrigin(0.13, 0.5)
+
+        const hatsIsh = builtInAttire.filter(a => !a.base)
+        const amountOfItems = Math.floor(Math.random() * 3)
+        const hatsToWear = hatsIsh.sort(() => 0.5 - Math.random()).slice(0, amountOfItems)
+
+        this.tightAttire.forEach(a => a.destroy())
+        this.looseAttire.forEach(a => a.destroy())
+
+        // Setup clothes (always set to true for non-player birds)
+        this.tightAttire = hatsToWear
+            .filter(a => !a.base)
+            .filter(a => !this.isPlayer || a.fit === "tight")
+            .map(a => {
+                const image = this.scene.add.image(this.bodySprite.x, this.bodySprite.y, a.id)
+                image.setOrigin(0.13, 0.55)
+                image.setDepth(constants.zLevels.birdAttire + 1)
+                return image
+            })
+
+        // See updateRelatedSprite for more info
+        this.looseAttire = hatsToWear
+            .filter(a => !a.base && this.isPlayer)
+            .filter(a => a.fit === "loose")
+            .map(a => {
+                const image = this.scene.add.image(this.bodySprite.x, this.bodySprite.y, a.id)
+                image.setOrigin(0.13, 0.55)
+                image.setDepth(constants.zLevels.birdAttire + 1)
+                return image
+            })
     }
 
     /** Lets you pass a func through for when the image is tapped */

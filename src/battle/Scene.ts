@@ -6,7 +6,7 @@ import * as game from "./utils/gameMode"
 import { PlayerEvent, PlayerData, SeedData, uploadReplayForSeed } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addRowOfPipes } from "./PipeManager"
-import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
+import { BirdSprite, preloadBirdSprites, setupBirdAnimations, preloadAllBirdAttire } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
@@ -53,10 +53,12 @@ const devSettings = {
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
     debugPhysics: false,
-    // Events + info
-    debugMessages: true,
     // Lets you easily hide all UI elements
-    showUI: true
+    showUI: true,
+    // Lets you load all attire in
+    preloadAllAttire: false,
+    // Auto-play
+    autoPlayWithBestReplay: false
 }
 
 export class BattleScene extends Phaser.Scene {
@@ -174,6 +176,7 @@ export class BattleScene extends Phaser.Scene {
         this.seedData = opts.data
         this.mode = opts.gameMode
         this.theme = opts.theme
+        this.sortedReplays = this.seedData.replays.sort((l, r) => r.score - l.score)
     }
 
     // This happens when the scene is being played by the game (more
@@ -206,6 +209,7 @@ export class BattleScene extends Phaser.Scene {
         preloadBusImages(this)
         preloadPipeSprites(this, this.theme)
         preloadBirdSprites(this)
+        if (devSettings.preloadAllAttire) preloadAllBirdAttire(this)
         preloadBackgroundSprites(this, this.theme)
         deathPreload(this)
 
@@ -257,7 +261,7 @@ export class BattleScene extends Phaser.Scene {
 
         // If there's a datastore of recorded inputs, then make a fresh clone of those
         if (this.seedData && this.seedData.replays) {
-            this.recordedInput = cloneDeep(this.seedData.replays || [])
+            this.recordedInput = cloneDeep(this.sortedReplays || [])
         }
 
         this.bus = createBus(this)
@@ -381,7 +385,6 @@ export class BattleScene extends Phaser.Scene {
             }
         })
 
-        this.sortedReplays = this.seedData.replays.sort((l, r) => r.score - l.score)
         const toBeat = this.sortedReplays.reverse().find(r => r.score > this.highScore)
 
         let highScoreText = `${this.highScore}`
@@ -491,6 +494,10 @@ export class BattleScene extends Phaser.Scene {
                     const ghostBird = this.ghostBirds[index]
                     if (event.action === "flap") {
                         ghostBird.flap()
+
+                        if (devSettings.autoPlayWithBestReplay && index === 0) {
+                            this.userFlap()
+                        }
                     } else if (event.action === "sync" && event.value !== undefined) {
                         ghostBird.position.y = event.value + constants.GameAreaTopOffset
                     } else if (event.action === "died") {
@@ -625,7 +632,6 @@ export class BattleScene extends Phaser.Scene {
             analyticsEvent("game_played", this.analytics.getResults())
 
             if (hasJumped) {
-                this.debug("Uploading replay")
                 const settings = getUserSettings()
                 uploadReplayForSeed({
                     seed: this.seed,
@@ -726,12 +732,6 @@ export class BattleScene extends Phaser.Scene {
 
     isRecording() {
         return canRecordScore() && game.shouldRecordScores(this.mode)
-    }
-
-    debug(msg: string) {
-        if (devSettings.debugMessages) {
-            console.log(msg)
-        }
     }
 }
 
