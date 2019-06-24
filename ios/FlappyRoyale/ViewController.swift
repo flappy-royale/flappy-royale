@@ -89,16 +89,19 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 //        webView.loadFileURL(url, allowingReadAccessTo: url)
 
         self.webView = webView
-        loadGameURL()
 
-        // Dispatch app pause/resume events to JS, so we can manually pause/resume gameplay
+        // WKWebViews don't dispatch visibilitychange events.
+        // If we fake support for visibilitychange, pausing the Phaser game will Just Work™
+        webView.evaluateJavaScript("document.hidden = false;", completionHandler: nil)
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) {_ in
-            webView.evaluateJavaScript("var evt = new Event('appPause'); window.dispatchEvent(evt);", completionHandler: nil)
+            webView.evaluateJavaScript("document.hidden = true; var evt = new Event('visibilitychange'); window.dispatchEvent(evt);", completionHandler: nil)
         }
 
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) {_ in
-            webView.evaluateJavaScript("var evt = new Event('appResume'); window.dispatchEvent(evt);", completionHandler: nil)
+            webView.evaluateJavaScript("document.hidden = false; var evt = new Event('visibilitychange'); window.dispatchEvent(evt);", completionHandler: nil)
         }
+
+        loadGameURL()
 
         MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fiveLivesMoPub, withMediationSettings: [])
         MPRewardedVideo.loadAd(withAdUnitID: AdConstants.testBannerMoPub, withMediationSettings: [])
