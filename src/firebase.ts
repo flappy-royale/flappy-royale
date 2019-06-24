@@ -75,13 +75,17 @@ export const getSeeds = async (apiVersion: string, prioritizeCache: boolean = fa
         return cached
     }
 
-    const expiry = new Date(cached.expiry)
-    const now = new Date()
+    if (cached.expiry) {
+        const expiry = new Date(cached.expiry)
+        const now = new Date()
 
-    if (now >= expiry) {
-        return await getSeedsFromAPI(apiVersion)
+        if (now >= expiry) {
+            return await getSeedsFromAPI(apiVersion)
+        } else {
+            return cached
+        }
     } else {
-        return cached
+        return await getSeedsFromAPI(apiVersion)
     }
 }
 
