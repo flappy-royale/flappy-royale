@@ -27,7 +27,7 @@ export function setDeviceSize() {
         let div = document.createElement("div")
         div.style.paddingTop = "env(safe-area-inset-top)"
         document.body.appendChild(div)
-        let calculatedPadding = parseInt(window.getComputedStyle(div).paddingTop, 10)
+        let calculatedPadding = parseInt(window.getComputedStyle(div).paddingTop || "0", 10)
         document.body.removeChild(div)
         NotchOffset = calculatedPadding * scale
     }
@@ -45,9 +45,9 @@ export function setDeviceSize() {
 
 /// Mysterious multiplier for the original game values from Zach
 export const mapValue = 20
-export const flapStrength = 6.8 * this.mapValue
-export const gravity = 23 * this.mapValue
-export const pipeSpeed = 2.9 * this.mapValue
+export const flapStrength = 6.8 * mapValue
+export const gravity = 23 * mapValue
+export const pipeSpeed = 2.9 * mapValue
 export const timeBeforeFirstPipeLoads = 1800
 export const pipeRepeatTime = 1300
 export const gapHeight = 56
