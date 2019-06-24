@@ -3,7 +3,7 @@ import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData } from "../../src/firebase"
-import { processNewRecording } from "./processNewRecording";
+import { processNewRecording } from "./processNewRecording"
 
 const numberOfDifferentRoyaleReplays = 3
 
@@ -22,6 +22,19 @@ export const hourlySeed = (version: string, offset: number) => {
     return `${version}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours() + offset}}`
 }
 
+/** We currently change seeds every hour on the hour.
+ * So the next time the client needs to re-fetch seeds is on the next hour boundary
+ */
+const currentSeedExpiry = (): Date => {
+    const expiry = new Date()
+    expiry.setMilliseconds(0)
+    expiry.setSeconds(0)
+    expiry.setMinutes(0)
+    expiry.setHours(expiry.getHours() + 1)
+
+    return expiry
+}
+
 export const seeds = functions.https.onRequest((request, response) => {
     const version = request.query.version || request.params.version
     const responseJSON: SeedsResponse = {
@@ -35,7 +48,8 @@ export const seeds = functions.https.onRequest((request, response) => {
             dev: hourlySeed(version, 2),
             staging: hourlySeed(version, 1),
             production: hourlySeed(version, 0)
-        }
+        },
+        expiry: currentSeedExpiry().toJSON()
     }
     response
         .status(200)
@@ -94,7 +108,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
     const responseJSON = { success: true }
     return response.status(200).send(responseJSON)
 })
-
 
 /**
  * Converts from the db representation where the seed data is gzipped into

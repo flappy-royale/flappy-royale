@@ -2,9 +2,9 @@ import { defaultAttire, Attire } from "../attire"
 import { unzip, zippedObj } from "../zip"
 import _ = require("lodash")
 import { GameMode } from "../battle/utils/gameMode"
-import { getSeedsFromAPI, SeedData } from "../firebase";
-import { APIVersion } from "../constants";
-import { cache } from "../localCache";
+import { getSeeds, SeedData } from "../firebase"
+import { APIVersion } from "../constants"
+import { cache } from "../localCache"
 
 interface Aesthetics {
     // Strings of stored keys for hats
@@ -81,7 +81,6 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
         existingSettings.aesthetics = settings.aesthetics!
     }
 
-
     saveSettings(existingSettings)
 }
 
@@ -121,7 +120,7 @@ export const getAndBumpUserCycleSeedIndex = (cap: number): number => {
 }
 
 export const getAndBumpUserCycleSeed = async (): Promise<string> => {
-    const seeds = cache.getSeeds(APIVersion) || await getSeedsFromAPI(APIVersion)
+    const seeds = await getSeeds(APIVersion, true)
     const newIndex = getAndBumpUserCycleSeedIndex(seeds.royale.length)
     return seeds.royale[newIndex]
 }

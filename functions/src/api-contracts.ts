@@ -10,4 +10,7 @@ export interface SeedsResponse {
         staging: string
         dev: string
     }
+
+    /** ISO 8601 string for when the client should next fetch seeds */
+    expiry: string
 }

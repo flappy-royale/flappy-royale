@@ -1,6 +1,6 @@
 import * as Phaser from "phaser"
 import { UserSettingsScene, UserSettingsKey } from "./UserSettingsScene"
-import { getSeedsFromAPI, emptySeedData } from "../firebase"
+import { emptySeedData, getSeeds } from "../firebase"
 import { BattleScene } from "../battle/Scene"
 import * as c from "../constants"
 import { GameMode } from "../battle/utils/gameMode"
@@ -15,7 +15,7 @@ import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
 import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
-import { launchTutorial } from "../battle/TutorialScene";
+import { launchTutorial } from "../battle/TutorialScene"
 
 declare const DEMO: boolean
 
@@ -83,7 +83,7 @@ export class MainMenuScene extends Phaser.Scene {
         rightAlignTextLabel(this.winsLabel, 1)
 
         // NOTE: ASYNC!
-        getSeedsFromAPI(c.APIVersion).then(seeds => {
+        getSeeds(c.APIVersion).then(seeds => {
             this.seeds = seeds
         })
 

@@ -60,6 +60,31 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
     }
 }
 
+/** Returns current seed data, intelligently deciding whether to fetch from the network or just return cached data
+ * @param apiVersion The current API version, changes when we manually bump it
+ * @param prioritizeCache If true, will always return cache data instead of network unless there is no cache data
+ */
+export const getSeeds = async (apiVersion: string, prioritizeCache: boolean = false) => {
+    const cached = cache.getSeeds(apiVersion)
+
+    if (!cached) {
+        return await getSeedsFromAPI(apiVersion)
+    }
+
+    if (prioritizeCache) {
+        return cached
+    }
+
+    const expiry = new Date(cached.expiry)
+    const now = new Date()
+
+    if (now >= expiry) {
+        return await getSeedsFromAPI(apiVersion)
+    } else {
+        return cached
+    }
+}
+
 /**
  * Grabs a copy of the seeds from a google function which ensures we have consistent seeds.
  * It's expected that this would be called every time you see the main menu.
@@ -67,7 +92,7 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
  * Call it will have the side-effect of saving your seeds into local cache, so that if the
  * app opens up offline you've got something to work with.
  */
-export const getSeedsFromAPI = (apiVersion: string) => {
+const getSeedsFromAPI = (apiVersion: string) => {
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/seeds?version=${apiVersion}`)
         .then(r => r.json() as Promise<SeedsResponse | undefined>)
         .then(seeds => {
