@@ -48,6 +48,8 @@ export const cache = {
 
     getSeeds: (apiVersion: string): SeedsResponse | undefined => {
         const stringResult = localStorage.lastSeeds
+        if (!stringResult) return undefined
+
         const result = JSON.parse(stringResult)
 
         if (result && result.apiVersion === apiVersion) {
