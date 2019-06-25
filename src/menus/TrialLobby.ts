@@ -170,7 +170,7 @@ export class TrialLobby extends Phaser.Scene {
 
         const info = document.getElementById("info")
         const tries = lives === 1 ? "try" : "tries"
-        info.innerHTML = `Daily scoreboard<br />${lives} ${tries} left`
+        info.innerHTML = `Today's leaderboard<br />${lives} ${tries} left`
 
         /// NOOP
         if (lives === 0 && livesState === LifeStateForSeed.ExtraFifteen) {
