@@ -85,7 +85,7 @@ export class AppLaunchScene extends Phaser.Scene {
             () => {
                 if (this.showLoadingScreen) {
                     if (appCache.downloaded) {
-                        localStorage.skipLaunchScreen = true
+                        localStorage.setItem("skipLaunchScreen", "true")
                         window.location.reload()
                     } else {
                         showLoadingScreen(this.game)

@@ -52,14 +52,14 @@ export class LoadingScene extends Phaser.Scene {
             // https://github.com/lazerwalker/flappy-royale/issues/102
             if (percent === 1) {
                 setTimeout(() => {
-                    localStorage.skipLaunchScreen = true
+                    localStorage.setItem("skipLaunchScreen", "true")
                     window.location.reload()
                 }, 300)
             }
         })
 
         appCache.onDownloadEnd(() => {
-            localStorage.skipLaunchScreen = true
+            localStorage.setItem("skipLaunchScreen", "true")
             window.location.reload()
         })
 
