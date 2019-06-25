@@ -104,7 +104,7 @@ export class MainMenuScene extends Phaser.Scene {
         } else {
             this.winsLabel = this.add.bitmapText(c.GameWidth, c.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
         }
-        rightAlignTextLabel(this.winsLabel, 1)
+        rightAlignTextLabel(this.winsLabel, 3)
 
         // NOTE: ASYNC!
         getSeeds(c.APIVersion).then(seeds => {
