@@ -2,7 +2,8 @@
 export function openURL(url: string) {
     if (window.isAppleApp) {
         window.webkit.messageHandlers.openURL.postMessage(url)
-    } else if (window.Analytics) {
+    } else if (window.URLLoader) {
+        window.URLLoader.openURL(url)
     } else {
         document.location.href = url
     }

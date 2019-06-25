@@ -23,6 +23,10 @@ declare global {
         Sharing?: {
             shareScreenshot: (name: string) => void
         }
+
+        URLLoader?: {
+            openURL: (url: string) => void
+        }
     }
 }
 

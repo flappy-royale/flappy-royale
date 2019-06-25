@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
-
+        webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
 
         window.decorView.apply {
             // Hide both the navigation bar and the status bar.
