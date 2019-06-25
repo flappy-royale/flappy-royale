@@ -61,6 +61,13 @@ export class UserSettingsScene extends Phaser.Scene {
             changeSettings({ name: usernameInput.value })
         }
 
+        usernameInput.onfocus = () => {
+            usernameInput.setSelectionRange(0, 99999)
+        }
+
+        usernameInput.onclick = () => {
+            usernameInput.setSelectionRange(0, 99999)
+        }
         /**
          * Runs on every selection change and asserts whether an LI
          * corresponding to attire is selected or not

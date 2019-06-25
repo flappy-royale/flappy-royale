@@ -1,14 +1,7 @@
 <html>
     <head>
-        <!-- These two are webpackified and links to assets are sha'd to the root and handled for you -->
         <link rel="stylesheet" href="./site.css" type="text/css" />
         <script async src="./site.ts"></script>
-
-        <!-- 
-            All other assets from /web/assets just get jammed inside the root of the dir 
-            which you can make assumptions of inside here
-        -->
-        <meta name="viewport" content="width=640, user-scalable=0" />
 
         <meta property="og:title" content="Flappy Royale" />
         <meta
@@ -21,7 +14,6 @@
         <meta property="og:image" content="./assets/og-preview.png" />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@orta" />
         <meta name="twitter:title" content="Flappy Royale" />
         <meta
             name="twitter:description"
@@ -29,6 +21,7 @@
         longer than 99 opponents?"
         />
         <meta name="twitter:image" content="./assets/og-preview.png" />
+        <meta name="viewport" content="width=640, user-scalable=0" />
     </head>
 
     <body>
@@ -50,10 +43,12 @@
         <div id="ground">
             <div class="container">
                 <div id="who">
-                    <span>A game by</span><a href="https://orta.io">Orta Therox</a><br /><a href="#">Em Lazer-Walker</a
+                    <span>A game by</span><a href="https://orta.io">Orta Therox</a><br /><a
+                        href="https://lazerwalker.com"
+                        >Em Lazer-Walker</a
                     ><br />
                     with
-                    <a href="#">Zach Gage</a>
+                    <a href="http://stfj.net">Zach Gage</a>
                 </div>
                 <div id="what">
                     <span>Flappy Royale is</span> a last-one-flapping Flappy Bird battle royale. Can you stay alive
