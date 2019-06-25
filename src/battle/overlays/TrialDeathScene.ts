@@ -180,11 +180,11 @@ export class TrialDeath extends Phaser.Scene {
         /// MIDDLE BIT
 
         if (sortedReplays[0])
-            this.drawPlayerRow({ position: 1, white: true, x: 14, y: top + 90, opacity: 0.6 }, sortedReplays[0])
+            this.drawPlayerRow({ position: 1, white: true, x: 12, y: top + 90, opacity: 0.6 }, sortedReplays[0])
         if (sortedReplays[1])
-            this.drawPlayerRow({ position: 2, white: true, x: 14, y: top + 110, opacity: 0.4 }, sortedReplays[1])
+            this.drawPlayerRow({ position: 2, white: true, x: 12, y: top + 110, opacity: 0.4 }, sortedReplays[1])
         if (sortedReplays[2])
-            this.drawPlayerRow({ position: 3, white: true, x: 14, y: top + 130, opacity: 0.2 }, sortedReplays[2])
+            this.drawPlayerRow({ position: 3, white: true, x: 12, y: top + 130, opacity: 0.2 }, sortedReplays[2])
 
         /// BOTTOM BIT
 
@@ -220,11 +220,11 @@ export class TrialDeath extends Phaser.Scene {
         const two = playerIsTwo ? player : sortedReplays[1]
         const three = playerIsThree ? player : sortedReplays[1]
 
-        this.drawPlayerRow({ position: 0, white: true, x: 14, y: top + 50, opacity: 1 }, one)
-        this.drawPlayerRow({ position: 1, white: !playerIsTwo, x: 14, y: top + 70, opacity: 1 }, two)
+        this.drawPlayerRow({ position: 0, white: true, x: 12, y: top + 50, opacity: 1 }, one)
+        this.drawPlayerRow({ position: 1, white: !playerIsTwo, x: 12, y: top + 70, opacity: 1 }, two)
         if (three) {
             // possible you could be 2 in 2
-            this.drawPlayerRow({ position: 2, white: !playerIsThree, x: 14, y: top + 90, opacity: 1 }, three)
+            this.drawPlayerRow({ position: 2, white: !playerIsThree, x: 12, y: top + 90, opacity: 1 }, three)
         }
 
         /// BOTTOM BIT
@@ -267,17 +267,17 @@ export class TrialDeath extends Phaser.Scene {
         const belowPlayer = sortedReplays[this.props.position]
 
         this.drawPlayerRow(
-            { position: this.props.position - 1, white: true, x: 14, y: top + 50 + yOffset, opacity: 1 },
+            { position: this.props.position - 1, white: true, x: 12, y: top + 50 + yOffset, opacity: 1 },
             abovePlayer
         )
         this.drawPlayerRow(
-            { position: this.props.position, white: false, x: 14, y: top + 70 + yOffset, opacity: 1 },
+            { position: this.props.position, white: false, x: 12, y: top + 70 + yOffset, opacity: 1 },
             player
         )
         if (belowPlayer) {
             // possible you could be 2 in 2
             this.drawPlayerRow(
-                { position: this.props.position + 1, white: true, x: 14, y: top + 90 + yOffset, opacity: 1 },
+                { position: this.props.position + 1, white: true, x: 12, y: top + 90 + yOffset, opacity: 1 },
                 belowPlayer
             )
         }
@@ -297,15 +297,27 @@ export class TrialDeath extends Phaser.Scene {
     ) {
         const font = config.white ? "fipps-bit" : "fipps-bit-black"
 
-        this.add.bitmapText(config.x, config.y - 8, font, `#${config.position + 1}`, 8).setAlpha(config.opacity)
+        let offset = config.x
 
-        const bird = new BirdSprite(this, config.x + 28, config.y, { isPlayer: false, settings: player.user })
+        const place = this.add
+            .bitmapText(offset, config.y - 8, font, `#${config.position + 1}`, 8)
+            .setAlpha(config.opacity)
+
+        offset += place.getTextBounds(true).local.width + 9
+
+        const bird = new BirdSprite(this, offset, config.y, { isPlayer: false, settings: player.user })
         bird.actAsImage()
         bird.setOpacity(config.opacity)
 
-        this.add.bitmapText(config.x + 52, config.y - 8, font, player.score.toString(), 8).setAlpha(config.opacity)
+        offset += 21
 
-        this.add.bitmapText(config.x + 86, config.y - 8, font, player.user.name, 8).setAlpha(config.opacity)
+        const scoreText = this.add
+            .bitmapText(offset, config.y - 8, font, player.score.toString(), 8)
+            .setAlpha(config.opacity)
+
+        offset += scoreText.getTextBounds(true).local.width + 7
+
+        this.add.bitmapText(offset, config.y - 8, font, player.user.name, 8).setAlpha(config.opacity)
     }
 
     private again() {
