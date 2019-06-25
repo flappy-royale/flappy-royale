@@ -2,6 +2,7 @@ package com.lazerwalker.flappyroyale
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,6 +34,14 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
 
+
+        window.decorView.apply {
+            // Hide both the navigation bar and the status bar.
+            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+            // a general rule, you should design your app to hide the status bar whenever you
+            // hide the navigation bar.
+            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
 
         setUpMoPub()
     }
