@@ -108,7 +108,7 @@ export class RoyaleDeath extends Phaser.Scene {
         }
 
         if (won) {
-            const streak = settings.royaleStreak + 1
+            const streak = settings.royaleStreak
             const streakText = this.add.bitmapText(0, 1 + NotchOffset, "fipps-bit", `win streak: ${streak}`, 8)
 
             let streakRecord: string =

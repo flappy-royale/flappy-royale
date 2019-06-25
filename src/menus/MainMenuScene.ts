@@ -24,7 +24,6 @@ import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { Prompt, showPrompt } from "./Prompt"
-import { settings } from "cluster"
 
 declare const DEMO: boolean
 
@@ -108,7 +107,7 @@ export class MainMenuScene extends Phaser.Scene {
                 c.GameWidth,
                 c.NotchOffset,
                 "nokia16",
-                "royale win streak: " + stats.royaleStreak,
+                "streak: " + stats.royaleStreak,
                 0
             )
         } else {
