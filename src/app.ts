@@ -216,7 +216,7 @@ window.onload = async () => {
         switch (startupScreen) {
             case StartupScreen.Launcher:
                 const scene = new AppLaunchScene()
-                game.scene.add("launcher", scene, true)
+                game.scene.add("Launch", scene, true)
                 break
             case StartupScreen.TrialBattle:
                 loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
@@ -259,7 +259,7 @@ window.onload = async () => {
     } else {
         appCache.onDownloadStart(() => {
             console.log("New version!")
-            const launchScreen = game.scene.getScene("launcher") as AppLaunchScene
+            const launchScreen = game.scene.getScene("Launch") as AppLaunchScene
             if (launchScreen) {
                 launchScreen.showLoadingScreen = true
             } else {
