@@ -30,6 +30,10 @@ export class EnterNameScreen extends Phaser.Scene {
         document.getElementById("button").addEventListener("click", () => {
             const usernameInput = document.getElementById("username") as HTMLInputElement
 
+            // We have code in place to fix scroll placement on blur,
+            // but manually triggering window.blur() or usernameInput.blur() doesn't fire it
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+
             changeSettings({ name: usernameInput.value })
             this.completion()
         })

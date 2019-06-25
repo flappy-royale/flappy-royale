@@ -190,6 +190,11 @@ window.onload = async () => {
     constants.setDeviceSize()
     const game = newGame()
 
+    // Fixes viewport if the user dismisses the iOS keyboard by tapping 'done'
+    window.addEventListener("blur", () => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    })
+
     // @ts-ignore
     // This is used by Ads manager etc to get to our game
     window.currentGame = game
