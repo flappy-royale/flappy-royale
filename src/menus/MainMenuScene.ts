@@ -98,7 +98,7 @@ export class MainMenuScene extends Phaser.Scene {
                 c.GameWidth,
                 c.NotchOffset,
                 "nokia16",
-                "royale streak: " + stats.royaleStreak,
+                "royale win streak: " + stats.royaleStreak,
                 0
             )
         } else {

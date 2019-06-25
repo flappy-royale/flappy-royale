@@ -258,8 +258,8 @@ function setUpStatsHTML() {
 
     // User facing names for the stats
     const presentation = {
-        "Current Royale Streak": stats.royaleStreak,
-        "Highest Royale Streak": stats.bestRoyaleStreak,
+        "Current Royale Win Streak": stats.royaleStreak,
+        "Highest Royale Win Streak": stats.bestRoyaleStreak,
         "Royale Wins": stats.royaleWins,
         "Best Position": stats.bestPosition,
         "Top Score": stats.bestScore,
