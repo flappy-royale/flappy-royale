@@ -16,6 +16,8 @@ import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
 import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
+import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
+import { AttirePrompt, AttirePromptKey } from "./AttirePrompt"
 
 declare const DEMO: boolean
 
@@ -77,6 +79,18 @@ export class MainMenuScene extends Phaser.Scene {
 
         setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
 
+        const settings = getUserSettings()
+        if (settings.name) {
+            this.setUpMenu()
+        } else {
+            this.loadAttirePrompt()
+        }
+
+        // This is just used for taking snapshots
+        window.dispatchEvent(new Event("gameloaded"))
+    }
+
+    private setUpMenu() {
         const stats = getUserStatistics()
 
         if (stats.royaleStreak > 0) {
@@ -98,6 +112,7 @@ export class MainMenuScene extends Phaser.Scene {
         })
 
         const settings = getUserSettings()
+
         const player = new BirdSprite(this, 6, c.GameHeight - 12, { isPlayer: false, settings: settings })
         player.actAsImage()
         player.makeClickable(this.loadSettings, this)
@@ -120,15 +135,31 @@ export class MainMenuScene extends Phaser.Scene {
         const howToPlayButton = this.add.bitmapText(0, c.GameHeight - 40, "nokia16", "?", 20)
         rightAlignTextLabel(howToPlayButton, 10)
         becomeButton(howToPlayButton, this.loadTutorial, this)
-
-        // This is just used for taking snapshots
-        window.dispatchEvent(new Event("gameloaded"))
     }
-
     private loadSettings() {
         this.removeMenu()
         const settings = new UserSettingsScene()
         addScene(this.game, UserSettingsKey, settings, true)
+    }
+
+    private loadNamePrompt() {
+        const namePrompt = new EnterNameScreen(() => {
+            this.scene.remove(namePrompt)
+            this.loadAttirePrompt()
+        })
+        addScene(this.game, NamePromptKey, namePrompt, true)
+    }
+
+    private loadAttirePrompt() {
+        const attirePrompt = new AttirePrompt((response: boolean) => {
+            this.scene.remove(attirePrompt)
+            if (response) {
+                this.loadSettings()
+            } else {
+                this.setUpMenu()
+            }
+        })
+        addScene(this.game, AttirePromptKey, attirePrompt, true)
     }
 
     private loadTrial() {
