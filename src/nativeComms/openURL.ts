@@ -5,6 +5,6 @@ export function openURL(url: string) {
     } else if (window.URLLoader) {
         window.URLLoader.openURL(url)
     } else {
-        document.location.href = url
+        window.open(url, "_blank")
     }
 }
