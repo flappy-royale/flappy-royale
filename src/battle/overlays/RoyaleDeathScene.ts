@@ -1,4 +1,4 @@
-import { GameWidth, GameHeight, zLevels } from "../../constants"
+import { GameWidth, GameHeight, zLevels, NotchOffset } from "../../constants"
 import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { BattleScene } from "../Scene"
@@ -9,7 +9,7 @@ import { requestReview } from "../../nativeComms/requestReview"
 import { addScene } from "../../menus/utils/addScene"
 import { GameMode } from "../utils/gameMode"
 import _ = require("lodash")
-import { centerAlignTextLabel } from "../utils/alignTextLabel"
+import { centerAlignTextLabel, rightAlignTextLabel } from "../utils/alignTextLabel"
 import { shareNatively } from "../../nativeComms/share"
 import { GameTheme } from "../theme"
 import { setupLogoCornerImages } from "../../menus/utils/backgroundColors"
@@ -105,6 +105,21 @@ export class RoyaleDeath extends Phaser.Scene {
             this.add.image(60, 152, "green-sash-small")
             const copy = `#${this.props.position} / ${this.props.totalPlayers}`
             this.add.bitmapText(10, 148, "fipps-bit", copy, 8)
+        }
+
+        if (won) {
+            const streak = settings.royaleStreak + 1
+            const streakText = this.add.bitmapText(0, 1 + NotchOffset, "fipps-bit", `win streak: ${streak}`, 8)
+
+            let streakRecord: string =
+                settings.bestRoyaleStreak && settings.bestRoyaleStreak > streak
+                    ? `highest streak: ${settings.bestRoyaleStreak}`
+                    : "personal best!"
+
+            const streakRecordText = this.add.bitmapText(0, NotchOffset + 13, "fipps-bit", streakRecord, 8)
+
+            rightAlignTextLabel(streakText, 3)
+            rightAlignTextLabel(streakRecordText, 3)
         }
 
         this.footerObjects.push(this.add.image(80, GameHeight - 8, "footer-bg"))

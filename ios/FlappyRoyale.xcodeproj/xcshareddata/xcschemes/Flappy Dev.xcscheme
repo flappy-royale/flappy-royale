@@ -64,7 +64,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "server"
-            value = "https://ono-sendai.local:8085"
+            value = "http://ono-sendai.local:8085"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

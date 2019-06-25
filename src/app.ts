@@ -190,6 +190,11 @@ window.onload = async () => {
     constants.setDeviceSize()
     const game = newGame()
 
+    // Fixes viewport if the user dismisses the iOS keyboard by tapping 'done'
+    window.addEventListener("blur", () => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    })
+
     // @ts-ignore
     // This is used by Ads manager etc to get to our game
     window.currentGame = game
@@ -200,13 +205,18 @@ window.onload = async () => {
     const startupScreen = StartupScreen.MainMenu as StartupScreen
 
     if (PRODUCTION) {
-        const scene = new AppLaunchScene()
-        game.scene.add("launcher", scene, true)
+        if (localStorage.getItem("skipLaunchScreen") === "true") {
+            localStorage.removeItem("skipLaunchScreen")
+            launchMainMenu(game)
+        } else {
+            const scene = new AppLaunchScene()
+            game.scene.add("launcher", scene, true)
+        }
     } else {
         switch (startupScreen) {
             case StartupScreen.Launcher:
                 const scene = new AppLaunchScene()
-                game.scene.add("launcher", scene, true)
+                game.scene.add("Launch", scene, true)
                 break
             case StartupScreen.TrialBattle:
                 loadUpIntoTraining(game, { offline: false, mode: GameMode.Trial })
@@ -249,7 +259,12 @@ window.onload = async () => {
     } else {
         appCache.onDownloadStart(() => {
             console.log("New version!")
-            showLoadingScreen(game)
+            const launchScreen = game.scene.getScene("Launch") as AppLaunchScene
+            if (launchScreen) {
+                launchScreen.showLoadingScreen = true
+            } else {
+                showLoadingScreen(game)
+            }
         })
     }
 }

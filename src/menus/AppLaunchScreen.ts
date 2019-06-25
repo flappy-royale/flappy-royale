@@ -6,11 +6,16 @@ import { launchMainMenu } from "./MainMenuScene"
 import { becomeButton } from "./utils/becomeButton"
 import { openURL } from "../nativeComms/openURL"
 import { launchTutorial } from "../battle/TutorialScene"
+import { LoadingScene, showLoadingScreen } from "./LoadingScene"
+import * as appCache from "../appCache"
 
 export class AppLaunchScene extends Phaser.Scene {
     progressBar: Phaser.GameObjects.Rectangle
     birds: BirdSprite[]
     possibleAttires: UserSettings[]
+
+    // If true, should attempt to show a loading screen after completion
+    showLoadingScreen: boolean
 
     constructor() {
         super("Launch")
@@ -78,8 +83,17 @@ export class AppLaunchScene extends Phaser.Scene {
         this.time.delayedCall(
             3900,
             () => {
-                this.game.scene.remove(this)
-                launchMainMenu(this.game)
+                if (this.showLoadingScreen) {
+                    if (appCache.downloaded) {
+                        localStorage.setItem("skipLaunchScreen", "true")
+                        window.location.reload()
+                    } else {
+                        showLoadingScreen(this.game)
+                    }
+                } else {
+                    this.game.scene.remove(this)
+                    launchMainMenu(this.game)
+                }
             },
             [],
             this

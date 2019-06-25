@@ -258,6 +258,8 @@ function setUpStatsHTML() {
 
     // User facing names for the stats
     const presentation = {
+        "Current Royale Win Streak": stats.royaleStreak,
+        "Highest Royale Win Streak": stats.bestRoyaleStreak,
         "Royale Wins": stats.royaleWins,
         "Best Position": stats.bestPosition,
         "Top Score": stats.bestScore,
@@ -269,6 +271,11 @@ function setUpStatsHTML() {
     }
 
     // Show either top position or royale wins
+    if (stats.bestRoyaleStreak === 0) {
+        delete presentation["Highest Royale Streak"]
+        delete presentation["Current Royale Streak"]
+    }
+
     if (stats.royaleWins === 0) delete presentation["Royale Wins"]
     if (stats.bestPosition === 0) delete presentation["Best Position"]
     if (stats.bestPosition === 500) delete presentation["Best Position"] // not played a game

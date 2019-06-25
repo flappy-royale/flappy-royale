@@ -412,12 +412,12 @@ export class BattleScene extends Phaser.Scene {
             })
             this.scoreToBeatIcon.actAsUIElement()
         } else {
-            this.highScoreLabel = this.add.bitmapText(0, constants.NotchOffset + 20, "nokia16", highScoreText, 16)
+            this.highScoreLabel = this.add.bitmapText(0, constants.NotchOffset + 4, "nokia16", highScoreText, 16)
             rightAlignTextLabel(this.highScoreLabel, 26)
             this.highScoreLabel.setDepth(constants.zLevels.ui)
 
             const settings = getUserSettings()
-            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 28 + constants.NotchOffset, {
+            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 12 + constants.NotchOffset, {
                 isPlayer: false,
                 settings: settings
             })

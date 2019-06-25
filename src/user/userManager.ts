@@ -46,6 +46,26 @@ export interface UserSettings {
     hasCompletedTutorial: boolean
 }
 
+export interface PlayerStats {
+    gamesPlayed: number
+    bestScore: number
+    bestPosition: number
+    royaleWins: number
+    trialWins: number
+    birdsBeaten: number
+    crashes: number
+    totalTime: number
+    instaDeaths: number
+    totalFlaps: number
+
+    /** The user's current royale streak
+     * (number of consecutive royale wins without a loss)*/
+    royaleStreak: number
+
+    /** The user's all-time highest royale streak */
+    bestRoyaleStreak: number
+}
+
 // What it is when you first join
 export const defaultSettings: UserSettings = {
     name: "Flappy_" + Math.floor(Math.random() * 999999) + 1,
@@ -127,8 +147,10 @@ export const getAndBumpUserCycleSeed = async (): Promise<string> => {
 }
 
 /** The stats from all your runs */
-export const getUserStatistics = () => {
-    const runs = getRoyales()
+export const getUserStatistics = (): PlayerStats => {
+    // Sorted ascending by time so we can easily calculate royale streak
+    const runs = getRoyales().sort((r1, r2) => r1.startTimestamp - r2.startTimestamp)
+
     const stats = {
         gamesPlayed: runs.length,
         bestScore: 0,
@@ -139,8 +161,12 @@ export const getUserStatistics = () => {
         crashes: 0,
         totalTime: 0,
         instaDeaths: 0,
-        totalFlaps: 0
+        totalFlaps: 0,
+        royaleStreak: 0,
+        bestRoyaleStreak: 0
     }
+
+    let currentRoyaleStreak = 0
 
     runs.forEach(run => {
         // Highest score
@@ -151,6 +177,17 @@ export const getUserStatistics = () => {
 
         // Position = 0, is a win
         if (run.position === 0 && run.mode === GameMode.Royale) stats.royaleWins += 1
+
+        if (run.mode === GameMode.Royale) {
+            if (run.position === 0) {
+                currentRoyaleStreak += 1
+                if (currentRoyaleStreak > stats.bestRoyaleStreak) {
+                    stats.bestRoyaleStreak = currentRoyaleStreak
+                }
+            } else {
+                currentRoyaleStreak = 0
+            }
+        }
 
         // So we can separately say how many trial wins you have
         if (run.position === 0 && run.mode == GameMode.Trial) stats.trialWins += 1
@@ -167,6 +204,8 @@ export const getUserStatistics = () => {
         // How many time did you flap
         stats.totalFlaps += run.flaps
     })
+
+    stats.royaleStreak = currentRoyaleStreak
 
     // how many times did you not win
     stats.crashes = stats.gamesPlayed - (stats.royaleWins + stats.trialWins)

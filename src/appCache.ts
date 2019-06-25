@@ -2,6 +2,8 @@ const startHandlers: (() => void)[] = []
 const progressHandlers: ((number) => void)[] = []
 const endHandlers: (() => void)[] = []
 
+export let downloaded = false
+
 export const configure = () => {
     window.addEventListener(
         "load",
@@ -40,10 +42,14 @@ const downloadStart = () => {
 }
 
 const downloadProgress = (percent: number) => {
+    if (percent === 1) {
+        this.downloaded = true
+    }
     progressHandlers.forEach(fn => fn(percent))
 }
 
 const downloadEnd = () => {
+    this.downloaded = true
     endHandlers.forEach(fn => fn())
 }
 
