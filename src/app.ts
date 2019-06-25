@@ -17,6 +17,7 @@ import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
 import { TutorialScene, launchTutorial } from "./battle/TutorialScene"
+import { setupSentry } from "./setupSentry"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -28,7 +29,11 @@ if (!PRODUCTION) {
     require("./setUpAppStoreScreenshots.ts")
 }
 
-if (PRODUCTION) appCache.configure()
+if (PRODUCTION) {
+    appCache.configure()
+    setupSentry()
+}
+
 if (DEMO) document.body.className = "demo"
 
 enum StartupScreen {
