@@ -4,11 +4,12 @@ import { GameWidth, GameHeight, zLevels } from "../constants"
 import { becomeButton } from "./utils/becomeButton"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { addScene } from "./utils/addScene"
+import { constants } from "fs"
 
 export const PromptKey = "AttirePrompt"
 
 export interface PromptOptions {
-    title: string
+    title?: string
     subtitle?: string
 
     yes?: string
@@ -16,16 +17,26 @@ export interface PromptOptions {
 
     y: number
 
-    completion: (response: boolean, prompt: Prompt) => void
+    zDepth?: number
+    zDepthBg?: number
+
+    completion?: (response: boolean, prompt: Prompt) => void
 }
 
-export function showPrompt(options: PromptOptions, game: Phaser.Game) {
+/** Pass in a Game if you want this to be its own scene.
+ * Pass in a Scene if you just want these added to an existing scene
+ */
+export function showPrompt(options: PromptOptions, game: Phaser.Game): Prompt {
     const prompt = new Prompt(options)
     addScene(game, PromptKey, prompt, true)
+    return prompt
 }
 
 export class Prompt extends Phaser.Scene {
     options: PromptOptions
+
+    parent?: Phaser.Scene
+    objectList?: Phaser.GameObjects.GameObject
 
     constructor(opts: PromptOptions) {
         super(PromptKey)
@@ -41,18 +52,22 @@ export class Prompt extends Phaser.Scene {
     }
 
     create() {
+        const depth = this.options.zDepth || zLevels.ui
+        const bgDepth = this.options.zDepthBg || zLevels.uiBg
+
         let y = this.options.y
 
-        const title = this.add.bitmapText(0, y, "fipps", this.options.title, 12)
-        centerAlignTextLabel(title)
-        title.setDepth(zLevels.ui)
-
-        y += title.getTextBounds(true).local.height
+        if (this.options.title) {
+            const title = this.add.bitmapText(0, y, "fipps", this.options.title, 12)
+            centerAlignTextLabel(title)
+            title.setDepth(depth)
+            y += title.getTextBounds(true).local.height
+        }
 
         if (this.options.subtitle) {
-            const subtitle = this.add.bitmapText(0, title.y + 24, "fipps", this.options.subtitle, 8)
+            const subtitle = this.add.bitmapText(0, y, "fipps", this.options.subtitle, 8)
             centerAlignTextLabel(subtitle)
-            subtitle.setDepth(zLevels.ui)
+            subtitle.setDepth(depth)
 
             y += subtitle.getTextBounds(true).local.height
         }
@@ -63,55 +78,59 @@ export class Prompt extends Phaser.Scene {
 
         if (this.options.no && this.options.yes) {
             const noBg = this.add.image(GameWidth / 3, y, "attire-button-small-bg")
-            noBg.setDepth(zLevels.ui)
-            const noText = this.add.bitmapText(noBg.x - 20, noBg.y - 5, "fipps", "LATER", 8)
-            noText.setDepth(zLevels.ui)
+            noBg.setDepth(depth)
+            const noText = this.add.bitmapText(noBg.x - 20, noBg.y - 5, "fipps", this.options.no, 8)
+            noText.setDepth(depth)
             becomeButton(noBg, this.no, this, [noText])
 
             const yesBg = this.add.image((4 * GameWidth) / 5, y, "attire-button-small-bg-yellow")
-            yesBg.setDepth(zLevels.ui)
+            yesBg.setDepth(depth)
             yesBg.x = GameWidth - yesBg.width
-            const yesText = this.add.bitmapText(yesBg.x - 20, yesBg.y - 5, "fipps", "YEAH!", 8)
+            const yesText = this.add.bitmapText(yesBg.x - 20, yesBg.y - 5, "fipps", this.options.yes, 8)
             becomeButton(yesBg, this.yes, this, [yesText])
-            yesText.setDepth(zLevels.ui)
+            yesText.setDepth(depth)
 
             y += yesBg.height
         } else if (this.options.no) {
             const noBg = this.add.image(GameWidth / 2, y, "attire-button-small-bg")
-            noBg.setDepth(zLevels.ui)
+            noBg.setDepth(depth)
 
             const noText = this.add.bitmapText(0, noBg.y - 5, "fipps", "LATER", 8)
             centerAlignTextLabel(noText)
-            noText.setDepth(zLevels.ui)
+            noText.setDepth(depth)
 
             becomeButton(noBg, this.no, this, [noText])
 
             y += noBg.height
         } else if (this.options.yes) {
             const yesBg = this.add.image(GameWidth / 2, y, "attire-button-small-bg-yellow")
-            yesBg.setDepth(zLevels.ui)
+            yesBg.setDepth(depth)
 
             const yesText = this.add.bitmapText(yesBg.x - 20, yesBg.y - 5, "fipps", "YEAH!", 8)
             becomeButton(yesBg, this.yes, this, [yesText])
-            yesText.setDepth(zLevels.ui)
+            yesText.setDepth(depth)
 
             y += yesBg.height
         }
 
         y += 10
 
-        const height = y - title.y
-        const bgY = title.y - 10 + height / 2
+        const height = y - this.options.y
+        const bgY = this.options.y - 10 + height / 2
 
         const bg = this.add.rectangle(GameWidth / 2, bgY, GameWidth, height, 0x8991eb)
-        bg.setDepth(zLevels.uiBg)
+        bg.setDepth(bgDepth)
     }
 
     private yes() {
-        this.options.completion(true, this)
+        if (this.options.completion) {
+            this.options.completion(true, this)
+        }
     }
 
     private no() {
-        this.options.completion(false, this)
+        if (this.options.completion) {
+            this.options.completion(false, this)
+        }
     }
 }

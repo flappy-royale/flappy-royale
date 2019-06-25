@@ -7,12 +7,13 @@ import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addR
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { busCrashed, preloadBusImages } from "./utils/createBus"
-import { getUserSettings, UserSettings, changeSettings, completeTutorial } from "../user/userManager"
-import { launchMainMenu } from "../menus/MainMenuScene"
+import { getUserSettings } from "../user/userManager"
+import { launchMainMenu, MainMenuScene } from "../menus/MainMenuScene"
 import { deathPreload } from "./overlays/RoyaleDeathScene"
 import { GameTheme, themeMap } from "./theme"
 import { addScene } from "../menus/utils/addScene"
-import { loadUpIntoSettings, FlappyGame } from "../app"
+import { showPrompt, Prompt } from "../menus/Prompt"
+import _ = require("lodash")
 
 /** Used on launch, and when you go back to the main menu */
 export const launchTutorial = (game: Phaser.Game) => {
@@ -23,6 +24,7 @@ export const launchTutorial = (game: Phaser.Game) => {
 enum TutorialStep {
     InBus = 1,
     Flapping,
+    CanSeePipes,
     Done
 }
 
@@ -68,6 +70,14 @@ export class TutorialScene extends Phaser.Scene {
 
     /** The thing that represents the floor (birds/the bus sit on this) */
     public floorPhysics: Phaser.Physics.Arcade.Image
+
+    /** THe current active prompt */
+    private prompt?: Prompt
+
+    /** How many times the user has flapped */
+    private numberOfFlaps: number = 0
+
+    private pipeScore: number = 0
 
     constructor(opts: any = {}) {
         super({
@@ -174,6 +184,14 @@ export class TutorialScene extends Phaser.Scene {
 
         this.bird.addCollideForSprite(this, this.floorPhysics)
 
+        this.prompt = showPrompt(
+            {
+                subtitle: "Tap to leave the bus",
+                y: (4 / 5) * constants.GameHeight
+            },
+            this.game
+        )
+
         // On spacebar bounce the bird
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     }
@@ -186,8 +204,8 @@ export class TutorialScene extends Phaser.Scene {
     setupPhysicsFloor() {
         /** the physics floor, so that the bus + bird can land on it */
         this.floorPhysics = this.physics.add.staticImage(
-            0,
-            constants.GameAreaHeight - 50 + constants.GameAreaTopOffset,
+            80,
+            constants.GameAreaHeight - 42 + constants.GameAreaTopOffset,
             "invis"
         )
         this.floorPhysics.setGravityY(-1 * constants.gravity)
@@ -276,13 +294,24 @@ export class TutorialScene extends Phaser.Scene {
         const timestamp = Math.round(this.time.now - this.timestampOffset)
         if (timestamp < 1000) return
 
-        this.bus.setDepth(constants.zLevels.playerBird - 1)
+        this.bus.setDepth(constants.zLevels.oneBelowBird)
 
         if (this.bird.isInBus) {
             // this.bird.flap() will be repsonsible for fixing the bird
             // This is everything else responsible for changing the tutorial mode
 
             this.tutorialStep = TutorialStep.Flapping
+
+            this.scene.remove(this.prompt)
+            setTimeout(() => {
+                this.prompt = showPrompt(
+                    {
+                        subtitle: "Tap to flap",
+                        y: (4 / 5) * constants.GameHeight
+                    },
+                    this.game
+                )
+            }, 200)
 
             this.bus.setVelocityX(0)
             this.bus.setAccelerationX(10)
@@ -292,23 +321,37 @@ export class TutorialScene extends Phaser.Scene {
             // TODO: Drop some random birds
 
             this.pipes.push(
-                addRowOfPipesManual(250, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
+                addRowOfPipesManual(300, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
             )
             this.pipes.push(
-                addRowOfPipesManual(280, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
+                addRowOfPipesManual(380, this, constants.tutorialGapHeight, constants.tutorialGapSlot - 1, this.theme)
             )
             this.pipes.push(
-                addRowOfPipesManual(310, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
-            )
-            this.pipes.push(
-                addRowOfPipesManual(340, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
-            )
-            this.pipes.push(
-                addRowOfPipesManual(370, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
+                addRowOfPipesManual(460, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
             )
 
             if (game.showPlayerBird(this.mode)) {
-                this.scoreLines.push(addScoreLine(260, this, this.bird))
+                this.scoreLines.push(addScoreLine(310, this, this.bird))
+                this.scoreLines.push(addScoreLine(390, this, this.bird))
+                this.scoreLines.push(addScoreLine(470, this, this.bird))
+            }
+        } else {
+            this.numberOfFlaps += 1
+            if (this.tutorialStep === TutorialStep.Flapping && this.prompt && this.numberOfFlaps >= 3) {
+                this.tutorialStep = TutorialStep.CanSeePipes
+
+                this.scene.remove(this.prompt)
+                this.prompt = undefined
+
+                setTimeout(() => {
+                    this.prompt = showPrompt(
+                        {
+                            subtitle: "Fly through the pipes",
+                            y: (4 / 5) * constants.GameHeight
+                        },
+                        this.game
+                    )
+                }, 600)
             }
         }
 
@@ -316,25 +359,50 @@ export class TutorialScene extends Phaser.Scene {
     }
 
     userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
-        if (this.tutorialStep === TutorialStep.Flapping) {
-            launchMainMenu(this.game)
+        this.pipeScore += 1
+        line.destroy()
+
+        if (this.pipeScore >= 3) {
+            this.scene.remove(this.prompt)
+            this.tutorialStep = TutorialStep.Done
+            setTimeout(() => {
+                this.prompt = showPrompt(
+                    {
+                        title: "Nailed it!",
+                        yes: "WOO!",
+                        y: constants.GameHeight / 3,
+                        completion: (response: boolean, prompt: Prompt) => {
+                            this.scene.remove(prompt)
+                            _.defer(() => {
+                                this.scene.remove(this)
+                            })
+                            launchMainMenu(this.game)
+                        }
+                    },
+                    this.game
+                )
+            }, 300)
         }
     }
 
     userDied() {
-        if (this.tutorialStep === TutorialStep.Flapping) {
+        if (this.tutorialStep !== TutorialStep.Done) {
             this.cameras.main.shake(20, 0.1)
             this.bird.die()
 
             setTimeout(() => {
                 this.restartTheGame()
-            }, 500)
+            }, 400)
         }
     }
 
     resetGame() {
         this.pipes = []
         this.scoreLines = []
+
+        if (this.prompt) {
+            this.scene.remove(this.prompt)
+        }
     }
 
     restartTheGame() {

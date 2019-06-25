@@ -7,7 +7,13 @@ import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
-import { getAndBumpUserCycleSeedIndex, getUserSettings, getUserStatistics } from "../user/userManager"
+import {
+    getAndBumpUserCycleSeedIndex,
+    getUserSettings,
+    getUserStatistics,
+    hasAskedAboutTutorial,
+    hasName
+} from "../user/userManager"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
@@ -18,6 +24,7 @@ import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { Prompt, showPrompt } from "./Prompt"
+import { settings } from "cluster"
 
 declare const DEMO: boolean
 
@@ -81,8 +88,10 @@ export class MainMenuScene extends Phaser.Scene {
 
         const settings = getUserSettings()
 
-        if (settings.name) {
+        if (hasName()) {
             this.setUpMenu()
+        } else if (!settings.hasAskedAboutTutorial) {
+            this.loadTutorialFlow()
         } else {
             this.loadNamePrompt()
         }
@@ -143,6 +152,36 @@ export class MainMenuScene extends Phaser.Scene {
         addScene(this.game, UserSettingsKey, settings, true)
     }
 
+    private loadTutorialFlow() {
+        const options = {
+            title: "Welcome!",
+            subtitle: "have you played\nFlappy Bird before?",
+
+            // TODO: Lol, these should be called primary/secondary
+            yes: "NOPE!",
+            no: "YES",
+
+            y: (1 / 3) * c.GameHeight,
+
+            completion: (response: boolean, prompt: Prompt) => {
+                hasAskedAboutTutorial()
+                this.scene.remove(prompt)
+                if (response) {
+                    this.removeMenu()
+                    launchTutorial(this.game)
+                } else {
+                    if (!hasName()) {
+                        this.loadNamePrompt()
+                    } else {
+                        this.setUpMenu()
+                    }
+                }
+            }
+        }
+
+        showPrompt(options, this.game)
+    }
+
     private loadNamePrompt() {
         const namePrompt = new EnterNameScreen(() => {
             this.scene.remove(namePrompt)
@@ -153,8 +192,8 @@ export class MainMenuScene extends Phaser.Scene {
 
     private loadAttirePrompt() {
         const options = {
-            title: "Flap in fashion!",
-            subtitle: "Customize your bird?",
+            title: "Flap in Fashion!",
+            subtitle: "customize your bird?",
 
             yes: "YEAH!",
             no: "LATER",

@@ -42,8 +42,8 @@ export interface UserSettings {
         seedIndex: number
     }
 
-    /** Whether or not the player has fully finished the onboarding */
-    hasCompletedTutorial: boolean
+    /** Whether or not the player has been asked if they know how to play onboarding */
+    hasAskedAboutTutorial: boolean
 }
 
 export interface PlayerStats {
@@ -68,7 +68,7 @@ export interface PlayerStats {
 
 // What it is when you first join
 export const defaultSettings: UserSettings = {
-    name: "Flappy_" + Math.floor(Math.random() * 999999) + 1,
+    name: "new player",
     aesthetics: {
         attire: [defaultAttire]
     },
@@ -76,7 +76,7 @@ export const defaultSettings: UserSettings = {
         // It'll auto-add one when you go into a royale
         seedIndex: -1
     },
-    hasCompletedTutorial: false
+    hasAskedAboutTutorial: false
 }
 
 // localStorage only works with text, so we need to marshall
@@ -91,7 +91,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 
     if ("name" in settings) existingSettings.name = settings.name!
     if ("royale" in settings) existingSettings.royale = settings.royale!
-    if ("hasCompletedTutorial" in settings) existingSettings.hasCompletedTutorial = settings.hasCompletedTutorial!
+    if ("hasAskedAboutTutorial" in settings) existingSettings.hasAskedAboutTutorial = settings.hasAskedAboutTutorial!
 
     if ("aesthetics" in settings) {
         const base = settings.aesthetics!.attire.filter(a => a.base)
@@ -305,6 +305,11 @@ export const bumpLivesExtensionState = (seed: string) => {
     localStorage.setItem("lives-state", JSON.stringify(newData))
 }
 
-export const completeTutorial = (name: string) => {
-    changeSettings({ name, hasCompletedTutorial: true })
+export const hasAskedAboutTutorial = () => {
+    changeSettings({ hasAskedAboutTutorial: true })
+}
+
+export const hasName = () => {
+    const settings = getUserSettings()
+    return settings.name && settings.name !== "new player"
 }

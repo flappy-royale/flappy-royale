@@ -601,7 +601,7 @@ export class BattleScene extends Phaser.Scene {
 
         this.userInput.push({ action: "flap", timestamp })
 
-        this.bus.setDepth(constants.zLevels.playerBird - 1)
+        this.bus.setDepth(constants.zLevels.oneBelowBird)
         this.bird.flap()
         this.analytics.flap()
     }
