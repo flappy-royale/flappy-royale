@@ -205,8 +205,13 @@ window.onload = async () => {
     const startupScreen = StartupScreen.MainMenu as StartupScreen
 
     if (PRODUCTION) {
-        const scene = new AppLaunchScene()
-        game.scene.add("launcher", scene, true)
+        if (localStorage.skipLaunchScreen) {
+            localStorage.skipLaunchScreen = false
+            launchMainMenu(game)
+        } else {
+            const scene = new AppLaunchScene()
+            game.scene.add("launcher", scene, true)
+        }
     } else {
         switch (startupScreen) {
             case StartupScreen.Launcher:
@@ -254,7 +259,12 @@ window.onload = async () => {
     } else {
         appCache.onDownloadStart(() => {
             console.log("New version!")
-            showLoadingScreen(game)
+            const launchScreen = game.scene.getScene("launcher") as AppLaunchScene
+            if (launchScreen) {
+                launchScreen.showLoadingScreen = true
+            } else {
+                showLoadingScreen(game)
+            }
         })
     }
 }
