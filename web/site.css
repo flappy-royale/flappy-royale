@@ -42,7 +42,7 @@ body {
 }
 
 nav {
-    width: 800px;
+    width: 600px;
     margin: 20px auto;
     text-align: center;
 }
@@ -104,7 +104,7 @@ nav a.disabled {
 }
 
 .container {
-    width: 600px;
+    width: 660px;
     margin: 0 auto;
     position: relative;
 }
@@ -233,7 +233,7 @@ ul.seats li img {
 
 #phone {
     position: absolute;
-    right: -20px;
+    right: 15px;
     top: 62px;
     width: 260px;
     height: 480px;
