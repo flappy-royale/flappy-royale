@@ -10,6 +10,7 @@ img,
     image-rendering: -o-crisp-edges;
     image-rendering: -webkit-optimize-contrast;
     -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: pixelated;
 }
 
 @font-face {
@@ -128,7 +129,9 @@ nav a.disabled {
 }
 
 #ground {
-    background: url("../assets/battle/ground.png") repeat-x;
+    background-image: url("../assets/battle/ground.png"), url("../assets/battle/ground.png");
+    background-repeat: repeat-x, repeat-x;
+    background-position-y: 0, 82px;
 
     /* 160 × 89 */
     background-size: 480px 267px;
