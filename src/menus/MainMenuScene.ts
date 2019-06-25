@@ -79,7 +79,17 @@ export class MainMenuScene extends Phaser.Scene {
 
         const stats = getUserStatistics()
 
-        this.winsLabel = this.add.bitmapText(c.GameWidth, c.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
+        if (stats.royaleStreak > 0) {
+            this.winsLabel = this.add.bitmapText(
+                c.GameWidth,
+                c.NotchOffset,
+                "nokia16",
+                "royale streak: " + stats.royaleStreak,
+                0
+            )
+        } else {
+            this.winsLabel = this.add.bitmapText(c.GameWidth, c.NotchOffset, "nokia16", "wins: " + stats.royaleWins, 0)
+        }
         rightAlignTextLabel(this.winsLabel, 1)
 
         // NOTE: ASYNC!
