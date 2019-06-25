@@ -205,7 +205,7 @@ window.onload = async () => {
     const startupScreen = StartupScreen.MainMenu as StartupScreen
 
     if (PRODUCTION) {
-        if (localStorage.get("skipLaunchScreen") === "true") {
+        if (localStorage.getItem("skipLaunchScreen") === "true") {
             localStorage.removeItem("skipLaunchScreen")
             launchMainMenu(game)
         } else {
