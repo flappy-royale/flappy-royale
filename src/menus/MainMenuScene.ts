@@ -80,10 +80,11 @@ export class MainMenuScene extends Phaser.Scene {
         setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
 
         const settings = getUserSettings()
-        if (settings.name) {
+        if (false) {
+            //settings.name) {
             this.setUpMenu()
         } else {
-            this.loadAttirePrompt()
+            this.loadNamePrompt()
         }
 
         // This is just used for taking snapshots

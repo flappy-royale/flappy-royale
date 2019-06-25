@@ -24,6 +24,9 @@ export class EnterNameScreen extends Phaser.Scene {
             .setOrigin(0, 0)
             .createFromCache("NameForm")
 
+        const buttonBG = document.getElementById("button-bg") as HTMLImageElement
+        buttonBG.src = require("../../assets/menu/ButtonSmallBG.png")
+
         document.getElementById("button").addEventListener("click", () => {
             const usernameInput = document.getElementById("username") as HTMLInputElement
 

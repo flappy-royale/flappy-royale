@@ -84,13 +84,17 @@ export class RoyaleLobby extends Phaser.Scene {
             launchMainMenu(this.game)
         }
 
-        document.getElementById('button').addEventListener('click', () => {
-            this.hasReadied = true
-            if (this.countdownTime <= 0) {
-                this.startTheGame()
-            }
-            this.updateCountdownLabel()
-        }, { once: true })
+        document.getElementById("button").addEventListener(
+            "click",
+            () => {
+                this.hasReadied = true
+                if (this.countdownTime <= 0) {
+                    this.startTheGame()
+                }
+                this.updateCountdownLabel()
+            },
+            { once: true }
+        )
 
         // Start the countdown timer
         let timeout: number | undefined
@@ -202,7 +206,9 @@ export class RoyaleLobby extends Phaser.Scene {
         const countdownButton = document.getElementById("countdown-description")
         let period = "." // Tracks "hold on..." periods if we don't load seeds in time
 
-        if (!this.hasReadied) { return }
+        if (!this.hasReadied) {
+            return
+        }
 
         if (this.countdownTime > 0) {
             countdownButton.innerHTML = `starts in <span id="countdown-time">${this.countdownTime}</span> s`
