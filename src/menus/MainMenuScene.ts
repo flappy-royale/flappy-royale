@@ -17,7 +17,7 @@ import { GameTheme } from "../battle/theme"
 import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
-import { AttirePrompt, AttirePromptKey } from "./AttirePrompt"
+import { Prompt, showPrompt } from "./Prompt"
 
 declare const DEMO: boolean
 
@@ -80,6 +80,7 @@ export class MainMenuScene extends Phaser.Scene {
         setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
 
         const settings = getUserSettings()
+
         if (settings.name) {
             this.setUpMenu()
         } else {
@@ -151,15 +152,24 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private loadAttirePrompt() {
-        const attirePrompt = new AttirePrompt((response: boolean) => {
-            this.scene.remove(attirePrompt)
-            if (response) {
-                this.loadSettings()
-            } else {
-                this.setUpMenu()
+        const options = {
+            title: "Flap in fashion!",
+            subtitle: "Customize your bird?",
+
+            yes: "YEAH!",
+            no: "LATER",
+
+            completion: (response: boolean, prompt: Prompt) => {
+                this.scene.remove(prompt)
+                if (response) {
+                    this.loadSettings()
+                } else {
+                    this.setUpMenu()
+                }
             }
-        })
-        addScene(this.game, AttirePromptKey, attirePrompt, true)
+        }
+
+        showPrompt(options, this.game)
     }
 
     private loadTrial() {
