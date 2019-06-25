@@ -159,6 +159,8 @@ export class MainMenuScene extends Phaser.Scene {
             yes: "YEAH!",
             no: "LATER",
 
+            y: (2 / 5) * c.GameHeight,
+
             completion: (response: boolean, prompt: Prompt) => {
                 this.scene.remove(prompt)
                 if (response) {

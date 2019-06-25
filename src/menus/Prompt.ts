@@ -13,6 +13,9 @@ export interface PromptOptions {
 
     yes?: string
     no?: string
+
+    y: number
+
     completion: (response: boolean, prompt: Prompt) => void
 }
 
@@ -38,7 +41,7 @@ export class Prompt extends Phaser.Scene {
     }
 
     create() {
-        let y = (2 / 5) * GameHeight
+        let y = this.options.y
 
         const title = this.add.bitmapText(0, y, "fipps", this.options.title, 12)
         centerAlignTextLabel(title)
