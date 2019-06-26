@@ -41,24 +41,15 @@ export class TutorialScene extends Phaser.Scene {
     /** All the current scorelines on screen */
     private scoreLines: Phaser.Physics.Arcade.Image[]
 
-    /** A timer for generating new pipes */
-    private newPipeTimer: Phaser.Time.TimerEvent
-
     /* Scene timestamp for when the most recent round started
      * So recording timestamps can be consistent */
     private timestampOffset: number = 0
-
-    /** Developer logging */
-    private debugLabel: Phaser.GameObjects.Text
 
     /** The RNG function for this current run, pipes, and all ghosts */
     public rng: () => number
 
     /** Track spacebar keypresses to flap */
     private spacebar: Phaser.Input.Keyboard.Key
-
-    /** What you see to go back, hides on dying in a royale */
-    private backButton: Phaser.GameObjects.Image | undefined
 
     /** What game mode is this scene running in? */
     public mode: game.GameMode = game.GameMode.Tutorial
@@ -78,6 +69,8 @@ export class TutorialScene extends Phaser.Scene {
     private numberOfFlaps: number = 0
 
     private pipeScore: number = 0
+
+    private disableJumping = false
 
     constructor(opts: any = {}) {
         super({
@@ -116,6 +109,7 @@ export class TutorialScene extends Phaser.Scene {
         deathPreload(this)
 
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
+        this.load.image("flag", require("../../assets/battle/flag.png"))
 
         this.load.audio("flap", require("../../assets/audio/flap.wav"))
         this.load.audio("hit", require("../../assets/audio/hit.wav"))
@@ -196,11 +190,6 @@ export class TutorialScene extends Phaser.Scene {
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     }
 
-    private goBackToMainMenu() {
-        this.game.scene.remove(this)
-        launchMainMenu(this.game)
-    }
-
     setupPhysicsFloor() {
         /** the physics floor, so that the bus + bird can land on it */
         this.floorPhysics = this.physics.add.staticImage(
@@ -235,9 +224,6 @@ export class TutorialScene extends Phaser.Scene {
         // Naively rounding their x-values down to the nearest int seems to work,
         // although could cause unexpected issues?
         nudgePipesOntoPixelGrid(this.pipes)
-
-        // The time from the start of a run
-        const adjustedTime = Math.round(timestamp - this.timestampOffset)
 
         // Flap if appropriate
         if (this.spacebar && Phaser.Input.Keyboard.JustDown(this.spacebar)) {
@@ -281,11 +267,9 @@ export class TutorialScene extends Phaser.Scene {
         pipeOutOfBoundsCheck(this.pipes)
     }
 
-    userFlap() {
-        // Trying to flap on the main menu is just silly!
-        if (this.mode === game.GameMode.Menu) {
-            return
-        }
+    userFlap(force?: boolean) {
+        // When you complete, the game takes over the last few flaps off-screen
+        if (this.disableJumping && !force) return
 
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return
@@ -330,6 +314,11 @@ export class TutorialScene extends Phaser.Scene {
                 addRowOfPipesManual(460, this, constants.tutorialGapHeight, constants.tutorialGapSlot, this.theme)
             )
 
+            this.physics.add
+                .sprite(520, constants.GameHeight - 80, "flag")
+                .setVelocityX(-1 * constants.pipeSpeed)
+                .setGravityY(-1 * constants.gravity)
+
             if (game.showPlayerBird(this.mode)) {
                 this.scoreLines.push(addScoreLine(310, this, this.bird))
                 this.scoreLines.push(addScoreLine(390, this, this.bird))
@@ -366,6 +355,19 @@ export class TutorialScene extends Phaser.Scene {
             this.scene.remove(this.prompt)
             this.tutorialStep = TutorialStep.Done
             setTimeout(() => {
+                this.disableJumping = true
+                this.bird.startMovingLeft()
+
+                let flapCount = 1
+                this.time.addEvent({
+                    delay: 750,
+                    callback: () => {
+                        if (flapCount < 5) this.userFlap(true)
+                        flapCount++
+                    },
+                    loop: true
+                })
+
                 this.prompt = showPrompt(
                     {
                         title: "Nailed it!",

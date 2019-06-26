@@ -72,7 +72,7 @@ export class AppLaunchScene extends Phaser.Scene {
         bird.startMovingLeft(constants.pipeSpeed * 0.85)
 
         this.time.addEvent({
-            delay: 560,
+            delay: 650,
             callback: () => {
                 bird.flap()
                 bird.startMovingLeft(constants.pipeSpeed * 0.85)
