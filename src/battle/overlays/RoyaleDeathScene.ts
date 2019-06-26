@@ -103,7 +103,7 @@ export class RoyaleDeath extends Phaser.Scene {
 
         if (!won) {
             this.add.image(60, 152, "green-sash-small")
-            const copy = `#${this.props.position} / ${this.props.totalPlayers}`
+            const copy = `#${this.props.position + 1} / ${this.props.totalPlayers}`
             this.add.bitmapText(10, 148, "fipps-bit", copy, 8)
         }
 
