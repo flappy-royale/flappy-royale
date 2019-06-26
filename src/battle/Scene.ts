@@ -224,6 +224,8 @@ export class BattleScene extends Phaser.Scene {
 
         this.load.audio("crash", require("../../assets/audio/crash.wav"))
         this.load.audio("win", require("../../assets/audio/win.wav"))
+
+        this.load.image("heart", require("../../assets/battle/heart.png"))
     }
 
     create() {
@@ -338,11 +340,9 @@ export class BattleScene extends Phaser.Scene {
 
             const livesNum = getLives(this.seed)
             const lives = livesNum - 1
-            const livesText = this.add.bitmapText(24, yPos, "nokia16", `${lives}`, 16)
-            livesText.setDepth(constants.zLevels.ui)
 
-            const livesIcon = new BirdSprite(this, 4, yPos + 8, { isPlayer: false, settings: this.userSettings })
-            livesIcon.actAsUIElement()
+            this.add.bitmapText(24, yPos, "nokia16", `${lives}`, 16).setDepth(constants.zLevels.ui)
+            this.add.image(14, yPos + 8, "heart").setDepth(constants.zLevels.ui)
         }
 
         if (devSettings.showUI && game.shouldShowHighScoreLabel(this.mode)) {
