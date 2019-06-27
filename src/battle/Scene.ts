@@ -30,6 +30,7 @@ import { rightAlignTextLabel, centerAlignTextLabel } from "./utils/alignTextLabe
 import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
+import _ = require("lodash")
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -385,7 +386,11 @@ export class BattleScene extends Phaser.Scene {
             }
         })
 
-        const toBeat = this.sortedReplays.reverse().find(r => r.score > this.highScore)
+        // TODO: Our old method of calculating the next-best-score was more
+        // efficient but had a hard-to-find bug.
+        // This should be more reliable, and we still shouldn't have perf issues...
+        const betterScoresThanYou = this.sortedReplays.filter(r => r.score > this.highScore)
+        const toBeat = _.minBy(betterScoresThanYou, "score")
 
         let highScoreText = `${this.highScore}`
 

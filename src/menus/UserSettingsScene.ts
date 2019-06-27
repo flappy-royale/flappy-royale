@@ -50,6 +50,11 @@ export class UserSettingsScene extends Phaser.Scene {
 
         // Grab the username via the DOM API
         const usernameInput = element.node.getElementsByTagName("input").item(0)
+
+        usernameInput.addEventListener("blur", () => {
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        })
+
         // Set the default value
         const settings = getUserSettings()
         const attireIDsWhenOpening = settings.aesthetics.attire.map(a => a.id)
