@@ -49,7 +49,6 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("royale-button", require("../../assets/menu/royale-2.png"))
         this.load.image("trial-button", require("../../assets/menu/trial-2.png"))
         this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
-        this.load.image("tutorial-button", require("../../assets/menu/tutorial.png"))
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
 
@@ -129,21 +128,22 @@ export class MainMenuScene extends Phaser.Scene {
         this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
         becomeButton(this.playerNameText, this.loadSettings, this)
 
-        const royaleButton = this.add.image(117, 108 + c.NotchOffset, "royale-button")
+        const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
-        const trial = this.add.image(40, 112 + c.NotchOffset, "trial-button")
+        const trial = this.add.image(74, 152 + c.NotchOffset, "trial-button")
         if (!DEMO) {
             becomeButton(trial, this.loadTrial, this)
         } else {
             trial.setAlpha(0.3)
         }
 
-        const settingsButton = this.add.image(42, c.GameHeight - 40, "settings-button")
+        const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
 
-        const tutorialButton = this.add.image(120, c.GameHeight - 40, "tutorial-button")
-        becomeButton(tutorialButton, this.loadTutorial, this)
+        const howToPlayButton = this.add.bitmapText(0, c.GameHeight - 40, "nokia16", "?", 20)
+        rightAlignTextLabel(howToPlayButton, 10)
+        becomeButton(howToPlayButton, this.loadTutorial, this)
     }
     private loadSettings() {
         this.removeMenu()
