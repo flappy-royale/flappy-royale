@@ -49,6 +49,8 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("royale-button", require("../../assets/menu/royale-2.png"))
         this.load.image("trial-button", require("../../assets/menu/trial-2.png"))
         this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
+        this.load.image("question-mark", require("../../assets/menu/question-mark.png"))
+
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
 
@@ -141,8 +143,7 @@ export class MainMenuScene extends Phaser.Scene {
         const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
 
-        const howToPlayButton = this.add.bitmapText(0, c.GameHeight - 40, "nokia16", "?", 20)
-        rightAlignTextLabel(howToPlayButton, 10)
+        const howToPlayButton = this.add.image(c.GameWidth - 20, c.GameHeight - 42, "question-mark")
         becomeButton(howToPlayButton, this.loadTutorial, this)
     }
     private loadSettings() {
