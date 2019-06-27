@@ -5,6 +5,10 @@ import * as pako from "pako"
 import { SeedDataZipped, SeedData } from "../../src/firebase"
 import { processNewRecording } from "./processNewRecording"
 
+const cors = require("cors")({
+    origin: true
+})
+
 const numberOfDifferentRoyaleReplays = 3
 
 // So we can access the db
@@ -36,26 +40,24 @@ const currentSeedExpiry = (): Date => {
 }
 
 export const seeds = functions.https.onRequest((request, response) => {
-    const version = request.query.version || request.params.version
-    const responseJSON: SeedsResponse = {
-        royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-royale-${i}`),
-        daily: {
-            dev: dailySeed(version, 2),
-            staging: dailySeed(version, 1),
-            production: dailySeed(version, 0)
-        },
-        hourly: {
-            dev: hourlySeed(version, 2),
-            staging: hourlySeed(version, 1),
-            production: hourlySeed(version, 0)
-        },
-        expiry: currentSeedExpiry().toJSON()
-    }
-    response
-        .status(200)
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-        .send(responseJSON)
+    cors(request, response, () => {
+        const version = request.query.version || request.params.version
+        const responseJSON: SeedsResponse = {
+            royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-royale-${i}`),
+            daily: {
+                dev: dailySeed(version, 2),
+                staging: dailySeed(version, 1),
+                production: dailySeed(version, 0)
+            },
+            hourly: {
+                dev: hourlySeed(version, 2),
+                staging: hourlySeed(version, 1),
+                production: hourlySeed(version, 0)
+            },
+            expiry: currentSeedExpiry().toJSON()
+        }
+        response.status(200).send(responseJSON)
+    })
 })
 
 export interface ReplayUploadRequest {
@@ -67,46 +69,43 @@ export interface ReplayUploadRequest {
 }
 
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
-    // Ensure CORS is cool
-    response
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    cors(request, response, async () => {
+        const { seed, uuid, version, data, mode } = JSON.parse(request.body) as ReplayUploadRequest
 
-    const { seed, uuid, version, data, mode } = JSON.parse(request.body) as ReplayUploadRequest
+        if (!uuid) {
+            return response.status(400).send({ error: "Needs a uuid in request" })
+        }
+        if (!version) {
+            return response.status(400).send({ error: "Needs a version in request" })
+        }
+        if (!data) {
+            return response.status(400).send({ error: "Needs a data of type PlayerData in request" })
+        }
+        if (!mode) {
+            return response.status(400).send({ error: "Needs a game mode in request" })
+        }
 
-    if (!uuid) {
-        return response.status(400).send({ error: "Needs a uuid in request" })
-    }
-    if (!version) {
-        return response.status(400).send({ error: "Needs a version in request" })
-    }
-    if (!data) {
-        return response.status(400).send({ error: "Needs a data of type PlayerData in request" })
-    }
-    if (!mode) {
-        return response.status(400).send({ error: "Needs a game mode in request" })
-    }
+        const db = admin.firestore()
+        const recordings = db.collection("recordings")
+        const dataRef = await recordings.doc(seed)
+        const zippedSeedData = (await dataRef.get()).data() as SeedDataZipped
 
-    const db = admin.firestore()
-    const recordings = db.collection("recordings")
-    const dataRef = await recordings.doc(seed)
-    const zippedSeedData = (await dataRef.get()).data() as SeedDataZipped
+        // Mainly to provide typings to dataRef.set
+        const saveToDB = (a: SeedDataZipped) => dataRef.set(a)
 
-    // Mainly to provide typings to dataRef.set
-    const saveToDB = (a: SeedDataZipped) => dataRef.set(a)
+        if (!zippedSeedData) {
+            // We need too make the data
+            const document = { replaysZipped: zippedObj([data]) }
+            await saveToDB(document)
+        } else {
+            const seedData = unzipSeedData(zippedSeedData)
+            const newData = processNewRecording(seedData, data, uuid, mode)
+            await saveToDB({ replaysZipped: zippedObj(newData.replays) })
+        }
 
-    if (!zippedSeedData) {
-        // We need too make the data
-        const document = { replaysZipped: zippedObj([data]) }
-        await saveToDB(document)
-    } else {
-        const seedData = unzipSeedData(zippedSeedData)
-        const newData = processNewRecording(seedData, data, uuid, mode)
-        await saveToDB({ replaysZipped: zippedObj(newData.replays) })
-    }
-
-    const responseJSON = { success: true }
-    return response.status(200).send(responseJSON)
+        const responseJSON = { success: true }
+        return response.status(200).send(responseJSON)
+    })
 })
 
 /**
