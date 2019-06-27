@@ -153,8 +153,8 @@ export class MainMenuScene extends Phaser.Scene {
 
     private loadTutorialFlow() {
         const options = {
-            title: "Welcome!",
-            subtitle: "have you played\nFlappy Bird before?",
+            title: "",
+            subtitle: "Have you played\nFlappy Bird before?",
 
             // TODO: Lol, these should be called primary/secondary
             yes: "NOPE!",
@@ -192,7 +192,7 @@ export class MainMenuScene extends Phaser.Scene {
     private loadAttirePrompt() {
         const options = {
             title: "Flap in Fashion!",
-            subtitle: "customize your bird?",
+            subtitle: "Customize your bird?",
 
             yes: "YEAH!",
             no: "LATER",

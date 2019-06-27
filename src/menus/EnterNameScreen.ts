@@ -1,6 +1,5 @@
 import * as Phaser from "phaser"
 import _ = require("lodash")
-import { GameWidth, GameHeight } from "../constants"
 import { changeSettings } from "../user/userManager"
 
 export const NamePromptKey = "EnterName"
@@ -27,6 +26,7 @@ export class EnterNameScreen extends Phaser.Scene {
         const buttonBG = document.getElementById("button-bg") as HTMLImageElement
         buttonBG.src = require("../../assets/menu/ButtonSmallBG.png")
 
+        document.getElementById("username").focus()
         document.getElementById("button").addEventListener("click", () => {
             const usernameInput = document.getElementById("username") as HTMLInputElement
 

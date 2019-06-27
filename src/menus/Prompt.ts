@@ -58,7 +58,7 @@ export class Prompt extends Phaser.Scene {
         let y = this.options.y
 
         if (this.options.title) {
-            const title = this.add.bitmapText(0, y, "fipps", this.options.title, 12)
+            const title = this.add.bitmapText(0, y, "fipps", this.options.title, 8)
             centerAlignTextLabel(title)
             title.setDepth(depth)
             y += title.getTextBounds(true).local.height
@@ -77,13 +77,13 @@ export class Prompt extends Phaser.Scene {
         }
 
         if (this.options.no && this.options.yes) {
-            const noBg = this.add.image(GameWidth / 3, y, "attire-button-small-bg")
+            const noBg = this.add.image(Math.round(GameWidth / 3), y, "attire-button-small-bg")
             noBg.setDepth(depth)
             const noText = this.add.bitmapText(noBg.x - 20, noBg.y - 5, "fipps", this.options.no, 8)
             noText.setDepth(depth)
             becomeButton(noBg, this.no, this, [noText])
 
-            const yesBg = this.add.image((4 * GameWidth) / 5, y, "attire-button-small-bg-yellow")
+            const yesBg = this.add.image(Math.round((4 * GameWidth) / 5), y, "attire-button-small-bg-yellow")
             yesBg.setDepth(depth)
             yesBg.x = GameWidth - yesBg.width
             const yesText = this.add.bitmapText(yesBg.x - 20, yesBg.y - 5, "fipps", this.options.yes, 8)
