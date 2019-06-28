@@ -16,8 +16,9 @@ import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
-import { TutorialScene, launchTutorial } from "./battle/TutorialScene"
+import { launchTutorial } from "./battle/TutorialScene"
 import { setupSentry } from "./setupSentry"
+import { setupAdsense } from "./setupAdsense"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -34,7 +35,10 @@ if (PRODUCTION) {
     setupSentry()
 }
 
-if (DEMO) document.body.className = "demo"
+if (DEMO) {
+    document.body.className = "demo"
+    setupAdsense()
+}
 
 enum StartupScreen {
     Launcher,
