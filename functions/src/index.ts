@@ -9,7 +9,7 @@ const cors = require("cors")({
     origin: true
 })
 
-const numberOfDifferentRoyaleReplays = 3
+const numberOfDifferentRoyaleReplays = 12
 
 // So we can access the db
 admin.initializeApp()
