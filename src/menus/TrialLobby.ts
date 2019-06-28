@@ -94,7 +94,7 @@ export class TrialLobby extends Phaser.Scene {
             analyticsEvent("out_of_lives", { livesState })
         }
 
-        fetchRecordingsForSeed(this.seed).then(seedData => {
+        fetchRecordingsForSeed(this.seed, false).then(seedData => {
             const birds = document.getElementById("birds")
             seedData.replays
                 .sort((l, r) => r.score - l.score)

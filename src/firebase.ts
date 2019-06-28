@@ -34,7 +34,14 @@ export interface PlayerEvent {
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 
-export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> => {
+export const fetchRecordingsForSeed = async (seed: string, prioritizeCache: boolean = true): Promise<SeedData> => {
+    if (prioritizeCache) {
+        const cached = cache.getRecordings(seed)
+        if (cached && cached.replays && cached.replays.length >= 99) {
+            return cached
+        }
+    }
+
     try {
         const dataRef = await firebaseApp
             .firestore()
