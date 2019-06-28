@@ -7291,6 +7291,11 @@ pkginfo@0.3.x:
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.3.1.tgz#5b29f6a81f70717142e09e765bbeab97b4f81e21"
   integrity sha1-Wyn2qB9wcXFC4J52W76rl7T4HiE=
 
+playfab-web-sdk@^1.48.190625:
+  version "1.48.190625"
+  resolved "https://registry.yarnpkg.com/playfab-web-sdk/-/playfab-web-sdk-1.48.190625.tgz#65a11ce33c512308a49e79d5df24f59d5c2e1b0c"
+  integrity sha512-y1xvqxbM129aK8vRbfcCsMBgWxHi4tNyWgBKBBDufQmELeUfJh4sosT9EhSsbKCt4Mo1vAkpcUYFWvoWXa0Ktg==
+
 please-upgrade-node@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/please-upgrade-node/-/please-upgrade-node-3.1.1.tgz#ed320051dfcc5024fae696712c8288993595e8ac"
