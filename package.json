@@ -29,6 +29,7 @@
         "lodash.clonedeep": "^4.5.0",
         "pako": "^1.0.10",
         "phaser": "^3.17.0",
+        "playfab-web-sdk": "^1.48.190625",
         "seed-random": "^2.2.0"
     },
     "devDependencies": {
