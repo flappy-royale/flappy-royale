@@ -195,7 +195,9 @@ export class BattleScene extends Phaser.Scene {
         window.addEventListener("mousedown", flap)
 
         window.addEventListener("blur", () => {
-            this.userDied()
+            if (this.bird) {
+                this.userDied()
+            }
         })
 
         this.events.on("destroy", () => {
