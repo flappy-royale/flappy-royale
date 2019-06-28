@@ -91,6 +91,7 @@ export class TutorialScene extends Phaser.Scene {
 
         this.events.on("destroy", () => {
             window.removeEventListener("touchstart", flap)
+            window.removeEventListener("mousedown", flap)
         })
     }
 
@@ -377,8 +378,8 @@ export class TutorialScene extends Phaser.Scene {
                             this.scene.remove(prompt)
                             _.defer(() => {
                                 this.scene.remove(this)
+                                launchMainMenu(this.game)
                             })
-                            launchMainMenu(this.game)
                         }
                     },
                     this.game

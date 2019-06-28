@@ -183,10 +183,11 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     private backToMainMenu() {
-        this.game.scene.remove(this)
-        this.game.scene.remove(this.props.battle)
-
-        launchMainMenu(this.game)
+        _.defer(() => {
+            this.game.scene.remove(this)
+            this.game.scene.remove(this.props.battle)
+            launchMainMenu(this.game)
+        })
     }
 
     private getReady() {
@@ -209,8 +210,10 @@ export class RoyaleDeath extends Phaser.Scene {
     private async startNewRound() {
         if (!(this.seed && this.seedData)) return
 
-        this.game.scene.remove(this)
-        this.game.scene.remove(this.props.battle)
+        _.defer(() => {
+            this.game.scene.remove(this)
+            this.game.scene.remove(this.props.battle)
+        })
 
         const scene = new BattleScene({
             seed: this.seed,
