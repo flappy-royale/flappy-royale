@@ -627,6 +627,10 @@ export class BattleScene extends Phaser.Scene {
         this.score++
         this.sound.play("point")
         this.updateScoreLabel()
+
+        if (this.score <= 2) {
+            this.ghostBirds.forEach(b => b.setOpacityBasedOnScore(this.score))
+        }
     }
 
     userDied() {

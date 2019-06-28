@@ -6,6 +6,7 @@ import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { builtInAttire } from "../attire"
+import _ = require("lodash")
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -135,7 +136,7 @@ export class BirdSprite {
         this.position = this.body.position
         const allAttire = this.tightAttire.concat(this.looseAttire)
         if (!meta.isPlayer) {
-            this.setOpacity(0.3)
+            this.setOpacityBasedOnScore(0)
         } else {
             this.bodySprite.setDepth(constants.zLevels.playerBird)
             if (this.isPlayer) this.focusSprite.setDepth(constants.zLevels.focusBackdrop)
@@ -146,6 +147,24 @@ export class BirdSprite {
         scene.sys.events.addListener("postupdate", () => {
             this.updateRelatedSprites({ tight: true })
         })
+    }
+
+    setOpacityBasedOnScore(pipes: number) {
+        if (this.isPlayer) {
+            return
+        }
+
+        let opacity = 0.3
+        const map = {
+            0: 0.2,
+            1: 0.25,
+            2: 0.3
+        }
+
+        if (!_.isUndefined(map[pipes])) {
+            opacity = map[pipes]
+        }
+        this.setOpacity(opacity)
     }
 
     addCollideForSprite(scene: Scene, otherPhysicsObj: Phaser.Physics.Arcade.Image) {
