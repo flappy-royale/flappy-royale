@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { getUserSettings, changeSettings, getUserStatistics } from "../user/userManager"
+import { getUserSettings, changeSettings, getUserStatistics, getRoyales } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { builtInAttire, Attire } from "../attire"
@@ -272,7 +272,8 @@ function setUpStatsHTML() {
         "First pipe fails": stats.instaDeaths,
         "Birds Past": stats.birdsBeaten,
         "Play Time": `${time.join(":")}${postThing}`,
-        Flaps: stats.totalFlaps
+        Flaps: stats.totalFlaps,
+        "Score History": ""
     }
 
     // Show either top position or royale wins
@@ -293,4 +294,38 @@ function setUpStatsHTML() {
         statsElement.appendChild(dataDiv)
         statsElement.appendChild(document.createElement("hr"))
     })
+
+    const runs = getRoyales().sort((r1, r2) => r1.startTimestamp - r2.startTimestamp)
+    const runsContainer = document.getElementById("runs-graph")
+
+    const topScore = document.createElement("div")
+    topScore.id = "top-score"
+    topScore.textContent = stats.bestScore.toString()
+    runsContainer.appendChild(topScore)
+
+    const bottomScore = document.createElement("div")
+    bottomScore.id = "bottom-score"
+    bottomScore.textContent = "0" //stats.bestScore.toString()
+    runsContainer.appendChild(bottomScore)
+
+    // Graph constraints
+    // we have 130 px max, must divide rows into round numbers, can be less than 130 columns
+    // can't drop the highest
+    // Let's be nice and overly optimistic.
+    //
+    let r = runs.concat(runs).concat(runs) //.slice(0, 149)
+    const maxLength = Math.min(130, r.length)
+    for (let i = 0; i < maxLength; i++) {
+        const index = r.length < 130 ? i : Math.round((runs.length / 130) * i)
+        const run = r[index]
+
+        const height = 60 / stats.bestScore
+        const relativeHeight = (run.score && Math.round(height * run.score)) || 0
+        console.log(height)
+        const bottomScore = document.createElement("div")
+        bottomScore.className = "column"
+        bottomScore.style.left = `${14 + i}px`
+        bottomScore.style.height = `${relativeHeight + 1}px`
+        runsContainer.appendChild(bottomScore)
+    }
 }
