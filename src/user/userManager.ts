@@ -4,6 +4,7 @@ import _ = require("lodash")
 import { GameMode } from "../battle/utils/gameMode"
 import { getSeeds } from "../firebase"
 import { APIVersion } from "../constants"
+import * as PlayFab from "../playFab"
 
 interface Aesthetics {
     // Strings of stored keys for hats
@@ -98,6 +99,8 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
         if (base.length !== 1) throw "Must be one, and only be one base"
 
         existingSettings.aesthetics = settings.aesthetics!
+
+        PlayFab.updateAttire(settings.aesthetics.attire)
     }
 
     saveSettings(existingSettings)

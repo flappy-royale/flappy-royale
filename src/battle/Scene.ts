@@ -31,7 +31,7 @@ import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
-import PlayFab from "../PlayFab"
+import * as PlayFab from "../playFab"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */

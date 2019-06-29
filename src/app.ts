@@ -21,7 +21,7 @@ import { setupSentry } from "./setupSentry"
 import { setupAdsense } from "./util/setupAdsense"
 import { setupGAnalytics } from "./util/setupGAnalytics"
 import { currentPlatform } from "./util/getPlatform"
-import PlayFab from "./playFab"
+import * as PlayFab from "./playFab"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
