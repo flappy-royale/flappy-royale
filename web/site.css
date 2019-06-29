@@ -276,3 +276,15 @@ ul.seats li img {
 .large h2 {
     font-size: 32px;
 }
+
+.testimonial {
+    margin-top: 180px;
+    font-family: Fipps;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.testimonial li {
+    list-style: none;
+    margin-bottom: 20px;
+}
