@@ -37,7 +37,7 @@ if (PRODUCTION) {
 
 if (DEMO) {
     document.body.className = "demo"
-    setupAdsense()
+    // setupAdsense()
 }
 
 enum StartupScreen {
