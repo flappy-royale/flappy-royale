@@ -21,6 +21,7 @@ import { BirdSprite } from "../BirdSprite"
 import { PlayerData } from "../../firebase"
 import { shareNatively } from "../../nativeComms/share"
 import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors"
+import * as PlayFab from "../../playFab"
 
 export interface TrialDeathProps {
     score: number
@@ -73,6 +74,7 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     create() {
+        PlayFab.getLeaderboard().then(l => console.log(l))
         const userData: PlayerData = {
             score: this.props.score,
             actions: [],

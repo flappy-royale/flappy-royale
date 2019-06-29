@@ -19,7 +19,7 @@ import { AppLaunchScene } from "./menus/AppLaunchScreen"
 import { launchTutorial } from "./battle/TutorialScene"
 import { setupSentry } from "./setupSentry"
 import { setupAdsense } from "./setupAdsense"
-import PlayFab from "./playFab"
+import * as PlayFab from "./playFab"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
