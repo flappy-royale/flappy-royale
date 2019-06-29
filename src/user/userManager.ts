@@ -90,7 +90,10 @@ const saveSettings = (settings: UserSettings) => localStorage.setItem("settings"
 export const changeSettings = (settings: Partial<UserSettings>) => {
     const existingSettings = getUserSettings()
 
-    if ("name" in settings) existingSettings.name = settings.name!
+    if ("name" in settings) {
+        existingSettings.name = settings.name!
+        PlayFab.updateName(settings.name)
+    }
     if ("royale" in settings) existingSettings.royale = settings.royale!
     if ("hasAskedAboutTutorial" in settings) existingSettings.hasAskedAboutTutorial = settings.hasAskedAboutTutorial!
 
