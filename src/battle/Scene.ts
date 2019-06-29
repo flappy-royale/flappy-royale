@@ -31,6 +31,7 @@ import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
+import PlayFab from "../PlayFab"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -661,6 +662,10 @@ export class BattleScene extends Phaser.Scene {
                 })
                     .then(a => a.json())
                     .then(r => console.log(r))
+
+                if (this.mode === game.GameMode.Trial) {
+                    PlayFab.sendTrialScore(this.score)
+                }
             }
         }
 
