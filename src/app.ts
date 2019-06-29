@@ -19,6 +19,7 @@ import { AppLaunchScene } from "./menus/AppLaunchScreen"
 import { launchTutorial } from "./battle/TutorialScene"
 import { setupSentry } from "./setupSentry"
 import { setupAdsense } from "./setupAdsense"
+import PlayFab from "./playFab"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -190,6 +191,8 @@ window.onload = async () => {
     // This very silly delay fixes the issues where notch-detection code sometimes doesn't work properly.
     // TODO: Our splash screen can happen in not-Phaser DOM land and use that to mask this waiting period.
     await wait(100)
+
+    PlayFab.login()
 
     constants.setDeviceSize()
     const game = newGame()
