@@ -313,7 +313,7 @@ function setUpStatsHTML() {
     // can't drop the highest
     // Let's be nice and overly optimistic.
     //
-    let r = runs.concat(runs).concat(runs) //.slice(0, 149)
+    let r = runs
     const maxLength = Math.min(130, r.length)
     for (let i = 0; i < maxLength; i++) {
         const index = r.length < 130 ? i : Math.round((runs.length / 130) * i)
