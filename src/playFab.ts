@@ -47,11 +47,14 @@ export const login = () => {
                 playerId = result.data.PlayFabId
 
                 isLoggedIn = true
-                if (result.data.NewlyCreated) {
-                    const settings = getUserSettings()
-                    updateName(settings.name)
-                    updateAttire(settings.aesthetics.attire)
-                }
+
+                // TODO: In the prod build, only upload these on creation.
+                // For beta, we messed this up in earlier builds, so let's ensure we always have a name
+                // if (result.data.NewlyCreated) {
+                const settings = getUserSettings()
+                updateName(settings.name)
+                updateAttire(settings.aesthetics.attire)
+                // }
 
                 resolve(playerId)
             }
