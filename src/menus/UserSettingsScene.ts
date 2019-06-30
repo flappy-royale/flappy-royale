@@ -12,8 +12,6 @@ import { usernameIsValid } from "../usernameIsValid"
 export const UserSettingsKey = "UserSettings"
 
 export class UserSettingsScene extends Phaser.Scene {
-    didChangeName: boolean = false
-
     constructor() {
         super(UserSettingsKey)
     }
@@ -67,12 +65,10 @@ export class UserSettingsScene extends Phaser.Scene {
 
             if (usernameIsValid(name)) {
                 usernameInput.style.border = "none"
-                return
+                changeSettings({ name })
             } else {
                 usernameInput.style.border = "2px red solid"
             }
-            this.didChangeName = true
-            changeSettings({ name })
         }
 
         usernameInput.onfocus = () => {
@@ -242,10 +238,6 @@ export class UserSettingsScene extends Phaser.Scene {
             const newAttireIDs = newSettings.aesthetics.attire.map(a => a.id)
             if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
                 analyticsEvent("new_attire", { ids: newAttireIDs })
-            }
-
-            if (this.didChangeName) {
-                analyticsSetID(newSettings.name)
             }
 
             this.game.scene.remove(this)
