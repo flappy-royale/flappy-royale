@@ -1,6 +1,7 @@
 import * as Phaser from "phaser"
 import _ = require("lodash")
 import { changeSettings } from "../user/userManager"
+import { usernameIsValid } from "../usernameIsValid"
 
 export const NamePromptKey = "EnterName"
 
@@ -23,18 +24,45 @@ export class EnterNameScreen extends Phaser.Scene {
             .setOrigin(0, 0)
             .createFromCache("NameForm")
 
+        const normalButton = require("../../assets/menu/ButtonSmallBG.png")
+        const disabledButton = require("../../assets/menu/ButtonSmallBG-Disabled.png")
+
         const buttonBG = document.getElementById("button-bg") as HTMLImageElement
-        buttonBG.src = require("../../assets/menu/ButtonSmallBG.png")
+        buttonBG.src = disabledButton
+
+        const usernameInput = document.getElementById("username") as HTMLInputElement
+        const button = document.getElementById("button") as HTMLButtonElement
+        button.disabled = true
+
+        const validateName = () => {
+            const name = usernameInput.value
+
+            if (usernameIsValid(name)) {
+                usernameInput.style.border = "none"
+                button.disabled = false
+                buttonBG.src = normalButton
+            } else {
+                usernameInput.style.border = "2px red solid"
+                button.disabled = true
+                buttonBG.src = disabledButton
+            }
+        }
+
+        document.addEventListener("keyup", validateName)
 
         document.getElementById("username").focus()
-        document.getElementById("button").addEventListener("click", () => {
-            const usernameInput = document.getElementById("username") as HTMLInputElement
+        button.addEventListener("click", () => {
+            const name = usernameInput.value
+            if (!usernameIsValid(name)) {
+                return
+            }
 
             // We have code in place to fix scroll placement on blur,
             // but manually triggering window.blur() or usernameInput.blur() doesn't fire it
             window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
-            changeSettings({ name: usernameInput.value })
+            changeSettings({ name })
+
             this.completion()
         })
     }
