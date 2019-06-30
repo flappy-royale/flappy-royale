@@ -609,7 +609,6 @@ export class BattleScene extends Phaser.Scene {
             })
 
             if (hasJumped) {
-<<<<<<< HEAD
                 const settings = getUserSettings()
 
                 uploadReplayForSeed({
@@ -621,22 +620,6 @@ export class BattleScene extends Phaser.Scene {
                 })
                     .then(a => a.json())
                     .then(r => console.log(r))
-=======
-                if (this.mode === game.GameMode.Trial) {
-                    PlayFab.sendTrialScore(this.score)
-                } else {
-                    const settings = getUserSettings()
-                    uploadReplayForSeed({
-                        seed: this.seed,
-                        uuid: settings.name,
-                        version: constants.APIVersion,
-                        mode: this.mode,
-                        data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
-                    })
-                        .then(a => a.json())
-                        .then(r => console.log(r))
-                }
->>>>>>> First stab at showing leaderboards entirely with PlayFab
             }
         }
 
@@ -696,8 +679,6 @@ export class BattleScene extends Phaser.Scene {
                     battle: this,
                     seed: this.seed
                 })
-
-                this.scene.add("deathoverlay", deathOverlay, true)
             }
         }
     }
@@ -710,6 +691,7 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLines = []
         this.score = 0
         this.timestampOffset = this.time.now
+        this.highScoreLabel = undefined
     }
 
     restartTheGame() {
