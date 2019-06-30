@@ -47,6 +47,15 @@ if (DEMO) {
     // setupAdsense()
 }
 
+localStorage.setItem("beta", "true")
+// TODO: uncomment me when it's time for production
+/*
+if (localStorage.getItem("beta") === "true") {
+    localStorage.clear()
+    window.location.reload()
+}
+*/
+
 enum StartupScreen {
     Launcher,
     MainMenu,
