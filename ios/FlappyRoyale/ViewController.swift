@@ -52,7 +52,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         }
 
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, playfabAuth]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
