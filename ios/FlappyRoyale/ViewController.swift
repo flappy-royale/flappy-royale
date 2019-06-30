@@ -13,7 +13,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let analytics = AnalyticsPresentor()
     let share = ShareManager()
     let urlOpener = URLManager()
-    
+
     var webView: WKWebView?
 
     var serverOverride: URL? {
@@ -31,16 +31,28 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         adPresentor.presentationVC = self
         share.presentationVC = self
         urlOpener.presentationVC = self
-        
+
+        let userContentController = WKUserContentController()
+
+
         let username = NSUserName()
         let userScript = WKUserScript(source: "window.isAppleApp = true; window.username = '\(username)';",
                                       injectionTime: .atDocumentStart,
                                       forMainFrameOnly: true)
-
-        let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener]
+        // PlayFab Auth
+        let device = UIDevice()
+        if let deviceId = device.identifierForVendor {
+            // If there's no local device ID, let JS just fall back to web auth
+            let playfabAuthUserScript = WKUserScript(source: "window.playfabAuth = { method: 'LoginWithIOSDeviceId', payload: { DeviceId: '\(deviceId)', DeviceModel: '\(device.model)', OS: '\(device.systemName) \(device.systemVersion)' }};",
+                injectionTime: .atDocumentStart,
+                forMainFrameOnly: true)
+            userContentController.addUserScript(playfabAuthUserScript)
+        }
+
+
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, playfabAuth]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()

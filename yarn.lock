@@ -1256,6 +1256,13 @@
   resolved "https://registry.yarnpkg.com/@types/seed-random/-/seed-random-2.2.0.tgz#38a1acb76ba12cc79b98cfa77962773d3ff0764c"
   integrity sha512-cQzmJjnYeGTZ6yrSljKUpBXim39c9cRwpTFArZzSdD3Jp5G1Le4YS+OUxf0KaI3AD+DRaSzDV0NH13U1N6CZ3g==
 
+"@types/uuid@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.4.tgz#7af69360fa65ef0decb41fd150bf4ca5c0cefdf5"
+  integrity sha512-tPIgT0GUmdJQNSHxp0X2jnpQfBSTfGxUMc/2CXBU2mnyTFVYVa2ojpoQ74w0U2yn2vw3jnC640+77lkFFpdVDw==
+  dependencies:
+    "@types/node" "*"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"

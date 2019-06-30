@@ -29,6 +29,10 @@ declare global {
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number)
+        playfabAuth?: {
+            method: string
+            payload: any
+        }
     }
 }
 
