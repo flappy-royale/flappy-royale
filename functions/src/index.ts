@@ -113,14 +113,19 @@ export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
 export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hours").onRun(async context => {
     const seeds = getSeeds(APIVersion)
     const allSeeds = [...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
-    const getZippedReplaysForSeed = async (seed: string): Promise<string> => {
+    const getZippedReplaysForSeed = async (seed: string): Promise<string | undefined> => {
         const dataRef = await admin
             .firestore()
             .collection("recordings")
             .doc(seed)
             .get()
 
-        return (dataRef.data() as SeedDataZipped).replaysZipped
+        const data = dataRef.data() as SeedDataZipped
+        if (data) {
+            return data.replaysZipped
+        } else {
+            return undefined
+        }
     }
 
     const expiry = new Date()
@@ -129,6 +134,8 @@ export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hou
 
     const replays = allSeeds.map(async seed => {
         const replaysZipped = await getZippedReplaysForSeed(seed)
+        if (!replaysZipped) return
+
         const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
 
         const bucket = admin.storage().bucket("flappy-royale-replays")
