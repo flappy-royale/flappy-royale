@@ -25,6 +25,7 @@
         "danger-prepush": "yarn ts-node dangerfile.lite.ts"
     },
     "dependencies": {
+        "google-profanity-words": "^1.0.0",
         "lodash.clonedeep": "^4.5.0",
         "pako": "^1.0.10",
         "phaser": "^3.17.0",
@@ -52,11 +53,11 @@
         "husky": "^2.3.0",
         "live-server": "^1.2.1",
         "mini-css-extract-plugin": "^0.6.0",
+        "parcel-bundler": "^1.12.3",
         "prettier": "^1.17.1",
         "ts-loader": "^6.0.0",
         "ts-node": "^8.1.0",
         "typescript": "^3.4.5",
-        "parcel-bundler": "^1.12.3",
         "webpack": "^4.31.0",
         "webpack-assets-manifest": "^3.1.1",
         "webpack-cli": "^3.3.2",

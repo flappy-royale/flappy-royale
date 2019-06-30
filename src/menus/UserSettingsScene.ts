@@ -7,6 +7,7 @@ import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { isEqual } from "lodash"
 import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
+import { list } from "google-profanity-words"
 
 export const UserSettingsKey = "UserSettings"
 
@@ -62,8 +63,18 @@ export class UserSettingsScene extends Phaser.Scene {
         usernameInput.value = settings.name
         // Make changes propagate to settings
         usernameInput.onchange = () => {
+            const name = usernameInput.value
+            const filterList = list()
+            const words = name.split(" ")
+            const anyFound = words.find(w => filterList.includes(w.toLowerCase()))
+            if (anyFound) {
+                usernameInput.style.border = "2px red solid"
+                return
+            } else {
+                usernameInput.style.border = "none"
+            }
             this.didChangeName = true
-            changeSettings({ name: usernameInput.value })
+            changeSettings({ name })
         }
 
         usernameInput.onfocus = () => {

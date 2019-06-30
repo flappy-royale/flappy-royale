@@ -4560,6 +4560,11 @@ google-p12-pem@^0.1.0:
   dependencies:
     node-forge "^0.7.1"
 
+google-profanity-words@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/google-profanity-words/-/google-profanity-words-1.0.0.tgz#29fe61cf9f5211391f2001e6c2a889378daa9a17"
+  integrity sha512-Sn1aEt4DVi+Xp/pzzZ4k0qJi+R3E8mukgk57OJBO4ZpCYY6xWhRawp/ejEOZ19Sv+Yx6RsCKUsksjkLWHEn/+w==
+
 got@^6.7.1:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/got/-/got-6.7.1.tgz#240cd05785a9a18e561dc1b44b41c763ef1e8db0"
