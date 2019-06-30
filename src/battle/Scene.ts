@@ -677,7 +677,8 @@ export class BattleScene extends Phaser.Scene {
                     lives: getLives(this.seed),
                     livesState: livesExtensionStateForSeed(this.seed),
                     battle: this,
-                    seed: this.seed
+                    seed: this.seed,
+                    score: this.score
                 })
             }
         }

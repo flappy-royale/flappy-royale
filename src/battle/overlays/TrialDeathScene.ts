@@ -28,6 +28,7 @@ export interface TrialDeathProps {
     battle: BattleScene
     livesState: LifeStateForSeed
     seed: string
+    score: number
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
@@ -90,8 +91,7 @@ export class TrialDeath extends Phaser.Scene {
                 this.didntComeTopThree(leaderboard)
             }
 
-            const settings = getUserStatistics()
-            if (player.score >= settings.bestScore && player.score > 0) {
+            if (player.score === this.props.score && player.score > 0) {
                 this.time.delayedCall(500, this.addTopMedal, [player], this)
             }
 
