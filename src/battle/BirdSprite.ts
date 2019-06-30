@@ -1,11 +1,11 @@
 import * as constants from "../constants"
 import { Scene } from "phaser"
 
-import { UserSettings, getUserSettings } from "../user/userManager"
+import { UserSettings, getUserSettings, Bird } from "../user/userManager"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
-import { builtInAttire } from "../attire"
+import { builtInAttire, Attire } from "../attire"
 import _ = require("lodash")
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
@@ -17,19 +17,12 @@ export const preloadBirdSprites = (scene: BattleScene | Scene) => {
 
     // Preload user attire
     const userSettings = getUserSettings()
-    userSettings.aesthetics.attire.forEach(attire => {
-        scene.load.image(attire.id, attire.href)
-    })
-
-    if ("seedData" in scene) {
-        // Preload opponents attire
-        scene.seedData.replays.forEach(data => preloadBirdAttire(scene, data.user))
-    }
+    preloadBirdAttire(scene, userSettings.aesthetics.attire)
 }
 
-export const preloadBirdAttire = (scene: Phaser.Scene, bird: UserSettings) => {
-    for (const attire of bird.aesthetics.attire) {
-        scene.load.image(attire.id, attire.href)
+export const preloadBirdAttire = (scene: Phaser.Scene, attire: Attire[]) => {
+    for (const piece of attire) {
+        scene.load.image(piece.id, piece.href)
     }
 }
 
@@ -88,7 +81,7 @@ export class BirdSprite {
     // Don't apply gravity / velocity etc during the constructor
     // because this is used for previews
     //
-    constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; settings: UserSettings }) {
+    constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; settings: Bird }) {
         this.isPlayer = meta.isPlayer
 
         this.scene = scene

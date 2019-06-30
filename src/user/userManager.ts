@@ -29,11 +29,14 @@ export interface GameResults {
     mode: GameMode
 }
 
-export interface UserSettings {
+export interface Bird {
     /** What do we call you? */
     name: string
     /** What do you look like? */
     aesthetics: Aesthetics
+}
+
+export interface UserSettings extends Bird {
     /** Settings just fort royale */
     royale: {
         /**

@@ -10,7 +10,6 @@ import {
 } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
-import { fetchRecordingsForSeed } from "../firebase"
 import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
@@ -20,6 +19,8 @@ import { addScene } from "./utils/addScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme } from "../battle/theme"
 import { useDarkMode } from "../util/useDarkMode"
+import { getTrialLobbyLeaderboard } from "../playFab"
+import { Attire } from "../attire"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -59,16 +60,16 @@ export class TrialLobby extends Phaser.Scene {
 
         const lives = getLives(this.seed)
 
-        const createUserImage = (user: UserSettings) => {
+        const createUserImage = (attire: Attire[]) => {
             const root = document.createElement("div")
 
-            const userBase = user.aesthetics.attire.find(a => a.base)
+            const userBase = attire.find(a => a.base)
             const img = document.createElement("img")
             img.src = userBase.href
             img.className = "you-attire"
             root.appendChild(img)
 
-            user.aesthetics.attire
+            attire
                 .filter(a => !a.base)
                 .forEach(a => {
                     const attireImg = document.createElement("img")
@@ -95,22 +96,20 @@ export class TrialLobby extends Phaser.Scene {
             analyticsEvent("out_of_lives", { livesState })
         }
 
-        fetchRecordingsForSeed(this.seed).then(seedData => {
+        getTrialLobbyLeaderboard().then(leaderboard => {
             const birds = document.getElementById("birds")
-            seedData.replays
-                .sort((l, r) => r.score - l.score)
-                .forEach(score => {
-                    preloadBirdAttire(this, score.user)
+            leaderboard.results.forEach(result => {
+                preloadBirdAttire(this, result.attire)
 
-                    const birdLi = document.createElement("li")
-                    const previewDiv = createUserImage(score.user)
-                    const theirName = document.createElement("p")
-                    theirName.innerHTML = `<span>${pad(score.score, 2)}</span>${score.user.name}`
+                const birdLi = document.createElement("li")
+                const previewDiv = createUserImage(result.attire)
+                const theirName = document.createElement("p")
+                theirName.innerHTML = `<span>${pad(result.score, 2)}</span>${result.name}`
 
-                    birdLi.appendChild(previewDiv)
-                    birdLi.appendChild(theirName)
-                    birds.appendChild(birdLi)
-                })
+                birdLi.appendChild(previewDiv)
+                birdLi.appendChild(theirName)
+                birds.appendChild(birdLi)
+            })
 
             const preloadAssetsDone = () => {
                 const goButton = document.getElementById("button")
@@ -124,7 +123,6 @@ export class TrialLobby extends Phaser.Scene {
                         this.game.scene.remove(this)
                         const scene = new BattleScene({
                             seed: this.seed,
-                            data: seedData,
                             gameMode: GameMode.Trial,
                             theme: GameTheme.default
                         })
@@ -212,19 +210,16 @@ export class TrialLobby extends Phaser.Scene {
 
         const goButton = document.getElementById("button")
         goButton.onclick = () => {
-            fetchRecordingsForSeed(this.seed).then(seedData => {
-                this.game.scene.remove(this)
-                const darkMode = useDarkMode()
+            this.game.scene.remove(this)
+            const darkMode = useDarkMode()
 
-                const scene = new BattleScene({
-                    seed: this.seed,
-                    data: seedData,
-                    gameMode: GameMode.Trial,
-                    theme: darkMode ? GameTheme.night : GameTheme.default
-                })
-                addScene(this.game, "BattleScene" + this.seed, scene, true, {})
-                scene.playBusCrash()
+            const scene = new BattleScene({
+                seed: this.seed,
+                gameMode: GameMode.Trial,
+                theme: darkMode ? GameTheme.night : GameTheme.default
             })
+            addScene(this.game, "BattleScene" + this.seed, scene, true, {})
+            scene.playBusCrash()
         }
     }
 }
