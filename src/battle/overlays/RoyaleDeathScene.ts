@@ -144,6 +144,10 @@ export class RoyaleDeath extends Phaser.Scene {
             requestReview()
         }
 
+        // Let you hit ready with spacebar
+        var spacekeyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        spacekeyObj.on("up", this.getReady, this)
+
         setTimeout(() => {
             becomeButton(back, this.backToMainMenu, this)
             becomeButton(this.newGameBG, this.getReady, this, [this.newGameText])
