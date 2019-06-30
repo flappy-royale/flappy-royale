@@ -1,4 +1,8 @@
+import * as PlayFab from "../playFab"
+
 export function analyticsEvent(name: string, params: any) {
+    PlayFab.event(name, params)
+
     if (window.isAppleApp) {
         window.webkit.messageHandlers.analyticsEvent.postMessage(JSON.stringify({ name, params }))
     } else if (window.Analytics) {

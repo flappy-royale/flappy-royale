@@ -39,7 +39,7 @@ export interface PlayerEvent {
 
 firebase.initializeApp(firebaseConfig)
 
-export const fetchRecordingsForSeed = async (seed: string, prioritizeCache: boolean = true): Promise<SeedData> => {
+export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> => {
     const cached = cache.getRecordings(seed)
 
     // If cache data (a) has an expiry and (b) hasn't expired yet, let's use it instead!
