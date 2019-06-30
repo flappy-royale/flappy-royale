@@ -111,8 +111,8 @@ export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
 
 // TODO: Each JSON file should support an `expiry` for client downloaders
 export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hours").onRun(async context => {
-    const seeds = getSeeds(APIVersion).royale
-
+    const seeds = getSeeds(APIVersion)
+    const allSeeds = [...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
     const getZippedReplaysForSeed = async (seed: string): Promise<string> => {
         const dataRef = await admin
             .firestore()
@@ -127,7 +127,7 @@ export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hou
     expiry.setHours(expiry.getHours() + 1)
     expiry.setMinutes(expiry.getMinutes() + 1) // Might as well give ourselves some slack
 
-    const replays = seeds.map(async seed => {
+    const replays = allSeeds.map(async seed => {
         const replaysZipped = await getZippedReplaysForSeed(seed)
         const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
 
