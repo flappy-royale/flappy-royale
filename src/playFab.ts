@@ -85,6 +85,20 @@ export const updateAttire = (attire: Attire[]) => {
     )
 }
 
+export const event = (name: string, params: any) => {
+    PlayFabClient.WritePlayerEvent(
+        {
+            EventName: name,
+            Body: params
+        },
+        (err, result) => {
+            if (err) {
+                console.log("Error writing analytics", err)
+            }
+        }
+    )
+}
+
 export const getLeaderboard = async (): Promise<LeaderboardResult[]> => {
     // PlayFab's function signatures are juuust odd enough that we can't use an es6 promisify polyfill :/
     const getLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardRequest) => {
