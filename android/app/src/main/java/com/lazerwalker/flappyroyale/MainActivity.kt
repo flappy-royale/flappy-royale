@@ -1,9 +1,12 @@
 package com.lazerwalker.flappyroyale
 
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.webkit.WebViewClient
+import com.jaredrummler.android.device.DeviceName
 import kotlinx.android.synthetic.main.activity_main.*
 
 import com.lazerwalker.flappyadconstants.AdConstants
@@ -34,6 +37,15 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
+
+        val deviceId = Settings.Secure.ANDROID_ID
+        val device = DeviceName.getDeviceName();
+
+        val osVersion = Build.VERSION.RELEASE
+        val apiVersion = Build.VERSION.SDK_INT
+        val os = "$osVersion ($apiVersion)"
+
+        webview.evaluateJavascript("window.playfabAuth = { method: 'LoginWithAndroidDeviceID', payload: { AndroidDeviceId: '$deviceId', AndroidDevice: '$device', OS: '$os'}};", null)
 
         window.decorView.apply {
             // Hide both the navigation bar and the status bar.
