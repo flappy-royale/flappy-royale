@@ -47,7 +47,10 @@ export const cache = {
     },
 
     getRecordings: (seed: String): JsonSeedData | undefined => {
-        return JSON.parse(localStorage[`recordings-${seed}`])
+        const data = localStorage[`recordings-${seed}`]
+        if (data) {
+            return JSON.parse(data)
+        }
     },
 
     setSeeds: (apiVersion: string, seeds: SeedsResponse) => {

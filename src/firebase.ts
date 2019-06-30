@@ -41,7 +41,9 @@ firebase.initializeApp(firebaseConfig)
 
 export const fetchRecordingsForSeed = async (seed: string, prioritizeCache: boolean = true): Promise<SeedData> => {
     const cached = cache.getRecordings(seed)
-    if (cached) {
+
+    // If cache data (a) has an expiry and (b) hasn't expired yet, let's use it instead!
+    if (cached && cached.expiry) {
         const expiry = new Date(cached.expiry)
         const now = new Date()
 
