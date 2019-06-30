@@ -149,7 +149,7 @@ export class RoyaleLobby extends Phaser.Scene {
 
         const birds = document.getElementById("birds")
         shuffle(seedData.replays).forEach(score => {
-            preloadBirdAttire(this, score.user)
+            preloadBirdAttire(this, score.user.aesthetics.attire)
 
             const birdLi = document.createElement("li")
             const previewDiv = this.createUserImage(score.user)

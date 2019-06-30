@@ -30,7 +30,7 @@ export class LoadingScene extends Phaser.Scene {
 
     preload() {
         preloadBirdSprites(this)
-        this.possibleAttires.forEach(a => preloadBirdAttire(this, a))
+        this.possibleAttires.forEach(a => preloadBirdAttire(this, a.aesthetics.attire))
 
         this.load.image("underground", require("../../assets/battle/ground-under.png"))
         this.load.image("pipe-end", require("../../assets/battle/PipeBottom.png"))

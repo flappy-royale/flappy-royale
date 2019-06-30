@@ -12,7 +12,8 @@ import {
     addLives,
     getLives,
     getUserSettings,
-    getUserStatistics
+    getUserStatistics,
+    Bird
 } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
 import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
@@ -21,16 +22,13 @@ import { BirdSprite } from "../BirdSprite"
 import { PlayerData } from "../../firebase"
 import { shareNatively } from "../../nativeComms/share"
 import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors"
+import { getTrialDeathLeaderboard, Leaderboard, LeaderboardResult } from "../../playFab"
 
 export interface TrialDeathProps {
-    score: number
     lives: number
-    position: number
     battle: BattleScene
-    totalPlayers: number
     livesState: LifeStateForSeed
     seed: string
-    replays: PlayerData[]
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
@@ -73,43 +71,38 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     create() {
-        const userData: PlayerData = {
-            score: this.props.score,
-            actions: [],
-            timestamp: 0,
-            user: getUserSettings()
-        }
-
-        const sortedReplays = this.props.replays.sort((l, r) => r.score - l.score)
-
         // Fill the BG
         const bg = this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.5)
         this.footerObjects.push(bg)
 
-        const won = this.props.position === 0
-        const firstPipeFail = this.props.score === 0
-
-        if (this.props.position === 0) {
-            this.cameInFirst(userData, sortedReplays)
-        } else if (this.props.position <= 2) {
-            this.cameInTopThree(userData, sortedReplays)
-        } else {
-            this.didntComeTopThree(userData, sortedReplays)
-        }
-
-        const settings = getUserStatistics()
-        if (this.props.score >= settings.bestScore && this.props.score > 0) {
-            this.time.delayedCall(500, this.addTopMedal, [], this)
-        }
-
         this.addFooter()
 
-        // Decide whether to show a rating screen
-        // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
-        // When building this out for Android, it's likely that won't be the case.
-        if (this.props.score > 0 && getRoyales().length >= 10) {
-            requestReview()
-        }
+        getTrialDeathLeaderboard().then(leaderboard => {
+            const { player, results } = leaderboard
+            if (!player) {
+                console.log("ERROR: Trial death leaderboard did not contain player")
+            }
+
+            if (player.position === 0) {
+                this.cameInFirst(leaderboard)
+            } else if (player.position <= 2) {
+                this.cameInTopThree(leaderboard)
+            } else {
+                this.didntComeTopThree(leaderboard)
+            }
+
+            const settings = getUserStatistics()
+            if (player.score >= settings.bestScore && player.score > 0) {
+                this.time.delayedCall(500, this.addTopMedal, [player], this)
+            }
+
+            // Decide whether to show a rating screen
+            // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
+            // When building this out for Android, it's likely that won't be the case.
+            if (player.score > 0 && getRoyales().length >= 10) {
+                requestReview()
+            }
+        })
     }
 
     private addFooter() {
@@ -145,7 +138,7 @@ export class TrialDeath extends Phaser.Scene {
         this.footerObjects.push(shareIcon)
     }
 
-    private cameInFirst(player: PlayerData, sortedReplays: PlayerData[]) {
+    private cameInFirst(leaderboard: Leaderboard) {
         const top = GameAreaTopOffset
 
         // TOP BIT
@@ -169,22 +162,24 @@ export class TrialDeath extends Phaser.Scene {
 
         // 1st of x
         this.add.bitmapText(10, top + 20, "fipps-bit-black", "1st", 24)
-        const ofX = this.add.bitmapText(26, top + 56, "fipps-bit-black", `of ${this.props.totalPlayers}`, 8)
-        ofX.x = 40 - ofX.width / 2 // makes it centered
+
+        // TODO: There's no obvious way to get the total number of leaderboard results with PlayFab
+        // const ofX = this.add.bitmapText(26, top + 56, "fipps-bit-black", `of ${this.props.totalPlayers}`, 8)
+        // ofX.x = 40 - ofX.width / 2 // makes it centered
 
         // Username + score
         this.add.bitmapText(80, top + 34, "fipps-bit-black", settings.name, 8)
-        const pipes = this.props.score === 1 ? "pipe" : "pipes"
-        this.add.bitmapText(80, top + 48, "fipps-bit-black", `${this.props.score} ${pipes}`, 8)
+        const pipes = leaderboard.player.score === 1 ? "pipe" : "pipes"
+        this.add.bitmapText(80, top + 48, "fipps-bit-black", `${leaderboard.player.score} ${pipes}`, 8)
 
         /// MIDDLE BIT
 
-        if (sortedReplays[0])
-            this.drawPlayerRow({ position: 1, white: true, x: 12, y: top + 90, opacity: 0.6 }, sortedReplays[0])
-        if (sortedReplays[1])
-            this.drawPlayerRow({ position: 2, white: true, x: 12, y: top + 110, opacity: 0.4 }, sortedReplays[1])
-        if (sortedReplays[2])
-            this.drawPlayerRow({ position: 3, white: true, x: 12, y: top + 130, opacity: 0.2 }, sortedReplays[2])
+        if (leaderboard.results[0])
+            this.drawPlayerRow({ white: true, x: 12, y: top + 90, opacity: 0.6 }, leaderboard.results[0])
+        if (leaderboard.results[1])
+            this.drawPlayerRow({ white: true, x: 12, y: top + 110, opacity: 0.4 }, leaderboard.results[1])
+        if (leaderboard.results[2])
+            this.drawPlayerRow({ white: true, x: 12, y: top + 130, opacity: 0.2 }, leaderboard.results[2])
 
         /// BOTTOM BIT
 
@@ -198,10 +193,12 @@ export class TrialDeath extends Phaser.Scene {
         this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${pos} win`, 8)
     }
 
-    private cameInTopThree(player: PlayerData, sortedReplays: PlayerData[]) {
+    private cameInTopThree(leaderboard: Leaderboard) {
+        const { player, results } = leaderboard
+
         const top = GameAreaTopOffset
-        const playerIsTwo = this.props.position === 1
-        const playerIsThree = this.props.position === 2
+        const playerIsTwo = player.position === 1
+        const playerIsThree = player.position === 2
 
         /// TOP-MIDDLE BIT
         this.add.image(80, top + 50, "red-sash").toggleFlipX()
@@ -216,15 +213,10 @@ export class TrialDeath extends Phaser.Scene {
         const circle = this.add.image(48, top + 70 + yOffset, "white-circle")
         circle.setScale(0.8, 0.8)
 
-        const one = sortedReplays[0]
-        const two = playerIsTwo ? player : sortedReplays[1]
-        const three = playerIsThree ? player : sortedReplays[1]
-
-        this.drawPlayerRow({ position: 0, white: true, x: 12, y: top + 50, opacity: 1 }, one)
-        this.drawPlayerRow({ position: 1, white: !playerIsTwo, x: 12, y: top + 70, opacity: 1 }, two)
-        if (three) {
-            // possible you could be 2 in 2
-            this.drawPlayerRow({ position: 2, white: !playerIsThree, x: 12, y: top + 90, opacity: 1 }, three)
+        this.drawPlayerRow({ white: true, x: 12, y: top + 50, opacity: 1 }, results[0])
+        this.drawPlayerRow({ white: !playerIsTwo, x: 12, y: top + 70, opacity: 1 }, results[1])
+        if (results[2]) {
+            this.drawPlayerRow({ white: !playerIsThree, x: 12, y: top + 90, opacity: 1 }, results[2])
         }
 
         /// BOTTOM BIT
@@ -237,7 +229,9 @@ export class TrialDeath extends Phaser.Scene {
         this.footerObjects.push(this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8))
     }
 
-    private didntComeTopThree(player: PlayerData, sortedReplays: PlayerData[]) {
+    private didntComeTopThree(leaderboard: Leaderboard) {
+        const { player, results } = leaderboard
+
         const top = GameAreaTopOffset
 
         // TOP BIT
@@ -246,9 +240,9 @@ export class TrialDeath extends Phaser.Scene {
         this.add.rectangle(84, top + 4, 160, 110, 0xd49d9d)
         this.add.rectangle(96, top + 6, 160, 110, 0xd49d9d)
 
-        this.drawPlayerRow({ position: 0, white: true, x: 4, y: top + 10, opacity: 1 }, sortedReplays[0])
-        this.drawPlayerRow({ position: 1, white: true, x: 7, y: top + 30, opacity: 1 }, sortedReplays[1])
-        this.drawPlayerRow({ position: 2, white: true, x: 10, y: top + 50, opacity: 1 }, sortedReplays[2])
+        this.drawPlayerRow({ white: true, x: 4, y: top + 10, opacity: 1 }, results[0])
+        this.drawPlayerRow({ white: true, x: 7, y: top + 30, opacity: 1 }, results[1])
+        this.drawPlayerRow({ white: true, x: 10, y: top + 50, opacity: 1 }, results[2])
 
         // MIDDLE
 
@@ -263,23 +257,16 @@ export class TrialDeath extends Phaser.Scene {
         const circle = this.add.image(48, top + 70 + yOffset, "white-circle")
         circle.setScale(0.8, 0.8)
 
-        const abovePlayer = sortedReplays[this.props.position - 1]
-        const belowPlayer = sortedReplays[this.props.position]
+        if (results[3]) {
+            this.drawPlayerRow({ white: true, x: 12, y: top + 50 + yOffset, opacity: 1 }, results[3])
+        }
 
-        this.drawPlayerRow(
-            { position: this.props.position - 1, white: true, x: 12, y: top + 50 + yOffset, opacity: 1 },
-            abovePlayer
-        )
-        this.drawPlayerRow(
-            { position: this.props.position, white: false, x: 12, y: top + 70 + yOffset, opacity: 1 },
-            player
-        )
-        if (belowPlayer) {
-            // possible you could be 2 in 2
-            this.drawPlayerRow(
-                { position: this.props.position + 1, white: true, x: 12, y: top + 90 + yOffset, opacity: 1 },
-                belowPlayer
-            )
+        if (results[4]) {
+            this.drawPlayerRow({ white: false, x: 12, y: top + 70 + yOffset, opacity: 1 }, results[4])
+        }
+
+        if (results[5]) {
+            this.drawPlayerRow({ white: true, x: 12, y: top + 90 + yOffset, opacity: 1 }, results[5])
         }
 
         // END
@@ -291,33 +278,32 @@ export class TrialDeath extends Phaser.Scene {
         this.footerObjects.push(this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8))
     }
 
-    private drawPlayerRow(
-        config: { white: boolean; opacity: number; position: number; x: number; y: number },
-        player: PlayerData
-    ) {
+    private drawPlayerRow(config: { white: boolean; opacity: number; x: number; y: number }, data: LeaderboardResult) {
         const font = config.white ? "fipps-bit" : "fipps-bit-black"
 
         let offset = config.x
 
         const place = this.add
-            .bitmapText(offset, config.y - 8, font, `#${config.position + 1}`, 8)
+            .bitmapText(offset, config.y - 8, font, `#${data.position + 1}`, 8)
             .setAlpha(config.opacity)
 
         offset += place.getTextBounds(true).local.width + 9
 
-        const bird = new BirdSprite(this, offset, config.y, { isPlayer: false, settings: player.user })
+        // TODO: Generate birdSprite UserSettings from leaderboard
+        const leaderboardBird: Bird = { name: data.name, aesthetics: { attire: data.attire } }
+        const bird = new BirdSprite(this, offset, config.y, { isPlayer: false, settings: leaderboardBird })
         bird.actAsImage()
         bird.setOpacity(config.opacity)
 
         offset += 21
 
         const scoreText = this.add
-            .bitmapText(offset, config.y - 8, font, player.score.toString(), 8)
+            .bitmapText(offset, config.y - 8, font, data.score.toString(), 8)
             .setAlpha(config.opacity)
 
         offset += scoreText.getTextBounds(true).local.width + 7
 
-        this.add.bitmapText(offset, config.y - 8, font, player.user.name, 8).setAlpha(config.opacity)
+        this.add.bitmapText(offset, config.y - 8, font, data.name, 8).setAlpha(config.opacity)
     }
 
     private again() {
@@ -330,12 +316,12 @@ export class TrialDeath extends Phaser.Scene {
         this.props.battle.restartTheGame()
     }
 
-    private shareStats() {
-        const won = this.props.position === 0
-        const firstPipeFail = this.props.score === 0
+    private shareStats(player: LeaderboardResult) {
+        const won = player.position === 0
+        const firstPipeFail = player.score === 0
 
-        const lossMessage = `I managed to get past ${this.props.score} pipes on today's Flappy Royale Daily Trial! https://flappyroyale.io`
-        const winMessage = `I have the high score for today's Flappy Royale Daily Trial! Think you can beat ${this.props.score}? https://flappyroyale.io`
+        const lossMessage = `I managed to get past ${player.score} pipes on today's Flappy Royale Daily Trial! https://flappyroyale.io`
+        const winMessage = `I have the high score for today's Flappy Royale Daily Trial! Think you can beat ${player.score}? https://flappyroyale.io`
         const firstPipeFailMessage =
             "I died on the first pipe in today's Flappy Royale Daily Trial! https://flappyroyale.io"
 
@@ -368,8 +354,8 @@ export class TrialDeath extends Phaser.Scene {
         launchMainMenu(this.game)
     }
 
-    private addTopMedal() {
-        const cameFirst = this.props.position === 0
+    private addTopMedal(player: LeaderboardResult) {
+        const cameFirst = player.position === 0
 
         const top = GameAreaTopOffset
         const medalX = GameWidth - 52

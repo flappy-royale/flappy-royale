@@ -7,6 +7,7 @@ import { getUserSettings } from "./user/userManager"
 import { GameMode } from "./battle/utils/gameMode"
 
 export let isLoggedIn: boolean = false
+let playerId: string | undefined
 
 PlayFabClient.settings.titleId = titleId
 
@@ -37,6 +38,8 @@ export const login = () => {
                 console.log("Login error:", error)
                 return
             }
+
+            playerId = result.data.PlayFabId
 
             isLoggedIn = true
             if (result.data.NewlyCreated) {
@@ -157,65 +160,56 @@ export const event = (name: string, params: any) => {
     )
 }
 
-export const getLeaderboard = async (): Promise<LeaderboardResult[]> => {
-    // PlayFab's function signatures are juuust odd enough that we can't use an es6 promisify polyfill :/
-    const getLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardRequest) => {
-        return new Promise((resolve, reject) => {
-            PlayFabClient.GetLeaderboard(opts, (err, result) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(result.data.Leaderboard)
-                }
-            })
-        })
-    }
+// LEADERBOARDS
 
-    const getLeaderboardAroundPlayer = async (opts: PlayFabClientModels.GetLeaderboardAroundPlayerRequest) => {
-        return new Promise((resolve, reject) => {
-            PlayFabClient.GetLeaderboardAroundPlayer(opts, (err, result) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(result.data.Leaderboard)
-                }
-            })
-        })
-    }
+export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
+    const results = await asyncGetLeaderboard({
+        StatisticName: "DailyTrial",
+        StartPosition: 0,
+        MaxResultsCount: 100
+    })
+    console.log(results)
 
-    const results = await Promise.all([
-        getLeaderboard({
-            StatisticName: "DailyTrial",
-            StartPosition: 0,
-            MaxResultsCount: 3,
-            ProfileConstraints: ({
-                ShowAvatarUrl: true,
-                ShowDisplayName: true
-            } as unknown) as number // sigh, the PlayFab TS typings are wrong
-        }),
+    const player = results.find(l => l.userId === playerId)
 
-        getLeaderboardAroundPlayer({
-            StatisticName: "DailyTrial",
-            MaxResultsCount: 3,
-            ProfileConstraints: ({
-                ShowAvatarUrl: true,
-                ShowDisplayName: true
-            } as unknown) as number
-        })
-    ])
-    console.log("RESULTS", results)
-    return (_(results)
-        .flatten()
-        .map(convertPlayFabLeaderboardData)
-        .uniqBy("position") // In case the user is in the top 3! this is rare enough we can spare the extra network call
-        .value() as unknown) as LeaderboardResult[]
+    return { results, player }
 }
 
-interface LeaderboardResult {
+export const getTrialDeathLeaderboard = async (): Promise<Leaderboard> => {
+    // PlayFab's function signatures are juuust odd enough that we can't use an es6 promisify polyfill :/
+
+    let twoResults = await Promise.all([
+        asyncGetLeaderboard({
+            StatisticName: "DailyTrial",
+            StartPosition: 0,
+            MaxResultsCount: 3
+        }),
+
+        asyncGetLeaderboardAroundPlayer({
+            StatisticName: "DailyTrial",
+            MaxResultsCount: 3
+        })
+    ])
+
+    const flattened = _.flatten(twoResults)
+    const deduped = _.uniqBy(flattened, "position") // In case the user is in the top 3! this is rare enough we can spare the extra network call
+
+    const player = deduped.find(l => l.userId === playerId)
+
+    return { results: deduped, player }
+}
+
+export interface Leaderboard {
+    results: LeaderboardResult[]
+    player?: LeaderboardResult
+}
+
+export interface LeaderboardResult {
     name: string
     attire: Attire[]
     position: number
     score: number
+    userId: string
 }
 
 const convertPlayFabLeaderboardData = (
@@ -225,8 +219,49 @@ const convertPlayFabLeaderboardData = (
         name: entry.Profile!.DisplayName!,
         attire: avatarUrlToAttire(entry.Profile!.AvatarUrl!),
         position: entry.Position,
-        score: entry.StatValue
+        score: entry.StatValue,
+        userId: entry.PlayFabId
     }
+}
+
+const asyncGetLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardRequest): Promise<LeaderboardResult[]> => {
+    const defaultOpts = {
+        ProfileConstraints: ({
+            ShowAvatarUrl: true,
+            ShowDisplayName: true
+        } as unknown) as number // sigh, the PlayFab TS typings are wrong
+    }
+
+    return new Promise((resolve, reject) => {
+        PlayFabClient.GetLeaderboard({ ...defaultOpts, ...opts }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
+            }
+        })
+    })
+}
+
+const asyncGetLeaderboardAroundPlayer = async (
+    opts: PlayFabClientModels.GetLeaderboardAroundPlayerRequest
+): Promise<LeaderboardResult[]> => {
+    const defaultOpts = {
+        ProfileConstraints: ({
+            ShowAvatarUrl: true,
+            ShowDisplayName: true
+        } as unknown) as number // sigh, the PlayFab TS typings are wrong
+    }
+
+    return new Promise((resolve, reject) => {
+        PlayFabClient.GetLeaderboardAroundPlayer({ ...defaultOpts, ...opts }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
+            }
+        })
+    })
 }
 
 const attireMap = _.keyBy(allAttire, "id")

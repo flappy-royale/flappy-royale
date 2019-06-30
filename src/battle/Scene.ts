@@ -38,7 +38,7 @@ export interface BattleSceneSettings {
     /** The string representation for the level */
     seed: string
     /** The data from firebase */
-    data: SeedData
+    data?: SeedData
     /** Game mode */
     gameMode: game.GameMode
     /** a UUID for the game scene  */
@@ -90,13 +90,7 @@ export class BattleScene extends Phaser.Scene {
     public seed: string
 
     /** The data (user recordings etc) for this seed  */
-    public seedData: SeedData
-
-    /** A sorted-by-score copy of the replays (for your score-to-beat) */
-    private sortedReplays: PlayerData[] | undefined
-
-    /** A copy of the current user */
-    private userSettings: UserSettings
+    public seedData?: SeedData
 
     /** A copy (to be mutated) of the other players input events */
     private recordedInput: PlayerData[] = []
@@ -127,20 +121,11 @@ export class BattleScene extends Phaser.Scene {
     // What the player's current high score for this seed is
     public highScore: number = 0
 
-    // What the next high score for you to beat is
-    public scoreToBeat: number = 0
-
     /** How we show your score */
     private scoreLabel: Phaser.GameObjects.BitmapText | undefined
 
-    /** How we show the score to beat */
-    private scoreToBeatLabel: Phaser.GameObjects.BitmapText | undefined
-
     /** Your avatar, for showing your high score */
     private highScoreIcon: BirdSprite | undefined
-
-    /** The avatar of the bird who's directly beating your high score */
-    private scoreToBeatIcon: BirdSprite | undefined
 
     /** How we show your daily high score in Trial */
     private highScoreLabel: Phaser.GameObjects.BitmapText | undefined
@@ -179,7 +164,6 @@ export class BattleScene extends Phaser.Scene {
         this.seedData = opts.data
         this.mode = opts.gameMode
         this.theme = opts.theme
-        this.sortedReplays = this.seedData.replays.sort((l, r) => r.score - l.score)
     }
 
     // This happens when the scene is being played by the game (more
@@ -267,17 +251,10 @@ export class BattleScene extends Phaser.Scene {
             enablePhysicsLogging(this)
         }
 
-        this.userSettings = getUserSettings()
-
         // setup bg + animations
         createBackgroundSprites(this, this.theme)
         setupBirdAnimations(this)
         this.setupPhysicsFloor()
-
-        // If there's a datastore of recorded inputs, then make a fresh clone of those
-        if (this.seedData && this.seedData.replays) {
-            this.recordedInput = cloneDeep(this.sortedReplays || [])
-        }
 
         this.bus = createBus(this)
 
@@ -392,45 +369,12 @@ export class BattleScene extends Phaser.Scene {
     }
 
     private renderHighScores() {
-        ;[this.highScoreLabel, this.scoreToBeatLabel, this.highScoreIcon, this.scoreToBeatIcon].forEach(i => {
-            if (i) {
-                i.destroy()
-            }
-        })
-
-        // TODO: Our old method of calculating the next-best-score was more
-        // efficient but had a hard-to-find bug.
-        // This should be more reliable, and we still shouldn't have perf issues...
-        const betterScoresThanYou = this.sortedReplays.filter(r => r.score > this.highScore)
-        const toBeat = _.minBy(betterScoresThanYou, "score")
-
         let highScoreText = `${this.highScore}`
 
-        if (toBeat) {
-            this.highScoreLabel = this.add.bitmapText(0, constants.NotchOffset + 20, "nokia16", highScoreText, 16)
-            rightAlignTextLabel(this.highScoreLabel, 26)
-            this.highScoreLabel.setDepth(constants.zLevels.ui)
-
-            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 28 + constants.NotchOffset, {
-                isPlayer: false,
-                settings: this.userSettings
-            })
-            this.highScoreIcon.actAsUIElement()
-
-            this.scoreToBeat = toBeat.score
-
-            this.scoreToBeatLabel = this.add.bitmapText(0, 4 + constants.NotchOffset, "nokia16", `${toBeat.score}`, 16)
-            rightAlignTextLabel(this.scoreToBeatLabel, 26)
-            this.scoreToBeatLabel.setDepth(constants.zLevels.ui)
-
-            this.scoreToBeatIcon = new BirdSprite(this, constants.GameWidth - 20, 12 + constants.NotchOffset, {
-                isPlayer: false,
-                settings: toBeat.user
-            })
-            this.scoreToBeatIcon.actAsUIElement()
+        if (this.highScoreLabel) {
+            this.highScoreLabel.setText(highScoreText)
         } else {
             this.highScoreLabel = this.add.bitmapText(0, constants.NotchOffset + 4, "nokia16", highScoreText, 16)
-            rightAlignTextLabel(this.highScoreLabel, 26)
             this.highScoreLabel.setDepth(constants.zLevels.ui)
 
             const settings = getUserSettings()
@@ -440,6 +384,7 @@ export class BattleScene extends Phaser.Scene {
             })
             this.highScoreIcon.actAsUIElement()
         }
+        rightAlignTextLabel(this.highScoreLabel, 26)
     }
 
     updateScoreLabel() {
@@ -664,6 +609,7 @@ export class BattleScene extends Phaser.Scene {
             })
 
             if (hasJumped) {
+<<<<<<< HEAD
                 const settings = getUserSettings()
 
                 uploadReplayForSeed({
@@ -675,6 +621,22 @@ export class BattleScene extends Phaser.Scene {
                 })
                     .then(a => a.json())
                     .then(r => console.log(r))
+=======
+                if (this.mode === game.GameMode.Trial) {
+                    PlayFab.sendTrialScore(this.score)
+                } else {
+                    const settings = getUserSettings()
+                    uploadReplayForSeed({
+                        seed: this.seed,
+                        uuid: settings.name,
+                        version: constants.APIVersion,
+                        mode: this.mode,
+                        data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
+                    })
+                        .then(a => a.json())
+                        .then(r => console.log(r))
+                }
+>>>>>>> First stab at showing leaderboards entirely with PlayFab
             }
         }
 
@@ -729,14 +691,10 @@ export class BattleScene extends Phaser.Scene {
                 this.scene.add("deathoverlay", deathOverlay, true)
             } else if (this.mode === game.GameMode.Trial) {
                 const deathOverlay = new TrialDeath("death", {
-                    score: this.score,
                     lives: getLives(this.seed),
                     livesState: livesExtensionStateForSeed(this.seed),
-                    position: this.seedData.replays.filter(r => r.score > this.score).length,
                     battle: this,
-                    totalPlayers: this.seedData.replays.length + 1,
-                    seed: this.seed,
-                    replays: this.seedData.replays
+                    seed: this.seed
                 })
 
                 this.scene.add("deathoverlay", deathOverlay, true)
