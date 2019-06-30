@@ -113,7 +113,7 @@ export class LoadingScene extends Phaser.Scene {
             loop: true
         })
 
-        this.add.bitmapText(40, constants.GameHeight / 2 + 50 + constants.NotchOffset, "nokia16", "Loading...")
+        this.add.bitmapText(40, constants.GameHeight / 2 + 50 + constants.NotchOffset, "nokia16", "Updating...")
 
         // Add loading box
         this.add.rectangle(constants.GameWidth / 2 - 2, vCenter + 80, constants.GameWidth / 2, 14, 0xffffff, 0.3)
