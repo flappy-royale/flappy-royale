@@ -10,24 +10,26 @@ export let isLoggedIn: boolean = false
 PlayFabClient.settings.titleId = titleId
 
 export const login = () => {
-    let method = "LoginWithCustomID"
-    let loginRequest = {
+    let method = PlayFabClient.LoginWithCustomID
+    let loginRequest: PlayFabClientModels.LoginWithCustomIDRequest = {
         TitleId: titleId,
         CreateAccount: true
     }
 
-    if (
-        window.playfabAuth &&
-        _.includes(["LoginWithIOSDeviceID", "LoginWithAndroidDeviceID"], window.playfabAuth.method)
-    ) {
-        method = window.playfabAuth.method
-        loginRequest = { ...loginRequest, ...window.playfabAuth.payload }
+    const customAuth = (window as any).playfabAuth // We have nativeApp.d.ts to deal with this casting, but the Firebase Fn compiler doesn't know about that
+    if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
+        method = PlayFabClient.LoginWithIOSDeviceID
+        loginRequest = { ...loginRequest, ...customAuth.payload }
+    } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
+        method = PlayFabClient.LoginWithAndroidDeviceID
+        loginRequest = { ...loginRequest, ...customAuth.payload }
     }
 
-    if (method === "LoginWithCustomID") {
-        loginRequest["CustomId"] = cache.getUUID(titleId)
+    if (method === PlayFabClient.LoginWithCustomID) {
+        loginRequest.CustomId = cache.getUUID(titleId)
     }
-    PlayFabClient[method](
+
+    method(
         loginRequest,
         (error: any, result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
             if (error) {
@@ -35,7 +37,7 @@ export const login = () => {
                 return
             }
 
-            this.isLoggedIn = true
+            isLoggedIn = true
             if (result.data.NewlyCreated) {
                 const settings = getUserSettings()
                 updateName(settings.name)
@@ -48,7 +50,7 @@ export const login = () => {
 export const updateName = (name: string) => {
     PlayFabClient.UpdateUserTitleDisplayName({ DisplayName: name }, (error: any, result) => {
         if (!error) {
-            this.isLoggedIn = true
+            isLoggedIn = true
         }
         console.log(error, result)
     })
@@ -130,11 +132,11 @@ export const getLeaderboard = async (): Promise<LeaderboardResult[]> => {
         })
     ])
     console.log("RESULTS", results)
-    return _(results)
+    return (_(results)
         .flatten()
         .map(convertPlayFabLeaderboardData)
         .uniqBy("position") // In case the user is in the top 3! this is rare enough we can spare the extra network call
-        .value()
+        .value() as unknown) as LeaderboardResult[]
 }
 
 interface LeaderboardResult {
@@ -144,10 +146,12 @@ interface LeaderboardResult {
     score: number
 }
 
-const convertPlayFabLeaderboardData = (entry: PlayFabClientModels.PlayerLeaderboardEntry): LeaderboardResult => {
+const convertPlayFabLeaderboardData = (
+    entry: PlayFabClientModels.PlayerLeaderboardEntry
+): LeaderboardResult | undefined => {
     return {
-        name: entry.Profile.DisplayName,
-        attire: avatarUrlToAttire(entry.Profile.AvatarUrl),
+        name: entry.Profile!.DisplayName!,
+        attire: avatarUrlToAttire(entry.Profile!.AvatarUrl!),
         position: entry.Position,
         score: entry.StatValue
     }

@@ -92,7 +92,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 
     if ("name" in settings) {
         existingSettings.name = settings.name!
-        PlayFab.updateName(settings.name)
+        PlayFab.updateName(settings.name!)
     }
     if ("royale" in settings) existingSettings.royale = settings.royale!
     if ("hasAskedAboutTutorial" in settings) existingSettings.hasAskedAboutTutorial = settings.hasAskedAboutTutorial!
@@ -103,7 +103,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 
         existingSettings.aesthetics = settings.aesthetics!
 
-        PlayFab.updateAttire(settings.aesthetics.attire)
+        PlayFab.updateAttire(settings.aesthetics!.attire)
     }
 
     saveSettings(existingSettings)

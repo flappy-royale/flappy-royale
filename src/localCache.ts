@@ -52,6 +52,7 @@ export const cache = {
         if (data) {
             return JSON.parse(data)
         }
+        return undefined
     },
 
     setSeeds: (apiVersion: string, seeds: SeedsResponse) => {
