@@ -3,6 +3,7 @@ import { allAttire, Attire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
+import { getUserSettings } from "./user/userManager"
 
 export let isLoggedIn: boolean = false
 
@@ -26,12 +27,22 @@ export const login = () => {
     if (method === "LoginWithCustomID") {
         loginRequest["CustomId"] = cache.getUUID(titleId)
     }
+    PlayFabClient[method](
+        loginRequest,
+        (error: any, result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
+            if (error) {
+                console.log("Login error:", error)
+                return
+            }
 
-    PlayFabClient[method](loginRequest, (result, error) => {
-        if (!error) {
             this.isLoggedIn = true
+            if (result.data.NewlyCreated) {
+                const settings = getUserSettings()
+                updateName(settings.name)
+                updateAttire(settings.aesthetics.attire)
+            }
         }
-    })
+    )
 }
 
 export const updateName = (name: string) => {
