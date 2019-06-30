@@ -1,8 +1,7 @@
 import { SeedsResponse } from "../functions/src/api-contracts"
 import { JsonSeedData } from "./firebase"
 import _ = require("lodash")
-import * as uuid from "uuid/v5"
-import { uuidNamespace } from "../assets/config/playfabConfig"
+import * as uuid from "uuid/v4"
 
 // For now, the API returns at most 50 royale seeds, plus one daily
 // (a comment is a promise waiting to be broken, etc)
@@ -79,7 +78,7 @@ export const cache = {
             return stored
         }
 
-        const generated = uuid(appId, uuidNamespace)
+        const generated = uuid()
         localStorage.setItem("uuid", generated)
         return generated
     }
