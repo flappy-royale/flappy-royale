@@ -15,7 +15,7 @@ export const cache = {
         // (note: "oldest" is currently based on creation time, not update time. This may cause problems, but this is simplest for now!)
 
         let list: string[][] = []
-        const recordingListData = localStorage.recordingList
+        const recordingListData = localStorage.allRecordings
         if (recordingListData) {
             list = JSON.parse(recordingListData)
         }
@@ -32,7 +32,7 @@ export const cache = {
             return expiry >= new Date()
         })
 
-        list.unshift([seed, data.expiry])
+        list.unshift([`replays-${seed}`, data.expiry])
 
         if (list.length > maxRecordingCount) {
             // `Array::splice` is mutating.
@@ -41,14 +41,14 @@ export const cache = {
 
             const diff = list.splice(maxRecordingCount)
             diff.forEach(d => localStorage.removeItem(d[0]))
-            localStorage.recordingList = JSON.stringify(list)
+            localStorage.allRecordings = JSON.stringify(list)
         }
 
-        localStorage[`recordings-${seed}`] = JSON.stringify(data)
+        localStorage[`replays-${seed}`] = JSON.stringify(data)
     },
 
     getRecordings: (seed: String): JsonSeedData | undefined => {
-        const data = localStorage[`recordings-${seed}`]
+        const data = localStorage[`replays-${seed}`]
         if (data) {
             return JSON.parse(data)
         }
