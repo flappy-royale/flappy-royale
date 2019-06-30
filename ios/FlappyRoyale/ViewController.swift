@@ -45,7 +45,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let device = UIDevice()
         if let deviceId = device.identifierForVendor {
             // If there's no local device ID, let JS just fall back to web auth
-            let playfabAuthUserScript = WKUserScript(source: "window.playfabAuth = { method: 'LoginWithIOSDeviceId', payload: { DeviceId: '\(deviceId)', DeviceModel: '\(device.model)', OS: '\(device.systemName) \(device.systemVersion)' }};",
+            let playfabAuthUserScript = WKUserScript(source: "window.playfabAuth = { method: 'LoginWithIOSDeviceID', payload: { DeviceId: '\(deviceId)', DeviceModel: '\(device.model)', OS: '\(device.systemName) \(device.systemVersion)' }};",
                 injectionTime: .atDocumentStart,
                 forMainFrameOnly: true)
             userContentController.addUserScript(playfabAuthUserScript)
