@@ -27,6 +27,11 @@ declare global {
         URLLoader?: {
             openURL: (url: string) => void
         }
+
+        playfabAuth?: {
+            method: string
+            payload: any
+        }
     }
 }
 

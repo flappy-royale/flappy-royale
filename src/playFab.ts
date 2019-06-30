@@ -1,22 +1,33 @@
 import { PlayFabClient } from "PlayFab-sdk"
 import { allAttire, Attire } from "./attire"
 import _ = require("lodash")
-import { promisify } from "util"
-import { Display } from "phaser"
+import { cache } from "./localCache"
+import { titleId } from "../assets/config/playfabConfig"
 
 export let isLoggedIn: boolean = false
 
+PlayFabClient.settings.titleId = titleId
+
 export const login = () => {
-    PlayFabClient.settings.titleId = "BBB0C"
-    const loginRequest = {
-        // Currently, you need to look up the correct format for this object in the API-docs:
-        // https://api.playfab.com/documentation/Client/method/LoginWithCustomID
-        TitleId: PlayFabClient.settings.titleId,
-        CustomId: "1234",
+    let method = "LoginWithCustomID"
+    let loginRequest = {
+        TitleId: titleId,
         CreateAccount: true
     }
 
-    PlayFabClient.LoginWithCustomID(loginRequest, (result, error) => {
+    if (
+        window.playfabAuth &&
+        _.includes(["LoginWithIOSDeviceID", "LoginWithAndroidDeviceID"], window.playfabAuth.method)
+    ) {
+        method = window.playfabAuth.method
+        loginRequest = { ...loginRequest, ...window.playfabAuth.payload }
+    }
+
+    if (method === "LoginWithCustomID") {
+        loginRequest["CustomId"] = cache.getUUID(titleId)
+    }
+
+    PlayFabClient[method](loginRequest, (result, error) => {
         if (!error) {
             this.isLoggedIn = true
         }
