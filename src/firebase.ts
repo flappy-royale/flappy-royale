@@ -6,11 +6,16 @@ import { SeedsResponse } from "../functions/src/api-contracts"
 import { ReplayUploadRequest } from "../functions/src"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
-import { firebaseConfig } from "../assets/config/firebaseConfig"
+import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 
 /** How it's stored in the DB to save on fs space */
 export interface SeedDataZipped {
     replaysZipped: string
+}
+
+export interface JsonSeedData {
+    replaysZipped: string
+    expiry: string
 }
 
 /** How it's unzipped in the client */
@@ -32,39 +37,34 @@ export interface PlayerEvent {
     value?: number
 }
 
-const firebaseApp = firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig)
 
 export const fetchRecordingsForSeed = async (seed: string, prioritizeCache: boolean = true): Promise<SeedData> => {
-    if (prioritizeCache) {
-        const cached = cache.getRecordings(seed)
-        if (cached && cached.replays && cached.replays.length >= 99) {
-            return cached
+    const cached = cache.getRecordings(seed)
+    if (cached) {
+        const expiry = new Date(cached.expiry)
+        const now = new Date()
+
+        if (now >= expiry) {
+            return unzipSeedData(cached)
         }
     }
 
-    try {
-        const dataRef = await firebaseApp
-            .firestore()
-            .collection("recordings")
-            .doc(seed)
-            .get()
+    const response = await fetch(replayJsonUrl(seed))
+    const json = (await response.json()) as JsonSeedData | undefined
 
-        const seedData = dataRef.data() as SeedDataZipped
-        if (!seedData) {
-            return emptySeedData
+    if (!json) {
+        if (cached) {
+            console.log("Could not fetch recordings over the network. Falling back on local cache")
+            return unzipSeedData(cached)
+        } else {
+            throw `No remote data or cache data! for seed ${seed}`
         }
-
-        const seeds = unzipSeedData(seedData)
-        console.log(`Fetched recordings from server for seed ${seed}`, seeds)
-        try {
-            cache.setRecordings(seed, seeds)
-        } catch (error) {}
-        return seeds
-    } catch (e) {
-        console.log("Could not fetch recordings over the network. Falling back on local cache", e)
-        console.log(cache.getRecordings(seed))
-        return cache.getRecordings(seed)
     }
+
+    cache.setRecordings(seed, json)
+
+    return unzipSeedData(json)
 }
 
 /** Returns current seed data, intelligently deciding whether to fetch from the network or just return cached data
@@ -138,7 +138,7 @@ export const emptySeedData: SeedData = { replays: [] }
  * Converts from the db representation where the seed data is gzipped into
  * a useable model JSON on the client
  */
-export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
+export const unzipSeedData = (seed: SeedDataZipped | JsonSeedData): SeedData => {
     return {
         replays: unzip(seed.replaysZipped)
     }

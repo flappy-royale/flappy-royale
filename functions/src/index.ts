@@ -2,7 +2,7 @@ import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
-import { SeedDataZipped, SeedData } from "../../src/firebase"
+import { SeedDataZipped, SeedData, JsonSeedData } from "../../src/firebase"
 import { processNewRecording } from "./processNewRecording"
 
 const cors = require("cors")({
@@ -10,6 +10,10 @@ const cors = require("cors")({
 })
 
 const numberOfDifferentRoyaleReplays = 12
+
+// TODO: Right now, if we bump this in the app, we need to bump this here
+// and we'll probably forget to do that!!
+const APIVersion = "1"
 
 // So we can access the db
 admin.initializeApp()
@@ -42,20 +46,7 @@ const currentSeedExpiry = (): Date => {
 export const seeds = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const version = request.query.version || request.params.version
-        const responseJSON: SeedsResponse = {
-            royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-royale-${i}`),
-            daily: {
-                dev: dailySeed(version, 2),
-                staging: dailySeed(version, 1),
-                production: dailySeed(version, 0)
-            },
-            hourly: {
-                dev: hourlySeed(version, 2),
-                staging: hourlySeed(version, 1),
-                production: hourlySeed(version, 0)
-            },
-            expiry: currentSeedExpiry().toJSON()
-        }
+        const responseJSON = getSeeds(version)
         response.status(200).send(responseJSON)
     })
 })
@@ -118,6 +109,38 @@ export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
     }
 }
 
+// TODO: Each JSON file should support an `expiry` for client downloaders
+export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hours").onRun(async context => {
+    const seeds = getSeeds(APIVersion).royale
+
+    const getZippedReplaysForSeed = async (seed: string): Promise<string> => {
+        const dataRef = await admin
+            .firestore()
+            .collection("recordings")
+            .doc(seed)
+            .get()
+
+        return (dataRef.data() as SeedDataZipped).replaysZipped
+    }
+
+    const expiry = new Date()
+    expiry.setHours(expiry.getHours() + 1)
+    expiry.setMinutes(expiry.getMinutes() + 1) // Might as well give ourselves some slack
+
+    const replays = seeds.map(async seed => {
+        const replaysZipped = await getZippedReplaysForSeed(seed)
+        const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
+
+        const bucket = admin.storage().bucket("flappy-royale-replays")
+        const file = bucket.file(`${seed}.json`)
+
+        await file.save(JSON.stringify(data))
+        return `${seed}.json`
+    })
+
+    await Promise.all(replays)
+})
+
 const unzip = (bin: string) => {
     if (!bin) {
         throw new Error("No bin param passed to unzip")
@@ -144,4 +167,21 @@ const zippedObj = (obj: object) => {
     const data = unescape(encodeURIComponent(str))
     const zipped = pako.deflate(data, { to: "string" })
     return zipped
+}
+
+const getSeeds = (version: string): SeedsResponse => {
+    return {
+        royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-royale-${i}`),
+        daily: {
+            dev: dailySeed(version, 2),
+            staging: dailySeed(version, 1),
+            production: dailySeed(version, 0)
+        },
+        hourly: {
+            dev: hourlySeed(version, 2),
+            staging: hourlySeed(version, 1),
+            production: hourlySeed(version, 0)
+        },
+        expiry: currentSeedExpiry().toJSON()
+    }
 }
