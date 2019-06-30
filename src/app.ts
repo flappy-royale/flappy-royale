@@ -18,7 +18,9 @@ import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
 import { launchTutorial } from "./battle/TutorialScene"
 import { setupSentry } from "./setupSentry"
-import { setupAdsense } from "./setupAdsense"
+import { setupAdsense } from "./util/setupAdsense"
+import { setupGAnalytics } from "./util/setupGAnalytics"
+import { currentPlatform } from "./util/getPlatform"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -33,6 +35,10 @@ if (!PRODUCTION) {
 if (PRODUCTION) {
     appCache.configure()
     setupSentry()
+
+    if (currentPlatform === "web") {
+        setupGAnalytics()
+    }
 }
 
 if (DEMO) {

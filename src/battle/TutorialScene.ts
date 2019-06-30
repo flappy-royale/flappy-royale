@@ -14,6 +14,7 @@ import { GameTheme, themeMap } from "./theme"
 import { addScene } from "../menus/utils/addScene"
 import { showPrompt, Prompt } from "../menus/Prompt"
 import _ = require("lodash")
+import { becomeButton } from "../menus/utils/becomeButton"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchTutorial = (game: Phaser.Game) => {
@@ -71,6 +72,9 @@ export class TutorialScene extends Phaser.Scene {
     private pipeScore: number = 0
 
     private disableJumping = false
+
+    /** What you see to go back, hides on dying in a royale */
+    private backButton: Phaser.GameObjects.Image
 
     constructor(opts: any = {}) {
         super({
@@ -145,6 +149,12 @@ export class TutorialScene extends Phaser.Scene {
             themeMap[this.theme].bgColor
         )
 
+        const back = this.add.image(16, constants.GameHeight - 16, "back-button").setInteractive()
+        becomeButton(back, this.goBackToMainMenu, this)
+
+        back.setDepth(constants.zLevels.ui)
+        this.backButton = back
+
         // setup bg + animations
         createBackgroundSprites(this, this.theme)
         setupBirdAnimations(this)
@@ -189,6 +199,15 @@ export class TutorialScene extends Phaser.Scene {
 
         // On spacebar bounce the bird
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+    }
+
+    goBackToMainMenu() {
+        // delay to kill the "now flap" scene
+        setTimeout(() => {
+            const scenes = this.game.scene.scenes
+            scenes.forEach(element => this.game.scene.remove(element))
+            launchMainMenu(this.game)
+        }, 300)
     }
 
     setupPhysicsFloor() {

@@ -3,6 +3,8 @@ export function analyticsEvent(name: string, params: any) {
         window.webkit.messageHandlers.analyticsEvent.postMessage(JSON.stringify({ name, params }))
     } else if (window.Analytics) {
         window.Analytics.event(name, JSON.stringify(params || {}))
+    } else if (window.ga) {
+        window.ga("send", "event", name, "sent", name)
     } else {
         console.log("Sending analytics event", name)
     }

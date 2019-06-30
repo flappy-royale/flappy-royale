@@ -178,6 +178,9 @@ export const getUserStatistics = (): PlayerStats => {
         // Position = 0, is a win
         if (run.position === 0 && run.mode === GameMode.Royale) stats.royaleWins += 1
 
+        // So we can separately say how many trial wins you have
+        if (run.position === 0 && run.mode == GameMode.Trial) stats.trialWins += 1
+
         if (run.mode === GameMode.Royale) {
             if (run.position === 0) {
                 currentRoyaleStreak += 1
@@ -188,9 +191,6 @@ export const getUserStatistics = (): PlayerStats => {
                 currentRoyaleStreak = 0
             }
         }
-
-        // So we can separately say how many trial wins you have
-        if (run.position === 0 && run.mode == GameMode.Trial) stats.trialWins += 1
 
         // Birds you've gone past
         stats.birdsBeaten += run.totalBirds - run.position
