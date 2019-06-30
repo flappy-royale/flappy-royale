@@ -97,6 +97,13 @@ export const builtInAttire: PresentationAttire[] = [
         href: require("../assets/attire/Crown1.png")
     },
     {
+        id: "crown2",
+        description: "We can all be royale-ty",
+        fit: "loose",
+        base: false,
+        href: require("../assets/attire/Crown2.png")
+    },
+    {
         id: "baseball-1",
         description: "Going to a generic game",
         fit: "loose",

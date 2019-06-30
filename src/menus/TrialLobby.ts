@@ -19,6 +19,7 @@ import { requestModalAd, prepareModalAd } from "../nativeComms/requestModalAd"
 import { addScene } from "./utils/addScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme } from "../battle/theme"
+import { useDarkMode } from "../util/useDarkMode"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -213,11 +214,13 @@ export class TrialLobby extends Phaser.Scene {
         goButton.onclick = () => {
             fetchRecordingsForSeed(this.seed).then(seedData => {
                 this.game.scene.remove(this)
+                const darkMode = useDarkMode()
+
                 const scene = new BattleScene({
                     seed: this.seed,
                     data: seedData,
                     gameMode: GameMode.Trial,
-                    theme: GameTheme.default
+                    theme: darkMode ? GameTheme.night : GameTheme.default
                 })
                 addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                 scene.playBusCrash()

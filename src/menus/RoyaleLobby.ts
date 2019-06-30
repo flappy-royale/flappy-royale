@@ -11,6 +11,7 @@ import { random, shuffle } from "lodash"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
+import { useDarkMode } from "../util/useDarkMode"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -192,11 +193,12 @@ export class RoyaleLobby extends Phaser.Scene {
     private startTheGame() {
         this.game.scene.remove(this)
 
+        const darkMode = useDarkMode()
         const scene = new BattleScene({
             seed: this.seed,
             data: this.seedData,
             gameMode: GameMode.Royale,
-            theme: GameTheme.default
+            theme: darkMode ? GameTheme.night : GameTheme.default
         })
         addScene(this.game, "BattleScene" + this.seed, scene, true, {})
         scene.playBusCrash()
