@@ -7,6 +7,9 @@ import { getUserSettings } from "./user/userManager"
 import { GameMode } from "./battle/utils/gameMode"
 
 export let isLoggedIn: boolean = false
+
+let loginPromise: Promise<string>
+
 let playerId: string | undefined
 
 PlayFabClient.settings.titleId = titleId
@@ -31,32 +34,40 @@ export const login = () => {
         loginRequest.CustomId = cache.getUUID(titleId)
     }
 
-    method(
-        loginRequest,
-        (error: any, result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
-            if (error) {
-                console.log("Login error:", error)
-                return
-            }
+    loginPromise = new Promise((resolve, reject) => {
+        method(
+            loginRequest,
+            (error: any, result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
+                if (error) {
+                    console.log("Login error:", error)
+                    reject(error)
+                    return
+                }
 
-            playerId = result.data.PlayFabId
+                playerId = result.data.PlayFabId
 
-            isLoggedIn = true
-            if (result.data.NewlyCreated) {
-                const settings = getUserSettings()
-                updateName(settings.name)
-                updateAttire(settings.aesthetics.attire)
+                isLoggedIn = true
+                if (result.data.NewlyCreated) {
+                    const settings = getUserSettings()
+                    updateName(settings.name)
+                    updateAttire(settings.aesthetics.attire)
+                }
+
+                resolve(playerId)
             }
-        }
-    )
+        )
+    })
 }
 
-export const updateName = (name: string) => {
-    PlayFabClient.UpdateUserTitleDisplayName({ DisplayName: name }, (error: any, result) => {
-        if (!error) {
-            isLoggedIn = true
-        }
-        console.log(error, result)
+export const updateName = async (name: string) => {
+    await loginPromise
+    return new Promise((resolve, reject) => {
+        PlayFabClient.UpdateUserTitleDisplayName({ DisplayName: name }, (error: any, result) => {
+            if (error) {
+                reject(error)
+            }
+            resolve(result)
+        })
     })
 }
 
@@ -131,7 +142,8 @@ export const playedGame = (data: {
     )
 }
 
-export const updateAttire = (attire: Attire[]) => {
+export const updateAttire = async (attire: Attire[]) => {
+    await loginPromise
     /* We want attire information to be attached to each player in a way that a GetLeaderboard() call returns attire data for all users
      * (so we're not making a million discrete network requests).
      * PlayFab offers Statistics, which are an int32, but I'm too lazy to set up a bitmask.
@@ -146,7 +158,9 @@ export const updateAttire = (attire: Attire[]) => {
     )
 }
 
-export const event = (name: string, params: any) => {
+export const event = async (name: string, params: any) => {
+    await loginPromise
+
     PlayFabClient.WritePlayerEvent(
         {
             EventName: name,
@@ -163,6 +177,8 @@ export const event = (name: string, params: any) => {
 // LEADERBOARDS
 
 export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
+    await loginPromise
+
     const results = await asyncGetLeaderboard({
         StatisticName: "DailyTrial",
         StartPosition: 0,
@@ -176,7 +192,7 @@ export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
 }
 
 export const getTrialDeathLeaderboard = async (): Promise<Leaderboard> => {
-    // PlayFab's function signatures are juuust odd enough that we can't use an es6 promisify polyfill :/
+    await loginPromise
 
     let twoResults = await Promise.all([
         asyncGetLeaderboard({
