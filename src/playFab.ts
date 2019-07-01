@@ -57,7 +57,14 @@ export const updateName = (name: string) => {
     })
 }
 
-export const playedGame = (mode: GameMode, score: number, won: boolean) => {
+export const playedGame = (data: {
+    mode: GameMode
+    score: number
+    flaps: number
+    won: boolean
+    winStreak?: number
+    birdsPast?: number
+}) => {
     let stats = [
         {
             StatisticName: "TotalGamesPlayed",
@@ -65,33 +72,49 @@ export const playedGame = (mode: GameMode, score: number, won: boolean) => {
         },
         {
             StatisticName: "Score",
-            Value: score
+            Value: data.score
+        },
+        {
+            StatisticName: "Flaps",
+            Value: data.flaps
         }
     ]
 
-    if (score === 0) {
+    if (data.score === 0) {
         stats.push({
             StatisticName: "FirstPipeFails",
             Value: 1
         })
     }
 
-    if (won) {
+    if (data.won) {
         stats.push({
             StatisticName: "RoyaleGamesWon",
             Value: 1
         })
+
+        stats.push({
+            StatisticName: "RoyaleWinStreak",
+            Value: data.winStreak
+        })
     }
 
-    if (mode === GameMode.Trial) {
+    if (data.mode === GameMode.Trial) {
         stats.push({
             StatisticName: "DailyTrial",
-            Value: score
+            Value: data.score
         })
-    } else if (mode === GameMode.Royale) {
+    } else if (data.mode === GameMode.Royale) {
         stats.push({
             StatisticName: "RoyaleGamesPlayed",
             Value: 1
+        })
+    }
+
+    if (data.birdsPast) {
+        stats.push({
+            StatisticName: "BirdsPast",
+            Value: data.birdsPast
         })
     }
 

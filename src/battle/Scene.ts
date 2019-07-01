@@ -20,7 +20,8 @@ import {
     getHighScore,
     setHighScore,
     livesExtensionStateForSeed,
-    UserSettings
+    UserSettings,
+    getUserStatistics
 } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
@@ -648,12 +649,23 @@ export class BattleScene extends Phaser.Scene {
         if (this.isRecording()) {
             // Store what happened
             this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
-            recordGamePlayed(this.analytics.getResults())
-            analyticsEvent("game_played", this.analytics.getResults())
-            PlayFab.playedGame(this.mode, this.score, birdsAlive.length === 0)
+            const stats = this.analytics.getResults()
+            recordGamePlayed(stats)
+            analyticsEvent("game_played", stats)
+
+            const userStats = getUserStatistics()
+            PlayFab.playedGame({
+                mode: this.mode,
+                score: this.score,
+                flaps: stats.flaps,
+                won: birdsAlive.length === 0,
+                winStreak: userStats.royaleStreak,
+                birdsPast: stats.totalBirds
+            })
 
             if (hasJumped) {
                 const settings = getUserSettings()
+
                 uploadReplayForSeed({
                     seed: this.seed,
                     uuid: settings.name,
