@@ -39,11 +39,11 @@ let play = (type: string) => {
     // While Apple's haptics give us nuanced vibrations, the web API just gives us ms times
     // TODO: These values are untested/untuned
     let map = {
-        light: 25,
+        light: 10,
         medium: 100,
         heavy: 150,
 
-        selection: 25,
+        selection: 10,
 
         success: 75,
         error: 75,
