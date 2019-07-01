@@ -34,7 +34,7 @@ android {
         applicationId "com.lazerwalker.flappyroyale"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 7
+        versionCode 8
         versionName "1.0"
         manifestPlaceholders = [
                 ApplovinSdkKey: constants["ApplovinSdkKey"],
@@ -89,6 +89,9 @@ dependencies {
     // Vungle
     implementation 'com.github.vungle:vungle-android-sdk:6.3.24'
     implementation 'com.mopub.mediation:vungle:6.3.24.3'
+
+    implementation 'com.jaredrummler:android-device-names:1.1.9'
+
 
     // Google Play Services needed by Chartboost
 //    implementation "com.google.android.gms:play-services-base:$project.ext.googlePlayServicesVersion"

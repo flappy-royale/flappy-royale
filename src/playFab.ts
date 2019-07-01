@@ -4,6 +4,7 @@ import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
 import { getUserSettings } from "./user/userManager"
+import { GameMode } from "./battle/utils/gameMode"
 
 export let isLoggedIn: boolean = false
 
@@ -56,15 +57,70 @@ export const updateName = (name: string) => {
     })
 }
 
-export const sendTrialScore = (score: number) => {
+export const playedGame = (data: {
+    mode: GameMode
+    score: number
+    flaps: number
+    won: boolean
+    winStreak?: number
+    birdsPast?: number
+}) => {
+    let stats = [
+        {
+            StatisticName: "TotalGamesPlayed",
+            Value: 1
+        },
+        {
+            StatisticName: "Score",
+            Value: data.score
+        },
+        {
+            StatisticName: "Flaps",
+            Value: data.flaps
+        }
+    ]
+
+    if (data.score === 0) {
+        stats.push({
+            StatisticName: "FirstPipeFails",
+            Value: 1
+        })
+    }
+
+    if (data.won) {
+        stats.push({
+            StatisticName: "RoyaleGamesWon",
+            Value: 1
+        })
+
+        stats.push({
+            StatisticName: "RoyaleWinStreak",
+            Value: data.winStreak
+        })
+    }
+
+    if (data.mode === GameMode.Trial) {
+        stats.push({
+            StatisticName: "DailyTrial",
+            Value: data.score
+        })
+    } else if (data.mode === GameMode.Royale) {
+        stats.push({
+            StatisticName: "RoyaleGamesPlayed",
+            Value: 1
+        })
+    }
+
+    if (data.birdsPast) {
+        stats.push({
+            StatisticName: "BirdsPast",
+            Value: data.birdsPast
+        })
+    }
+
     PlayFabClient.UpdatePlayerStatistics(
         {
-            Statistics: [
-                {
-                    StatisticName: "DailyTrial",
-                    Value: score
-                }
-            ]
+            Statistics: stats
         },
         () => {}
     )

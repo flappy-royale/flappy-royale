@@ -7,13 +7,11 @@ import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { isEqual } from "lodash"
 import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
-import { list } from "google-profanity-words"
+import { usernameIsValid } from "../usernameIsValid"
 
 export const UserSettingsKey = "UserSettings"
 
 export class UserSettingsScene extends Phaser.Scene {
-    didChangeName: boolean = false
-
     constructor() {
         super(UserSettingsKey)
     }
@@ -64,17 +62,14 @@ export class UserSettingsScene extends Phaser.Scene {
         // Make changes propagate to settings
         usernameInput.onchange = () => {
             const name = usernameInput.value
-            const filterList = list()
-            const words = name.split(" ")
-            const anyFound = words.find(w => filterList.includes(w.toLowerCase()))
-            if (anyFound) {
-                usernameInput.style.border = "2px red solid"
-                return
-            } else {
+
+            if (usernameIsValid(name)) {
                 usernameInput.style.border = "none"
+                changeSettings({ name })
+                analyticsSetID(name)
+            } else {
+                usernameInput.style.border = "2px red solid"
             }
-            this.didChangeName = true
-            changeSettings({ name })
         }
 
         usernameInput.onfocus = () => {
@@ -244,10 +239,6 @@ export class UserSettingsScene extends Phaser.Scene {
             const newAttireIDs = newSettings.aesthetics.attire.map(a => a.id)
             if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
                 analyticsEvent("new_attire", { ids: newAttireIDs })
-            }
-
-            if (this.didChangeName) {
-                analyticsSetID(newSettings.name)
             }
 
             this.game.scene.remove(this)

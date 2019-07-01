@@ -42,10 +42,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         userContentController.addUserScript(userScript)
 
         // PlayFab Auth
-        let device = UIDevice()
+        let device = UIDevice.current
+        let osVersion = ProcessInfo.processInfo.operatingSystemVersion
+        let osString = "\(osVersion.majorVersion).\(osVersion.minorVersion).\(osVersion.patchVersion)"
+
         if let deviceId = device.identifierForVendor {
             // If there's no local device ID, let JS just fall back to web auth
-            let playfabAuthUserScript = WKUserScript(source: "window.playfabAuth = { method: 'LoginWithIOSDeviceID', payload: { DeviceId: '\(deviceId)', DeviceModel: '\(device.model)', OS: '\(device.systemName) \(device.systemVersion)' }};",
+            let playfabAuthUserScript = WKUserScript(source: "window.playfabAuth = { method: 'LoginWithIOSDeviceID', payload: { DeviceId: '\(deviceId)', DeviceModel: '\(device.modelName)', OS: '\(osString)' }};",
                 injectionTime: .atDocumentStart,
                 forMainFrameOnly: true)
             userContentController.addUserScript(playfabAuthUserScript)
@@ -251,5 +254,19 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 extension ViewController: MPAdViewDelegate {
     func viewControllerForPresentingModalView() -> UIViewController! {
         return self
+    }
+}
+
+// via https://stackoverflow.com/questions/11197509/how-to-get-device-make-and-model-on-ios
+extension UIDevice {
+    var modelName: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        return identifier
     }
 }
