@@ -138,9 +138,13 @@ export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hou
     }
 
     const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
-        const downloaded = await file.download()
-        const json = JSON.parse(downloaded.toString())
-        return unzipSeedData(json).replays
+        try {
+            const downloaded = await file.download()
+            const json = JSON.parse(downloaded.toString())
+            return unzipSeedData(json).replays
+        } catch (error) {
+            return []
+        }
     }
 
     const expiry = new Date()
@@ -151,7 +155,7 @@ export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hou
         // New flow - fetch from disk
 
         const bucket = admin.storage().bucket("flappy-royale-replays")
-        const fileToOpen = bucket.file(`${seed}.json`)
+        const fileToOpen = bucket.file(`${seed}-new.json`)
         let replays = await getReplayJsonFromFile(fileToOpen)
 
         const files = await bucket.getFiles({ prefix: `${seed}/` })
