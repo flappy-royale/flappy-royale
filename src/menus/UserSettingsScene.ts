@@ -66,6 +66,7 @@ export class UserSettingsScene extends Phaser.Scene {
             if (usernameIsValid(name)) {
                 usernameInput.style.border = "none"
                 changeSettings({ name })
+                analyticsSetID(name)
             } else {
                 usernameInput.style.border = "2px red solid"
             }

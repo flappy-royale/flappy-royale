@@ -2,6 +2,7 @@ import * as Phaser from "phaser"
 import _ = require("lodash")
 import { changeSettings } from "../user/userManager"
 import { usernameIsValid } from "../usernameIsValid"
+import { analyticsSetID } from "../nativeComms/analytics"
 
 export const NamePromptKey = "EnterName"
 
@@ -62,6 +63,7 @@ export class EnterNameScreen extends Phaser.Scene {
             window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
             changeSettings({ name })
+            analyticsSetID(name)
 
             this.completion()
         })

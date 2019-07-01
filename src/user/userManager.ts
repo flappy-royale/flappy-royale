@@ -5,7 +5,6 @@ import { GameMode } from "../battle/utils/gameMode"
 import { getSeeds } from "../firebase"
 import { APIVersion } from "../constants"
 import * as PlayFab from "../playFab"
-import { analyticsSetID } from "../nativeComms/analytics"
 
 interface Aesthetics {
     // Strings of stored keys for hats
@@ -94,7 +93,6 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
     if ("name" in settings) {
         existingSettings.name = settings.name!
         PlayFab.updateName(settings.name!)
-        analyticsSetID(settings.name!)
     }
     if ("royale" in settings) existingSettings.royale = settings.royale!
     if ("hasAskedAboutTutorial" in settings) existingSettings.hasAskedAboutTutorial = settings.hasAskedAboutTutorial!

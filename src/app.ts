@@ -47,8 +47,10 @@ if (DEMO) {
     // setupAdsense()
 }
 
+// TODO: Delete this line before shipping the production app
 localStorage.setItem("beta", "true")
-// TODO: uncomment me when it's time for production
+
+// ...and uncomment the following
 /*
 if (localStorage.getItem("beta") === "true") {
     localStorage.clear()
