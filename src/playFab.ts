@@ -93,10 +93,12 @@ export const playedGame = (data: {
             Value: 1
         })
 
-        stats.push({
-            StatisticName: "RoyaleWinStreak",
-            Value: data.winStreak
-        })
+        if (data.winStreak) {
+            stats.push({
+                StatisticName: "RoyaleWinStreak",
+                Value: data.winStreak!
+            })
+        }
     }
 
     if (data.mode === GameMode.Trial) {

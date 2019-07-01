@@ -4,7 +4,6 @@ import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData, JsonSeedData, PlayerData } from "../../src/firebase"
 import { processNewRecording } from "./processNewRecording"
-import { File } from "@google-cloud/storage"
 
 const cors = require("cors")({
     origin: true
@@ -78,11 +77,18 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         }
 
         // New flow - save to Firebase Storage
-        const bucket = admin.storage().bucket("flappy-royale-raw-replays")
-        const file = bucket.file(`${seed}/${uuid}-${new Date()}.json`)
-
-        const document = { replaysZipped: zippedObj([data]) }
-        file.save(JSON.stringify(document))
+        const bucket = admin.storage().bucket("flappy-royale-replay-uploads")
+        const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
+        console.log("fetched existing files", existingFiles.length)
+        // TODO: Parameterize this, like we do in processNewRecording()
+        if (existingFiles.length < 99) {
+            console.log("uploading to firebase storage")
+            const file = bucket.file(`${seed}/${uuid}-${new Date()}.json`)
+            const document = { replaysZipped: zippedObj([data]) }
+            file.save(JSON.stringify(document))
+        } else {
+            console.log("BUCKET IS FULL NOT UPLOADING RAW")
+        }
 
         // Old flow - save to Firebase DB
 
@@ -95,6 +101,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         const saveToDB = (a: SeedDataZipped) => dataRef.set(a)
 
         if (!zippedSeedData) {
+            const document = { replaysZipped: zippedObj([data]) }
             await saveToDB(document)
         } else {
             const seedData = unzipSeedData(zippedSeedData)
@@ -117,71 +124,102 @@ export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
     }
 }
 
-// TODO: Each JSON file should support an `expiry` for client downloaders
-export const migrateReplaysFromDbToJson = functions.pubsub.schedule("every 1 hours").onRun(async context => {
+const migrationTask = async () => {
     const seeds = getSeeds(APIVersion)
-    const allSeeds = [...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
+    const allSeeds = seeds.royale //[...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
 
-    const getZippedReplaysForSeed = async (seed: string): Promise<string | undefined> => {
-        const dataRef = await admin
-            .firestore()
-            .collection("recordings")
-            .doc(seed)
-            .get()
+    // const getZippedReplaysForSeed = async (seed: string): Promise<string | undefined> => {
+    //     const dataRef = await admin
+    //         .firestore()
+    //         .collection("recordings")
+    //         .doc(seed)
+    //         .get()
 
-        const data = dataRef.data() as SeedDataZipped
-        if (data) {
-            return data.replaysZipped
-        } else {
-            return undefined
-        }
-    }
+    //     const data = dataRef.data() as SeedDataZipped
+    //     if (data) {
+    //         return data.replaysZipped
+    //     } else {
+    //         return undefined
+    //     }
+    // }
 
-    const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
-        try {
-            const downloaded = await file.download()
-            const json = JSON.parse(downloaded.toString())
-            return unzipSeedData(json).replays
-        } catch (error) {
-            return []
-        }
-    }
+    // const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
+    //     try {
+    //         const downloaded = await file.download()
+    //         const json = JSON.parse(downloaded.toString())
+    //         return unzipSeedData(json).replays
+    //     } catch (error) {
+    //         return []
+    //     }
+    // }
 
     const expiry = new Date()
     expiry.setHours(expiry.getHours() + 1)
     expiry.setMinutes(expiry.getMinutes() + 1) // Might as well give ourselves some slack
 
-    const replays = allSeeds.map(async seed => {
-        // New flow - fetch from disk
+    console.log("About to grab the two buckets")
+    const bucket = admin.storage().bucket("flappy-royale-replays")
+    const rawBucket = admin.storage().bucket("flappy-royale-replay-uploads")
 
-        const bucket = admin.storage().bucket("flappy-royale-replays")
-        const fileToOpen = bucket.file(`${seed}-new.json`)
-        let replays = await getReplayJsonFromFile(fileToOpen)
+    console.log("Grabbed the two buckets")
+    for (const seed of allSeeds) {
+        console.log("Trying to update for seed", seed)
 
-        const files = await bucket.getFiles({ prefix: `${seed}/` })
-        const newFiles = await Promise.all(files.map(getReplayJsonFromFile))
-        replays.concat(...newFiles)
+        console.log("Fetching files")
+        const [files] = await rawBucket.getFiles({ prefix: `${seed}/` })
+        console.log(files)
+
+        const replays: PlayerData[] = []
+
+        console.log("Beginning grand mass download")
+        const downloadedFiles = await Promise.all(files.map(f => f.download()))
+        for (const f of downloadedFiles) {
+            console.log(f)
+            const json = JSON.parse(f.toString())
+            const data = unzipSeedData(json).replays
+            console.log("Data")
+            console.log(data)
+            replays.concat(data)
+        }
+
+        console.log("Done with files, attempting to zip")
 
         const newData: JsonSeedData = { replaysZipped: zippedObj(replays), expiry: expiry.toJSON() }
-        const newFile = bucket.file(`${seed}-new.json`)
-        await newFile.save(JSON.stringify(newData))
+        const replayData = bucket.file(`${seed}-test.json`)
+        await replayData.save(JSON.stringify(newData))
 
-        await Promise.all(files.map(f => f.delete))
+        console.log("Saved, about to delete")
+
+        await rawBucket.deleteFiles({ prefix: `${seed}/` })
+
+        console.log("Deleted")
 
         // Old flow - fetch from DB
 
-        const replaysZipped = await getZippedReplaysForSeed(seed)
-        if (!replaysZipped) return
+        // const replaysZipped = await getZippedReplaysForSeed(seed)
+        // if (!replaysZipped) return
 
-        const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
+        // const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
 
-        const file = bucket.file(`${seed}.json`)
+        // const file = bucket.file(`${seed}.json`)
 
-        await file.save(JSON.stringify(data))
-        return `${seed}.json`
+        // await file.save(JSON.stringify(data))
+        // return `${seed}.json`
+    }
+}
+
+// TODO: Each JSON file should support an `expiry` for client downloaders
+export const migrateReplaysFromDbToJson = functions
+    .runWith({ timeoutSeconds: 540, memory: "1GB" })
+    .pubsub.schedule("every 1 hours")
+    .onRun(async () => await migrationTask())
+
+export const manualMigration = functions.https.onRequest(async (request, response) => {
+    cors(request, response, async () => {
+        await migrationTask()
+
+        return response.status(200).send({ success: true })
     })
-
-    await Promise.all(replays)
 })
 
 const unzip = (bin: string) => {
