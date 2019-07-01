@@ -650,6 +650,7 @@ export class BattleScene extends Phaser.Scene {
             this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
             recordGamePlayed(this.analytics.getResults())
             analyticsEvent("game_played", this.analytics.getResults())
+            PlayFab.playedGame(this.mode, this.score, birdsAlive.length === 0)
 
             if (hasJumped) {
                 const settings = getUserSettings()
@@ -662,10 +663,6 @@ export class BattleScene extends Phaser.Scene {
                 })
                     .then(a => a.json())
                     .then(r => console.log(r))
-
-                if (this.mode === game.GameMode.Trial) {
-                    PlayFab.sendTrialScore(this.score)
-                }
             }
         }
 

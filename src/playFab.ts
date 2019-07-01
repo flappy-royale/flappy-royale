@@ -4,6 +4,7 @@ import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
 import { getUserSettings } from "./user/userManager"
+import { GameMode } from "./battle/utils/gameMode"
 
 export let isLoggedIn: boolean = false
 
@@ -56,15 +57,47 @@ export const updateName = (name: string) => {
     })
 }
 
-export const sendTrialScore = (score: number) => {
+export const playedGame = (mode: GameMode, score: number, won: boolean) => {
+    let stats = [
+        {
+            StatisticName: "TotalGamesPlayed",
+            Value: 1
+        },
+        {
+            StatisticName: "Score",
+            Value: score
+        }
+    ]
+
+    if (score === 0) {
+        stats.push({
+            StatisticName: "FirstPipeFails",
+            Value: 1
+        })
+    }
+
+    if (won) {
+        stats.push({
+            StatisticName: "RoyaleGamesWon",
+            Value: 1
+        })
+    }
+
+    if (mode === GameMode.Trial) {
+        stats.push({
+            StatisticName: "DailyTrial",
+            Value: score
+        })
+    } else if (mode === GameMode.Royale) {
+        stats.push({
+            StatisticName: "RoyaleGamesPlayed",
+            Value: 1
+        })
+    }
+
     PlayFabClient.UpdatePlayerStatistics(
         {
-            Statistics: [
-                {
-                    StatisticName: "DailyTrial",
-                    Value: score
-                }
-            ]
+            Statistics: stats
         },
         () => {}
     )
