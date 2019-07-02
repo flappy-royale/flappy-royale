@@ -188,7 +188,8 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
             lives: 10,
             livesState: 1,
             battle: {} as any,
-            seed: this.seed
+            seed: this.seed,
+            score: 5
         })
 
         game.scene.add("over", deathOverlay, true)
