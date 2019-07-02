@@ -135,6 +135,43 @@ export const recordGamePlayed = (results: GameResults) => {
     localStorage.setItem("royales", zippedRoyales)
 }
 
+/** Daily trial runs when you're lower than your previous best */
+
+export interface DailyTrialRun {
+    score: number
+    timestamp: Date // Date.toJSON()
+}
+
+const dailyTrialStorageKey = "dailyTrialRuns"
+
+export const saveDailyTrialRun = (score: number, seed: string) => {
+    const run = {
+        score,
+        timestamp: new Date()
+    }
+
+    let runs = [...getDailyTrialRuns(seed), run]
+    const data = { runs, seed }
+
+    localStorage.setItem(dailyTrialStorageKey, JSON.stringify(data))
+}
+
+export const getDailyTrialRuns = (seed: string): DailyTrialRun[] => {
+    let rawData = localStorage.getItem(dailyTrialStorageKey)
+    if (!rawData) return []
+
+    let data = JSON.parse(rawData)
+    if (!data || data.seed !== seed) return []
+
+    // JSON.parse()-ing an object containing Date.toJSON() strings doesn't return rehydrated Date objects
+    return data.runs.map(r => {
+        return {
+            score: r.score,
+            timestamp: new Date(r.timestamp)
+        }
+    })
+}
+
 /** Will get the seed index + 1 or 0 if it's at the cap */
 export const getAndBumpUserCycleSeedIndex = (cap: number): number => {
     const settings = getUserSettings()

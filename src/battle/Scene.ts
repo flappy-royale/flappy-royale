@@ -21,7 +21,8 @@ import {
     setHighScore,
     livesExtensionStateForSeed,
     UserSettings,
-    getUserStatistics
+    getUserStatistics,
+    saveDailyTrialRun
 } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
@@ -674,20 +675,32 @@ export class BattleScene extends Phaser.Scene {
                 })
                 this.scene.add("deathoverlay", deathOverlay, true)
             } else if (this.mode === game.GameMode.Trial) {
-                // It takes some time for PlayFab to register scores on the leaderboard.
-                // Let's jankily wait.
-                playFabSubmission.then(() => {
-                    setTimeout(() => {
-                        const deathOverlay = new TrialDeath("death", {
-                            lives: getLives(this.seed),
-                            livesState: livesExtensionStateForSeed(this.seed),
-                            battle: this,
-                            seed: this.seed,
-                            score: this.score
-                        })
-                        this.scene.add("deathoverlay", deathOverlay, true)
-                    }, 500)
-                })
+                saveDailyTrialRun(this.score, this.seed)
+
+                const isHighScore = this.score === this.highScore
+
+                const showOverlay = () => {
+                    const deathOverlay = new TrialDeath("death", {
+                        lives: getLives(this.seed),
+                        livesState: livesExtensionStateForSeed(this.seed),
+                        battle: this,
+                        seed: this.seed,
+                        score: this.score,
+                        isHighScore
+                    })
+                    this.scene.add("deathoverlay", deathOverlay, true)
+                }
+
+                if (isHighScore) {
+                    // We're showing leaderboard results from PlayFab.
+                    // After submitting our latest score, it takes some time (anecdotally ~500ms) for PlayFab to register the new score.
+                    // Let's awkwardly wait.
+                    playFabSubmission.then(() => {
+                        setTimeout(showOverlay, 500)
+                    })
+                } else {
+                    showOverlay()
+                }
             }
         }
     }

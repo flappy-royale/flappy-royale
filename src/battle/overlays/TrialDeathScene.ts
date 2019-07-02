@@ -10,10 +10,12 @@ import {
     LifeStateForSeed,
     bumpLivesExtensionState,
     addLives,
+    getDailyTrialRuns,
     getLives,
     getUserSettings,
     getUserStatistics,
-    Bird
+    Bird,
+    DailyTrialRun
 } from "../../user/userManager"
 import { requestReview } from "../../nativeComms/requestReview"
 import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
@@ -22,6 +24,7 @@ import { BirdSprite } from "../BirdSprite"
 import { shareNatively } from "../../nativeComms/share"
 import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors"
 import { getTrialDeathLeaderboard, Leaderboard, LeaderboardResult } from "../../playFab"
+import _ = require("lodash")
 
 export interface TrialDeathProps {
     lives: number
@@ -29,6 +32,7 @@ export interface TrialDeathProps {
     livesState: LifeStateForSeed
     seed: string
     score: number
+    isHighScore: boolean
 }
 
 export const deathPreload = (game: Phaser.Scene) => {
@@ -77,11 +81,36 @@ export class TrialDeath extends Phaser.Scene {
 
         this.addFooter()
 
-        getTrialDeathLeaderboard().then(leaderboard => {
-            const { player, results } = leaderboard
-            if (!player) {
-                console.log("ERROR: Trial death leaderboard did not contain player")
-            }
+        if (this.props.isHighScore) {
+            getTrialDeathLeaderboard().then(leaderboard => {
+                const { player } = leaderboard
+                if (!player) {
+                    console.log("ERROR: Trial death leaderboard did not contain player")
+                }
+
+                if (player.position === 0) {
+                    this.cameInFirst(leaderboard)
+                } else if (player.position <= 2) {
+                    this.cameInTopThree(leaderboard)
+                } else {
+                    this.didntComeTopThree(leaderboard)
+                }
+
+                if (player.score === this.props.score && player.score > 0) {
+                    this.time.delayedCall(500, this.addTopMedal, [player], this)
+                }
+
+                // Decide whether to show a rating screen
+                // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
+                // When building this out for Android, it's likely that won't be the case.
+                if (player.score > 0 && getRoyales().length >= 10) {
+                    requestReview()
+                }
+            })
+        } else {
+            const dailyTrialRuns = getDailyTrialRuns(this.props.seed)
+            const leaderboard = this.localTrialCacheToLeaderboard(dailyTrialRuns)
+            const { player } = leaderboard
 
             if (player.position === 0) {
                 this.cameInFirst(leaderboard)
@@ -90,18 +119,7 @@ export class TrialDeath extends Phaser.Scene {
             } else {
                 this.didntComeTopThree(leaderboard)
             }
-
-            if (player.score === this.props.score && player.score > 0) {
-                this.time.delayedCall(500, this.addTopMedal, [player], this)
-            }
-
-            // Decide whether to show a rating screen
-            // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
-            // When building this out for Android, it's likely that won't be the case.
-            if (player.score > 0 && getRoyales().length >= 10) {
-                requestReview()
-            }
-        })
+        }
     }
 
     private addFooter() {
@@ -431,5 +449,48 @@ export class TrialDeath extends Phaser.Scene {
 
         this.againButton.setText("again")
         centerAlignTextLabel(this.againButton, -10)
+    }
+
+    private localTrialCacheToLeaderboard = (cache: DailyTrialRun[]): Leaderboard => {
+        const settings = getUserSettings()
+        const attire = settings.aesthetics.attire
+        const sortedCache = _.sortBy(cache, "score").reverse()
+
+        const lastRun = cache[cache.length - 1]
+
+        const results = sortedCache.map((r, i) => {
+            let name = r.timestamp.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+            if (r === lastRun) {
+                name = "just now"
+            }
+
+            return {
+                name,
+                attire,
+                position: i,
+                score: r.score,
+                userId: name
+            }
+        })
+        const player = results.find(r => r.name === "just now")
+
+        // This isn't obvious from the signature, but in the new leaderboard world, there should be at most 6 elements in leaderboard.
+
+        let shrunkResults = results.slice(0, 3)
+
+        if (player.position >= 3) {
+            if (player.position - 1 >= 3) {
+                shrunkResults.push(results[player.position - 1])
+            }
+
+            shrunkResults.push(results[player.position])
+
+            if (results[player.position + 1]) {
+                shrunkResults.push(results[player.position + 1])
+            }
+        }
+
+        console.log(shrunkResults, player)
+        return { results: shrunkResults, player }
     }
 }
