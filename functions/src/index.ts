@@ -4,12 +4,15 @@ import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData, JsonSeedData, PlayerData } from "../../src/firebase"
 import { processNewRecording } from "./processNewRecording"
+import { File } from "@google-cloud/storage"
+import _ = require("lodash")
 
 const cors = require("cors")({
     origin: true
 })
 
 const numberOfDifferentRoyaleReplays = 12
+const numberOfReplaysPerSeed = 99
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
 // and we'll probably forget to do that!!
@@ -79,15 +82,11 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         // New flow - save to Firebase Storage
         const bucket = admin.storage().bucket("flappy-royale-replay-uploads")
         const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
-        console.log("fetched existing files", existingFiles.length)
-        // TODO: Parameterize this, like we do in processNewRecording()
-        if (existingFiles.length < 99) {
-            console.log("uploading to firebase storage")
+
+        if (existingFiles.length < numberOfReplaysPerSeed) {
             const file = bucket.file(`${seed}/${uuid}-${new Date()}.json`)
             const document = { replaysZipped: zippedObj([data]) }
             file.save(JSON.stringify(document))
-        } else {
-            console.log("BUCKET IS FULL NOT UPLOADING RAW")
         }
 
         // Old flow - save to Firebase DB
@@ -143,15 +142,15 @@ const migrationTask = async () => {
         }
     }
 
-    // const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
-    //     try {
-    //         const downloaded = await file.download()
-    //         const json = JSON.parse(downloaded.toString())
-    //         return unzipSeedData(json).replays
-    //     } catch (error) {
-    //         return []
-    //     }
-    // }
+    const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
+        try {
+            const buffer = await file.download()
+            const json = JSON.parse(buffer.toString())
+            return unzipSeedData(json).replays
+        } catch (error) {
+            return []
+        }
+    }
 
     const expiry = new Date()
     expiry.setHours(expiry.getHours() + 1)
@@ -177,35 +176,24 @@ const migrationTask = async () => {
         await file.save(JSON.stringify(data))
 
         // New flow
+        const replayFile = bucket.file(`${seed}-test.json`)
+        let replays: PlayerData[] = await getReplayJsonFromFile(replayFile)
 
-        console.log("Fetching files")
         const [files] = await rawBucket.getFiles({ prefix: `${seed}/` })
-        console.log(files)
 
-        const replays: PlayerData[] = []
+        // This will take each file, download it, and unzip its replays
+        // giving us an array of arrays each with a single replay
+        const rawReplays = await Promise.all(files.map(getReplayJsonFromFile))
+        const newReplays = _.flatten(rawReplays)
 
-        console.log("Beginning grand mass download")
-        const downloadedFiles = await Promise.all(files.map(f => f.download()))
-        for (const f of downloadedFiles) {
-            console.log(f)
-            const json = JSON.parse(f.toString())
-            const data = unzipSeedData(json).replays
-            console.log("Data")
-            console.log(data)
-            replays.concat(data)
-        }
-
-        console.log("Done with files, attempting to zip")
+        // We want to limit the number of replays, but also prioritize new replays
+        replays = [...newReplays, ...replays]
+        replays = replays.slice(0, numberOfReplaysPerSeed)
 
         const newData: JsonSeedData = { replaysZipped: zippedObj(replays), expiry: expiry.toJSON() }
-        const replayData = bucket.file(`${seed}-test.json`)
-        await replayData.save(JSON.stringify(newData))
-
-        console.log("Saved, about to delete")
+        await replayFile.save(JSON.stringify(newData))
 
         await rawBucket.deleteFiles({ prefix: `${seed}/` })
-
-        console.log("Deleted")
     }
 }
 
