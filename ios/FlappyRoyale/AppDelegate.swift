@@ -24,14 +24,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.bottomBannerMoPub)
+        
         config.loggingLevel = .debug
         MoPub.sharedInstance().initializeSdk(with: config) {
             GADMobileAds.sharedInstance().start(completionHandler: nil)
             ALSdk.initializeSdk()
+            NotificationCenter.default.post(name: NSNotification.Name("AdsReady"), object: nil)
         }
-        
-//        [[MPAdConversionTracker sharedConversionTracker] reportApplicationOpenForApplicationID:@"112358"];
-
         
         return true
     }

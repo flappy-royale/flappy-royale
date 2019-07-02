@@ -31,9 +31,9 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         adPresentor.presentationVC = self
         share.presentationVC = self
         urlOpener.presentationVC = self
+        view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
 
         let userContentController = WKUserContentController()
-
 
         let username = NSUserName()
         let userScript = WKUserScript(source: "window.isAppleApp = true; window.username = '\(username)';",
@@ -93,16 +93,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
         adView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            adView.heightAnchor.constraint(equalToConstant: 50),
+            adView.heightAnchor.constraint(equalToConstant: 46),
             adView.widthAnchor.constraint(equalToConstant: 320),
             adView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             adView.topAnchor.constraint(equalTo: webView.bottomAnchor),
             adView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
-//        let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
-//        webView.loadFileURL(url, allowingReadAccessTo: url)
-
         self.webView = webView
 
         // WKWebViews don't dispatch visibilitychange events.
@@ -118,9 +115,10 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
         loadGameURL()
 
-        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fiveLivesMoPub, withMediationSettings: [])
-        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.testBannerMoPub, withMediationSettings: [])
-        MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fifteenLivesMobPub, withMediationSettings: [])
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("AdsReady"), object: nil, queue: nil) { notification in
+            MPRewardedVideo.loadAd(withAdUnitID: AdConstants.bottomBannerMoPub, withMediationSettings: [])
+            MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fiveLivesMoPub, withMediationSettings: [])
+        }
 
     }
 
@@ -131,13 +129,6 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             else { return }
 
         webView.load(URLRequest(url: url))
-    }
-
-    @objc func show5ad() {
-        let reward = MPRewardedVideo.availableRewards(forAdUnitID:AdConstants.testRewardMoPub)
-        if reward != nil {
-            MPRewardedVideo.presentAd(forAdUnitID: AdConstants.testRewardMoPub, from: self, with: reward?.first! as! MPRewardedVideoReward)
-        }
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
