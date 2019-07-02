@@ -93,9 +93,6 @@ export class BattleScene extends Phaser.Scene {
     /** The data (user recordings etc) for this seed  */
     public seedData?: SeedData
 
-    /** A copy (to be mutated) of the other players input events */
-    private recordedInput: PlayerData[] = []
-
     /* Scene timestamp for when the most recent round started
      * So recording timestamps can be consistent */
     private timestampOffset: number = 0
@@ -263,7 +260,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Set up the competitor birds
         if (game.showGhostBirds(this.mode)) {
-            this.recordedInput.forEach(input => {
+            this.seedData.replays.forEach(input => {
                 const ghost = new BirdSprite(
                     this,
                     constants.birdXPosition,
@@ -447,7 +444,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Replay all of the actions for the other players
         if (game.showGhostBirds(this.mode)) {
-            this.recordedInput.forEach((input, index) => {
+            this.seedData.replays.forEach((input, index) => {
                 if (!input.actions) {
                     return
                 }

@@ -192,13 +192,11 @@ export class RoyaleLobby extends Phaser.Scene {
 
     private startTheGame() {
         this.game.scene.remove(this)
-
-        const darkMode = useDarkMode()
         const scene = new BattleScene({
             seed: this.seed,
             data: this.seedData,
             gameMode: GameMode.Royale,
-            theme: darkMode ? GameTheme.night : GameTheme.default
+            theme: GameTheme.default
         })
         addScene(this.game, "BattleScene" + this.seed, scene, true, {})
         scene.playBusCrash()
