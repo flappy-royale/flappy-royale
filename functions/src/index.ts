@@ -3,7 +3,6 @@ import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData, JsonSeedData, PlayerData } from "../../src/firebase"
-import { processNewRecording } from "./processNewRecording"
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
 
@@ -89,25 +88,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             file.save(JSON.stringify(document))
         }
 
-        // Old flow - save to Firebase DB
-
-        const db = admin.firestore()
-        const recordings = db.collection("recordings")
-        const dataRef = await recordings.doc(seed)
-        const zippedSeedData = (await dataRef.get()).data() as SeedDataZipped
-
-        // Mainly to provide typings to dataRef.set
-        const saveToDB = (a: SeedDataZipped) => dataRef.set(a)
-
-        if (!zippedSeedData) {
-            const document = { replaysZipped: zippedObj([data]) }
-            await saveToDB(document)
-        } else {
-            const seedData = unzipSeedData(zippedSeedData)
-            const newData = processNewRecording(seedData, data, uuid, mode)
-            await saveToDB({ replaysZipped: zippedObj(newData.replays) })
-        }
-
         const responseJSON = { success: true }
         return response.status(200).send(responseJSON)
     })
@@ -127,21 +107,6 @@ const migrationTask = async () => {
     const seeds = getSeeds(APIVersion)
     const allSeeds = [...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
 
-    const getZippedReplaysForSeed = async (seed: string): Promise<string | undefined> => {
-        const dataRef = await admin
-            .firestore()
-            .collection("recordings")
-            .doc(seed)
-            .get()
-
-        const data = dataRef.data() as SeedDataZipped
-        if (data) {
-            return data.replaysZipped
-        } else {
-            return zippedObj([])
-        }
-    }
-
     const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
         try {
             const buffer = await file.download()
@@ -156,27 +121,11 @@ const migrationTask = async () => {
     expiry.setHours(expiry.getHours() + 1)
     expiry.setMinutes(expiry.getMinutes() + 1) // Might as well give ourselves some slack
 
-    console.log("About to grab the two buckets")
     const bucket = admin.storage().bucket("flappy-royale-replays")
     const rawBucket = admin.storage().bucket("flappy-royale-replay-uploads")
 
-    console.log("Grabbed the two buckets")
     for (const seed of allSeeds) {
-        console.log("Trying to update for seed", seed)
-
-        // Old flow - fetch from DB
-
-        const replaysZipped = await getZippedReplaysForSeed(seed)
-        if (!replaysZipped) return
-
-        const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
-
-        const file = bucket.file(`${seed}.json`)
-
-        await file.save(JSON.stringify(data))
-
-        // New flow
-        const replayFile = bucket.file(`${seed}-test.json`)
+        const replayFile = bucket.file(`${seed}.json`)
         let replays: PlayerData[] = await getReplayJsonFromFile(replayFile)
 
         const [files] = await rawBucket.getFiles({ prefix: `${seed}/` })
