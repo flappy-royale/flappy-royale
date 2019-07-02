@@ -74,7 +74,7 @@ export const updateName = async (name: string) => {
     })
 }
 
-export const playedGame = (data: {
+export const playedGame = async (data: {
     mode: GameMode
     score: number
     flaps: number
@@ -137,12 +137,20 @@ export const playedGame = (data: {
         })
     }
 
-    PlayFabClient.UpdatePlayerStatistics(
-        {
-            Statistics: stats
-        },
-        () => {}
-    )
+    return new Promise((resolve, reject) => {
+        PlayFabClient.UpdatePlayerStatistics(
+            {
+                Statistics: stats
+            },
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        )
+    })
 }
 
 export const updateAttire = async (attire: Attire[]) => {

@@ -589,24 +589,25 @@ export class BattleScene extends Phaser.Scene {
         const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
         const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
 
+        this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
+        const stats = this.analytics.getResults()
+
+        const userStats = getUserStatistics()
+        const playFabSubmission = PlayFab.playedGame({
+            mode: this.mode,
+            score: this.score,
+            flaps: stats.flaps,
+            won: birdsAlive.length === 0,
+            winStreak: userStats.royaleStreak,
+            birdsPast: stats.totalBirds
+        })
+
         // Check if they did enough for us to record the run
         // in the future we'll want to show the death animation etc
         if (this.isRecording()) {
             // Store what happened
-            this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
-            const stats = this.analytics.getResults()
             recordGamePlayed(stats)
             analyticsEvent("game_played", stats)
-
-            const userStats = getUserStatistics()
-            PlayFab.playedGame({
-                mode: this.mode,
-                score: this.score,
-                flaps: stats.flaps,
-                won: birdsAlive.length === 0,
-                winStreak: userStats.royaleStreak,
-                birdsPast: stats.totalBirds
-            })
 
             if (hasJumped) {
                 const settings = getUserSettings()
@@ -673,12 +674,19 @@ export class BattleScene extends Phaser.Scene {
                 })
                 this.scene.add("deathoverlay", deathOverlay, true)
             } else if (this.mode === game.GameMode.Trial) {
-                const deathOverlay = new TrialDeath("death", {
-                    lives: getLives(this.seed),
-                    livesState: livesExtensionStateForSeed(this.seed),
-                    battle: this,
-                    seed: this.seed,
-                    score: this.score
+                // It takes some time for PlayFab to register scores on the leaderboard.
+                // Let's jankily wait.
+                playFabSubmission.then(() => {
+                    setTimeout(() => {
+                        const deathOverlay = new TrialDeath("death", {
+                            lives: getLives(this.seed),
+                            livesState: livesExtensionStateForSeed(this.seed),
+                            battle: this,
+                            seed: this.seed,
+                            score: this.score
+                        })
+                        this.scene.add("deathoverlay", deathOverlay, true)
+                    }, 500)
                 })
             }
         }
