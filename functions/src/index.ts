@@ -126,22 +126,22 @@ export const unzipSeedData = (seed: SeedDataZipped): SeedData => {
 
 const migrationTask = async () => {
     const seeds = getSeeds(APIVersion)
-    const allSeeds = seeds.royale //[...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
+    const allSeeds = [...seeds.royale, seeds.daily.dev, seeds.daily.production, seeds.daily.staging]
 
-    // const getZippedReplaysForSeed = async (seed: string): Promise<string | undefined> => {
-    //     const dataRef = await admin
-    //         .firestore()
-    //         .collection("recordings")
-    //         .doc(seed)
-    //         .get()
+    const getZippedReplaysForSeed = async (seed: string): Promise<string | undefined> => {
+        const dataRef = await admin
+            .firestore()
+            .collection("recordings")
+            .doc(seed)
+            .get()
 
-    //     const data = dataRef.data() as SeedDataZipped
-    //     if (data) {
-    //         return data.replaysZipped
-    //     } else {
-    //         return undefined
-    //     }
-    // }
+        const data = dataRef.data() as SeedDataZipped
+        if (data) {
+            return data.replaysZipped
+        } else {
+            return zippedObj([])
+        }
+    }
 
     // const getReplayJsonFromFile = async (file: File): Promise<PlayerData[]> => {
     //     try {
@@ -164,6 +164,19 @@ const migrationTask = async () => {
     console.log("Grabbed the two buckets")
     for (const seed of allSeeds) {
         console.log("Trying to update for seed", seed)
+
+        // Old flow - fetch from DB
+
+        const replaysZipped = await getZippedReplaysForSeed(seed)
+        if (!replaysZipped) return
+
+        const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
+
+        const file = bucket.file(`${seed}.json`)
+
+        await file.save(JSON.stringify(data))
+
+        // New flow
 
         console.log("Fetching files")
         const [files] = await rawBucket.getFiles({ prefix: `${seed}/` })
@@ -193,18 +206,6 @@ const migrationTask = async () => {
         await rawBucket.deleteFiles({ prefix: `${seed}/` })
 
         console.log("Deleted")
-
-        // Old flow - fetch from DB
-
-        // const replaysZipped = await getZippedReplaysForSeed(seed)
-        // if (!replaysZipped) return
-
-        // const data: JsonSeedData = { replaysZipped, expiry: expiry.toJSON() }
-
-        // const file = bucket.file(`${seed}.json`)
-
-        // await file.save(JSON.stringify(data))
-        // return `${seed}.json`
     }
 }
 
