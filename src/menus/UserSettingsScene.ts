@@ -203,6 +203,7 @@ export class UserSettingsScene extends Phaser.Scene {
         })
 
         // Sets up the attires
+
         const bases = builtInAttire.filter(a => a.base)
         const attires = builtInAttire.filter(a => !a.base)
 
