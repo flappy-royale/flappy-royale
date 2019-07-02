@@ -155,7 +155,7 @@ export class MainMenuScene extends Phaser.Scene {
     private loadTutorialFlow() {
         const options = {
             title: "",
-            subtitle: "Have you played\nFlappy Bird before?",
+            subtitle: "Have you played a\nflappy game before?",
 
             // TODO: Lol, these should be called primary/secondary
             yes: "NOPE!",
