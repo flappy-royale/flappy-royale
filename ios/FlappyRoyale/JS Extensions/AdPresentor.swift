@@ -29,7 +29,7 @@ class AdPresentor : NSObject, WebViewInteropProvider, MPRewardedVideoDelegate {
         let reward = MPRewardedVideo.availableRewards(forAdUnitID:adUnitID)
         if reward != nil {
             MPRewardedVideo.setDelegate(self, forAdUnitId: adUnitID)
-            MPRewardedVideo.presentAd(forAdUnitID: adUnitID, from: presentationVC, with: reward?.first! as! MPRewardedVideoReward)
+            MPRewardedVideo.presentAd(forAdUnitID: adUnitID, from: presentationVC, with: reward?.first! as? MPRewardedVideoReward)
         } else {
             let alert = UIAlertController(title: "Sorry!", message: "We couldn't fetch any video ads for you. Try again later?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
