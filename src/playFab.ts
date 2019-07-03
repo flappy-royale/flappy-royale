@@ -61,7 +61,9 @@ export const login = () => {
     })
 }
 
-export const updateName = async (name: string) => {
+export const updateName = async (
+    name: string
+): Promise<PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.UpdateUserTitleDisplayNameResult>> => {
     await loginPromise
     return new Promise((resolve, reject) => {
         PlayFabClient.UpdateUserTitleDisplayName({ DisplayName: name }, (error: any, result) => {

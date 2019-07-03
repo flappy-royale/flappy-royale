@@ -203,7 +203,7 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private loadNamePrompt() {
-        const namePrompt = new EnterNameScreen(() => {
+        const namePrompt = new EnterNameScreen(false, () => {
             this.scene.remove(namePrompt)
             this.loadAttirePrompt()
         })
