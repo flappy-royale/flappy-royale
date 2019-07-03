@@ -10,7 +10,7 @@ const cors = require("cors")({
     origin: true
 })
 
-const numberOfRoyaleSeeds = 12
+const numberOfRoyaleSeeds = 50
 const numberOfReplaysPerSeed = 99
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
