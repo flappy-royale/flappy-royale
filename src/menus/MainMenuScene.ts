@@ -24,6 +24,7 @@ import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { Prompt, showPrompt } from "./Prompt"
+import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 
 declare const DEMO: boolean
 
@@ -50,6 +51,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("trial-button", require("../../assets/menu/trial-2.png"))
         this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
         this.load.image("question-mark", require("../../assets/menu/question-mark.png"))
+        this.load.image("stats-button", require("../../assets/menu/stats.png"))
 
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
@@ -140,16 +142,26 @@ export class MainMenuScene extends Phaser.Scene {
             trial.setAlpha(0.3)
         }
 
-        const settingsButton = this.add.image(76, c.GameHeight - 40, "settings-button")
+        const settingsButton = this.add.image(40, c.GameHeight - 40, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
 
-        const howToPlayButton = this.add.image(c.GameWidth - 20, c.GameHeight - 42, "question-mark")
+        const statsButton = this.add.image(107, c.GameHeight - 41, "stats-button")
+        becomeButton(statsButton, this.loadStats, this)
+
+        const howToPlayButton = this.add.image(c.GameWidth - 12, c.GameHeight - 42, "question-mark")
         becomeButton(howToPlayButton, this.loadTutorial, this)
     }
+
     private loadSettings() {
         this.removeMenu()
         const settings = new UserSettingsScene()
         addScene(this.game, UserSettingsKey, settings, true)
+    }
+
+    private loadStats() {
+        this.removeMenu()
+        const settings = new UserStatsScene()
+        addScene(this.game, UserStatsKey, settings, true)
     }
 
     private loadTutorialFlow() {
