@@ -7,6 +7,7 @@ import { ReplayUploadRequest } from "../functions/src"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
 import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
+import _ = require("lodash")
 
 /** How it's stored in the DB to save on fs space */
 export interface SeedDataZipped {
@@ -73,7 +74,7 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
  * @param apiVersion The current API version, changes when we manually bump it
  * @param prioritizeCache If true, will always return cache data instead of network unless there is no cache data
  */
-export const getSeeds = async (apiVersion: string, prioritizeCache: boolean = false) => {
+export const getSeeds = async (apiVersion: string, prioritizeCache: boolean = false): Promise<SeedsResponse> => {
     const cached = cache.getSeeds(apiVersion)
 
     if (!cached) {
@@ -113,6 +114,11 @@ const getSeedsFromAPI = (apiVersion: string) => {
                 console.log("Could not fetch seeds (received undefined), falling back to local cache")
                 return cache.getSeeds(apiVersion)
             }
+
+            // We cycle through the list of seeds in order.
+            // In practice, an individual user won't notice the list of games they're playing is in a fixed order.
+            // But since we might add new seeds on the server, we want each user to havce a different seed order so that new seeds get populated more quickly
+            seeds.royale = _.shuffle(seeds.royale)
 
             // Store a local copy of the seeds
             cache.setSeeds(apiVersion, seeds)
