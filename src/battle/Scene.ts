@@ -606,7 +606,6 @@ export class BattleScene extends Phaser.Scene {
         const timestamp = this.time.now - this.timestampOffset
         const position = this.userPositionAgainstGhosts()
 
-        debugger
         this.userInput.push({ action: "died", timestamp })
 
         const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
