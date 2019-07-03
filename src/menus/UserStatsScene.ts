@@ -66,17 +66,17 @@ function setUpStatsHTML() {
 
     // User facing names for the stats
     const presentation = {
-        "Royale Streak": stats.royaleStreak,
-        "Best Streak": stats.bestRoyaleStreak,
-        "Royale Wins": stats.royaleWins,
-        "Best Position": stats.bestPosition,
-        "Top Score": stats.bestScore,
-        "Games Played": stats.gamesPlayed,
-        "First Pipe fails": stats.instaDeaths,
-        "Birds Passed": stats.birdsBeaten,
-        "Play Time": `${time.join(":")}${postThing}`,
-        Flaps: stats.totalFlaps,
-        "Score History": ""
+        "royale streak": stats.royaleStreak,
+        "best streak": stats.bestRoyaleStreak,
+        "royale wins": stats.royaleWins,
+        "best position": stats.bestPosition,
+        "top score": stats.bestScore,
+        "games played": stats.gamesPlayed,
+        "first pipe fails": stats.instaDeaths,
+        "birds passed": stats.birdsBeaten,
+        "play time": `${time.join(":")}${postThing}`,
+        flaps: stats.totalFlaps,
+        "score history": ""
     }
 
     // Show either top position or royale wins
