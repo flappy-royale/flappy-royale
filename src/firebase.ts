@@ -86,7 +86,10 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
  * @param apiVersion The current API version, changes when we manually bump it
  * @param prioritizeCache If true, will always return cache data instead of network unless there is no cache data
  */
-export const getSeeds = async (apiVersion: string, prioritizeCache: boolean = false): Promise<SeedsResponse> => {
+export const getSeeds = async (
+    apiVersion: string,
+    prioritizeCache: boolean = false
+): Promise<SeedsResponse | undefined> => {
     const cached = cache.getSeeds(apiVersion)
 
     if (!cached) {
@@ -130,7 +133,7 @@ const getSeedsFromAPI = (apiVersion: string) => {
             // We cycle through the list of seeds in order.
             // In practice, an individual user won't notice the list of games they're playing is in a fixed order.
             // But since we might add new seeds on the server, we want each user to havce a different seed order so that new seeds get populated more quickly
-            seeds.royale = _.shuffle(seeds.royale)
+            seeds.royale = _.shuffle(seeds.royale)!
 
             // Store a local copy of the seeds
             cache.setSeeds(apiVersion, seeds)
