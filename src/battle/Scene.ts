@@ -697,7 +697,7 @@ export class BattleScene extends Phaser.Scene {
                     score: this.score,
                     position,
                     battle: this,
-                    totalPlayers: this.seedData.replays.length
+                    totalPlayers: this.seedData.replays.length + 1
                 })
                 this.scene.add("deathoverlay", deathOverlay, true)
             } else if (this.mode === game.GameMode.Trial) {
