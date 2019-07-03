@@ -2,9 +2,8 @@
     "compilerOptions": {
         "target": "es2015",
         "module": "commonjs",
-        "removeComments": true
+        "removeComments": true,
+        "strictNullChecks": true
     },
-    "exclude": [
-        "functions/__tests__"
-    ]
+    "exclude": ["functions/__tests__"]
 }

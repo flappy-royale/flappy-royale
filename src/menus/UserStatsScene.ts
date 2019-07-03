@@ -53,7 +53,7 @@ export class UserStatsScene extends Phaser.Scene {
 }
 
 function setUpStatsHTML() {
-    const statsElement = document.getElementById("stats")
+    const statsElement = document.getElementById("stats")!
     const stats = getUserStatistics()
 
     let seconds = Math.floor(stats.totalTime / 1000)
@@ -103,7 +103,7 @@ function setUpStatsHTML() {
     })
 
     const runs = getRoyales().sort((r1, r2) => r1.startTimestamp - r2.startTimestamp)
-    const runsContainer = document.getElementById("runs-graph")
+    const runsContainer = document.getElementById("runs-graph")!
 
     const topScore = document.createElement("div")
     topScore.id = "top-score"

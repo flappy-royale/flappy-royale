@@ -33,7 +33,7 @@ export class BattleAnalytics {
         this.data.position = results.position
     }
 
-    getResults(): GameResults | undefined {
+    getResults(): GameResults {
         return this.data as GameResults
     }
 }

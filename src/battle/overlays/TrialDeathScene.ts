@@ -86,6 +86,7 @@ export class TrialDeath extends Phaser.Scene {
                 const { player } = leaderboard
                 if (!player) {
                     console.log("ERROR: Trial death leaderboard did not contain player")
+                    return
                 }
 
                 if (player.position === 0) {
@@ -111,6 +112,10 @@ export class TrialDeath extends Phaser.Scene {
             const dailyTrialRuns = getDailyTrialRuns(this.props.seed)
             const leaderboard = this.localTrialCacheToLeaderboard(dailyTrialRuns)
             const { player } = leaderboard
+            if (!player) {
+                console.log("ERROR: Trial death leaderboard did not contain player")
+                return
+            }
 
             if (player.position === 0) {
                 this.cameInFirst(leaderboard)
@@ -156,6 +161,11 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     private cameInFirst(leaderboard: Leaderboard) {
+        if (!leaderboard.player) {
+            console.log("ERROR: Trial death leaderboard did not contain player")
+            return
+        }
+
         const top = GameAreaTopOffset
 
         // TOP BIT
@@ -211,6 +221,11 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     private cameInTopThree(leaderboard: Leaderboard) {
+        if (!leaderboard.player) {
+            console.log("ERROR: Trial death leaderboard did not contain player")
+            return
+        }
+
         const { player, results } = leaderboard
 
         const top = GameAreaTopOffset
@@ -247,7 +262,7 @@ export class TrialDeath extends Phaser.Scene {
     }
 
     private didntComeTopThree(leaderboard: Leaderboard) {
-        const { player, results } = leaderboard
+        const { results } = leaderboard
 
         const top = GameAreaTopOffset
 
@@ -472,13 +487,13 @@ export class TrialDeath extends Phaser.Scene {
                 userId: name
             }
         })
+
         const player = results.find(r => r.name === "just now")
 
         // This isn't obvious from the signature, but in the new leaderboard world, there should be at most 6 elements in leaderboard.
 
         let shrunkResults = results.slice(0, 3)
-
-        if (player.position >= 3) {
+        if (player && player.position >= 3) {
             if (player.position - 1 >= 3) {
                 shrunkResults.push(results[player.position - 1])
             }

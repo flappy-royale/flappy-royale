@@ -12,6 +12,7 @@ import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
 import { useDarkMode } from "../util/useDarkMode"
+import { defaultAttire } from "../attire"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -80,12 +81,12 @@ export class RoyaleLobby extends Phaser.Scene {
         const buttonBG = document.getElementById("button-bg") as HTMLImageElement
         buttonBG.src = require("../../assets/menu/ButtonBG.png")
 
-        document.getElementById("back").onclick = () => {
+        document.getElementById("back")!.onclick = () => {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
         }
 
-        document.getElementById("button").addEventListener(
+        document.getElementById("button")!.addEventListener(
             "click",
             () => {
                 this.hasReadied = true
@@ -131,7 +132,7 @@ export class RoyaleLobby extends Phaser.Scene {
             numberOfEnemies = 99
         }
 
-        const birdCount = document.getElementById("you-vs")
+        const birdCount = document.getElementById("you-vs")!
 
         this.tweens.addCounter({
             from: 0,
@@ -143,7 +144,7 @@ export class RoyaleLobby extends Phaser.Scene {
                 (birdCount.innerHTML = `You vs <span>${pad(Math.round(v.getValue()), 2)}</span> birds`)
         })
 
-        const birds = document.getElementById("birds")
+        const birds = document.getElementById("birds")!
         shuffle(seedData.replays).forEach(score => {
             preloadBirdAttire(this, score.user.aesthetics.attire)
 
@@ -165,7 +166,7 @@ export class RoyaleLobby extends Phaser.Scene {
 
         const userBase = user.aesthetics.attire.find(a => a.base)
         const img = document.createElement("img")
-        img.src = userBase.href
+        img.src = userBase ? userBase.href : defaultAttire.href
         img.className = "you-attire"
         root.appendChild(img)
 
@@ -190,7 +191,7 @@ export class RoyaleLobby extends Phaser.Scene {
         this.game.scene.remove(this)
         const scene = new BattleScene({
             seed: this.seed,
-            data: this.seedData,
+            data: this.seedData!, // Can only get here once it's downloaded
             gameMode: GameMode.Royale,
             theme: GameTheme.default
         })
@@ -199,7 +200,7 @@ export class RoyaleLobby extends Phaser.Scene {
     }
 
     private updateCountdownLabel() {
-        const countdownButton = document.getElementById("countdown-description")
+        const countdownButton = document.getElementById("countdown-description")!
         let period = "." // Tracks "hold on..." periods if we don't load seeds in time
 
         if (!this.hasReadied) {
@@ -208,7 +209,7 @@ export class RoyaleLobby extends Phaser.Scene {
 
         if (this.countdownTime > 0) {
             countdownButton.innerHTML = `starts in <span id="countdown-time">${this.countdownTime}</span> s`
-            document.getElementById("button-bg").style.opacity = "0.3"
+            document.getElementById("button-bg")!.style.opacity = "0.3"
         } else if (!this.seedData) {
             countdownButton.innerText = `hold on${period}`
             period += "."

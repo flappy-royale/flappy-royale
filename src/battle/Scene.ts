@@ -38,7 +38,7 @@ export interface BattleSceneSettings {
     /** The string representation for the level */
     seed: string
     /** The data from firebase */
-    data?: SeedData
+    data: SeedData
     /** Game mode */
     gameMode: game.GameMode
     /** a UUID for the game scene  */
@@ -90,7 +90,7 @@ export class BattleScene extends Phaser.Scene {
     public seed: string
 
     /** The data (user recordings etc) for this seed  */
-    public seedData?: SeedData
+    public seedData: SeedData
 
     /* Scene timestamp for when the most recent round started
      * So recording timestamps can be consistent */
@@ -391,6 +391,8 @@ export class BattleScene extends Phaser.Scene {
 
     updateScoreLabel() {
         if (!devSettings.showUI) return
+        if (!this.scoreLabel) return
+
         this.scoreLabel.text = `${this.score}`
         this.scoreLabel.setCenterAlign()
         centerAlignTextLabel(this.scoreLabel, -2)
@@ -462,7 +464,7 @@ export class BattleScene extends Phaser.Scene {
                 while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
                     const event = input.actions.shift()
                     const ghostBird = this.ghostBirds[index]
-                    if (!ghostBird) return
+                    if (!ghostBird || !event) return
 
                     if (event.action === "flap") {
                         ghostBird.flap()
@@ -477,7 +479,7 @@ export class BattleScene extends Phaser.Scene {
                         // bird will now be moving at the pipes speed
                         // off the screen
                         let pipeSpeed = constants.pipeSpeed
-                        if (this.bird.isDead) pipeSpeed = 0
+                        if (this.bird && this.bird.isDead) pipeSpeed = 0
 
                         ghostBird.die(-1 * pipeSpeed)
                         this.ghostBirdHasDied()
@@ -487,7 +489,7 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // Player related game logic
-        if (game.showPlayerBird(this.mode)) {
+        if (game.showPlayerBird(this.mode) && this.bird) {
             //
             // record a sync of the users y position every so often, so that
             // we can make sure that the y positions are consistent with the ghosts
@@ -533,7 +535,7 @@ export class BattleScene extends Phaser.Scene {
             }
         }
 
-        this.physics.overlap(this.bus, this.pipes, busCrash, null, this)
+        this.physics.overlap(this.bus, this.pipes, busCrash, undefined, this)
 
         pipeOutOfBoundsCheck(this.pipes)
     }
@@ -582,7 +584,7 @@ export class BattleScene extends Phaser.Scene {
         this.userInput.push({ action: "flap", timestamp })
 
         this.bus.setDepth(constants.zLevels.oneBelowBird)
-        this.bird.flap()
+        this.bird && this.bird.flap()
         this.analytics.flap()
     }
 
@@ -666,7 +668,7 @@ export class BattleScene extends Phaser.Scene {
             this.restartTheGame()
         } else {
             // Could be hitting this on a loop
-            if (this.bird.isDead) return
+            if (this.bird && this.bird.isDead) return
             console.log("not in a loop")
 
             // Stop everything!
@@ -678,7 +680,7 @@ export class BattleScene extends Phaser.Scene {
             this.scoreLines.forEach(sl => sl && sl.setVelocity(0, 0))
 
             // Make your bird go through the death animation
-            this.bird.die()
+            this.bird && this.bird.die()
 
             // Allow the other birds to continue off screen
             this.ghostBirds.forEach(b => !b.isDead && b.startMovingLeft())

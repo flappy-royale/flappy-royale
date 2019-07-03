@@ -22,7 +22,7 @@ export const setupDeveloperKeyboardShortcuts = (scene: BattleScene) => {
     // Press A to randomly change your attire
     const changeAttire = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
     changeAttire.on("up", () => {
-        scene["bird"].changeAttireToRandom()
+        scene["bird"]!.changeAttireToRandom()
     })
 
     return {

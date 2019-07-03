@@ -20,7 +20,8 @@ import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme } from "../battle/theme"
 import { useDarkMode } from "../util/useDarkMode"
 import { getTrialLobbyLeaderboard } from "../playFab"
-import { Attire } from "../attire"
+import { Attire, defaultAttire } from "../attire"
+import { emptySeedData } from "../firebase"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -65,7 +66,7 @@ export class TrialLobby extends Phaser.Scene {
 
             const userBase = attire.find(a => a.base)
             const img = document.createElement("img")
-            img.src = userBase.href
+            img.src = userBase ? userBase.href : defaultAttire.href
             img.className = "you-attire"
             root.appendChild(img)
 
@@ -92,12 +93,12 @@ export class TrialLobby extends Phaser.Scene {
         // Changes the button at the bottom to note about how you can add more lives
         // which triggers and ad
         if (outOfLives) {
-            document.getElementById("button-text").textContent = livesExtensionsButtonTitleForState(livesState)
+            document.getElementById("button-text")!.textContent = livesExtensionsButtonTitleForState(livesState)
             analyticsEvent("out_of_lives", { livesState })
         }
 
         getTrialLobbyLeaderboard().then(leaderboard => {
-            const birds = document.getElementById("birds")
+            const birds = document.getElementById("birds")!
             leaderboard.results.forEach(result => {
                 preloadBirdAttire(this, result.attire)
 
@@ -112,7 +113,7 @@ export class TrialLobby extends Phaser.Scene {
             })
 
             const preloadAssetsDone = () => {
-                const goButton = document.getElementById("button")
+                const goButton = document.getElementById("button")!
 
                 if (lives <= 0) {
                     prepareModalAd(livesState)
@@ -124,7 +125,8 @@ export class TrialLobby extends Phaser.Scene {
                         const scene = new BattleScene({
                             seed: this.seed,
                             gameMode: GameMode.Trial,
-                            theme: GameTheme.default
+                            theme: GameTheme.default,
+                            data: emptySeedData
                         })
                         addScene(this.game, "BattleScene" + this.seed, scene, true, {})
                         scene.playBusCrash()
@@ -162,12 +164,12 @@ export class TrialLobby extends Phaser.Scene {
         const buttonBG = document.getElementById("button-bg") as HTMLImageElement
         buttonBG.src = require("../../assets/menu/ButtonBG.png")
 
-        document.getElementById("back").onclick = () => {
+        document.getElementById("back")!.onclick = () => {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
         }
 
-        const info = document.getElementById("info")
+        const info = document.getElementById("info")!
         const tries = lives === 1 ? "try" : "tries"
         info.innerHTML = `Today's leaderboard<br />${lives} ${tries} left`
 
@@ -203,12 +205,12 @@ export class TrialLobby extends Phaser.Scene {
             )
         }, 100)
 
-        const info = document.getElementById("info")
+        const info = document.getElementById("info")!
         info.innerHTML = `Daily scoreboard<br />${livesToAdd} tries left`
 
-        document.getElementById("button-text").textContent = "start"
+        document.getElementById("button-text")!.textContent = "start"
 
-        const goButton = document.getElementById("button")
+        const goButton = document.getElementById("button")!
         goButton.onclick = () => {
             this.game.scene.remove(this)
             const darkMode = useDarkMode()
@@ -216,7 +218,8 @@ export class TrialLobby extends Phaser.Scene {
             const scene = new BattleScene({
                 seed: this.seed,
                 gameMode: GameMode.Trial,
-                theme: darkMode ? GameTheme.night : GameTheme.default
+                theme: darkMode ? GameTheme.night : GameTheme.default,
+                data: emptySeedData
             })
             addScene(this.game, "BattleScene" + this.seed, scene, true, {})
             scene.playBusCrash()

@@ -37,7 +37,7 @@ export class AppSettingsScene extends Phaser.Scene {
         resizeToFullScreen(element)
         element.addListener("click")
 
-        document.getElementById("button").addEventListener("click", () => {
+        document.getElementById("button")!.addEventListener("click", () => {
             if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
                 localStorage.clear()
                 window.location.reload()

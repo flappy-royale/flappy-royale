@@ -51,7 +51,7 @@ export class EnterNameScreen extends Phaser.Scene {
 
         document.addEventListener("keyup", validateName)
 
-        document.getElementById("username").focus()
+        document.getElementById("username")!.focus()
         button.addEventListener("click", () => {
             const name = usernameInput.value
             if (!usernameIsValid(name)) {

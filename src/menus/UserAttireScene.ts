@@ -2,7 +2,7 @@ import * as Phaser from "phaser"
 import { getUserSettings, changeSettings } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
-import { builtInAttire, Attire } from "../attire"
+import { builtInAttire, Attire, defaultAttire } from "../attire"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { isEqual } from "lodash"
@@ -43,12 +43,12 @@ export class UserAttireScene extends Phaser.Scene {
         element.addListener("click")
 
         // Set the circle BG on the you bird
-        const you = document.getElementById("you-sticky")
-        const youBG = you.getElementsByTagName("img").item(0)
+        const you = document.getElementById("you-sticky")!
+        const youBG = you.getElementsByTagName("img").item(0)!
         youBG.src = require("../../assets/menu/Circle.png")
 
         // Grab the username via the DOM API
-        const usernameInput = element.node.getElementsByTagName("input").item(0)
+        const usernameInput = element.node.getElementsByTagName("input").item(0)!
 
         usernameInput.addEventListener("blur", () => {
             window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
@@ -95,9 +95,9 @@ export class UserAttireScene extends Phaser.Scene {
 
             const attires = settings.aesthetics.attire.filter(a => !a.base)
             const styleCount = document
-                .getElementById("style-title")
+                .getElementById("style-title")!
                 .getElementsByTagName("span")
-                .item(0)
+                .item(0)!
             styleCount.textContent = `${attires.length}/3`
         }
 
@@ -137,14 +137,14 @@ export class UserAttireScene extends Phaser.Scene {
         const showUser = () => {
             const settings = getUserSettings()
 
-            const user = document.getElementById("you")
+            const user = document.getElementById("you")!
             while (user.hasChildNodes()) {
-                user.removeChild(user.lastChild)
+                user.removeChild(user.lastChild!)
             }
 
             const userBase = settings.aesthetics.attire.find(a => a.base)
             const img = document.createElement("img")
-            img.src = userBase.href
+            img.src = userBase ? userBase.href : defaultAttire.href
             img.className = "you-attire"
             user.appendChild(img)
 
@@ -175,7 +175,7 @@ export class UserAttireScene extends Phaser.Scene {
                 const attire = maybeLI as Element
 
                 const currentAttire = settings.aesthetics.attire
-                const clickedAttire = builtInAttire.find(att => att.id === attire.id)
+                const clickedAttire = builtInAttire.find(att => att.id === attire.id)!
 
                 // Should we be replacing the body
                 if (clickedAttire.base) {
@@ -207,8 +207,8 @@ export class UserAttireScene extends Phaser.Scene {
         const bases = builtInAttire.filter(a => a.base)
         const attires = builtInAttire.filter(a => !a.base)
 
-        const basesUL = element.node.getElementsByClassName("bases").item(0)
-        const attiresUL = element.node.getElementsByClassName("attires").item(0)
+        const basesUL = element.node.getElementsByClassName("bases").item(0)!
+        const attiresUL = element.node.getElementsByClassName("attires").item(0)!
 
         bases.forEach(a => makeClickableAttire(a, basesUL))
         attires.forEach(a => makeClickableAttire(a, attiresUL))

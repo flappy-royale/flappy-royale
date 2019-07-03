@@ -232,45 +232,47 @@ export class TutorialScene extends Phaser.Scene {
             bgUpdateTick()
         }
 
-        if (this.bird.isInBus && this.bus.x >= constants.GameWidth / 2) {
-            this.bus.setAccelerationX(0)
-            this.bus.setVelocityX(0)
-
-            this.bird.sprite.setAccelerationX(0)
-            this.bird.sprite.setVelocityX(0)
-        }
-
         // Just applying velocity, pipes have non-integer X values, which causes them to jiggle
         // Naively rounding their x-values down to the nearest int seems to work,
         // although could cause unexpected issues?
         nudgePipesOntoPixelGrid(this.pipes)
 
-        // Flap if appropriate
-        if (this.spacebar && Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-            this.userFlap()
+        if (this.bird) {
+            if (this.bird.isInBus && this.bus.x >= constants.GameWidth / 2) {
+                this.bus.setAccelerationX(0)
+                this.bus.setVelocityX(0)
+
+                this.bird.sprite.setAccelerationX(0)
+                this.bird.sprite.setVelocityX(0)
+            }
+
+            // Flap if appropriate
+            if (this.spacebar && Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+                this.userFlap()
+            }
+
+            // If the bird hits the floor
+            if (this.bird.position.y > 171 + constants.GameAreaTopOffset) {
+                if (!this.bird.isDead) this.userDied()
+
+                this.bird.hasHitFloor()
+            }
+
+            // If somehow they move to the edge fo the screen past pipes
+            if (!this.bird.isDead && this.bird.position.x > constants.GameWidth) {
+                this.userDied()
+            }
+
+            // The collision of your bird and the pipes
+            if (!this.bird.isDead) {
+                this.bird.checkCollision(this, this.pipes, this.userDied)
+            }
+
+            // Score points by checking whether you got halfway
+            this.bird.checkCollision(this, this.scoreLines, this.userScored)
+
+            this.bird.updateRelatedSprites({ tight: false })
         }
-
-        // If the bird hits the floor
-        if (this.bird.position.y > 171 + constants.GameAreaTopOffset) {
-            if (!this.bird.isDead) this.userDied()
-
-            this.bird.hasHitFloor()
-        }
-
-        // If somehow they move to the edge fo the screen past pipes
-        if (!this.bird.isDead && this.bird.position.x > constants.GameWidth) {
-            this.userDied()
-        }
-
-        // The collision of your bird and the pipes
-        if (!this.bird.isDead) {
-            this.bird.checkCollision(this, this.pipes, this.userDied)
-        }
-
-        // Score points by checking whether you got halfway
-        this.bird.checkCollision(this, this.scoreLines, this.userScored)
-
-        this.bird.updateRelatedSprites({ tight: false })
 
         // Let the bus collide
         const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
@@ -282,7 +284,7 @@ export class TutorialScene extends Phaser.Scene {
             }
         }
 
-        this.physics.overlap(this.bus, this.pipes, busCrash, null, this)
+        this.physics.overlap(this.bus, this.pipes, busCrash, undefined, this)
 
         pipeOutOfBoundsCheck(this.pipes)
     }
@@ -300,7 +302,7 @@ export class TutorialScene extends Phaser.Scene {
 
         this.bus.setDepth(constants.zLevels.oneBelowBird)
 
-        if (this.bird.isInBus) {
+        if (this.bird && this.bird.isInBus) {
             // this.bird.flap() will be repsonsible for fixing the bird
             // This is everything else responsible for changing the tutorial mode
 
@@ -364,7 +366,7 @@ export class TutorialScene extends Phaser.Scene {
             }
         }
 
-        this.bird.flap()
+        this.bird && this.bird.flap()
     }
 
     userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
@@ -376,7 +378,7 @@ export class TutorialScene extends Phaser.Scene {
             this.tutorialStep = TutorialStep.Done
             setTimeout(() => {
                 this.disableJumping = true
-                this.bird.startMovingLeft()
+                this.bird && this.bird.startMovingLeft()
 
                 let flapCount = 1
                 this.time.addEvent({
@@ -410,7 +412,7 @@ export class TutorialScene extends Phaser.Scene {
     userDied() {
         if (this.tutorialStep !== TutorialStep.Done) {
             this.cameras.main.shake(20, 0.1)
-            this.bird.die()
+            this.bird && this.bird.die()
 
             setTimeout(() => {
                 this.restartTheGame()

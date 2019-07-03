@@ -170,7 +170,7 @@ export class BirdSprite {
         objects: Phaser.Types.Physics.Arcade.ArcadeColliderType,
         callback: ArcadePhysicsCallback
     ) {
-        return scene.physics.overlap(this.sprite, objects, callback, null, scene)
+        return scene.physics.overlap(this.sprite, objects, callback, undefined, scene)
     }
 
     flap() {

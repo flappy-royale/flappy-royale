@@ -123,7 +123,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         // NOTE: ASYNC!
         getSeeds(c.APIVersion).then(seeds => {
-            this.seeds = seeds
+            if (seeds) this.seeds = seeds
         })
 
         const settings = getUserSettings()
@@ -145,10 +145,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         const player = new BirdSprite(this, 8, c.GameHeight - 22, { isPlayer: false, settings: settings })
         player.actAsImage()
-        // player.makeClickable(this.loadYourAttire, this)
-        // this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
         becomeButton(youButton, this.loadYourAttire, this)
-        // becomeButton(this.playerNameText, this.loadSettings, this)
 
         const statsButton = this.add.image(c.GameWidth / 2 + 10, c.GameHeight - 22, "stats-button")
         becomeButton(statsButton, this.loadStats, this)

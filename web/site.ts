@@ -6,7 +6,7 @@ import "./index.html"
 import "./privacy.html"
 import "./media.html"
 
-import { allAttire, PresentationAttire } from "../src/attire"
+import { allAttire, PresentationAttire, defaultAttire } from "../src/attire"
 
 const addSomeButtsToThoseSeats = () => {
     const bases = allAttire.filter(a => a.base)
@@ -28,7 +28,7 @@ const addSomeButtsToThoseSeats = () => {
         const div = document.createElement("div")
         const userBase = attire.find(a => a.base)
         const img = document.createElement("img")
-        img.src = userBase.href
+        img.src = userBase ? userBase.href : defaultAttire.href
         img.className = "you-attire"
 
         div.appendChild(img)
@@ -54,7 +54,7 @@ const addSomeButtsToThoseSeats = () => {
     const seats = document.getElementsByClassName("seats")
     for (const seatRow of seats) {
         while (seatRow.hasChildNodes()) {
-            seatRow.removeChild(seatRow.lastChild)
+            seatRow.removeChild(seatRow.lastChild!)
         }
 
         const indexes = [...Array(4).keys()]

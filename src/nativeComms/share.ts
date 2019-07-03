@@ -25,7 +25,7 @@ export function shareNatively(copy: string, scene: ScreenshotableScreen) {
     } else if (window.Sharing) {
         scene.showScreenshotUI()
         setTimeout(() => {
-            window.Sharing.shareScreenshot(copy)
+            if (window.Sharing) window.Sharing.shareScreenshot(copy)
         }, 100)
 
         window.addEventListener(

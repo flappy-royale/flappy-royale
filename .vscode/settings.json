@@ -19,6 +19,7 @@
         "haptics",
         "invis",
         "keypresses",
+        "leaderboard",
         "localstorage",
         "nameform",
         "objs",
