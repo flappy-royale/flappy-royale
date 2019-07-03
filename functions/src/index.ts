@@ -10,7 +10,7 @@ const cors = require("cors")({
     origin: true
 })
 
-const numberOfDifferentRoyaleReplays = 12
+const numberOfRoyaleSeeds = 12
 const numberOfReplaysPerSeed = 99
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
@@ -190,7 +190,7 @@ const zippedObj = (obj: object) => {
 
 const getSeeds = (version: string): SeedsResponse => {
     return {
-        royale: [...Array(numberOfDifferentRoyaleReplays).keys()].map(i => `${version}-royale-${i}`),
+        royale: [...Array(numberOfRoyaleSeeds).keys()].map(i => `${version}-royale-${i}`),
         daily: {
             dev: dailySeed(version, 2),
             staging: dailySeed(version, 1),
