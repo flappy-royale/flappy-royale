@@ -5,7 +5,7 @@ import { UserSettings, getUserSettings, Bird } from "../user/userManager"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
-import { builtInAttire, Attire } from "../attire"
+import { builtInAttire, Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
@@ -90,7 +90,8 @@ export class BirdSprite {
         const base = meta.settings.aesthetics.attire.find(a => a.base)
         if (!base) throw "No base attire found"
 
-        this.bodySprite = scene.add.sprite(x, y, base.id)
+        const baseID = scene.load.textureManager.exists(base.id) ? base.id : defaultAttire.id
+        this.bodySprite = scene.add.sprite(x, y, baseID)
         this.bodySprite.setOrigin(0.13, 0.5)
 
         // Setup the focus sprite
@@ -101,7 +102,7 @@ export class BirdSprite {
 
         // Setup clothes (always set to true for non-player birds)
         this.tightAttire = meta.settings.aesthetics.attire
-            .filter(a => !a.base)
+            .filter(a => !a.base && scene.load.textureManager.exists(a.id))
             .filter(a => !meta.isPlayer || a.fit === "tight")
             .map(a => {
                 const image = scene.add.image(x, y, a.id)
@@ -111,7 +112,7 @@ export class BirdSprite {
 
         // See updateRelatedSprite for more info
         this.looseAttire = meta.settings.aesthetics.attire
-            .filter(a => !a.base && meta.isPlayer)
+            .filter(a => !a.base && meta.isPlayer && scene.load.textureManager.exists(a.id))
             .filter(a => a.fit === "loose")
             .map(a => {
                 const image = scene.add.image(x, y, a.id)
