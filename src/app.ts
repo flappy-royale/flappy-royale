@@ -202,6 +202,30 @@ export const loadUpIntoSettings = (game: Phaser.Game) => {
     addScene(game, UserSettingsKey, settings, true)
 }
 
+declare global {
+    interface Window {
+        currentGame: Phaser.Game
+    }
+}
+
+if (!PRODUCTION) {
+    console.log("Skipping app cache")
+} else {
+    appCache.onDownloadStart(() => {
+        // TODO: Let's hooope there's a current game by the time this happens.
+        // Otherwise, we'll need to be smarter here.
+        // (Wrting this on 3 July 2019.
+        // If you see this months later, we're fine and you can safely delete this comment :) )
+        console.log("New version!")
+        const launchScreen = window.currentGame.scene.getScene("Launch") as AppLaunchScene
+        if (launchScreen) {
+            launchScreen.showLoadingScreen = true
+        } else {
+            showLoadingScreen(window.currentGame)
+        }
+    })
+}
+
 window.onload = async () => {
     // This very silly delay fixes the issues where notch-detection code sometimes doesn't work properly.
     // TODO: Our splash screen can happen in not-Phaser DOM land and use that to mask this waiting period.
@@ -274,19 +298,5 @@ window.onload = async () => {
         // showLoadingScreen(game)
         // appCache.fakeLoadingScreen()
         // testTrialDeathScreen(game, 7)
-    }
-
-    if (!PRODUCTION) {
-        console.log("Skipping app cache")
-    } else {
-        appCache.onDownloadStart(() => {
-            console.log("New version!")
-            const launchScreen = game.scene.getScene("Launch") as AppLaunchScene
-            if (launchScreen) {
-                launchScreen.showLoadingScreen = true
-            } else {
-                showLoadingScreen(game)
-            }
-        })
     }
 }
