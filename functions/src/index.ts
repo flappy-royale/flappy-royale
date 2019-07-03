@@ -15,7 +15,8 @@ const cors = require("cors")({
 // After deploying, wait a few minutes and do this manually
 // (click the "..." icon next to Firebase -> Functions -> migrateReplaysFromDbToJson, then "Open in Cloud Scheduler". Click "Run now")
 const numberOfRoyaleSeeds = 50
-const numberOfReplaysPerSeed = 99
+
+const numberOfReplaysPerSeed = 200
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
 // and we'll probably forget to do that!!
