@@ -66,14 +66,14 @@ function setUpStatsHTML() {
 
     // User facing names for the stats
     const presentation = {
-        "Royale Win Streak": stats.royaleStreak,
+        "Royale Streak": stats.royaleStreak,
         "Best Streak": stats.bestRoyaleStreak,
         "Royale Wins": stats.royaleWins,
         "Best Position": stats.bestPosition,
         "Top Score": stats.bestScore,
         "Games Played": stats.gamesPlayed,
-        "First pipe fails": stats.instaDeaths,
-        "Birds Past": stats.birdsBeaten,
+        "First Pipe fails": stats.instaDeaths,
+        "Birds Passed": stats.birdsBeaten,
         "Play Time": `${time.join(":")}${postThing}`,
         Flaps: stats.totalFlaps,
         "Score History": ""
