@@ -83,14 +83,21 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             return response.status(400).send({ error: "Needs a game mode in request" })
         }
 
-        // New flow - save to Firebase Storage
+        const document = { replaysZipped: zippedObj([data]) }
+        const json = JSON.stringify(document)
+
+        // All replays get saved to the firehose bucket, so we can analyze later
+        const firehoseBucket = admin.storage().bucket("flappy-royale-replay-firehose")
+        const firehoseFile = firehoseBucket.file(`${seed}/${uuid}-${new Date()}.json`)
+        await firehoseFile.save(json)
+
+        // Only the first N seeds per hour get collated into real in-game ghost data
         const bucket = admin.storage().bucket("flappy-royale-replay-uploads")
         const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
 
         if (existingFiles.length < numberOfReplaysPerSeed) {
             const file = bucket.file(`${seed}/${uuid}-${new Date()}.json`)
-            const document = { replaysZipped: zippedObj([data]) }
-            file.save(JSON.stringify(document))
+            await file.save(json)
         }
 
         const responseJSON = { success: true }
