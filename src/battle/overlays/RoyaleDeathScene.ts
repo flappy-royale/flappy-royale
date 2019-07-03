@@ -131,9 +131,9 @@ export class RoyaleDeath extends Phaser.Scene {
         this.footerObjects.push(this.newGameBG)
         this.footerObjects.push(this.newGameText)
 
-        const share = this.add.image(125, GameHeight - 51, "button-small-bg")
+        const share = this.add.image(55, GameHeight - 51, "button-small-bg")
         share.setScale(0.6, 1)
-        const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
+        const shareIcon = this.add.image(55, GameHeight - 51, "share-ios")
         this.footerObjects.push(share)
         this.footerObjects.push(shareIcon)
 
