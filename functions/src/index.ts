@@ -10,6 +10,10 @@ const cors = require("cors")({
     origin: true
 })
 
+// IF YOU BUMP THIS:
+// Even after 100 people play a new seed, that won't update for everyone until the migration task runs.
+// After deploying, wait a few minutes and do this manually
+// (click the "..." icon next to Firebase -> Functions -> migrateReplaysFromDbToJson, then "Open in Cloud Scheduler". Click "Run now")
 const numberOfRoyaleSeeds = 50
 const numberOfReplaysPerSeed = 99
 
