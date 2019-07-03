@@ -219,16 +219,16 @@ export const getUserStatistics = (): PlayerStats => {
         if (run.score > stats.bestScore) stats.bestScore = run.score
 
         // Lowest position
-        if (run.position < stats.bestPosition) stats.bestPosition = run.position
+        if (run.position < stats.bestPosition && run.totalBirds > 0) stats.bestPosition = run.position
 
         // Position = 0, is a win
-        if (run.position === 0 && run.mode === GameMode.Royale) stats.royaleWins += 1
+        if (run.position === 0 && run.mode === GameMode.Royale && run.totalBirds > 0) stats.royaleWins += 1
 
         // So we can separately say how many trial wins you have
         if (run.position === 0 && run.mode == GameMode.Trial) stats.trialWins += 1
 
         if (run.mode === GameMode.Royale) {
-            if (run.position === 0) {
+            if (run.position === 0 && run.totalBirds > 0) {
                 currentRoyaleStreak += 1
                 if (currentRoyaleStreak > stats.bestRoyaleStreak) {
                     stats.bestRoyaleStreak = currentRoyaleStreak

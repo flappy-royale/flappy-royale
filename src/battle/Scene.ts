@@ -553,13 +553,17 @@ export class BattleScene extends Phaser.Scene {
         const position = this.userPositionAgainstGhosts()
         if (position) {
             this.birdsLeft.text = `${position + 1}/${this.seedData.replays.length + 1}`
-        } else if (this.seedData.replays.length) {
+        } else if (this.hasOpponents()) {
             // You were actually against other folk
             this.birdsLeft.text = "1st"
             this.sound.play("win")
         } else {
             this.birdsLeft.text = "Solo"
         }
+    }
+
+    hasOpponents() {
+        return this.seedData.replays.length > 0
     }
 
     userFlap() {
@@ -620,7 +624,7 @@ export class BattleScene extends Phaser.Scene {
             mode: this.mode,
             score: this.score,
             flaps: stats.flaps,
-            won: position === 0,
+            won: position === 0 && this.hasOpponents(),
             winStreak: userStats.royaleStreak,
             birdsPast: stats.totalBirds
         })
