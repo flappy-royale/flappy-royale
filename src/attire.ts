@@ -166,13 +166,13 @@ export const v1Attire: PresentationAttire[] = [
         base: false,
         href: require("../assets/attire/nervous.png")
     },
-    {
-        id: "pig",
-        description: "Bird got punk'd",
-        fit: "tight",
-        base: true,
-        href: require("../assets/bases/Pig.png")
-    },
+    // {
+    //     id: "pig",
+    //     description: "Bird got punk'd",
+    //     fit: "tight",
+    //     base: true,
+    //     href: require("../assets/bases/Pig.png")
+    // },
     {
         id: "tired",
         description: "Bird got punk'd",

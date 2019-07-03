@@ -27,7 +27,6 @@ import {
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
-import { cloneDeep } from "lodash"
 import { rightAlignTextLabel, centerAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
@@ -179,7 +178,7 @@ export class BattleScene extends Phaser.Scene {
         window.addEventListener("mousedown", flap)
 
         const killBirdOnBlur = () => {
-            if (this.bird) {
+            if (this.bird && !this.bird.isDead) {
                 this.userDied()
             }
         }
@@ -191,6 +190,9 @@ export class BattleScene extends Phaser.Scene {
             window.removeEventListener("mousedown", flap)
             window.removeEventListener("blur", killBirdOnBlur)
         })
+
+        // When you have reduced ghost birds, then we don't get the callbacks to trigger position updates
+        this.time.addEvent({ delay: 300, callback: this.updatePositionUI, callbackScope: this, loop: true })
     }
 
     preload() {
@@ -260,20 +262,22 @@ export class BattleScene extends Phaser.Scene {
 
         // Set up the competitor birds
         if (game.showGhostBirds(this.mode)) {
-            this.seedData.replays.forEach(input => {
-                const ghost = new BirdSprite(
-                    this,
-                    constants.birdXPosition,
-                    constants.birdYPosition + constants.GameAreaTopOffset,
-                    {
-                        isPlayer: false,
-                        settings: input.user
-                    }
-                )
-                ghost.setupForBeingInBus()
-                ghost.addCollideForSprite(this, this.floorPhysics)
-                this.ghostBirds.push(ghost)
-            })
+            this.seedData.replays
+                .sort((l, r) => r.score - l.score)
+                .forEach(input => {
+                    const ghost = new BirdSprite(
+                        this,
+                        constants.birdXPosition,
+                        constants.birdYPosition + constants.GameAreaTopOffset,
+                        {
+                            isPlayer: false,
+                            settings: input.user
+                        }
+                    )
+                    ghost.setupForBeingInBus()
+                    ghost.addCollideForSprite(this, this.floorPhysics)
+                    this.ghostBirds.push(ghost)
+                })
         }
 
         if (this.bird) {
@@ -424,6 +428,12 @@ export class BattleScene extends Phaser.Scene {
     }
 
     update(timestamp: number) {
+        // console.log(this.game.loop.actualFps)
+        // if (this.ghostBirds.length > 30 && this.game.loop.actualFps < 70) {
+        //     const lastBird = this.ghostBirds.pop()
+        //     lastBird.destroy()
+        // }
+
         // Parallax stuff, and moves the ground to the front
         if (!this.bird || !this.bird.isDead) {
             bgUpdateTick()
@@ -452,6 +462,8 @@ export class BattleScene extends Phaser.Scene {
                 while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
                     const event = input.actions.shift()
                     const ghostBird = this.ghostBirds[index]
+                    if (!ghostBird) return
+
                     if (event.action === "flap") {
                         ghostBird.flap()
 
@@ -530,19 +542,23 @@ export class BattleScene extends Phaser.Scene {
         if (game.shouldRestartWhenAllBirdsAreDead(this.mode)) {
             this.restartTheGame()
         } else {
-            if (this.bird && this.bird.isDead) return
-            if (!this.birdsLeft) return
+            this.updatePositionUI()
+        }
+    }
 
-            const birdsAlive = this.ghostBirds.filter(b => !b.isDead).length
-            if (birdsAlive) {
-                this.birdsLeft.text = `${birdsAlive + 1}/${this.ghostBirds.length + 1}`
-            } else if (this.ghostBirds.length) {
-                // You were actually against other folk
-                this.birdsLeft.text = "1st"
-                this.sound.play("win")
-            } else {
-                this.birdsLeft.text = "Solo"
-            }
+    updatePositionUI() {
+        if (this.bird && this.bird.isDead) return
+        if (!this.birdsLeft) return
+
+        const position = this.userPositionAgainstGhosts()
+        if (position) {
+            this.birdsLeft.text = `${position + 1}/${this.seedData.replays.length + 1}`
+        } else if (this.seedData.replays.length) {
+            // You were actually against other folk
+            this.birdsLeft.text = "1st"
+            this.sound.play("win")
+        } else {
+            this.birdsLeft.text = "Solo"
         }
     }
 
@@ -578,16 +594,26 @@ export class BattleScene extends Phaser.Scene {
         }
     }
 
+    userPositionAgainstGhosts() {
+        const timestamp = this.time.now - this.timestampOffset
+        return this.seedData.replays.filter(r => {
+            const death = r.actions.find(a => a.action === "died")
+            return death && death.timestamp > timestamp
+        }).length
+    }
+
     userDied() {
-        this.userInput.push({
-            action: "died",
-            timestamp: this.time.now - this.timestampOffset
-        })
+        const timestamp = this.time.now - this.timestampOffset
+        const position = this.userPositionAgainstGhosts()
+
+        debugger
+        this.userInput.push({ action: "died", timestamp })
 
         const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
-        const birdsAlive = this.ghostBirds.filter(b => !b.isDead)
 
-        this.analytics.finishRecording({ score: this.score, position: birdsAlive.length })
+        // Loop through all the seed data to find out the actual position based on when the bird died
+
+        this.analytics.finishRecording({ score: this.score, position })
         const stats = this.analytics.getResults()
 
         const userStats = getUserStatistics()
@@ -595,7 +621,7 @@ export class BattleScene extends Phaser.Scene {
             mode: this.mode,
             score: this.score,
             flaps: stats.flaps,
-            won: birdsAlive.length === 0,
+            won: position === 0,
             winStreak: userStats.royaleStreak,
             birdsPast: stats.totalBirds
         })
@@ -666,9 +692,9 @@ export class BattleScene extends Phaser.Scene {
             if (this.mode === game.GameMode.Royale) {
                 const deathOverlay = new RoyaleDeath("death", {
                     score: this.score,
-                    position: birdsAlive.length,
+                    position,
                     battle: this,
-                    totalPlayers: this.ghostBirds.length + 1
+                    totalPlayers: this.seedData.replays.length
                 })
                 this.scene.add("deathoverlay", deathOverlay, true)
             } else if (this.mode === game.GameMode.Trial) {
