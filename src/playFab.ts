@@ -239,15 +239,13 @@ export interface LeaderboardResult {
     userId: string
 }
 
-const convertPlayFabLeaderboardData = (
-    entry: PlayFabClientModels.PlayerLeaderboardEntry
-): LeaderboardResult | undefined => {
+const convertPlayFabLeaderboardData = (entry: PlayFabClientModels.PlayerLeaderboardEntry): LeaderboardResult => {
     return {
         name: entry.Profile!.DisplayName!,
         attire: avatarUrlToAttire(entry.Profile!.AvatarUrl!),
         position: entry.Position,
         score: entry.StatValue,
-        userId: entry.PlayFabId
+        userId: entry.PlayFabId!
     }
 }
 
@@ -263,8 +261,10 @@ const asyncGetLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardReque
         PlayFabClient.GetLeaderboard({ ...defaultOpts, ...opts }, (err, result) => {
             if (err) {
                 reject(err)
+            } else if (!result.data.Leaderboard) {
+                reject("No leaderboard returned")
             } else {
-                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
+                result.data.Leaderboard.map(convertPlayFabLeaderboardData)
             }
         })
     })
@@ -284,8 +284,10 @@ const asyncGetLeaderboardAroundPlayer = async (
         PlayFabClient.GetLeaderboardAroundPlayer({ ...defaultOpts, ...opts }, (err, result) => {
             if (err) {
                 reject(err)
+            } else if (!result.data.Leaderboard) {
+                reject("No leaderboard returned")
             } else {
-                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
+                result.data.Leaderboard.map(convertPlayFabLeaderboardData)
             }
         })
     })

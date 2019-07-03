@@ -164,7 +164,7 @@ export const getDailyTrialRuns = (seed: string): DailyTrialRun[] => {
     if (!data || data.seed !== seed) return []
 
     // JSON.parse()-ing an object containing Date.toJSON() strings doesn't return rehydrated Date objects
-    return data.runs.map(r => {
+    return data.runs.map((r: { score: number; timestamp: string }) => {
         return {
             score: r.score,
             timestamp: new Date(r.timestamp)
