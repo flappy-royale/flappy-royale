@@ -40,7 +40,19 @@ export interface PlayerEvent {
 
 firebase.initializeApp(firebaseConfig)
 
+/** Returns replay data for a given seed.
+ * If not-expired cached data exists, it will prioritize that.
+ * Otherwise, it tries to fetch from the server and cache that data (or falls back to the cache if that fails)
+ * If the recording has > 99 birds, it will randomly pick 99.
+ */
 export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> => {
+    function truncate(data: SeedData): SeedData {
+        if (data.replays.length > 99) {
+            data.replays = _.sampleSize(data.replays, 99)
+        }
+        return data
+    }
+
     const cached = cache.getRecordings(seed)
 
     // If cache data (a) has an expiry and (b) hasn't expired yet, let's use it instead!
@@ -49,7 +61,7 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
         const now = new Date()
 
         if (now >= expiry) {
-            return unzipSeedData(cached)
+            return truncate(unzipSeedData(cached))
         }
     }
 
@@ -59,7 +71,7 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
     if (!json) {
         if (cached) {
             console.log("Could not fetch recordings over the network. Falling back on local cache")
-            return unzipSeedData(cached)
+            return truncate(unzipSeedData(cached))
         } else {
             throw `No remote data or cache data! for seed ${seed}`
         }
@@ -67,7 +79,7 @@ export const fetchRecordingsForSeed = async (seed: string): Promise<SeedData> =>
 
     cache.setRecordings(seed, json)
 
-    return unzipSeedData(json)
+    return truncate(unzipSeedData(json))
 }
 
 /** Returns current seed data, intelligently deciding whether to fetch from the network or just return cached data

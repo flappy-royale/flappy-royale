@@ -123,10 +123,6 @@ export class RoyaleLobby extends Phaser.Scene {
     processSeedData = (seedData: SeedData) => {
         this.seedData = seedData
 
-        if (this.seedData.replays.length > 99) {
-            this.seedData.replays = _.sampleSize(this.seedData.replays, 99)
-        }
-
         var numberOfEnemies = seedData.replays.length
         var duration = _.random(this.countdownTime - 2, this.countdownTime) * 1000
 
