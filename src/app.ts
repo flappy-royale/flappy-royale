@@ -7,7 +7,7 @@ import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
-import { UserSettingsKey, UserSettingsScene } from "./menus/UserSettingsScene"
+import { UserAttireKey, UserAttireScene } from "./menus/UserAttireScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
 import { addScene } from "./menus/utils/addScene"
@@ -198,8 +198,8 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
 }
 
 export const loadUpIntoSettings = (game: Phaser.Game) => {
-    const settings = new UserSettingsScene()
-    addScene(game, UserSettingsKey, settings, true)
+    const settings = new UserAttireScene()
+    addScene(game, UserAttireKey, settings, true)
 }
 
 declare global {

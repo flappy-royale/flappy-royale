@@ -3,6 +3,7 @@ import { getUserSettings, getUserStatistics, getRoyales } from "../user/userMana
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
+import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 
 export const UserStatsKey = "UserStatsKey"
 
@@ -16,11 +17,14 @@ export class UserStatsScene extends Phaser.Scene {
         this.load.html("Stats", require("../../assets/html/Stats.html"))
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
+
+        preloadBackgroundBlobImages(this)
     }
 
     create() {
         // Fill the BG
         this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0xdecf5e)
+        setupBackgroundBlobImages(this, { min: 30 })
 
         // Make a HTML form
         var element = this.add
@@ -66,23 +70,23 @@ function setUpStatsHTML() {
 
     // User facing names for the stats
     const presentation = {
-        "royale streak": stats.royaleStreak,
-        "best streak": stats.bestRoyaleStreak,
-        "royale wins": stats.royaleWins,
-        "best position": stats.bestPosition,
-        "top score": stats.bestScore,
-        "games played": stats.gamesPlayed,
-        "first pipe fails": stats.instaDeaths,
-        "birds passed": stats.birdsBeaten,
-        "play time": `${time.join(":")}${postThing}`,
-        flaps: stats.totalFlaps,
-        "score history": ""
+        "Royale Streak": stats.royaleStreak,
+        "Best Streak": stats.bestRoyaleStreak,
+        "Royale Wins": stats.royaleWins,
+        "Best Position": stats.bestPosition,
+        "Top Score": stats.bestScore,
+        "Games Played": stats.gamesPlayed,
+        "First Pipe fails": stats.instaDeaths,
+        "Birds Passed": stats.birdsBeaten,
+        "Play Time": `${time.join(":")}${postThing}`,
+        Flaps: stats.totalFlaps,
+        "Score History": ""
     }
 
     // Show either top position or royale wins
     if (stats.bestRoyaleStreak === 0) {
-        delete presentation["Highest Royale Streak"]
-        delete presentation["Current Royale Streak"]
+        delete presentation["Best Streak"]
+        delete presentation["Royale Streak"]
     }
 
     if (stats.royaleWins === 0) delete presentation["Royale Wins"]

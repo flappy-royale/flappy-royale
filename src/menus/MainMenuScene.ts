@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { UserSettingsScene, UserSettingsKey } from "./UserSettingsScene"
+import { UserAttireScene, UserAttireKey } from "./UserAttireScene"
 import { emptySeedData, getSeeds } from "../firebase"
 import { BattleScene } from "../battle/Scene"
 import * as c from "../constants"
@@ -25,6 +25,7 @@ import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { Prompt, showPrompt } from "./Prompt"
 import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
+import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 
 declare const DEMO: boolean
 
@@ -52,6 +53,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("settings-button", require("../../assets/menu/settings-2.png"))
         this.load.image("question-mark", require("../../assets/menu/question-mark.png"))
         this.load.image("stats-button", require("../../assets/menu/stats.png"))
+        this.load.image("you-button", require("../../assets/menu/you.png"))
 
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
@@ -126,12 +128,6 @@ export class MainMenuScene extends Phaser.Scene {
 
         const settings = getUserSettings()
 
-        const player = new BirdSprite(this, 6, c.GameHeight - 12, { isPlayer: false, settings: settings })
-        player.actAsImage()
-        player.makeClickable(this.loadSettings, this)
-        this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
-        becomeButton(this.playerNameText, this.loadSettings, this)
-
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
@@ -142,20 +138,35 @@ export class MainMenuScene extends Phaser.Scene {
             trial.setAlpha(0.3)
         }
 
-        const settingsButton = this.add.image(40, c.GameHeight - 40, "settings-button")
+        const settingsButton = this.add.image(c.GameWidth - 20, c.GameHeight - 21, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
 
-        const statsButton = this.add.image(107, c.GameHeight - 41, "stats-button")
+        const youButton = this.add.image(32, c.GameHeight - 22, "you-button")
+
+        const player = new BirdSprite(this, 8, c.GameHeight - 22, { isPlayer: false, settings: settings })
+        player.actAsImage()
+        // player.makeClickable(this.loadYourAttire, this)
+        // this.playerNameText = this.add.bitmapText(26, c.GameHeight - 20, "nokia16", settings.name, 0)
+        becomeButton(youButton, this.loadYourAttire, this)
+        // becomeButton(this.playerNameText, this.loadSettings, this)
+
+        const statsButton = this.add.image(c.GameWidth / 2 + 10, c.GameHeight - 22, "stats-button")
         becomeButton(statsButton, this.loadStats, this)
 
-        const howToPlayButton = this.add.image(c.GameWidth - 12, c.GameHeight - 42, "question-mark")
-        becomeButton(howToPlayButton, this.loadTutorial, this)
+        // const howToPlayButton = this.add.image(c.GameWidth - 12, c.GameHeight - 42, "question-mark")
+        // becomeButton(howToPlayButton, this.loadTutorial, this)
     }
 
     private loadSettings() {
         this.removeMenu()
-        const settings = new UserSettingsScene()
-        addScene(this.game, UserSettingsKey, settings, true)
+        const settings = new AppSettingsScene()
+        addScene(this.game, AppSettingsKey, settings, true)
+    }
+
+    private loadYourAttire() {
+        this.removeMenu()
+        const settings = new UserAttireScene()
+        addScene(this.game, UserAttireKey, settings, true)
     }
 
     private loadStats() {

@@ -5,8 +5,7 @@ import { preloadBirdSprites, setupBirdAnimations, BirdSprite } from "../battle/B
 import { launchMainMenu } from "./MainMenuScene"
 import { becomeButton } from "./utils/becomeButton"
 import { openURL } from "../nativeComms/openURL"
-import { launchTutorial } from "../battle/TutorialScene"
-import { LoadingScene, showLoadingScreen } from "./LoadingScene"
+import { showLoadingScreen } from "./LoadingScene"
 import * as appCache from "../appCache"
 
 export class AppLaunchScene extends Phaser.Scene {

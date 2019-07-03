@@ -9,16 +9,16 @@ import { isEqual } from "lodash"
 import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
 import { usernameIsValid } from "../usernameIsValid"
 
-export const UserSettingsKey = "UserSettings"
+export const UserAttireKey = "UserSettings"
 
-export class UserSettingsScene extends Phaser.Scene {
+export class UserAttireScene extends Phaser.Scene {
     constructor() {
-        super(UserSettingsKey)
+        super(UserAttireKey)
     }
 
     preload() {
         // Adds the HTML file to the game cache
-        this.load.html("Settings", require("../../assets/html/Settings.html"))
+        this.load.html("You", require("../../assets/html/You.html"))
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
         this.load.image("bottom-sash", require("../../assets/menu/BottomSash.png"))
         this.load.image("white-circle", require("../../assets/menu/Circle.png"))
@@ -38,7 +38,7 @@ export class UserSettingsScene extends Phaser.Scene {
         var element = this.add
             .dom(0, 0)
             .setOrigin(0, 0)
-            .createFromCache("Settings")
+            .createFromCache("You")
         resizeToFullScreen(element)
         element.addListener("click")
 
@@ -212,13 +212,6 @@ export class UserSettingsScene extends Phaser.Scene {
 
         bases.forEach(a => makeClickableAttire(a, basesUL))
         attires.forEach(a => makeClickableAttire(a, attiresUL))
-
-        document.getElementById("button").addEventListener("click", () => {
-            if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
-                localStorage.clear()
-                window.location.reload()
-            }
-        })
 
         // Run all the interactions upfront
         updateWearables()
