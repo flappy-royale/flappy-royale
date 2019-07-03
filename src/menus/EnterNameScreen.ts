@@ -7,11 +7,13 @@ import { analyticsSetID } from "../nativeComms/analytics"
 export const NamePromptKey = "EnterName"
 
 export class EnterNameScreen extends Phaser.Scene {
-    completion: () => void
+    completion: (name?: string) => void
+    showCancelButton: boolean
 
-    constructor(completion: () => void) {
+    constructor(showCancelButton: boolean, completion: (name: string) => void) {
         super(NamePromptKey)
         this.completion = completion
+        this.showCancelButton = showCancelButton
     }
 
     preload() {
@@ -26,14 +28,25 @@ export class EnterNameScreen extends Phaser.Scene {
             .createFromCache("NameForm")
 
         const normalButton = require("../../assets/menu/ButtonSmallBG.png")
+        const yellowButton = require("../../assets/menu/ButtonSmallBG-Yellow.png")
         const disabledButton = require("../../assets/menu/ButtonSmallBG-Disabled.png")
 
-        const buttonBG = document.getElementById("button-bg") as HTMLImageElement
+        const buttonBG = document.getElementById("ok-button-bg") as HTMLImageElement
         buttonBG.src = disabledButton
+        const okButtonBG = this.showCancelButton ? yellowButton : normalButton
+
+        const cancelButtonBG = document.getElementById("cancel-button-bg") as HTMLImageElement
+        cancelButtonBG.src = normalButton
 
         const usernameInput = document.getElementById("username") as HTMLInputElement
-        const button = document.getElementById("button") as HTMLButtonElement
+        const button = document.getElementById("ok-button") as HTMLButtonElement
         button.disabled = true
+
+        const cancelButton = document.getElementById("cancel-button") as HTMLButtonElement
+
+        if (!this.showCancelButton) {
+            cancelButton.classList.add("hidden")
+        }
 
         const validateName = () => {
             const name = usernameInput.value
@@ -41,7 +54,7 @@ export class EnterNameScreen extends Phaser.Scene {
             if (usernameIsValid(name)) {
                 usernameInput.style.border = "none"
                 button.disabled = false
-                buttonBG.src = normalButton
+                buttonBG.src = okButtonBG
             } else {
                 usernameInput.style.border = "2px red solid"
                 button.disabled = true
@@ -65,7 +78,11 @@ export class EnterNameScreen extends Phaser.Scene {
             changeSettings({ name })
             analyticsSetID(name)
 
-            this.completion()
+            this.completion(name)
+        })
+
+        cancelButton.addEventListener("click", () => {
+            this.completion(undefined)
         })
     }
 }

@@ -8,6 +8,8 @@ import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { isEqual } from "lodash"
 import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
 import { usernameIsValid } from "../usernameIsValid"
+import { NamePromptKey, EnterNameScreen } from "./EnterNameScreen"
+import { addScene } from "./utils/addScene"
 
 export const UserAttireKey = "UserSettings"
 
@@ -47,38 +49,25 @@ export class UserAttireScene extends Phaser.Scene {
         const youBG = you.getElementsByTagName("img").item(0)!
         youBG.src = require("../../assets/menu/Circle.png")
 
-        // Grab the username via the DOM API
-        const usernameInput = element.node.getElementsByTagName("input").item(0)!
-
-        usernameInput.addEventListener("blur", () => {
-            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-        })
-
         // Set the default value
         const settings = getUserSettings()
         const attireIDsWhenOpening = settings.aesthetics.attire.map(a => a.id)
 
-        usernameInput.value = settings.name
-        // Make changes propagate to settings
-        usernameInput.onchange = () => {
-            const name = usernameInput.value
+        const nameDiv = document.getElementById("name")!
+        nameDiv.innerText = settings.name
+        const buttonBG = document.getElementById("button-bg") as HTMLImageElement
+        buttonBG.src = require("../../assets/menu/ButtonBG.png")
 
-            if (usernameIsValid(name)) {
-                usernameInput.style.border = "none"
-                changeSettings({ name })
-                analyticsSetID(name)
-            } else {
-                usernameInput.style.border = "2px red solid"
-            }
-        }
+        document.getElementById("change-name")!.addEventListener("click", () => {
+            const namePrompt = new EnterNameScreen(true, (name?: string) => {
+                this.scene.remove(namePrompt)
+                if (name) {
+                    nameDiv.innerText = name
+                }
+            })
+            addScene(this.game, NamePromptKey, namePrompt, true)
+        })
 
-        usernameInput.onfocus = () => {
-            usernameInput.setSelectionRange(0, 99999)
-        }
-
-        usernameInput.onclick = () => {
-            usernameInput.setSelectionRange(0, 99999)
-        }
         /**
          * Runs on every selection change and asserts whether an LI
          * corresponding to attire is selected or not
