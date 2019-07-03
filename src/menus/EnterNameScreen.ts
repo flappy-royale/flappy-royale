@@ -3,6 +3,7 @@ import _ = require("lodash")
 import { changeSettings } from "../user/userManager"
 import { usernameIsValid } from "../usernameIsValid"
 import { analyticsSetID } from "../nativeComms/analytics"
+import * as PlayFab from "../playFab"
 
 export const NamePromptKey = "EnterName"
 
@@ -48,28 +49,49 @@ export class EnterNameScreen extends Phaser.Scene {
             cancelButton.classList.add("hidden")
         }
 
+        const inputIsBad = () => {
+            usernameInput.style.border = "2px red solid"
+            button.disabled = true
+            buttonBG.src = disabledButton
+        }
+
+        const inputIsGood = () => {
+            usernameInput.style.border = "none"
+            button.disabled = false
+            buttonBG.src = okButtonBG
+        }
+
         const validateName = () => {
             const name = usernameInput.value
 
             if (usernameIsValid(name)) {
-                usernameInput.style.border = "none"
-                button.disabled = false
-                buttonBG.src = okButtonBG
+                inputIsGood()
             } else {
-                usernameInput.style.border = "2px red solid"
-                button.disabled = true
-                buttonBG.src = disabledButton
+                inputIsBad()
             }
         }
 
         document.addEventListener("keyup", validateName)
 
         document.getElementById("username")!.focus()
-        button.addEventListener("click", () => {
-            const name = usernameInput.value
-            if (!usernameIsValid(name)) {
+        button.addEventListener("click", async () => {
+            const nameToTry = usernameInput.value
+
+            // It's quicker to run local rules than hit PlayFab, so we might as well
+            if (!usernameIsValid(nameToTry)) {
                 return
             }
+
+            const result = await PlayFab.updateName(nameToTry).catch(inputIsBad)
+
+            if (!result) return
+
+            if (result.code !== 200) {
+                inputIsBad()
+            }
+
+            const name = result.data.DisplayName
+            if (!name) return
 
             // We have code in place to fix scroll placement on blur,
             // but manually triggering window.blur() or usernameInput.blur() doesn't fire it
@@ -79,10 +101,10 @@ export class EnterNameScreen extends Phaser.Scene {
             analyticsSetID(name)
 
             this.completion(name)
-        })
 
-        cancelButton.addEventListener("click", () => {
-            this.completion(undefined)
+            cancelButton.addEventListener("click", () => {
+                this.completion(undefined)
+            })
         })
     }
 }
