@@ -76,6 +76,7 @@ export class EnterNameScreen extends Phaser.Scene {
         document.getElementById("username")!.focus()
 
         cancelButton.addEventListener("click", () => {
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
             this.completion(undefined)
         })
 
