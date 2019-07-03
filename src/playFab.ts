@@ -5,6 +5,7 @@ import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
 import { getUserSettings } from "./user/userManager"
 import { GameMode } from "./battle/utils/gameMode"
+import { APIVersion } from "./constants"
 
 export let isLoggedIn: boolean = false
 
@@ -119,6 +120,10 @@ export const playedGame = async (data: {
     if (data.mode === GameMode.Trial) {
         stats.push({
             StatisticName: "DailyTrial",
+            Value: data.score
+        })
+        stats.push({
+            StatisticName: `DailyTrial-${APIVersion}`,
             Value: data.score
         })
     } else if (data.mode === GameMode.Royale) {
