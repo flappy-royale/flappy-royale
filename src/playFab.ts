@@ -262,7 +262,7 @@ const asyncGetLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardReque
             } else if (!result.data.Leaderboard) {
                 reject("No leaderboard returned")
             } else {
-                result.data.Leaderboard.map(convertPlayFabLeaderboardData)
+                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
             }
         })
     })
@@ -285,7 +285,7 @@ const asyncGetLeaderboardAroundPlayer = async (
             } else if (!result.data.Leaderboard) {
                 reject("No leaderboard returned")
             } else {
-                result.data.Leaderboard.map(convertPlayFabLeaderboardData)
+                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
             }
         })
     })
