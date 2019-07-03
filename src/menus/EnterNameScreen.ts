@@ -74,6 +74,11 @@ export class EnterNameScreen extends Phaser.Scene {
         document.addEventListener("keyup", validateName)
 
         document.getElementById("username")!.focus()
+
+        cancelButton.addEventListener("click", () => {
+            this.completion(undefined)
+        })
+
         button.addEventListener("click", async () => {
             const nameToTry = usernameInput.value
 
@@ -101,10 +106,6 @@ export class EnterNameScreen extends Phaser.Scene {
             analyticsSetID(name)
 
             this.completion(name)
-
-            cancelButton.addEventListener("click", () => {
-                this.completion(undefined)
-            })
         })
     }
 }
