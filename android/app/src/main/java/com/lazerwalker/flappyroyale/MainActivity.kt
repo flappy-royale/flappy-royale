@@ -20,7 +20,11 @@ import com.mopub.mobileads.MoPubView
 import android.text.method.Touch.onTouchEvent
 import android.view.MotionEvent
 import android.view.GestureDetector
-
+import android.view.WindowInsets
+import android.annotation.TargetApi
+import android.os.Debug
+import android.util.Log
+import android.webkit.WebView
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,21 +44,6 @@ class MainActivity : AppCompatActivity() {
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.setAppCacheEnabled(true)
-        webview.loadUrl("https://flappyroyale.io/prod")
-
-        webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
-        webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
-        webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
-        webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
-
-        val deviceId = Settings.Secure.ANDROID_ID
-        val device = DeviceName.getDeviceName();
-
-        val osVersion = Build.VERSION.RELEASE
-        val apiVersion = Build.VERSION.SDK_INT
-        val os = "$osVersion ($apiVersion)"
-
-        webview.evaluateJavascript("window.playfabAuth = { method: 'LoginWithAndroidDeviceID', payload: { AndroidDeviceId: '$deviceId', AndroidDevice: '$device', OS: '$os'}};", null)
 
         makeFullScreen()
 
@@ -75,7 +64,23 @@ class MainActivity : AppCompatActivity() {
             )
         })
 
-            setUpMoPub()
+        setUpMoPub()
+    }
+
+    override fun onAttachedToWindow() {
+        // Notch offsets aren't available until we attach to window
+        // Let's delay loading the game til then
+
+        webview.loadUrl("https://flappyroyale.io/prod")
+//        webview.loadUrl("http://192.168.1.6:8085")
+//        WebView.setWebContentsDebuggingEnabled(true);
+
+        webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
+        webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
+        webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
+        webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
+        webview.addJavascriptInterface(PlayfabAuthData(this, webview), "PlayfabAuth")
+        webview.addJavascriptInterface(NotchOffset(this, webview), "NotchOffset")
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
