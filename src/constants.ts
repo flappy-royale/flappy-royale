@@ -32,6 +32,15 @@ export function setDeviceSize() {
         NotchOffset = calculatedPadding * scale
     }
 
+    console.log(window.NotchOffset)
+    if (window.NotchOffset) {
+        // Set by Android
+        const offset = window.NotchOffset.offset()
+        if (offset) {
+            NotchOffset = parseFloat(offset)
+        }
+    }
+
     GameHeight = window.innerHeight * scale + NotchOffset
     GameAreaTopOffset = NotchOffset && (GameHeight - GameAreaHeight) / 2
 

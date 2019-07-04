@@ -1,5 +1,10 @@
 import { haptics } from "./haptics"
 
+interface PlayfabAuth {
+    method: string
+    payload: any
+}
+
 declare global {
     interface Window {
         // iOS
@@ -34,10 +39,13 @@ declare global {
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number)
-        playfabAuth?: {
-            method: string
-            payload: any
-        }
+
+        // iOS (former) vs Android (latter)
+        // TODO: Rename these to be more helpful :)
+        playfabAuth?: PlayfabAuth
+        PlayfabAuth?: { data: () => string } // JSON-ified PlayfabAuth object
+
+        NotchOffset?: { offset: () => string | undefined }
     }
 }
 
