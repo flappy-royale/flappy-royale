@@ -248,7 +248,7 @@ window.onload = async () => {
     const seed = "1-royale-0"
 
     // Change this to have it load up into a different screen on save in dev mode
-    const startupScreen = StartupScreen.MainMenu as StartupScreen
+    const startupScreen = StartupScreen.Tutorial as StartupScreen
 
     if (PRODUCTION) {
         if (localStorage.getItem("skipLaunchScreen") === "true") {

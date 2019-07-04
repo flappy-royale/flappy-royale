@@ -67,7 +67,7 @@ export class BirdSprite {
     // Actually the wings
     // NOTE: This is public so I can futz with it more easily in the tutorial
     // but in general you shouldn't touch this ;)
-    public sprite: Phaser.Physics.Arcade.Sprite
+    public sprite: Phaser.GameObjects.Sprite
 
     // Focus sprite
     private focusSprite: Phaser.GameObjects.Image
@@ -76,6 +76,9 @@ export class BirdSprite {
     private looseAttire: Phaser.GameObjects.Image[]
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
+
+    // The group for rotation
+    private allObjects: Phaser.GameObjects.Container
 
     private scene: Scene
     // Don't apply gravity / velocity etc during the constructor
@@ -91,13 +94,13 @@ export class BirdSprite {
         if (!base) throw "No base attire found"
 
         const baseID = scene.load.textureManager.exists(base.id) ? base.id : defaultAttire.id
-        this.bodySprite = scene.add.sprite(x, y, baseID)
-        this.bodySprite.setOrigin(0.13, 0.5)
+        this.bodySprite = scene.add.sprite(0, 0, baseID)
+        // this.bodySprite.setOrigin(0.13, 0.5)
 
         // Setup the focus sprite
         if (this.isPlayer) {
-            this.focusSprite = scene.add.sprite(x, y, "focusBackdrop")
-            this.focusSprite.setOrigin(0.13, 0.5)
+            this.focusSprite = scene.add.sprite(0, 0, "focusBackdrop")
+            // this.focusSprite.setOrigin(0.13, 0.5)
         }
 
         // Setup clothes (always set to true for non-player birds)
@@ -105,8 +108,8 @@ export class BirdSprite {
             .filter(a => !a.base && scene.load.textureManager.exists(a.id))
             .filter(a => !meta.isPlayer || a.fit === "tight")
             .map(a => {
-                const image = scene.add.image(x, y, a.id)
-                image.setOrigin(0.13, 0.55)
+                const image = scene.add.image(0, 0, a.id)
+                // image.setOrigin(0.13, 0.5)
                 return image
             })
 
@@ -115,20 +118,26 @@ export class BirdSprite {
             .filter(a => !a.base && meta.isPlayer && scene.load.textureManager.exists(a.id))
             .filter(a => a.fit === "loose")
             .map(a => {
-                const image = scene.add.image(x, y, a.id)
-                image.setOrigin(0.13, 0.55)
+                const image = scene.add.image(0, 0, a.id)
+                // image.setOrigin(0.13, 0.5)
                 return image
             })
 
-        this.sprite = scene.physics.add.sprite(x, y, "flap1")
-        this.sprite.setOrigin(0.13, 0.6)
+        this.sprite = scene.add.sprite(0, 0, "flap1")
+        // this.sprite.setOrigin(0.13, 0.5)
 
         // Set up
-        this.body = this.sprite.body as Phaser.Physics.Arcade.Body
+        // this.body = scene.physics.add. //  this.sprite.body as Phaser.Physics.Arcade.Body
         this.isInBus = true
 
-        this.position = this.body.position
+        // this.position = this.body.position
         const allAttire = this.tightAttire.concat(this.looseAttire)
+
+        this.allObjects = scene.add.container(x, y, [this.sprite, ...allAttire])
+
+        // this.allObjects.body
+        // group.set
+
         if (!meta.isPlayer) {
             this.setOpacityBasedOnScore(0)
         } else {
@@ -214,18 +223,21 @@ export class BirdSprite {
         }
 
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
-        this.sprite.setAngle(newAngle)
+        this.allObjects.setAngle(newAngle)
+        // this.sprite.setAngle(newAngle)
+
+        // Phaser.Actions.RotateAroundDistance([this.sprite], { x: this.sprite.x, y: this.sprite.y }, newAngle, 1)
 
         const defaultWidth = 17
         const defaultHeight = 11
         let physicsWidth = remapClamped(this.body.velocity.y, 105, 200, defaultWidth - 2, 12 - 2)
         let physicsHeight = remapClamped(this.body.velocity.y, 105, 200, defaultHeight - 2, 16 - 2)
 
-        this.sprite.body.setSize(physicsWidth, physicsHeight)
-        this.sprite.body.offset = new Phaser.Math.Vector2(
-            remapClamped(this.body.velocity.y, 105, 200, -1, 3) * -1,
-            remapClamped(this.body.velocity.y, 105, 200, 1, 8)
-        )
+        // this.sprite.body.setSize(physicsWidth, physicsHeight)
+        // this.sprite.body.offset = new Phaser.Math.Vector2(
+        //     remapClamped(this.body.velocity.y, 105, 200, -1, 3) * -1,
+        //     remapClamped(this.body.velocity.y, 105, 200, 1, 8)
+        // )
     }
 
     destroy() {
@@ -254,19 +266,23 @@ export class BirdSprite {
     // and a custom (slower) gravity
 
     setupForBeingInBus() {
-        this.sprite.setGravityY(-450)
-        this.sprite.setAccelerationX(20)
+        this.body.setGravityY(-450)
+        this.body.setAccelerationX(20)
     }
 
     stopBeingInBus() {
-        this.sprite.setGravityY(0)
-        this.sprite.setAccelerationX(0)
-        this.sprite.setVelocityX(0)
+        this.body.setGravityY(0)
+        this.stopMovingX()
+    }
+
+    stopMovingX() {
+        this.body.setAccelerationX(0)
+        this.body.setVelocityX(0)
     }
 
     actAsImage() {
         this.isAtRest = true
-        this.sprite.setGravityY(constants.gravity * -1)
+        this.body.setGravityY(constants.gravity * -1)
         const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setAlpha(1))
         this.sprite.setAngle(0)
@@ -282,8 +298,8 @@ export class BirdSprite {
     hasHitFloor() {
         if (!this.isAtRest) {
             this.isAtRest = true
-            this.sprite.setGravityY(constants.gravity * -1)
-            this.sprite.setVelocityY(0)
+            this.body.setGravityY(constants.gravity * -1)
+            this.body.setVelocityY(0)
 
             haptics.playHeavy()
         }
@@ -291,7 +307,7 @@ export class BirdSprite {
 
     // When a player dies in royale, the rest if the birds move forwards
     startMovingLeft(velocity = constants.pipeSpeed) {
-        this.sprite.setVelocityX(velocity)
+        this.body.setVelocityX(velocity)
     }
 
     updateRelatedSprites(settings: { tight: boolean }) {
@@ -307,13 +323,13 @@ export class BirdSprite {
         // so attire is just manually kept up to date with the positioning
         // of the sprite, this means attire needs to be centered on the bird
 
-        this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
-        this.bodySprite.rotation = this.sprite.rotation
+        // this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
+        // this.bodySprite.rotation = this.sprite.rotation
 
-        if (this.isPlayer) {
-            this.focusSprite.setPosition(this.sprite.x, this.sprite.y)
-            this.focusSprite.rotation = this.sprite.rotation
-        }
+        // if (this.isPlayer) {
+        // this.focusSprite.setPosition(this.sprite.x, this.sprite.y)
+        // this.focusSprite.rotation = this.sprite.rotation
+        // }
         // There are two loops, one that is done _after_ the physics resolution
         // layer (coming from scene.sys.events.addListener("postupdate") above )
         // and another coming from the 'preUpdate' loop which comes from the game
@@ -325,11 +341,11 @@ export class BirdSprite {
         // item is loosely held.
         //
         // Note: This function will only be called with loose attire  on the player
-        const attireCount = settings.tight ? this.tightAttire : this.looseAttire
-        attireCount.forEach(item => {
-            item.setPosition(this.bodySprite.x - 1, this.bodySprite.y + 1)
-            item.rotation = this.bodySprite.rotation
-        })
+        // const attireCount = settings.tight ? this.tightAttire : this.looseAttire
+        // attireCount.forEach(item => {
+        //     item.setPosition(this.bodySprite.x, this.bodySprite.y)
+        //     item.rotation = this.bodySprite.rotation
+        // })
     }
 
     changeAttireToRandom() {

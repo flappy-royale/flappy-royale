@@ -4,7 +4,7 @@ import * as game from "./utils/gameMode"
 
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addRowOfPipesManual } from "./PipeManager"
-import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprite"
+import { BirdSprite, preloadBirdSprites, setupBirdAnimations, preloadBirdAttire } from "./BirdSprite"
 import { addScoreLine } from "./scoreLine"
 import { busCrashed, preloadBusImages } from "./utils/createBus"
 import { getUserSettings } from "../user/userManager"
@@ -15,6 +15,7 @@ import { addScene } from "../menus/utils/addScene"
 import { showPrompt, Prompt } from "../menus/Prompt"
 import _ = require("lodash")
 import { becomeButton } from "../menus/utils/becomeButton"
+import { debugAttire } from "../attire"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchTutorial = (game: Phaser.Game) => {
@@ -112,6 +113,7 @@ export class TutorialScene extends Phaser.Scene {
         preloadBirdSprites(this)
         preloadBackgroundSprites(this, this.theme)
         deathPreload(this)
+        preloadBirdAttire(this, debugAttire)
 
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
         this.load.image("flag", require("../../assets/battle/flag.png"))
@@ -176,16 +178,16 @@ export class TutorialScene extends Phaser.Scene {
         }
 
         const settings = getUserSettings()
-        const birdConfig = { isPlayer: true, settings }
+        // const birdConfig = { isPlayer: true, settings: {} }
         this.bird = new BirdSprite(
             this,
             constants.birdXPosition,
             constants.birdYPosition + constants.GameAreaTopOffset,
-            birdConfig
+            { isPlayer: true, settings: { name: "", aesthetics: { attire: debugAttire } } }
         )
 
-        this.bird.sprite.setGravityY(-constants.gravity)
-        this.bird.sprite.setAccelerationX(20)
+        // this.bird.sprite.setGravityY(-constants.gravity)
+        // this.bird.sprite.setAccelerationX(20)
 
         this.bird.addCollideForSprite(this, this.floorPhysics)
 
@@ -242,8 +244,7 @@ export class TutorialScene extends Phaser.Scene {
                 this.bus.setAccelerationX(0)
                 this.bus.setVelocityX(0)
 
-                this.bird.sprite.setAccelerationX(0)
-                this.bird.sprite.setVelocityX(0)
+                this.bird.stopMovingX()
             }
 
             // Flap if appropriate

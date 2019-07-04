@@ -42,6 +42,30 @@ export const sheep: PresentationAttire = {
     href: require("../assets/bases/Sheep.png")
 }
 
+export const debugAttire: PresentationAttire[] = [
+    {
+        id: "debug-zero",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/DebugBase.png")
+    },
+    {
+        id: "debug-one",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/attire/DebugAttireOne.png")
+    },
+    {
+        id: "debug-two",
+        description: "Bird got punk'd",
+        fit: "loose",
+        base: true,
+        href: require("../assets/attire/DebugAttireTwo.png")
+    }
+]
+
 export const defaultAttire = hedgehog
 
 export const v1Attire: PresentationAttire[] = [
@@ -179,6 +203,35 @@ export const v1Attire: PresentationAttire[] = [
         fit: "tight",
         base: false,
         href: require("../assets/attire/tired.png")
+    },
+    {
+        id: "fish",
+        description: "TBD",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Fish.png")
+    },
+
+    {
+        id: "whiterabbit",
+        description: "TBD",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/WhiteRabbit.png")
+    },
+    {
+        id: "horse",
+        description: "TBD",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/horse.png")
+    },
+    {
+        id: "frog",
+        description: "TBD",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Frog.png")
     },
     {
         id: "paranoid",

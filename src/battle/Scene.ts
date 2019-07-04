@@ -51,7 +51,7 @@ const devSettings = {
     // Turn off for release builds
     developer: constants.isInDevMode,
     // Allows flying through pipes
-    skipPipeCollision: false,
+    skipPipeCollision: true,
     // Allows falling off the bottom
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
