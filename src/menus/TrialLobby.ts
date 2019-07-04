@@ -1,6 +1,5 @@
 import * as Phaser from "phaser"
 import {
-    UserSettings,
     getLives,
     livesExtensionStateForSeed,
     LifeStateForSeed,
@@ -18,7 +17,6 @@ import { requestModalAd, prepareModalAd } from "../nativeComms/requestModalAd"
 import { addScene } from "./utils/addScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme } from "../battle/theme"
-import { useDarkMode } from "../util/useDarkMode"
 import { getTrialLobbyLeaderboard } from "../playFab"
 import { Attire, defaultAttire } from "../attire"
 import { emptySeedData } from "../firebase"
@@ -213,12 +211,10 @@ export class TrialLobby extends Phaser.Scene {
         const goButton = document.getElementById("button")!
         goButton.onclick = () => {
             this.game.scene.remove(this)
-            const darkMode = useDarkMode()
 
             const scene = new BattleScene({
                 seed: this.seed,
                 gameMode: GameMode.Trial,
-                theme: darkMode ? GameTheme.night : GameTheme.default,
                 data: emptySeedData
             })
             addScene(this.game, "BattleScene" + this.seed, scene, true, {})

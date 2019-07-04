@@ -34,6 +34,7 @@ import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
+import { getSettings } from "../gameSettings"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -45,7 +46,7 @@ export interface BattleSceneSettings {
     /** a UUID for the game scene  */
     key?: string
     /** What is the current theme? */
-    theme: GameTheme
+    theme?: GameTheme
 }
 
 const devSettings = {
@@ -161,7 +162,7 @@ export class BattleScene extends Phaser.Scene {
         this.seed = opts.seed
         this.seedData = opts.data
         this.mode = opts.gameMode
-        this.theme = opts.theme
+        this.theme = opts.theme || (getSettings().darkMode ? GameTheme.night : GameTheme.default)
     }
 
     // This happens when the scene is being played by the game (more

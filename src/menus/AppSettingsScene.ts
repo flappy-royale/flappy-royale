@@ -44,6 +44,7 @@ export class AppSettingsScene extends Phaser.Scene {
         const settings = getSettings()
         this.makeButton("audio-button", settings.sound, sound => saveSettings({ sound }))
         this.makeButton("haptics-button", settings.haptics, haptics => saveSettings({ haptics }))
+        this.makeButton("dark-mode-button", settings.darkMode, darkMode => saveSettings({ darkMode }))
 
         document.getElementById("reset")!.addEventListener("click", () => {
             if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
@@ -79,7 +80,6 @@ export class AppSettingsScene extends Phaser.Scene {
     makeButton(id: string, value: boolean, onChange: (newValue: boolean) => void) {
         let currentValue = value
         const el = document.getElementById(id)!
-        console.log(el, id)
         this.setButtonState(el, currentValue)
 
         el.addEventListener("click", () => {
