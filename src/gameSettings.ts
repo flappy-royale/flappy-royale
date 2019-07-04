@@ -2,12 +2,14 @@ interface GameSettings {
     sound: boolean
     haptics: boolean
     darkMode: boolean
+    autoDarkMode: boolean
 }
 
 const defaultSettings: GameSettings = {
     sound: true,
     haptics: true,
-    darkMode: false
+    darkMode: false,
+    autoDarkMode: false
 }
 
 const LocalStorageKey = "GameSettings"

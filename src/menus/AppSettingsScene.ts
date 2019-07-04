@@ -46,6 +46,16 @@ export class AppSettingsScene extends Phaser.Scene {
         this.makeButton("haptics-button", settings.haptics, haptics => saveSettings({ haptics }))
         this.makeButton("dark-mode-button", settings.darkMode, darkMode => saveSettings({ darkMode }))
 
+        this.makeButton("auto-dark-mode-button", settings.autoDarkMode, autoDarkMode => {
+            const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
+            this.setButtonState(otherButton, getSettings().darkMode, autoDarkMode)
+            saveSettings({ autoDarkMode })
+        })
+
+        // Set initial dark mode disabled state
+        const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
+        this.setButtonState(otherButton, settings.darkMode, settings.autoDarkMode)
+
         document.getElementById("reset")!.addEventListener("click", () => {
             if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
                 localStorage.clear()
@@ -67,19 +77,26 @@ export class AppSettingsScene extends Phaser.Scene {
         }
     }
 
-    setButtonState(el: HTMLElement, value: boolean) {
+    setButtonState(el: HTMLButtonElement, value: boolean, disabled: boolean = false) {
         const text = value ? "on" : "off"
-        const bgImage = value
-            ? require("../../assets/menu/ButtonSmallBG-Green.png")
-            : require("../../assets/menu/ButtonSmallBG-Red.png")
+        let bgImage
 
+        if (disabled) {
+            bgImage = require("../../assets/menu/ButtonSmallBG-Disabled.png")
+        } else if (value) {
+            bgImage = require("../../assets/menu/ButtonSmallBG-Green.png")
+        } else {
+            bgImage = require("../../assets/menu/ButtonSmallBG-Red.png")
+        }
+
+        el.disabled = disabled
         el.innerText = text
         el.style.backgroundImage = `url(${bgImage})`
     }
 
     makeButton(id: string, value: boolean, onChange: (newValue: boolean) => void) {
         let currentValue = value
-        const el = document.getElementById(id)!
+        const el = document.getElementById(id) as HTMLButtonElement
         this.setButtonState(el, currentValue)
 
         el.addEventListener("click", () => {

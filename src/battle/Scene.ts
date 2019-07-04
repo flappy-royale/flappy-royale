@@ -34,7 +34,7 @@ import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
-import { getSettings } from "../gameSettings"
+import { getSettings, saveSettings } from "../gameSettings"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -162,7 +162,23 @@ export class BattleScene extends Phaser.Scene {
         this.seed = opts.seed
         this.seedData = opts.data
         this.mode = opts.gameMode
-        this.theme = opts.theme || (getSettings().darkMode ? GameTheme.night : GameTheme.default)
+
+        if (opts.theme) {
+            this.theme = opts.theme
+        } else {
+            // Auto dark mode should take precedence over a manually-set one.
+            // TODO: This logic shouldn't live here
+            if (getSettings().autoDarkMode) {
+                const now = new Date()
+                // 8pm-8am.
+                // We could manually tweak this, we could also try to grab user's local sunrise/sunset
+                let darkMode = now.getHours() > 20 || now.getHours() < 8
+                saveSettings({ darkMode })
+                this.theme = darkMode ? GameTheme.night : GameTheme.default
+            }
+
+            this.theme = getSettings().darkMode ? GameTheme.night : GameTheme.default
+        }
     }
 
     // This happens when the scene is being played by the game (more
