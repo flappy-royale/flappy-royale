@@ -17,6 +17,11 @@ import com.mopub.common.SdkConfiguration
 import com.mopub.common.SdkInitializationListener
 import com.mopub.common.logging.MoPubLog
 import com.mopub.mobileads.MoPubView
+import android.text.method.Touch.onTouchEvent
+import android.view.MotionEvent
+import android.view.GestureDetector
+
+
 
 class MainActivity : AppCompatActivity() {
     private var moPubView: MoPubView? = null
@@ -51,15 +56,46 @@ class MainActivity : AppCompatActivity() {
 
         webview.evaluateJavascript("window.playfabAuth = { method: 'LoginWithAndroidDeviceID', payload: { AndroidDeviceId: '$deviceId', AndroidDevice: '$device', OS: '$os'}};", null)
 
-        window.decorView.apply {
-            // Hide both the navigation bar and the status bar.
-            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-            // a general rule, you should design your app to hide the status bar whenever you
-            // hide the navigation bar.
-            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
+        makeFullScreen()
 
-        setUpMoPub()
+        webview.setClickable(true)
+        val clickDetector = GestureDetector(this,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onSingleTapUp(e: MotionEvent): Boolean {
+                    val visible = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION == 0
+                    if (visible) {
+                        makeFullScreen()
+                    }
+                    return true
+                }
+            })
+        webview.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
+            clickDetector.onTouchEvent(
+                motionEvent
+            )
+        })
+
+            setUpMoPub()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            makeFullScreen()
+        }
+    }
+
+    fun makeFullScreen() {
+        // Give us "full-screen" mode, which hides the bottom navigation bar
+        // We need "immersive" mode, which means normal UI taps don't re-trigger it, just swiping from an edege
+        window.decorView.apply {
+            systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE)
+        }
     }
 
     fun setUpMoPub() {
