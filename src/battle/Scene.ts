@@ -33,6 +33,8 @@ import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
+import { playSound } from "../playSound"
+import { getSettings, saveSettings } from "../gameSettings"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -44,7 +46,7 @@ export interface BattleSceneSettings {
     /** a UUID for the game scene  */
     key?: string
     /** What is the current theme? */
-    theme: GameTheme
+    theme?: GameTheme
 }
 
 const devSettings = {
@@ -160,7 +162,23 @@ export class BattleScene extends Phaser.Scene {
         this.seed = opts.seed
         this.seedData = opts.data
         this.mode = opts.gameMode
-        this.theme = opts.theme
+
+        if (opts.theme) {
+            this.theme = opts.theme
+        } else {
+            // Auto dark mode should take precedence over a manually-set one.
+            // TODO: This logic shouldn't live here
+            if (getSettings().autoDarkMode) {
+                const now = new Date()
+                // 8pm-8am.
+                // We could manually tweak this, we could also try to grab user's local sunrise/sunset
+                let darkMode = now.getHours() > 20 || now.getHours() < 8
+                saveSettings({ darkMode })
+                this.theme = darkMode ? GameTheme.night : GameTheme.default
+            }
+
+            this.theme = getSettings().darkMode ? GameTheme.night : GameTheme.default
+        }
     }
 
     // This happens when the scene is being played by the game (more
@@ -426,7 +444,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     playBusCrash() {
-        this.sound.play("crash")
+        playSound(this, "crash")
     }
 
     update(timestamp: number) {
@@ -558,7 +576,7 @@ export class BattleScene extends Phaser.Scene {
         } else if (this.hasOpponents()) {
             // You were actually against other folk
             this.birdsLeft.text = "1st"
-            this.sound.play("win")
+            playSound(this, "win")
         } else {
             this.birdsLeft.text = "Solo"
         }
@@ -592,7 +610,7 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLines.shift()
         line.destroy()
         this.score++
-        this.sound.play("point")
+        playSound(this, "point")
         this.updateScoreLabel()
 
         if (this.score <= 2) {
