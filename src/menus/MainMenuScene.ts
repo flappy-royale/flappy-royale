@@ -223,7 +223,7 @@ export class MainMenuScene extends Phaser.Scene {
             completion: (response: boolean, prompt: Prompt) => {
                 this.scene.remove(prompt)
                 if (response) {
-                    this.loadSettings()
+                    this.loadYourAttire()
                 } else {
                     this.setUpMenu()
                 }
