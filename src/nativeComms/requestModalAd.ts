@@ -5,8 +5,9 @@ export function requestModalAd(current: LifeStateForSeed) {
     analyticsEvent("watching_ad", { state: current })
 
     if (window.isAppleApp) {
-        window.webkit.messageHandlers.adManager.postMessage(current)
-    } else if (window.ModalAdPresenter) { // Android!
+        window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ show: current }))
+    } else if (window.ModalAdPresenter) {
+        // Android!
         window.ModalAdPresenter.requestAd(current)
     } else {
         console.log("Requesting a modal ad!")
@@ -19,8 +20,9 @@ export function prepareModalAd(current: LifeStateForSeed) {
 
     if (window.isAppleApp) {
         // TODO: Actually prepare on iOS
-        return
-    } else if (window.ModalAdPresenter) { // Android!
+        window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ prepare: current }))
+    } else if (window.ModalAdPresenter) {
+        // Android!
         window.ModalAdPresenter.prepareAd(current)
     } else {
         console.log("Preparing to maybe show an ad!")

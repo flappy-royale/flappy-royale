@@ -37,5 +37,5 @@ declare global {
 }
 
 interface WebkitHandler {
-    postMessage: (args: any) => void
+    postMessage: (args: string | integer | boolean) => void
 }

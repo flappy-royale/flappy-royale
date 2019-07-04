@@ -1,0 +1,47 @@
+framework module IronSource {
+    umbrella header "IronSource.h"
+    
+    export *
+    module * {
+        export *
+    }
+    
+    link framework "AdSupport"
+    link framework "CoreGraphics"
+    link framework "CoreLocation"
+    link framework "CoreTelephony"
+    link framework "MediaPlayer"
+    link framework "MessageUI"
+    link framework "MobileCoreServices"
+    link framework "QuartzCore"
+    link framework "Security"
+    link framework "StoreKit"
+    link framework "SystemConfiguration"
+    link framework "AVFoundation"
+    link framework "CoreMedia"
+    link framework "CFNetwork"
+    link framework "CoreVideo"
+    link framework "Foundation"
+    link framework "WebKit"
+    link framework "AudioToolbox"
+    
+    link "xml2"
+    link "z"
+    
+    header "ISConfigurations.h"
+    header "ISEventsReporting.h"
+    header "ISGender.h"
+    header "ISIntegrationHelper.h"
+    header "ISInterstitialDelegate.h"
+    header "ISDemandOnlyInterstitialDelegate.h"
+    header "ISLogDelegate.h"
+    header "ISOfferwallDelegate.h"
+    header "ISPlacementInfo.h"
+    header "ISRewardedInterstitialDelegate.h"
+    header "ISRewardedVideoDelegate.h"
+    header "ISDemandOnlyRewardedVideoDelegate.h"
+    header "ISSupersonicAdsConfiguration.h"
+    
+    
+    
+}

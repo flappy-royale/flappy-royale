@@ -1,10 +1,6 @@
 import UIKit
 import SafariServices
 import WebKit
-import MoPub
-
-//import AppLovinSDK
-
 
 class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UIScrollViewDelegate, SFSafariViewControllerDelegate {
     let haptics = HapticManager()
@@ -27,8 +23,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     }
 
     override func viewDidLoad() {
+        
+        ISIntegrationHelper.validateIntegration()
+
         super.viewDidLoad()
+
         adPresentor.presentationVC = self
+        
         share.presentationVC = self
         urlOpener.presentationVC = self
         view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
@@ -87,17 +88,19 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
             webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
 
-        let adView = MPAdView(adUnitId: AdConstants.bottomBannerMoPub, size: MOPUB_BANNER_SIZE)!
-        view.addSubview(adView)
-        adView.loadAd()
+        let adViewContainer = UIView()
+        view.addSubview(adViewContainer)
+        view.backgroundColor = view.backgroundColor
+        
+        adPresentor.startUpBannerIntoContainer(container: adViewContainer)
 
-        adView.translatesAutoresizingMaskIntoConstraints = false
+        adViewContainer.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            adView.heightAnchor.constraint(equalToConstant: 46),
-            adView.widthAnchor.constraint(equalToConstant: 320),
-            adView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            adView.topAnchor.constraint(equalTo: webView.bottomAnchor),
-            adView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            adViewContainer.heightAnchor.constraint(equalToConstant: 56),
+            adViewContainer.widthAnchor.constraint(equalToConstant: 320),
+            adViewContainer.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            adViewContainer.topAnchor.constraint(equalTo: webView.bottomAnchor),
+            adViewContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
         self.webView = webView
@@ -114,12 +117,6 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         }
 
         loadGameURL()
-
-        NotificationCenter.default.addObserver(forName: NSNotification.Name("AdsReady"), object: nil, queue: nil) { notification in
-            MPRewardedVideo.loadAd(withAdUnitID: AdConstants.bottomBannerMoPub, withMediationSettings: [])
-            MPRewardedVideo.loadAd(withAdUnitID: AdConstants.fiveLivesMoPub, withMediationSettings: [])
-        }
-
     }
 
     private func loadGameURL() {
@@ -224,27 +221,6 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
 
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         controller.dismiss(animated: true, completion: nil)
-    }
-}
-//
-//extension ViewController : ALAdLoadDelegate
-//{
-//    func adService(_ adService: ALAdService, didLoad ad: ALAd) {
-//        // We now have an interstitial ad we can show!
-////        self.ad = ad
-//        ALInterstitialAd.shared().show(ad)
-//    }
-//
-//    func adService(_ adService: ALAdService, didFailToLoadAdWithError code: Int32) {
-//        // Look at ALErrorCodes.h for list of error codes.
-//        print("Error with applovin: \(code)")
-//    }
-//}
-
-
-extension ViewController: MPAdViewDelegate {
-    func viewControllerForPresentingModalView() -> UIViewController! {
-        return self
     }
 }
 
