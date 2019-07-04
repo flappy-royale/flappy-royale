@@ -33,6 +33,7 @@ import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
+import { playSound } from "../playSound"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -426,7 +427,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     playBusCrash() {
-        this.sound.play("crash")
+        playSound(this, "crash")
     }
 
     update(timestamp: number) {
@@ -558,7 +559,7 @@ export class BattleScene extends Phaser.Scene {
         } else if (this.hasOpponents()) {
             // You were actually against other folk
             this.birdsLeft.text = "1st"
-            this.sound.play("win")
+            playSound(this, "win")
         } else {
             this.birdsLeft.text = "Solo"
         }
@@ -592,7 +593,7 @@ export class BattleScene extends Phaser.Scene {
         this.scoreLines.shift()
         line.destroy()
         this.score++
-        this.sound.play("point")
+        playSound(this, "point")
         this.updateScoreLabel()
 
         if (this.score <= 2) {

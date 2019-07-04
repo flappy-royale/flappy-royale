@@ -1,3 +1,5 @@
+import { getSettings } from "./gameSettings"
+
 export const haptics = {
     prepareLight: () => {
         prepare("light")
@@ -36,6 +38,10 @@ export const haptics = {
 
 let prepare = (type: string) => {}
 let play = (type: string) => {
+    if (!getSettings().haptics) {
+        return
+    }
+
     // While Apple's haptics give us nuanced vibrations, the web API just gives us ms times
     // TODO: These values are untested/untuned
     let map = {
@@ -57,10 +63,18 @@ let play = (type: string) => {
 
 if (window.isAppleApp) {
     prepare = (type: string) => {
+        if (!getSettings().haptics) {
+            return
+        }
+
         window.webkit.messageHandlers.prepareHaptics.postMessage(type)
     }
 
     play = (type: string) => {
+        if (!getSettings().haptics) {
+            return
+        }
+
         window.webkit.messageHandlers.playHaptics.postMessage(type)
     }
 }

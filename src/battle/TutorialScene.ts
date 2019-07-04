@@ -15,6 +15,7 @@ import { addScene } from "../menus/utils/addScene"
 import { showPrompt, Prompt } from "../menus/Prompt"
 import _ = require("lodash")
 import { becomeButton } from "../menus/utils/becomeButton"
+import { playSound } from "../playSound"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchTutorial = (game: Phaser.Game) => {
@@ -223,7 +224,7 @@ export class TutorialScene extends Phaser.Scene {
     }
 
     playBusCrash() {
-        this.sound.play("crash")
+        playSound(this, "crash")
     }
 
     update(timestamp: number) {

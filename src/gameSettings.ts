@@ -8,7 +8,7 @@ const defaultSettings: GameSettings = {
     haptics: true
 }
 
-const LocalStorageKey = "Settings"
+const LocalStorageKey = "GameSettings"
 
 export const getSettings = (): GameSettings => {
     const stored = localStorage.getItem(LocalStorageKey)

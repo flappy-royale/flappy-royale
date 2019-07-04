@@ -7,6 +7,7 @@ import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { builtInAttire, Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
+import { playSound } from "../playSound"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -183,12 +184,12 @@ export class BirdSprite {
         this.sprite.play("flap")
 
         if (this.isPlayer) {
-            this.scene.sound.play("flap")
+            playSound(this.scene, "flap")
 
             haptics.playSelection()
             haptics.prepareHeavy()
         } else {
-            this.scene.sound.play("other_flap")
+            playSound(this.scene, "other_flap")
         }
     }
 
@@ -241,11 +242,11 @@ export class BirdSprite {
         this.isDead = true
 
         if (this.isPlayer) {
-            this.scene.sound.play("hit")
+            playSound(this.scene, "hit")
             haptics.playHeavy()
             haptics.prepareHeavy()
         } else {
-            this.scene.sound.play("other_hit")
+            playSound(this.scene, "other_hit")
         }
     }
 
