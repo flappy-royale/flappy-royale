@@ -44,17 +44,17 @@ export class AppSettingsScene extends Phaser.Scene {
         const settings = getSettings()
         this.makeButton("audio-button", settings.sound, sound => saveSettings({ sound }))
         this.makeButton("haptics-button", settings.haptics, haptics => saveSettings({ haptics }))
-        this.makeButton("dark-mode-button", settings.darkMode, darkMode => saveSettings({ darkMode }))
+        // this.makeButton("dark-mode-button", settings.darkMode, darkMode => saveSettings({ darkMode }))
 
-        this.makeButton("auto-dark-mode-button", settings.autoDarkMode, autoDarkMode => {
-            const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
-            this.setButtonState(otherButton, getSettings().darkMode, autoDarkMode)
-            saveSettings({ autoDarkMode })
-        })
+        // this.makeButton("auto-dark-mode-button", settings.autoDarkMode, autoDarkMode => {
+        //     const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
+        //     this.setButtonState(otherButton, getSettings().darkMode, autoDarkMode)
+        //     saveSettings({ autoDarkMode })
+        // })
 
-        // Set initial dark mode disabled state
-        const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
-        this.setButtonState(otherButton, settings.darkMode, settings.autoDarkMode)
+        // // Set initial dark mode disabled state
+        // const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
+        // this.setButtonState(otherButton, settings.darkMode, settings.autoDarkMode)
 
         document.getElementById("reset")!.addEventListener("click", () => {
             if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
