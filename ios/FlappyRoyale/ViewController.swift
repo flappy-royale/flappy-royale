@@ -36,7 +36,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let userContentController = WKUserContentController()
 
         let username = NSUserName()
-        let userScript = WKUserScript(source: "window.isAppleApp = true; window.username = '\(username)';",
+        let userScript = WKUserScript(source: "window.isAppleApp = true; window.username = '\(username)'; window.isProductionNativeApp = true;",
                                       injectionTime: .atDocumentStart,
                                       forMainFrameOnly: true)
         userContentController.addUserScript(userScript)

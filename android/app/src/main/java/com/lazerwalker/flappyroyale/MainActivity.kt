@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         val apiVersion = Build.VERSION.SDK_INT
         val os = "$osVersion ($apiVersion)"
 
+        webview.evaluateJavascript("window.isProductionNativeApp = true;", null)
         webview.evaluateJavascript("window.playfabAuth = { method: 'LoginWithAndroidDeviceID', payload: { AndroidDeviceId: '$deviceId', AndroidDevice: '$device', OS: '$os'}};", null)
 
         window.decorView.apply {
