@@ -1,5 +1,6 @@
 package com.lazerwalker.flappyroyale
 
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Force portrait mode
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
         // Without this, our redirect immediately causes the game to be opened in a separate chrome browser
         webview.webViewClient = WebViewClient()
