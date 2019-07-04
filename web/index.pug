@@ -1,8 +1,9 @@
 head
   include includes/head.pug
-  script(async='', src='./site.ts')
+  script(async, src='./site.ts')
 
 include includes/sky.pug
+
 
 #ground
   .container
@@ -27,8 +28,10 @@ include includes/sky.pug
         video(playsinline, muted, loop, autoplay, width='248', height='360')
           source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.webm?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/webm')
           source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.mp4?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/mp4')
-          | Sorry, your browser doesn&apos;t support embedded videos.
+          | Sorry, your browser doesn't support embedded videos.
+      
       img#player(src='./assets/SheepOnPhone.png', style='transform:  scale(4) ')
+
     #seating
       ul.seats
         li
@@ -67,6 +70,15 @@ include includes/sky.pug
         li
           img(src='./assets/chair.png', style='left: 10px;')
 
+
+    .testimonial
+      li
+        p 
+          | Due to the popularity of our beta, we ran out of tokens for people to join,
+          | unfortunately making it a closed beta :(
+        p 
+          | We're working on getting it into the stores ASAP!
+
     .testimonial
       li
         | The thing is though, Flappy Royale is just damn fun. The formula works.
@@ -86,12 +98,12 @@ include includes/sky.pug
           a(href='https://kotaku.com/there-s-a-flappy-bird-battle-royale-game-now-and-it-s-1835918626') Kotaku
       li
         | It is frustrating, extremely addictive and you should probably not play it, but I simply
-        | couldn&rsquo;t help myself and have played over 50 matches while writing this article.
+        | couldn't help myself and have played over 50 matches while writing this article.
         span
           | -
           a(href='https://glitched.africa/flappy-royale-is-out-now-and-it-will-take-over-your-life/') Glitched Africa
       li
-        | It&apos;s utter chaos compiled into a tiny box, like tons and tons of pressure that has no way to
+        | It's utter chaos compiled into a tiny box, like tons and tons of pressure that has no way to
         | escape other than by exploding
         span
           | -
@@ -102,10 +114,11 @@ include includes/sky.pug
         span
           | -
           a(href='https://twitter.com/germormal/status/1144391254417055745') @germormal
+
 #call-to-action
   nav
-    a(href='https://testflight.apple.com/join/tArOpzQD') iOS Beta
-    a(href='https://play.google.com/apps/testing/com.lazerwalker.flappyroyale') Android Beta
+    a.disabled iOS
+    a.disabled Android
   nav
     a(href='./demo') Web Demo
     a(href='./media.pug') Media Pack
