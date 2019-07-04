@@ -196,7 +196,7 @@ export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
     await loginPromise
 
     const results = await asyncGetLeaderboard({
-        StatisticName: "DailyTrial",
+        StatisticName: `DailyTrial-${APIVersion}`,
         StartPosition: 0,
         MaxResultsCount: 100
     })
@@ -212,13 +212,13 @@ export const getTrialDeathLeaderboard = async (): Promise<Leaderboard> => {
 
     let twoResults = await Promise.all([
         asyncGetLeaderboard({
-            StatisticName: "DailyTrial",
+            StatisticName: `DailyTrial-${APIVersion}`,
             StartPosition: 0,
             MaxResultsCount: 3
         }),
 
         asyncGetLeaderboardAroundPlayer({
-            StatisticName: "DailyTrial",
+            StatisticName: `DailyTrial-${APIVersion}`,
             MaxResultsCount: 3
         })
     ])
