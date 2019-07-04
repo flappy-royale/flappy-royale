@@ -11,7 +11,7 @@
         "node": "8"
     },
     "scripts": {
-        "build": "yarn webpack-prod; yarn webpack-site",
+        "build": "yarn webpack-prod; yarn webpack-site; yarn ts-node scripts/post-build.ts",
         "start": "yarn webpack-dev --watch & yarn live-server --port=8085 --wait=1000",
         "start-site": "yarn parcel serve web/index.pug",
         "type-check": "yarn tsc --noEmit",
