@@ -4,6 +4,7 @@ import { launchMainMenu } from "./MainMenuScene"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { saveSettings, getSettings } from "../gameSettings"
+import { launchTutorial } from "../battle/TutorialScene"
 
 export const AppSettingsKey = "UserSettings"
 
@@ -61,6 +62,11 @@ export class AppSettingsScene extends Phaser.Scene {
                 localStorage.clear()
                 window.location.reload()
             }
+        })
+
+        document.getElementById("show-tutorial")!.addEventListener("click", () => {
+            this.game.scene.remove(this)
+            launchTutorial(this.game)
         })
 
         const header = document.getElementById("header") as HTMLImageElement
