@@ -19,6 +19,6 @@ class PlayfabAuthData(private val context: Context, val webview: WebView) {
         val os = "$osVersion ($apiVersion)"
 
         // TODO: This is very silly instead of using a library to construct JSON.
-        return "{ method: 'LoginWithAndroidDeviceID', payload: { AndroidDeviceId: '$deviceId', AndroidDevice: '$device', OS: '$os'}};"
+        return "{ \"method\": \"LoginWithAndroidDeviceID\", \"payload\": { \"AndroidDeviceId\": \"$deviceId\", \"AndroidDevice\": \"$device\", \"OS\": \"$os\"}}"
     }
 }

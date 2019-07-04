@@ -34,7 +34,11 @@ declare global {
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number)
-        playfabAuth?: PlayfabAuth | (() => PlayfabAuth)
+
+        // iOS (former) vs Android (latter)
+        // TODO: Rename these to be more helpful :)
+        playfabAuth?: PlayfabAuth
+        PlayfabAuth?: { data: () => string } // JSON-ified PlayfabAuth object
 
         NotchOffset?: { offset: () => string | undefined }
     }

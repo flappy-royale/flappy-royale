@@ -22,10 +22,11 @@ export const login = () => {
         CreateAccount: true
     }
 
-    let customAuth = (window as any).playfabAuth // We have nativeApp.d.ts to deal with this casting, but the Firebase Fn compiler doesn't know about that
-    if (_.isFunction(customAuth)) {
-        customAuth = JSON.parse(customAuth())
+    let customAuth = window.playfabAuth // We have nativeApp.d.ts to deal with this casting, but the Firebase Fn compiler doesn't know about that
+    if (!customAuth && window.PlayfabAuth) {
+        customAuth = JSON.parse(window.PlayfabAuth.data())
     }
+
     if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
         method = PlayFabClient.LoginWithIOSDeviceID
         loginRequest = { ...loginRequest, ...customAuth.payload }
