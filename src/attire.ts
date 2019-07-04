@@ -249,6 +249,13 @@ export const v1Attire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Robin.png")
+    },
+    {
+        id: "pride_hunter",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Pride_Hunter.png")
     }
 ]
 
@@ -746,6 +753,20 @@ export const versionTwoAttire: PresentationAttire[] = [
         fit: "tight",
         base: false,
         href: require("../assets/attire/Pride_Hunter.png")
+    },
+    {
+        id: "flag_trans",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Flag_Trans.png")
+    },
+    {
+        id: "flag_nonbinary",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Flag_Nonbinary.png")
     },
     {
         id: "rabbit_ears",
