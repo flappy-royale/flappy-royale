@@ -55,7 +55,7 @@ export const v1Attire: PresentationAttire[] = [
     },
     {
         id: "banana",
-        description: "It's a banana, kk",
+        description: "It's a banana or A COISS, kk",
         fit: "tight",
         base: true,
         href: require("../assets/bases/Banana.png")
