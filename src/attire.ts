@@ -249,13 +249,6 @@ export const v1Attire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Robin.png")
-    },
-    {
-        id: "pride_hunter",
-        description: "TBD",
-        fit: "tight",
-        base: false,
-        href: require("../assets/attire/Pride_Hunter.png")
     }
 ]
 
