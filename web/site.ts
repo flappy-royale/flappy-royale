@@ -1,10 +1,10 @@
 // Ensures these get connected correctly
-import "./site.css"
+import "./site.scss"
 
 //  Lol, this is how you make sure a file is in the site
-import "./index.html"
-import "./privacy.html"
-import "./media.html"
+import "./index.pug"
+import "./privacy.pug"
+import "./media.pug"
 
 import { allAttire, PresentationAttire, defaultAttire } from "../src/attire"
 

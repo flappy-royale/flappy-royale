@@ -13,7 +13,7 @@
     "scripts": {
         "build": "yarn webpack-prod; yarn webpack-site",
         "start": "yarn webpack-dev --watch & yarn live-server --port=8085 --wait=1000",
-        "start-site": "yarn parcel serve web/index.html",
+        "start-site": "yarn parcel serve web/index.pug",
         "type-check": "yarn tsc --noEmit",
         "deploy": "rm -rf dist && yarn danger-prepush && yarn build && firebase deploy",
         "build-web": "rm -rf dist && yarn danger-prepush && yarn webpack-prod && yarn webpack-demo && yarn webpack-site",
@@ -58,6 +58,9 @@
         "mini-css-extract-plugin": "^0.6.0",
         "parcel-bundler": "^1.12.3",
         "prettier": "^1.17.1",
+        "pug": "^2.0.4",
+        "pug-lint": "^2.6.0",
+        "sass": "^1.22.3",
         "ts-loader": "^6.0.0",
         "ts-node": "^8.1.0",
         "typescript": "^3.4.5",
