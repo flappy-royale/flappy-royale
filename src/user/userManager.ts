@@ -310,8 +310,8 @@ export const addLives = (seed: string, val: number): number => {
 }
 
 export enum LifeStateForSeed {
-    FirstSet = 1,
-    ExtraFive,
+    FirstSet, // Not seen any ads today
+    ExtraFive, // Gone through first set
     ExtraTen,
     ExtraFifteen
 }

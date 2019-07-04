@@ -1,11 +1,3 @@
-// Ensures these get connected correctly
-import "./site.css"
-
-//  Lol, this is how you make sure a file is in the site
-import "./index.html"
-import "./privacy.html"
-import "./media.html"
-
 import { allAttire, PresentationAttire, defaultAttire } from "../src/attire"
 
 const addSomeButtsToThoseSeats = () => {

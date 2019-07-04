@@ -8,21 +8,24 @@ target 'FlappyRoyale' do
   # Pods for FlappyRoyale
   pod 'Firebase/Core'
 
-  # ADDDDSsssss
-  pod 'mopub-ios-sdk', '~> 5.0'
+  pod 'IronSourceSDK', '~> 6'
 
-  # AdColony
-  pod 'MoPub-AdColony-Adapters', '3.3.7.1'
-  
-  # AppLovin
-  pod 'MoPub-Applovin-Adapters', '6.6.1.0'
-  
-  # Chartboost
-  pod 'MoPub-Chartboost-Adapters', '7.5.0.0'
-  
-  # Google (AdMob)
-  pod 'MoPub-AdMob-Adapters', '7.44.0.0'
-  
-  # Vungle
-  pod 'MoPub-Vungle-Adapters', '6.3.2.5'
+#
+#  # ADDDDSsssss
+#  pod 'mopub-ios-sdk', '~> 5.0'
+#
+#  # AdColony
+#  pod 'MoPub-AdColony-Adapters', '3.3.7.1'
+#
+#  # AppLovin
+#  pod 'MoPub-Applovin-Adapters', '6.6.1.0'
+#
+#  # Chartboost
+#  pod 'MoPub-Chartboost-Adapters', '7.5.0.0'
+#
+#  # Google (AdMob)
+#  pod 'MoPub-AdMob-Adapters', '7.44.0.0'
+#
+#  # Vungle
+#  pod 'MoPub-Vungle-Adapters', '6.3.2.5'
 end

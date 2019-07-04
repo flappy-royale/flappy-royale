@@ -1,7 +1,7 @@
 import { BattleScene } from "./Scene"
 import * as constants from "../constants"
 import { themeMap, GameTheme } from "./theme"
-import { TutorialScene } from "./TutorialScene";
+import { TutorialScene } from "./TutorialScene"
 
 export const preloadBackgroundSprites = (scene: Phaser.Scene, theme: GameTheme = GameTheme.default) => {
     const bg = themeMap[theme]
@@ -21,16 +21,16 @@ export const createBackgroundSprites = (scene: BattleScene | TutorialScene, them
     const bg = themeMap[theme]
 
     // 148 px wide
-    scene.add.tileSprite(74, 164 + constants.GameAreaTopOffset, 164, 0, bg.clouds[0])
-    scene.add.tileSprite(74 + 147, 164 + constants.GameAreaTopOffset, 160, 0, bg.clouds[0])
+    scene.add.tileSprite(74, 166 + constants.GameAreaTopOffset, 164, 0, bg.clouds[0])
+    scene.add.tileSprite(74 + 147, 166 + constants.GameAreaTopOffset, 160, 0, bg.clouds[0])
     // 114 px
-    city = scene.add.tileSprite(57, 171 + constants.GameAreaTopOffset, 0, 0, bg.city[0])
-    city2 = scene.add.tileSprite(57 + 114, 171 + constants.GameAreaTopOffset, 0, 0, bg.city[0])
+    city = scene.add.tileSprite(57, 173 + constants.GameAreaTopOffset, 0, 0, bg.city[0])
+    city2 = scene.add.tileSprite(57 + 114, 173 + constants.GameAreaTopOffset, 0, 0, bg.city[0])
     // 147 px
-    bushes = scene.add.tileSprite(74, 176 + constants.GameAreaTopOffset, 0, 0, bg.bushes[0])
-    bushes2 = scene.add.tileSprite(74 + 147, 176 + constants.GameAreaTopOffset, 0, 0, bg.bushes[0])
+    bushes = scene.add.tileSprite(74, 178 + constants.GameAreaTopOffset, 0, 0, bg.bushes[0])
+    bushes2 = scene.add.tileSprite(74 + 147, 178 + constants.GameAreaTopOffset, 0, 0, bg.bushes[0])
 
-    ground = scene.add.tileSprite(80, 230 + constants.GameAreaTopOffset, 0, 0, bg.ground[0])
+    ground = scene.add.tileSprite(80, 232 + constants.GameAreaTopOffset, 0, 0, bg.ground[0])
     ground.setDepth(constants.zLevels.ground)
 }
 

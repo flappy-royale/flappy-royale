@@ -1,7 +1,4 @@
 PODS:
-  - AdColony (3.3.7)
-  - AppLovinSDK (6.6.1)
-  - ChartboostSDK (7.5.0)
   - Firebase/Core (6.2.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 6.0.1)
@@ -23,8 +20,6 @@ PODS:
     - FirebaseCore (~> 6.0)
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
-  - Google-Mobile-Ads-SDK (7.44.0):
-    - GoogleAppMeasurement (~> 6.0)
   - GoogleAppMeasurement (6.0.1):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -49,114 +44,38 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.2.0):
     - GoogleUtilities/Logger
-  - MoPub-AdColony-Adapters (3.3.7.1):
-    - MoPub-AdColony-Adapters/MoPub (= 3.3.7.1)
-    - MoPub-AdColony-Adapters/Network (= 3.3.7.1)
-  - MoPub-AdColony-Adapters/MoPub (3.3.7.1):
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-AdColony-Adapters/Network (3.3.7.1):
-    - AdColony (= 3.3.7)
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-AdMob-Adapters (7.44.0.0):
-    - MoPub-AdMob-Adapters/MoPub (= 7.44.0.0)
-    - MoPub-AdMob-Adapters/Network (= 7.44.0.0)
-  - MoPub-AdMob-Adapters/MoPub (7.44.0.0):
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-AdMob-Adapters/Network (7.44.0.0):
-    - Google-Mobile-Ads-SDK (= 7.44.0)
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-Applovin-Adapters (6.6.1.0):
-    - MoPub-Applovin-Adapters/MoPub (= 6.6.1.0)
-    - MoPub-Applovin-Adapters/Network (= 6.6.1.0)
-  - MoPub-Applovin-Adapters/MoPub (6.6.1.0):
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-Applovin-Adapters/Network (6.6.1.0):
-    - AppLovinSDK (= 6.6.1)
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-Chartboost-Adapters (7.5.0.0):
-    - MoPub-Chartboost-Adapters/MoPub (= 7.5.0.0)
-    - MoPub-Chartboost-Adapters/Network (= 7.5.0.0)
-  - MoPub-Chartboost-Adapters/MoPub (7.5.0.0):
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-Chartboost-Adapters/Network (7.5.0.0):
-    - ChartboostSDK (= 7.5.0)
-    - mopub-ios-sdk/Core (~> 5.5)
-  - mopub-ios-sdk (5.7.1):
-    - mopub-ios-sdk/MoPubSDK (= 5.7.1)
-  - mopub-ios-sdk/Avid (5.7.1):
-    - mopub-ios-sdk/Core
-  - mopub-ios-sdk/Core (5.7.1)
-  - mopub-ios-sdk/Moat (5.7.1):
-    - mopub-ios-sdk/Core
-  - mopub-ios-sdk/MoPubSDK (5.7.1):
-    - mopub-ios-sdk/Avid
-    - mopub-ios-sdk/Core
-    - mopub-ios-sdk/Moat
-  - MoPub-Vungle-Adapters (6.3.2.5):
-    - MoPub-Vungle-Adapters/MoPub (= 6.3.2.5)
-    - MoPub-Vungle-Adapters/Network (= 6.3.2.5)
-  - MoPub-Vungle-Adapters/MoPub (6.3.2.5):
-    - mopub-ios-sdk/Core (~> 5.5)
-  - MoPub-Vungle-Adapters/Network (6.3.2.5):
-    - mopub-ios-sdk/Core (~> 5.5)
-    - VungleSDK-iOS (= 6.3.2)
+  - IronSourceSDK (6.8.3.0)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - VungleSDK-iOS (6.3.2)
 
 DEPENDENCIES:
   - Firebase/Core
-  - MoPub-AdColony-Adapters (= 3.3.7.1)
-  - MoPub-AdMob-Adapters (= 7.44.0.0)
-  - MoPub-Applovin-Adapters (= 6.6.1.0)
-  - MoPub-Chartboost-Adapters (= 7.5.0.0)
-  - mopub-ios-sdk (~> 5.0)
-  - MoPub-Vungle-Adapters (= 6.3.2.5)
+  - IronSourceSDK (~> 6)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - AdColony
-    - AppLovinSDK
-    - ChartboostSDK
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseInstanceID
-    - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleUtilities
-    - MoPub-AdColony-Adapters
-    - MoPub-AdMob-Adapters
-    - MoPub-Applovin-Adapters
-    - MoPub-Chartboost-Adapters
-    - mopub-ios-sdk
-    - MoPub-Vungle-Adapters
+    - IronSourceSDK
     - nanopb
-    - VungleSDK-iOS
 
 SPEC CHECKSUMS:
-  AdColony: 86db79092f2cb0ff22b676ff13b3096b696306c7
-  AppLovinSDK: 7625161a9ffd96fed91d8cd61588d089a7d8527f
-  ChartboostSDK: c79cf075b4c39337e82599ab9adc2b91f79698c8
   Firebase: 5965bac23e7fcb5fa6d926ed429c9ecef8a2014e
   FirebaseAnalytics: 629301c2b9925f3537d4093a17a72751ae5b7084
   FirebaseCore: b0f0262acebfa540e5f97b3832dbb13186980822
   FirebaseInstanceID: cdb3827746d53ece7ae87a5c51c25c3055443366
-  Google-Mobile-Ads-SDK: 1e72b4f438d997ab0f2ee62b3a7b0cbcc87c47cb
   GoogleAppMeasurement: 51d8d9ea48f0ca44484d29cfbdef976fbd4fc336
   GoogleUtilities: 996e0db07153674fd1b54b220fda3a3dc3547cba
-  MoPub-AdColony-Adapters: b932592758259c222819cede8e23fc3d79948b7b
-  MoPub-AdMob-Adapters: f024498a2658d5836ff946f510d35091af1ea1d0
-  MoPub-Applovin-Adapters: da42c7b5edd953c39605b6ebed7de17e22768613
-  MoPub-Chartboost-Adapters: 2ca4e8da90efbe16438edef62c64d57a43a42e70
-  mopub-ios-sdk: b1167e8c86afaccd37d484828c4ad2c3c1656a32
-  MoPub-Vungle-Adapters: a1a802bb5026b55c558a27348b5b18fac1f85a41
+  IronSourceSDK: 3b5255c5f3982c29e6ee464304b85aef07d2543f
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  VungleSDK-iOS: 69a7f407b60281d2954ffc5eeeac349fbfed51d6
 
-PODFILE CHECKSUM: 49f5b5ba9ab0b44d5bc0b17f70516b6b22985472
+PODFILE CHECKSUM: a549e364a4f4611ff3756bd0cb20ad109f72d73a
 
-COCOAPODS: 1.7.0.rc.1
+COCOAPODS: 1.6.1

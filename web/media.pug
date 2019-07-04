@@ -1,0 +1,102 @@
+head
+  include includes/head.pug
+
+include includes/sky.pug
+
+#ground
+  .container
+    h2(style='color:white; font-size: 40px;') Media Pack
+#underground
+  .container.large
+    div(style='display: flex;')
+      div(style='flex:1')
+        div(style='margin-top: 20px')
+          h5 Developers:
+          // Thanks https://thunderlotusgames.com/media-packs/ for the reference
+          p(style='font-size: 100%;margin-top: 0.2em')
+            a(href='https://orta.io') Orta Therox
+            | and 
+            a(href='https://lazerwalker.com') Em Lazer-Walker
+          h5 Contributors:
+          p(style='font-size: 100%;margin-top: 0.2em')
+            a(href='http://stfj.net/') Zach Gage
+          h5 Expected release:
+          p(style='font-size: 100%;margin-top: 0.2em') July 2019
+          h5 Platforms:
+          p(style='font-size: 100%;margin-top: 0.2em') Android, iOS and a Web Demo
+          h5 Press / Business Contact:
+          p(style='font-size: 100%;margin-top: 0.2em')
+            a(style='color: #be966e;text-decoration: none', href='mailto:team@flappyroyale.io') team@flappyroyale.io
+      div(style='flex:1;padding: 10px;')
+        p
+          strong Flappy Royale
+          |  is a battle royale-styled game influenced by Flappy Bird. It
+          |  takes the competitive nature of a battle royale where far too many people play at once, with
+          |  the un-forgiving nature of flappy games.
+        p
+          | Flappy Royale has two game modes: a royale free-for-all with up to 100 players and a daily
+          | top-score system to see who got past the most pipes daily where players have a limited
+          | number of tries.
+        p
+          | If it flaps (and kinda if it doesn&apos;t), we&apos;ve tried to get it in the game, giving you the
+          | chance to play as all sorts of animals and glammed to the brim.
+        p
+          | We think you&apos;ll find it messy, frustrating, and very fun for 10 seconds. Then you hit a
+          | pipe, and start all over again. You know the drill.
+    div
+      h2 Screenshots
+      .thumbs
+        a(href='./assets/0-full.png')
+          img(src='./assets/0-thumb.png')
+        a(href='./assets/1-full.png')
+          img(src='./assets/1-thumb.png')
+        a(href='./assets/2-full.png')
+          img(src='./assets/2-thumb.png')
+        a(href='./assets/3-full.png')
+          img(src='./assets/3-thumb.png')
+        a(href='./assets/4-full.png')
+          img(src='./assets/4-thumb.png')
+        a(href='./assets/5-full.png')
+          img(src='./assets/5-thumb.png')
+      h2 GIFs
+      .thumbs
+        a(href='https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/flappyroyaleio-square.gif?alt=media&token=e358167e-f47a-40a1-8ca9-da1213a2222e')
+          img(src='https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/flappyroyaleio-square.gif?alt=media&token=e358167e-f47a-40a1-8ca9-da1213a2222e')
+        a(href='https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/flappyroyaleio-wide.gif?alt=media&token=515e7fdd-8e19-45d8-97ba-123468e145b3')
+          img(src='https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/flappyroyaleio-wide.gif?alt=media&token=515e7fdd-8e19-45d8-97ba-123468e145b3')
+    div
+      h2 Logo
+      div
+        a(href='./assets/logo-color.png')
+          img(style='width:30%;margin:4px;', src='./assets/logo-color.png')
+        a(href='./assets/logo-black.png')
+          img(style='width:30%;margin:4px;', src='./assets/logo-black.png')
+        a(href='./assets/logo-white.png')
+          img(style='width:30%;margin:4px;', src='./assets/logo-white.png')
+    div
+      h2 About the devs
+      div(style='display: flex;')
+        div(style='flex:1;padding-right: 20px;')
+          p
+            strong Orta
+            |  is an engineer with a
+            a(href='https://open.nytimes.com/five-questions-with-orta-therox-d5bb9659c50b') long experience
+            | in the Open Source world, having built many tools used by the iOS and JavaScript
+            | developer communities.
+          p
+            | Today he works on the
+            a(href='https://artsy.github.io/blog/2019/04/05/omakase-typescript/') TypeScript programming language
+            | at Microsoft. That&apos;s the language this game is created with.
+
+        div(style='flex:1;color:#fff; ')
+          p
+            strong Em
+            |  make experimental games, interactive art, and software tools.
+          p
+            | Her installations, artgames, and research projects have been featured in places such as
+            | NPR&apos;s All Things Considered, the Venice Biennale, and the Smithsonian American Art
+            | Museum.
+  #call-to-action(style='margin-top: 180px;')
+    nav
+      a(href='./index.pug') Back
+      a(href='mailto:team@flappyroyale.io') Contact

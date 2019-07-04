@@ -27,5 +27,6 @@
         "royales",
         "spacebar",
         "spritesheet"
-    ]
+    ],
+    "puglint.enable": true
 }

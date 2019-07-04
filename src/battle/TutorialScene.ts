@@ -8,7 +8,7 @@ import { BirdSprite, preloadBirdSprites, setupBirdAnimations } from "./BirdSprit
 import { addScoreLine } from "./scoreLine"
 import { busCrashed, preloadBusImages } from "./utils/createBus"
 import { getUserSettings } from "../user/userManager"
-import { launchMainMenu, MainMenuScene } from "../menus/MainMenuScene"
+import { launchMainMenu } from "../menus/MainMenuScene"
 import { deathPreload } from "./overlays/RoyaleDeathScene"
 import { GameTheme, themeMap } from "./theme"
 import { addScene } from "../menus/utils/addScene"
@@ -76,6 +76,8 @@ export class TutorialScene extends Phaser.Scene {
 
     /** What you see to go back, hides on dying in a royale */
     private backButton: Phaser.GameObjects.Image
+
+    private isExiting = false
 
     constructor(opts: any = {}) {
         super({
@@ -204,6 +206,8 @@ export class TutorialScene extends Phaser.Scene {
 
     goBackToMainMenu() {
         // delay to kill the "now flap" scene
+        this.isExiting = true
+
         setTimeout(() => {
             const scenes = this.game.scene.scenes
             scenes.forEach(element => this.game.scene.remove(element))
@@ -296,6 +300,8 @@ export class TutorialScene extends Phaser.Scene {
 
         // No dead birds flapping y'hear
         if (this.bird && this.bird.isDead) return
+
+        if (this.isExiting) return
 
         // Give a delay of 1s so that your sprite is on-screen entirely
         const timestamp = Math.round(this.time.now - this.timestampOffset)
