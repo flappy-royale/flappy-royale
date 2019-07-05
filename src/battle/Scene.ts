@@ -34,7 +34,13 @@ import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
-import { getSettings, saveSettings } from "../gameSettings"
+import {
+    getSettings,
+    saveSettings,
+    useLowQuality,
+    shouldMeasureQuality,
+    enableAutoLowQualityMode
+} from "../gameSettings"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -146,6 +152,16 @@ export class BattleScene extends Phaser.Scene {
 
     /** How to render the BG */
     private theme: GameTheme
+
+    /** FPS AUTO QUALITY DETECTION */
+    /** If true, actively measuring FPS (for auto quality detection) */
+    private measuringFps: boolean
+
+    /** The last time an update() function ran, for fps/quality detection  */
+    private lastUpdateTimestamp: number
+
+    /** An array containing implied FPS numbers for each discrete update call */
+    private runningFpsTally: number[] = []
 
     constructor(opts: BattleSceneSettings) {
         super(
@@ -284,8 +300,12 @@ export class BattleScene extends Phaser.Scene {
         if (game.showGhostBirds(this.mode)) {
             let replays = this.seedData.replays.sort((l, r) => r.score - l.score) // Sorted descending
 
-            if (getSettings().lowPerformanceMode) {
+            if (useLowQuality()) {
                 replays = replays.slice(0, 60)
+            }
+
+            if (shouldMeasureQuality() && this.mode === game.GameMode.Royale) {
+                this.measuringFps = true
             }
 
             replays.forEach(input => {
@@ -387,6 +407,8 @@ export class BattleScene extends Phaser.Scene {
             back.setDepth(constants.zLevels.ui)
             this.backButton = back
         }
+
+        this.runningFpsTally = []
     }
 
     private goBackToMainMenu() {
@@ -454,6 +476,38 @@ export class BattleScene extends Phaser.Scene {
     }
 
     update(timestamp: number) {
+        if (this.measuringFps) {
+            if (this.runningFpsTally.length === 20) {
+                const avgFps = Math.floor(_.mean(this.runningFpsTally))
+
+                if (this.scoreLabel) {
+                    this.scoreLabel.setText(`${avgFps}`)
+                }
+
+                if (avgFps < 50) {
+                    // Low quality!
+                    const deadGhostBirds = this.ghostBirds.splice(0, _.min([this.ghostBirds.length, 60]))
+                    this.ghostBirds.forEach(b => b.removeAttire())
+                    deadGhostBirds.forEach(b => b.destroy())
+
+                    enableAutoLowQualityMode()
+
+                    if (this.scoreLabel) {
+                        this.scoreLabel.setText(`${avgFps}!`)
+                    }
+                }
+
+                this.measuringFps = false
+            } else if (this.runningFpsTally.length < 20) {
+                if (this.lastUpdateTimestamp) {
+                    const delta = timestamp - this.lastUpdateTimestamp
+                    const fps = 1000 / delta
+                    this.runningFpsTally.push(fps)
+                }
+                this.lastUpdateTimestamp = timestamp
+            }
+        }
+
         // Parallax stuff, and moves the ground to the front
         if (!this.bird || !this.bird.isDead) {
             bgUpdateTick()
@@ -479,10 +533,16 @@ export class BattleScene extends Phaser.Scene {
                     return
                 }
 
+                // Technically, this naive lookup is incorrect.
+                // ghostBirds are sorted by score, AND we also remove 40 of 'em in low-quality mode
+                // meaning the mapping of a ghost's performance and appearance is basically random.
+                // Shrug.
+                const ghostBird = this.ghostBirds[index]
+                if (!ghostBird) return
+
                 while (input.actions.length > 0 && input.actions[0].timestamp < adjustedTime) {
                     const event = input.actions.shift()
-                    const ghostBird = this.ghostBirds[index]
-                    if (!ghostBird || !event) return
+                    if (!event) return
 
                     if (event.action === "flap") {
                         ghostBird.flap()
@@ -760,6 +820,7 @@ export class BattleScene extends Phaser.Scene {
         this.score = 0
         this.timestampOffset = this.time.now
         this.highScoreLabel = undefined
+        this.runningFpsTally = []
     }
 
     restartTheGame() {

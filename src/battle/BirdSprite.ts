@@ -8,7 +8,7 @@ import { becomeButton } from "../menus/utils/becomeButton"
 import { builtInAttire, Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
 import { playSound } from "../playSound"
-import { getSettings } from "../gameSettings"
+import { getSettings, useLowQuality } from "../gameSettings"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -104,7 +104,7 @@ export class BirdSprite {
             this.focusSprite.setOrigin(0.13, 0.5)
         }
 
-        if (!getSettings().lowPerformanceMode || (this.isPlayer || this.isImage)) {
+        if (!useLowQuality() || (this.isPlayer || this.isImage)) {
             // Setup clothes (always set to true for non-player birds)
             this.tightAttire = meta.settings.aesthetics.attire
                 .filter(a => !a.base && scene.load.textureManager.exists(a.id))
@@ -257,6 +257,14 @@ export class BirdSprite {
         } else {
             playSound(this.scene, "other_hit")
         }
+    }
+
+    removeAttire() {
+        this.tightAttire.forEach(s => s.destroy())
+        this.looseAttire.forEach(s => s.destroy())
+
+        this.tightAttire = []
+        this.looseAttire = []
     }
 
     // Use the same gravity + velocity as the bus
