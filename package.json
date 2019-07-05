@@ -18,6 +18,7 @@
         "pre-deploy": "yarn ts-node scripts/post-build.ts",
         "deploy": "yarn build-web && yarn pre-deploy && firebase deploy",
         "deploy-web": "yarn build-web && yarn pre-deploy && firebase deploy --only hosting",
+        "deploy-web-staging": "yarn build-web && yarn pre-deploy && firebase deploy --only hosting:flappy-staging; echo 'https://flappy-staging.web.app/'",
         "build-web": "rm -rf dist && yarn danger-prepush && yarn webpack-prod && yarn webpack-demo && yarn webpack-site",
         "webpack-prod": "webpack -p --progress --config=webpack.prod-full.js --mode production",
         "webpack-demo": "webpack -p --progress --config=webpack.prod-demo.js --mode production",

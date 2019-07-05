@@ -89,20 +89,20 @@ nav a.disabled {
 
 #sky {
     #clouds {
-        background-image: url("../assets/battle/clouds.png");
+        background-image: url("../assets/battle/themes/default/clouds.png");
         background-repeat: repeat-x;
         background-size: 296px 86px;
         height: 86px;
     }
     #city {
-        background-image: url("../assets/battle/city.png");
+        background-image: url("../assets/battle/themes/default/city.png");
         background-repeat: repeat-x;
         background-size: 296px 58px;
         height: 58px;
         margin-top: -58px;
     }
     #trees {
-        background-image: url("../assets/battle/bushes.png");
+        background-image: url("../assets/battle/themes/default/bushes.png");
         background-repeat: repeat-x;
         background-size: 296px 36px;
         height: 36px;
@@ -134,7 +134,8 @@ nav a.disabled {
 }
 
 #ground {
-    background-image: url("../assets/battle/ground.png"), url("../assets/battle/ground.png");
+    background-image: url("../assets/battle/themes/default/ground.png"),
+        url("../assets/battle/themes/default/ground.png");
     background-repeat: repeat-x, repeat-x;
     background-position-y: 0, 82px;
     /* 160 × 89 */
@@ -181,7 +182,7 @@ h5 {
 }
 
 #underground {
-    background: url("../assets/battle/ground-under.png") repeat-x;
+    background: url("../assets/battle/themes/default/ground-under.png") repeat-x;
     /* 160 × 47 */
     background-size: 480px 141px;
     padding: 200px 0;
