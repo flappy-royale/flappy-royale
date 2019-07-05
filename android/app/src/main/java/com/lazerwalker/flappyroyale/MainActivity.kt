@@ -1,5 +1,6 @@
 package com.lazerwalker.flappyroyale
 
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,15 @@ import com.mopub.common.SdkConfiguration
 import com.mopub.common.SdkInitializationListener
 import com.mopub.common.logging.MoPubLog
 import com.mopub.mobileads.MoPubView
+import android.text.method.Touch.onTouchEvent
+import android.view.MotionEvent
+import android.view.GestureDetector
+import android.view.WindowInsets
+import android.annotation.TargetApi
+import android.os.Debug
+import android.util.Log
+import android.webkit.WebView
+
 
 class MainActivity : AppCompatActivity() {
     private var moPubView: MoPubView? = null
@@ -24,6 +34,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Force portrait mode
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
         // Without this, our redirect immediately causes the game to be opened in a separate chrome browser
         webview.webViewClient = WebViewClient()
 
@@ -31,31 +44,62 @@ class MainActivity : AppCompatActivity() {
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.setAppCacheEnabled(true)
+
+        makeFullScreen()
+
+        webview.setClickable(true)
+        val clickDetector = GestureDetector(this,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onSingleTapUp(e: MotionEvent): Boolean {
+                    val visible = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION == 0
+                    if (visible) {
+                        makeFullScreen()
+                    }
+                    return false
+                }
+            })
+        webview.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
+            clickDetector.onTouchEvent(
+                motionEvent
+            )
+        })
+
+        setUpMoPub()
+    }
+
+    override fun onAttachedToWindow() {
+        // Notch offsets aren't available until we attach to window
+        // Let's delay loading the game til then
+
         webview.loadUrl("https://flappyroyale.io/prod")
+//        webview.loadUrl("http://192.168.1.6:8085")
+//        WebView.setWebContentsDebuggingEnabled(true);
 
         webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
+        webview.addJavascriptInterface(AndroidStaticData(this, webview), "AndroidStaticData")
+    }
 
-        val deviceId = Settings.Secure.ANDROID_ID
-        val device = DeviceName.getDeviceName();
-
-        val osVersion = Build.VERSION.RELEASE
-        val apiVersion = Build.VERSION.SDK_INT
-        val os = "$osVersion ($apiVersion)"
-
-        webview.evaluateJavascript("window.playfabAuth = { method: 'LoginWithAndroidDeviceID', payload: { AndroidDeviceId: '$deviceId', AndroidDevice: '$device', OS: '$os'}};", null)
-
-        window.decorView.apply {
-            // Hide both the navigation bar and the status bar.
-            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-            // a general rule, you should design your app to hide the status bar whenever you
-            // hide the navigation bar.
-            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            makeFullScreen()
         }
+    }
 
-        setUpMoPub()
+    fun makeFullScreen() {
+        // Give us "full-screen" mode, which hides the bottom navigation bar
+        // We need "immersive" mode, which means normal UI taps don't re-trigger it, just swiping from an edege
+        window.decorView.apply {
+            systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE)
+        }
     }
 
     fun setUpMoPub() {

@@ -11,7 +11,6 @@ import { random, shuffle } from "lodash"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
-import { useDarkMode } from "../util/useDarkMode"
 import { defaultAttire } from "../attire"
 
 export const RoyaleLobbyKey = "RoyaleLobby"

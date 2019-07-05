@@ -1,8 +1,5 @@
 import UIKit
 import Firebase
-import GoogleMobileAds
-import AppLovinSDK
-import MoPub
 
 @UIApplicationMain
 
@@ -14,23 +11,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
-        
-        let sdk:VungleSDK = VungleSDK.shared()
-        do {
-            try sdk.start(withAppId: AdConstants.vungleAppID)
-        }
-        catch let error as NSError {
-            print("Error while starting VungleSDK : \(error.domain)")
-        }
-        
-        let config = MPMoPubConfiguration(adUnitIdForAppInitialization: AdConstants.bottomBannerMoPub)
-        
-        config.loggingLevel = .debug
-        MoPub.sharedInstance().initializeSdk(with: config) {
-            GADMobileAds.sharedInstance().start(completionHandler: nil)
-            ALSdk.initializeSdk()
-            NotificationCenter.default.post(name: NSNotification.Name("AdsReady"), object: nil)
-        }
         
         return true
     }

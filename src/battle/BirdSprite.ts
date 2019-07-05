@@ -7,6 +7,8 @@ import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { builtInAttire, Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
+import { playSound } from "../playSound"
+import { getSettings } from "../gameSettings"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -57,6 +59,7 @@ export class BirdSprite {
     position: Phaser.Math.Vector2
 
     isPlayer: boolean = false
+    isImage: boolean = false
     isInBus: boolean
     isDead: boolean = false
     isAtRest: boolean = false
@@ -72,8 +75,8 @@ export class BirdSprite {
     // Focus sprite
     private focusSprite: Phaser.GameObjects.Image
     // HATS
-    private tightAttire: Phaser.GameObjects.Image[]
-    private looseAttire: Phaser.GameObjects.Image[]
+    private tightAttire: Phaser.GameObjects.Image[] = []
+    private looseAttire: Phaser.GameObjects.Image[] = []
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
@@ -84,8 +87,9 @@ export class BirdSprite {
     // Don't apply gravity / velocity etc during the constructor
     // because this is used for previews
     //
-    constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; settings: Bird }) {
+    constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; isImage?: boolean; settings: Bird }) {
         this.isPlayer = meta.isPlayer
+        this.isImage = meta.isImage || false
 
         this.scene = scene
 
@@ -102,6 +106,8 @@ export class BirdSprite {
             this.focusSprite = scene.add.sprite(0, 0, "focusBackdrop")
             // this.focusSprite.setOrigin(0.13, 0.5)
         }
+
+        if (!getSettings().lowPerformanceMode || (this.isPlayer || this.isImage)) {
 
         // Setup clothes (always set to true for non-player birds)
         this.tightAttire = meta.settings.aesthetics.attire
@@ -122,6 +128,7 @@ export class BirdSprite {
                 // image.setOrigin(0.13, 0.5)
                 return image
             })
+        }
 
         this.sprite = scene.add.sprite(0, 0, "flap1")
         // this.sprite.setOrigin(0.13, 0.5)
@@ -150,6 +157,10 @@ export class BirdSprite {
         scene.sys.events.addListener("postupdate", () => {
             this.updateRelatedSprites({ tight: true })
         })
+
+        if (this.isImage) {
+            this.actAsImage()
+        }
     }
 
     setOpacityBasedOnScore(pipes: number) {
@@ -192,12 +203,12 @@ export class BirdSprite {
         this.sprite.play("flap")
 
         if (this.isPlayer) {
-            this.scene.sound.play("flap")
+            playSound(this.scene, "flap")
 
             haptics.playSelection()
             haptics.prepareHeavy()
         } else {
-            this.scene.sound.play("other_flap")
+            playSound(this.scene, "other_flap")
         }
     }
 
@@ -253,11 +264,11 @@ export class BirdSprite {
         this.isDead = true
 
         if (this.isPlayer) {
-            this.scene.sound.play("hit")
+            playSound(this.scene, "hit")
             haptics.playHeavy()
             haptics.prepareHeavy()
         } else {
-            this.scene.sound.play("other_hit")
+            playSound(this.scene, "other_hit")
         }
     }
 

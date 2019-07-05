@@ -1,0 +1,27 @@
+{
+    "short_name": "Flappy Royale",
+    "name": "Flappy Royale",
+    "icons": [
+        {
+            "src": "https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/icon-192.png?alt=media&token=4264a9d8-d762-4c3f-a777-981302329f0b",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/icon-500.png?alt=media&token=bcc28289-98e1-4cb0-a7ab-e7e3a75d4caa",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/demo",
+    "background_color": "#311706",
+    "display": "standalone",
+    "theme_color": "#311706",
+    "prefer_related_applications": true,
+    "related_applications": [
+        {
+            "platform": "play",
+            "id": "com.lazerwalker.flappyroyale"
+        }
+    ]
+}

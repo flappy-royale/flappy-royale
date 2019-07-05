@@ -1,3 +1,7 @@
+html {
+    touch-action: manipulation;
+}
+
 canvas {
     image-rendering: optimizeSpeed;
     image-rendering: crisp-edges;
@@ -14,8 +18,20 @@ body {
     background-color: #ebf6ff;
 }
 
-#button {
+#button,
+button {
     touch-action: manipulation;
+
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    /*
+      Introduced in IE 10.
+      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
 }
 
 @font-face {

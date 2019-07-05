@@ -1,0 +1,127 @@
+head
+  include includes/head.pug
+  script(async, src='./site.ts')
+
+include includes/sky.pug
+
+
+#ground
+  .container
+    #who
+      span A game by
+      a(href='https://orta.io') Orta Therox
+      br
+      a(href='https://lazerwalker.com') Em Lazer-Walker
+      br
+      | with
+      a(href='http://stfj.net') Zach Gage
+    #what
+      span Flappy Royale is
+      |  a last-one-flapping battle royale. Can you stay alive longer than 99
+      |  opponents?
+
+#underground
+  .container
+    h3 Flappy Bootcamp
+    #phone
+      #projected
+        video(playsinline, muted, loop, autoplay, width='248', height='360')
+          source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.webm?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/webm')
+          source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.mp4?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/mp4')
+          | Sorry, your browser doesn't support embedded videos.
+      
+      img#player(src='./assets/SheepOnPhone.png', style='transform:  scale(4) ')
+
+    #seating
+      ul.seats
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+      ul.seats
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+      ul.seats(style='margin-top: 120px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+      ul.seats
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+        li
+          img(src='./assets/chair.png', style='left: 10px;')
+
+
+    .testimonial
+      li
+        p 
+          | Due to the popularity of our beta, we ran out of tokens for people to join,
+          | unfortunately making it a closed beta :(
+        p 
+          | We're working on getting it into the stores ASAP!
+
+    .testimonial
+      li
+        | The thing is though, Flappy Royale is just damn fun. The formula works.
+        span
+          | -
+          a(href='https://toucharcade.com/2019/06/27/flappy-royale-open-beta/') toucharcade
+      li
+        | &Eacute; tudo um bocado ca&oacute;tico
+        span
+          | -
+          a(href='https://www.eurogamer.pt/articles/2019-06-28-flappy-royale-e-um-novo-jogo-que-mistura-fortnite-e-flappy-bird') Eurogamer pt
+      li
+        | A sense of futility is pervasive in Flappy Royale as well, but it&rsquo;s counter-balanced by the fact
+        | that everyone is doomed together. Or, at least, almost everyone.
+        span
+          | -
+          a(href='https://kotaku.com/there-s-a-flappy-bird-battle-royale-game-now-and-it-s-1835918626') Kotaku
+      li
+        | It is frustrating, extremely addictive and you should probably not play it, but I simply
+        | couldn't help myself and have played over 50 matches while writing this article.
+        span
+          | -
+          a(href='https://glitched.africa/flappy-royale-is-out-now-and-it-will-take-over-your-life/') Glitched Africa
+      li
+        | It's utter chaos compiled into a tiny box, like tons and tons of pressure that has no way to
+        | escape other than by exploding
+        span
+          | -
+          a(href='https://www.androidheadlines.com/2019/06/games-mobilegames-flappybird-battleroyale-smartphonegames.html')
+            | Android Headlines
+      li
+        | El futuro de los battle royale est&aacute; aqu&iacute;, #FlappyRoyale.
+        span
+          | -
+          a(href='https://twitter.com/germormal/status/1144391254417055745') @germormal
+
+#call-to-action
+  nav
+    a.disabled iOS
+    a.disabled Android
+  nav
+    a(href='./demo') Web Demo
+    a(href='./media.pug') Media Pack
+  nav
+    a(href='/privacy.pug') Privacy
+    a(href='mailto:team@flappyroyale.io') Contact

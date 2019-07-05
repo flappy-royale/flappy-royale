@@ -1,5 +1,10 @@
 import { haptics } from "./haptics"
 
+interface PlayfabAuth {
+    method: string
+    payload: any
+}
+
 declare global {
     interface Window {
         // iOS
@@ -7,6 +12,11 @@ declare global {
         webkit: {
             messageHandlers: { [key: string]: WebkitHandler }
         }
+
+        /** Like 15 or something */
+        buildVersion: string
+        /** Release version, e.g. 1.1 */
+        appVersion: string
 
         // Android
         ModalAdPresenter?: {
@@ -29,13 +39,14 @@ declare global {
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number)
-        playfabAuth?: {
-            method: string
-            payload: any
-        }
+
+        playfabAuth?: PlayfabAuth
+
+        AndroidStaticData?: { fetch: () => string }
+        notchOffset?: number
     }
 }
 
 interface WebkitHandler {
-    postMessage: (args: any) => void
+    postMessage: (args: string | integer | boolean) => void
 }

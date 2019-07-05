@@ -184,8 +184,7 @@ export class TrialDeath extends Phaser.Scene {
         circle.setScale(1.6, 1.6)
 
         const settings = getUserSettings()
-        const bird = new BirdSprite(this, 33, top + 18, { isPlayer: false, settings: settings })
-        bird.actAsImage()
+        const bird = new BirdSprite(this, 33, top + 18, { isPlayer: false, isImage: true, settings: settings })
 
         // 1st of x
         this.add.bitmapText(10, top + 20, "fipps-bit-black", "1st", 24)
@@ -323,8 +322,11 @@ export class TrialDeath extends Phaser.Scene {
 
         // TODO: Generate birdSprite UserSettings from leaderboard
         const leaderboardBird: Bird = { name: data.name, aesthetics: { attire: data.attire } }
-        const bird = new BirdSprite(this, offset, config.y, { isPlayer: false, settings: leaderboardBird })
-        bird.actAsImage()
+        const bird = new BirdSprite(this, offset, config.y, {
+            isPlayer: false,
+            isImage: true,
+            settings: leaderboardBird
+        })
         bird.setOpacity(config.opacity)
 
         offset += 21

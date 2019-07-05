@@ -79,7 +79,7 @@ export const v1Attire: PresentationAttire[] = [
     },
     {
         id: "banana",
-        description: "It's a banana, kk",
+        description: "It's a banana or A COISS, kk",
         fit: "tight",
         base: true,
         href: require("../assets/bases/Banana.png")
@@ -799,6 +799,20 @@ export const versionTwoAttire: PresentationAttire[] = [
         fit: "tight",
         base: false,
         href: require("../assets/attire/Pride_Hunter.png")
+    },
+    {
+        id: "flag_trans",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Flag_Trans.png")
+    },
+    {
+        id: "flag_nonbinary",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Flag_Nonbinary.png")
     },
     {
         id: "rabbit_ears",

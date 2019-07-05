@@ -22,7 +22,8 @@ export const login = () => {
         CreateAccount: true
     }
 
-    const customAuth = (window as any).playfabAuth // We have nativeApp.d.ts to deal with this casting, but the Firebase Fn compiler doesn't know about that
+    let customAuth = window.playfabAuth
+
     if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
         method = PlayFabClient.LoginWithIOSDeviceID
         loginRequest = { ...loginRequest, ...customAuth.payload }
@@ -196,7 +197,7 @@ export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
     await loginPromise
 
     const results = await asyncGetLeaderboard({
-        StatisticName: "DailyTrial",
+        StatisticName: `DailyTrial-${APIVersion}`,
         StartPosition: 0,
         MaxResultsCount: 100
     })
@@ -212,13 +213,13 @@ export const getTrialDeathLeaderboard = async (): Promise<Leaderboard> => {
 
     let twoResults = await Promise.all([
         asyncGetLeaderboard({
-            StatisticName: "DailyTrial",
+            StatisticName: `DailyTrial-${APIVersion}`,
             StartPosition: 0,
             MaxResultsCount: 3
         }),
 
         asyncGetLeaderboardAroundPlayer({
-            StatisticName: "DailyTrial",
+            StatisticName: `DailyTrial-${APIVersion}`,
             MaxResultsCount: 3
         })
     ])
