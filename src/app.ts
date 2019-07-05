@@ -58,17 +58,6 @@ if (localStorage.getItem("beta") === "true") {
 }
 */
 
-enum StartupScreen {
-    Launcher,
-    MainMenu,
-    RoyalBattle,
-    TrialBattle,
-    Settings,
-    RoyaleLobby,
-    TrialLobby,
-    Tutorial
-}
-
 function newGame(): FlappyGame {
     const isSafariRenderer = window.isAppleApp || "safari" in window
     const renderMode = isSafariRenderer ? Phaser.CANVAS : Phaser.AUTO
@@ -217,7 +206,7 @@ if (!PRODUCTION) {
     appCache.onDownloadStart(() => {
         // TODO: Let's hooope there's a current game by the time this happens.
         // Otherwise, we'll need to be smarter here.
-        // (Wrting this on 3 July 2019.
+        // (Writing this on 3 July 2019.
         // If you see this months later, we're fine and you can safely delete this comment :) )
         console.log("New version!")
         const launchScreen = window.currentGame.scene.getScene("Launch") as AppLaunchScene
@@ -228,6 +217,19 @@ if (!PRODUCTION) {
         }
     })
 }
+
+enum StartupScreen {
+    Launcher,
+    MainMenu,
+    RoyalBattle,
+    TrialBattle,
+    Settings,
+    RoyaleLobby,
+    TrialLobby,
+    Tutorial
+}
+// Change this to have it load up into a different screen on save in dev mode
+const startupScreen = StartupScreen.Tutorial as StartupScreen
 
 window.onload = async () => {
     // This very silly delay fixes the issues where notch-detection code sometimes doesn't work properly.
@@ -259,9 +261,6 @@ window.onload = async () => {
     window.currentGame = game
 
     const seed = "1-royale-0"
-
-    // Change this to have it load up into a different screen on save in dev mode
-    const startupScreen = StartupScreen.Tutorial as StartupScreen
 
     if (PRODUCTION) {
         if (localStorage.getItem("skipLaunchScreen") === "true") {

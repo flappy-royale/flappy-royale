@@ -108,26 +108,27 @@ export class BirdSprite {
         }
 
         if (!getSettings().lowPerformanceMode || (this.isPlayer || this.isImage)) {
+            // Setup clothes (always set to true for non-player birds)
+            this.tightAttire = meta.settings.aesthetics.attire
+                .filter(a => !a.base && scene.load.textureManager.exists(a.id))
+                .filter(a => !meta.isPlayer || a.fit === "tight")
+                .map(a => {
+                    const image = scene.add.image(0, 0, a.id)
+                    // image.setOrigin(0.13, 0.5)
+                    return image
+                })
 
-        // Setup clothes (always set to true for non-player birds)
-        this.tightAttire = meta.settings.aesthetics.attire
-            .filter(a => !a.base && scene.load.textureManager.exists(a.id))
-            .filter(a => !meta.isPlayer || a.fit === "tight")
-            .map(a => {
-                const image = scene.add.image(0, 0, a.id)
-                // image.setOrigin(0.13, 0.5)
-                return image
-            })
+            // See updateRelatedSprite for more info
 
-        // See updateRelatedSprite for more info
-        this.looseAttire = meta.settings.aesthetics.attire
-            .filter(a => !a.base && meta.isPlayer && scene.load.textureManager.exists(a.id))
-            .filter(a => a.fit === "loose")
-            .map(a => {
-                const image = scene.add.image(0, 0, a.id)
-                // image.setOrigin(0.13, 0.5)
-                return image
-            })
+            // TODO: This 'isplayer' check means you never see these on opponent birds
+            this.looseAttire = meta.settings.aesthetics.attire
+                .filter(a => !a.base && meta.isPlayer && scene.load.textureManager.exists(a.id))
+                .filter(a => a.fit === "loose")
+                .map(a => {
+                    const image = scene.add.image(0, 0, a.id)
+                    // image.setOrigin(0.13, 0.5)
+                    return image
+                })
         }
 
         this.sprite = scene.add.sprite(0, 0, "flap1")
@@ -137,10 +138,14 @@ export class BirdSprite {
         // this.body = scene.physics.add. //  this.sprite.body as Phaser.Physics.Arcade.Body
         this.isInBus = true
 
-        // this.position = this.body.position
         const allAttire = this.tightAttire.concat(this.looseAttire)
 
         this.allObjects = scene.add.container(x, y, [this.sprite, ...allAttire])
+        scene.physics.world.enable(this.allObjects)
+
+        // debugger
+        this.body = this.allObjects.body as Phaser.Physics.Arcade.Body
+        this.position = this.body.position
 
         // this.allObjects.body
         // group.set
@@ -244,11 +249,11 @@ export class BirdSprite {
         let physicsWidth = remapClamped(this.body.velocity.y, 105, 200, defaultWidth - 2, 12 - 2)
         let physicsHeight = remapClamped(this.body.velocity.y, 105, 200, defaultHeight - 2, 16 - 2)
 
-        // this.sprite.body.setSize(physicsWidth, physicsHeight)
-        // this.sprite.body.offset = new Phaser.Math.Vector2(
-        //     remapClamped(this.body.velocity.y, 105, 200, -1, 3) * -1,
-        //     remapClamped(this.body.velocity.y, 105, 200, 1, 8)
-        // )
+        this.body.setSize(physicsWidth, physicsHeight)
+        this.body.offset = new Phaser.Math.Vector2(
+            remapClamped(this.body.velocity.y, 105, 200, -1, 3) * -1,
+            remapClamped(this.body.velocity.y, 105, 200, 1, 8)
+        )
     }
 
     destroy() {

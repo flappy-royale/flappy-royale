@@ -5,7 +5,7 @@ import { execSync, spawnSync } from "child_process"
 
 const appTS = readFileSync("src/app.ts", "utf8")
 if (!appTS.includes("const startupScreen = StartupScreen.MainMenu")) {
-    throw "The app is not set up to launch into the Main Menu"
+    throw "The app is not set up to launch into the Main Menu: src/app.ts:232"
 }
 
 // Ensures we ship submodules

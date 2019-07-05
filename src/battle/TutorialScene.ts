@@ -17,6 +17,7 @@ import _ = require("lodash")
 import { becomeButton } from "../menus/utils/becomeButton"
 import { debugAttire } from "../attire"
 import { playSound } from "../playSound"
+import { enablePhysicsLogging } from "./debugging/enablePhysicsLogging"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchTutorial = (game: Phaser.Game) => {
@@ -133,6 +134,8 @@ export class TutorialScene extends Phaser.Scene {
     }
 
     create() {
+        enablePhysicsLogging(this)
+
         this.sound.add("flap")
         this.sound.add("hit")
         this.sound.add("point")
