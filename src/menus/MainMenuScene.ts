@@ -78,7 +78,7 @@ export class MainMenuScene extends Phaser.Scene {
             seed: "menu",
             data: emptySeedData,
             gameMode: GameMode.Menu,
-            theme: GameTheme.default
+            theme: GameTheme.night
         })
         addScene(this.game, "battlebg", this.battleBG, true)
         this.game.scene.bringToTop("MainMenu")
@@ -249,11 +249,6 @@ export class MainMenuScene extends Phaser.Scene {
         const seed = this.seeds.royale[index]
         const lobby = new RoyaleLobby({ seed })
         addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
-    }
-
-    private loadTutorial() {
-        this.removeMenu()
-        launchTutorial(this.game)
     }
 
     removeMenu() {

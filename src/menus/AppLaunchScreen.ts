@@ -23,7 +23,7 @@ export class AppLaunchScene extends Phaser.Scene {
     preload() {
         preloadBirdSprites(this)
 
-        this.load.image("underground", require("../../assets/battle/ground-under.png"))
+        this.load.image("underground", require("../../assets/battle/themes/default/ground-under.png"))
         this.load.image("poster", require("../../assets/menu/royale-sign.png"))
         this.load.audio("other_flap", require("../../assets/audio/silence.wav"))
 

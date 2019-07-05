@@ -1,33 +1,34 @@
 import * as constants from "../../constants"
 import { BattleScene } from "../Scene"
 import * as Phaser from "phaser"
-import { TutorialScene } from "../TutorialScene";
+import { TutorialScene } from "../TutorialScene"
+import { GameTheme, themeMap } from "../theme"
 
-export const preloadBusImages = (game: BattleScene | TutorialScene) => {
-    game.load.image("bus", require("../../../assets/battle/Bus.png"))
-    game.load.image("bus-crashed", require("../../../assets/battle/BusCrashed.png"))
+export const preloadBusImages = (game: BattleScene | TutorialScene, theme: GameTheme) => {
+    game.load.image(themeMap[theme].bus[0], themeMap[theme].bus[1])
+    game.load.image(themeMap[theme].busCrashed[0], themeMap[theme].busCrashed[1])
 
     game.load.image("trash-1", require("../../../assets/battle/trash-1.png"))
     game.load.image("trash-2", require("../../../assets/battle/trash-2.png"))
     game.load.image("trash-3", require("../../../assets/battle/trash-3.png"))
 }
 
-export const createBus = (scene: BattleScene) => {
-    const bus = scene.physics.add.sprite(-10, 40 + constants.GameAreaTopOffset, "bus")
+export const createBus = (scene: BattleScene, theme: GameTheme) => {
+    const bus = scene.physics.add.sprite(-10, 40 + constants.GameAreaTopOffset, themeMap[theme].bus[0])
     bus.setGravityY(-450)
     bus.setAccelerationX(20)
     bus.setDepth(constants.zLevels.birdWings + 1)
     return bus
 }
 
-export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: Phaser.Scene) => {
+export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: Phaser.Scene, theme: GameTheme) => {
     if (bus.getData("dead")) return
 
     // Stop the bus, make it bounce back a bit
     bus.setAccelerationX(0)
     bus.setVelocityX(-65)
     bus.setGravityX(0)
-    bus.setTexture("bus-crashed")
+    bus.setTexture(themeMap[theme].busCrashed[0])
     bus.setGravityY(-300)
     bus.setData("dead", {})
 

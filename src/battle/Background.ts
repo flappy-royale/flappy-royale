@@ -5,6 +5,7 @@ import { TutorialScene } from "./TutorialScene"
 
 export const preloadBackgroundSprites = (scene: Phaser.Scene, theme: GameTheme = GameTheme.default) => {
     const bg = themeMap[theme]
+    scene.load.image(bg.groundTop[0], bg.groundTop[1])
     scene.load.image(bg.ground[0], bg.ground[1])
     scene.load.image(bg.bushes[0], bg.bushes[1])
     scene.load.image(bg.city[0], bg.city[1])
@@ -15,6 +16,7 @@ var city: Phaser.GameObjects.TileSprite,
     city2: Phaser.GameObjects.TileSprite,
     bushes: Phaser.GameObjects.TileSprite,
     bushes2: Phaser.GameObjects.TileSprite,
+    groundTop: Phaser.GameObjects.TileSprite,
     ground: Phaser.GameObjects.TileSprite
 
 export const createBackgroundSprites = (scene: BattleScene | TutorialScene, theme: GameTheme) => {
@@ -30,8 +32,24 @@ export const createBackgroundSprites = (scene: BattleScene | TutorialScene, them
     bushes = scene.add.tileSprite(74, 178 + constants.GameAreaTopOffset, 0, 0, bg.bushes[0])
     bushes2 = scene.add.tileSprite(74 + 147, 178 + constants.GameAreaTopOffset, 0, 0, bg.bushes[0])
 
-    ground = scene.add.tileSprite(80, 232 + constants.GameAreaTopOffset, 0, 0, bg.ground[0])
+    ground = scene.add.tileSprite(
+        constants.GameWidth / 2,
+        constants.GameAreaHeight - 10,
+        constants.GameWidth,
+        80,
+        bg.ground[0]
+    )
     ground.setDepth(constants.zLevels.ground)
+
+    // 7px for the top
+    groundTop = scene.add.tileSprite(
+        constants.GameWidth / 2,
+        constants.GameAreaHeight - 50,
+        constants.GameWidth,
+        7,
+        bg.groundTop[0]
+    )
+    groundTop.setDepth(constants.zLevels.ground)
 }
 
 export const bgUpdateTick = () => {
@@ -42,4 +60,5 @@ export const bgUpdateTick = () => {
     if (bushes2) bushes2.setTilePosition(bushes2.tilePositionX + 0.5)
 
     if (ground) ground.setTilePosition(ground.tilePositionX + 1)
+    if (groundTop) groundTop.setTilePosition(groundTop.tilePositionX + 1)
 }

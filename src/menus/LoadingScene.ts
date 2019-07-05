@@ -32,8 +32,8 @@ export class LoadingScene extends Phaser.Scene {
         preloadBirdSprites(this)
         this.possibleAttires.forEach(a => preloadBirdAttire(this, a.aesthetics.attire))
 
-        this.load.image("underground", require("../../assets/battle/ground-under.png"))
-        this.load.image("pipe-end", require("../../assets/battle/PipeBottom.png"))
+        this.load.image("underground", require("../../assets/battle/themes/default/ground-under.png"))
+        this.load.image("pipe-end", require("../../assets/battle/themes/default/PipeBottom.png"))
         this.load.audio("other_flap", require("../../assets/audio/silence.wav"))
 
         this.load.bitmapFont(

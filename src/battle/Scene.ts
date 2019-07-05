@@ -239,7 +239,7 @@ export class BattleScene extends Phaser.Scene {
             require("../../assets/fonts/nokia16.xml")
         )
 
-        preloadBusImages(this)
+        preloadBusImages(this, this.theme)
         preloadPipeSprites(this, this.theme)
         preloadBirdSprites(this)
         if (devSettings.preloadAllAttire) preloadAllBirdAttire(this)
@@ -292,7 +292,7 @@ export class BattleScene extends Phaser.Scene {
         setupBirdAnimations(this)
         this.setupPhysicsFloor()
 
-        this.bus = createBus(this)
+        this.bus = createBus(this, this.theme)
 
         this.physics.add.collider(this.bus, this.floorPhysics)
 
@@ -597,7 +597,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Let the bus collide
         const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
-            busCrashed(bus, this)
+            busCrashed(bus, this, this.theme)
             if (this.bird && this.bird.isInBus && !this.bird.isDead) {
                 this.userDied()
                 this.bird.stopBeingInBus()
