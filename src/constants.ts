@@ -21,27 +21,31 @@ export const GameAreaHeight = 240
  * so we export this fn to let others control the flow)
  */
 export function setDeviceSize() {
+    console.log(screen.width, window.innerWidth)
     const scale = GameWidth / screen.width
 
-    if (CSS.supports("padding-top: env(safe-area-inset-top)")) {
+    GameHeight = window.innerHeight * scale
+    GameAreaTopOffset = NotchOffset && (GameHeight - GameAreaHeight) / 2
+
+    if (window.NotchOffset) {
+        // Android native app
+        const offset = window.NotchOffset.offset()
+        if (offset) {
+            NotchOffset = parseFloat(offset) * scale
+        }
+    } else if (CSS.supports("padding-top: env(safe-area-inset-top)")) {
         let div = document.createElement("div")
         div.style.paddingTop = "env(safe-area-inset-top)"
         document.body.appendChild(div)
         let calculatedPadding = parseInt(window.getComputedStyle(div).paddingTop || "0", 10)
         document.body.removeChild(div)
+
         NotchOffset = calculatedPadding * scale
+
+        // We don't do this in Android because of the way Android handles sizing differently.
+        GameHeight += NotchOffset
     }
 
-    console.log(window.NotchOffset)
-    if (window.NotchOffset) {
-        // Set by Android
-        const offset = window.NotchOffset.offset()
-        if (offset) {
-            NotchOffset = parseFloat(offset)
-        }
-    }
-
-    GameHeight = window.innerHeight * scale + NotchOffset
     GameAreaTopOffset = NotchOffset && (GameHeight - GameAreaHeight) / 2
 
     // Handle landscape / desktop separately

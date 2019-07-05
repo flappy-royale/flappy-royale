@@ -21,8 +21,7 @@ class NotchOffset(private val context: Context, val webview: WebView) {
             val density = context.resources.displayMetrics.density
 
             if (cutout != null) {
-                val topOffset = (cutout.safeInsetTop / density)
-                return "$topOffset";
+                return "${cutout.safeInsetTop}";
             }
         }
         return null
