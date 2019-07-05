@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                     if (visible) {
                         makeFullScreen()
                     }
-                    return true
+                    return false
                 }
             })
         webview.setOnTouchListener(View.OnTouchListener { _, motionEvent ->
