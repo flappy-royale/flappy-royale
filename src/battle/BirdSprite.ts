@@ -58,6 +58,7 @@ export class BirdSprite {
     position: Phaser.Math.Vector2
 
     isPlayer: boolean = false
+    isImage: boolean = false
     isInBus: boolean
     isDead: boolean = false
     isAtRest: boolean = false
@@ -73,8 +74,8 @@ export class BirdSprite {
     // Focus sprite
     private focusSprite: Phaser.GameObjects.Image
     // HATS
-    private tightAttire: Phaser.GameObjects.Image[]
-    private looseAttire: Phaser.GameObjects.Image[]
+    private tightAttire: Phaser.GameObjects.Image[] = []
+    private looseAttire: Phaser.GameObjects.Image[] = []
     // the physics representation of the bird
     private body: Phaser.Physics.Arcade.Body
 
@@ -82,8 +83,9 @@ export class BirdSprite {
     // Don't apply gravity / velocity etc during the constructor
     // because this is used for previews
     //
-    constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; settings: Bird }) {
+    constructor(scene: Scene, x: number, y: number, meta: { isPlayer: boolean; isImage?: boolean; settings: Bird }) {
         this.isPlayer = meta.isPlayer
+        this.isImage = meta.isImage || false
 
         this.scene = scene
 
@@ -142,6 +144,10 @@ export class BirdSprite {
         scene.sys.events.addListener("postupdate", () => {
             this.updateRelatedSprites({ tight: true })
         })
+
+        if (this.isImage) {
+            this.actAsImage()
+        }
     }
 
     setOpacityBasedOnScore(pipes: number) {
