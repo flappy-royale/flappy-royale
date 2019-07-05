@@ -480,10 +480,6 @@ export class BattleScene extends Phaser.Scene {
             if (this.runningFpsTally.length === 20) {
                 const avgFps = Math.floor(_.mean(this.runningFpsTally))
 
-                if (this.scoreLabel) {
-                    this.scoreLabel.setText(`${avgFps}`)
-                }
-
                 if (avgFps < 50) {
                     // Low quality!
                     const deadGhostBirds = this.ghostBirds.splice(0, _.min([this.ghostBirds.length, 60]))
@@ -491,10 +487,6 @@ export class BattleScene extends Phaser.Scene {
                     deadGhostBirds.forEach(b => b.destroy())
 
                     enableAutoLowQualityMode()
-
-                    if (this.scoreLabel) {
-                        this.scoreLabel.setText(`${avgFps}!`)
-                    }
                 }
 
                 this.measuringFps = false
