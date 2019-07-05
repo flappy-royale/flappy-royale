@@ -13,6 +13,11 @@ declare global {
             messageHandlers: { [key: string]: WebkitHandler }
         }
 
+        /** Like 15 or something */
+        buildVersion: string
+        /** Release version, e.g. 1.1 */
+        appVersion: string
+
         // Android
         ModalAdPresenter?: {
             requestAd: (currentState: number) => void

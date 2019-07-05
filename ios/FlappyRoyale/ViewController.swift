@@ -37,7 +37,14 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         let userContentController = WKUserContentController()
 
         let username = NSUserName()
-        let userScript = WKUserScript(source: "window.isAppleApp = true; window.username = '\(username)';",
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        let bundleVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+        let userScript = WKUserScript(source: """
+window.isAppleApp = true;
+window.username = '\(username)';
+window.appVersion = '\(appVersion)';
+window.buildVersion = '\(bundleVersion)';
+""",
                                       injectionTime: .atDocumentStart,
                                       forMainFrameOnly: true)
         userContentController.addUserScript(userScript)

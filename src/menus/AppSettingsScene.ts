@@ -77,6 +77,21 @@ export class AppSettingsScene extends Phaser.Scene {
         const back = document.getElementById("back") as HTMLImageElement
         back.src = require("../../assets/menu/Back2.png")
 
+        // Show or hide the build metadata in the game
+        const metaApp = document.getElementById("meta-app")!
+        if (window.appVersion) {
+            metaApp.getElementsByTagName("span")[0].textContent = window.appVersion
+        } else {
+            metaApp.parentNode!.removeChild(metaApp)
+        }
+
+        const metaBuild = document.getElementById("meta-build")!
+        if (window.buildVersion) {
+            metaBuild.getElementsByTagName("span")[0].textContent = window.buildVersion
+        } else {
+            metaBuild.parentNode!.removeChild(metaBuild)
+        }
+
         back.onclick = () => {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
