@@ -282,22 +282,26 @@ export class BattleScene extends Phaser.Scene {
 
         // Set up the competitor birds
         if (game.showGhostBirds(this.mode)) {
-            this.seedData.replays
-                .sort((l, r) => r.score - l.score)
-                .forEach(input => {
-                    const ghost = new BirdSprite(
-                        this,
-                        constants.birdXPosition,
-                        constants.birdYPosition + constants.GameAreaTopOffset,
-                        {
-                            isPlayer: false,
-                            settings: input.user
-                        }
-                    )
-                    ghost.setupForBeingInBus()
-                    ghost.addCollideForSprite(this, this.floorPhysics)
-                    this.ghostBirds.push(ghost)
-                })
+            let replays = this.seedData.replays.sort((l, r) => r.score - l.score) // Sorted descending
+
+            if (getSettings().lowPerformanceMode) {
+                replays = replays.slice(0, 60)
+            }
+
+            replays.forEach(input => {
+                const ghost = new BirdSprite(
+                    this,
+                    constants.birdXPosition,
+                    constants.birdYPosition + constants.GameAreaTopOffset,
+                    {
+                        isPlayer: false,
+                        settings: input.user
+                    }
+                )
+                ghost.setupForBeingInBus()
+                ghost.addCollideForSprite(this, this.floorPhysics)
+                this.ghostBirds.push(ghost)
+            })
         }
 
         if (this.bird) {
@@ -450,12 +454,6 @@ export class BattleScene extends Phaser.Scene {
     }
 
     update(timestamp: number) {
-        // console.log(this.game.loop.actualFps)
-        // if (this.ghostBirds.length > 30 && this.game.loop.actualFps < 70) {
-        //     const lastBird = this.ghostBirds.pop()
-        //     lastBird.destroy()
-        // }
-
         // Parallax stuff, and moves the ground to the front
         if (!this.bird || !this.bird.isDead) {
             bgUpdateTick()

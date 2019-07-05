@@ -8,6 +8,14 @@ import { launchTutorial } from "../battle/TutorialScene"
 
 export const AppSettingsKey = "UserSettings"
 
+interface ButtonOptions {
+    initialValue: boolean
+    disabled?: boolean
+
+    onText?: string
+    offText?: string
+}
+
 export class AppSettingsScene extends Phaser.Scene {
     constructor() {
         super(AppSettingsKey)
@@ -43,8 +51,19 @@ export class AppSettingsScene extends Phaser.Scene {
         element.addListener("click")
 
         const settings = getSettings()
-        this.makeButton("audio-button", settings.sound, sound => saveSettings({ sound }))
-        this.makeButton("haptics-button", settings.haptics, haptics => saveSettings({ haptics }))
+        this.makeButton("audio-button", { initialValue: settings.sound }, sound => saveSettings({ sound }))
+        this.makeButton("haptics-button", { initialValue: settings.haptics }, haptics => saveSettings({ haptics }))
+        this.makeButton(
+            "quality-button",
+            {
+                initialValue: !settings.lowPerformanceMode,
+                onText: "high",
+                offText: "low"
+            },
+            value => {
+                saveSettings({ lowPerformanceMode: !value })
+            }
+        )
         // this.makeButton("dark-mode-button", settings.darkMode, darkMode => saveSettings({ darkMode }))
 
         // this.makeButton("auto-dark-mode-button", settings.autoDarkMode, autoDarkMode => {
@@ -98,11 +117,11 @@ export class AppSettingsScene extends Phaser.Scene {
         }
     }
 
-    setButtonState(el: HTMLButtonElement, value: boolean, disabled: boolean = false) {
-        const text = value ? "on" : "off"
+    setButtonState(el: HTMLButtonElement, value: boolean, opts: ButtonOptions) {
+        const text = value ? opts.onText || "on" : opts.offText || "off"
         let bgImage
 
-        if (disabled) {
+        if (opts.disabled) {
             bgImage = require("../../assets/menu/ButtonSmallBG-Disabled.png")
         } else if (value) {
             bgImage = require("../../assets/menu/ButtonSmallBG-Green.png")
@@ -110,19 +129,19 @@ export class AppSettingsScene extends Phaser.Scene {
             bgImage = require("../../assets/menu/ButtonSmallBG-Red.png")
         }
 
-        el.disabled = disabled
+        el.disabled = opts.disabled || false
         el.innerText = text
         el.style.backgroundImage = `url(${bgImage})`
     }
 
-    makeButton(id: string, value: boolean, onChange: (newValue: boolean) => void) {
-        let currentValue = value
+    makeButton(id: string, opts: ButtonOptions, onChange: (newValue: boolean) => void) {
+        let currentValue = opts.initialValue
         const el = document.getElementById(id) as HTMLButtonElement
-        this.setButtonState(el, currentValue)
+        this.setButtonState(el, currentValue, opts)
 
         el.addEventListener("click", () => {
             currentValue = !currentValue
-            this.setButtonState(el, currentValue)
+            this.setButtonState(el, currentValue, opts)
             onChange(currentValue)
         })
     }
