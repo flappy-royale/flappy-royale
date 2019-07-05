@@ -20,7 +20,11 @@ class AndroidStaticData(private val context: Context, val webview: WebView) {
         string += "\"playfabAuth\": " + playfabAuth.data() + ", "
 
         val notchOffset = NotchOffset(context, webview)
-        string += "\"notchOffset\": " + notchOffset.offset()
+        string += "\"notchOffset\": " + notchOffset.offset() + ","
+
+        val appVersion = AppVersion(context, webview)
+        string += "\"appVersion\": \"${appVersion.appVersion()}\", "
+        string += "\"buildVersion\": \"${appVersion.buildVersion()}\""
 
         string += "}"
 
