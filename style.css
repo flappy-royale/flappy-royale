@@ -1,3 +1,7 @@
+html {
+    touch-action: manipulation;
+}
+
 canvas {
     image-rendering: optimizeSpeed;
     image-rendering: crisp-edges;
