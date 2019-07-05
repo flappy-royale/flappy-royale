@@ -88,7 +88,7 @@ function newGame(): FlappyGame {
         dom: {
             createContainer: true
         },
-        type: Phaser.CANVAS,
+        type: Phaser.AUTO,
         physics: {
             default: "arcade",
             arcade: {
