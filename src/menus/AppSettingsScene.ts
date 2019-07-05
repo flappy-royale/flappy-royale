@@ -6,6 +6,7 @@ import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { saveSettings, getSettings, GameQuality } from "../gameSettings"
 import { launchTutorial } from "../battle/TutorialScene"
 import _ = require("lodash")
+import { openURL } from "../nativeComms/openURL"
 
 export const AppSettingsKey = "UserSettings"
 
@@ -150,6 +151,12 @@ export class AppSettingsScene extends Phaser.Scene {
             metaBuild.parentNode!.removeChild(metaBuild)
         }
 
+        const metaSha = document.getElementById("meta-sha")!
+        const sha = metaSha.getElementsByTagName("span")[0].textContent
+        metaSha.onclick = () => {
+            openURL(`https://github.com/flappy-royale/flappy-royale/commit/${sha}`)
+        }
+
         back.onclick = () => {
             this.game.scene.remove(this)
             launchMainMenu(this.game)
@@ -167,8 +174,6 @@ export class AppSettingsScene extends Phaser.Scene {
 
         let currentState = opts.states.find(s => s.value === currentValue)
         let currentIndex = _.indexOf(opts.states, currentState)
-
-        console.log(opts, currentState, currentValue, opts.states)
 
         if (!currentState) return
         this.setButtonState(el, currentState)
