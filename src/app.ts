@@ -70,6 +70,9 @@ enum StartupScreen {
 }
 
 function newGame(): FlappyGame {
+    const isSafariRenderer = window.isAppleApp || "safari" in window
+    const renderMode = isSafariRenderer ? Phaser.CANVAS : Phaser.AUTO
+
     const config: Phaser.Types.Core.GameConfig = {
         title: "Flappy Royale",
         width: constants.GameWidth,
@@ -88,7 +91,7 @@ function newGame(): FlappyGame {
         dom: {
             createContainer: true
         },
-        type: Phaser.AUTO,
+        type: renderMode,
         physics: {
             default: "arcade",
             arcade: {
