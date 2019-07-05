@@ -79,8 +79,7 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
-        webview.addJavascriptInterface(PlayfabAuthData(this, webview), "PlayfabAuth")
-        webview.addJavascriptInterface(NotchOffset(this, webview), "NotchOffset")
+        webview.addJavascriptInterface(AndroidStaticData(this, webview), "AndroidStaticData")
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

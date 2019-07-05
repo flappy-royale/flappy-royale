@@ -234,9 +234,19 @@ window.onload = async () => {
     // TODO: Our splash screen can happen in not-Phaser DOM land and use that to mask this waiting period.
     await wait(100)
 
-    PlayFab.login()
+    // Android doesn't give us an easy way to set variables on window.
+    // This AndroidStaticData.fetch() function is going to return a JSON object
+    // containing everything we want shoved onto window.
+    if (window.AndroidStaticData) {
+        let data = JSON.parse(window.AndroidStaticData.fetch())
+        for (const key in data) {
+            window[key] = data[key]
+        }
+    }
 
+    PlayFab.login()
     constants.setDeviceSize()
+
     const game = newGame()
 
     // Fixes viewport if the user dismisses the iOS keyboard by tapping 'done'

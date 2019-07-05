@@ -27,12 +27,9 @@ export function setDeviceSize() {
     GameHeight = window.innerHeight * scale
     GameAreaTopOffset = NotchOffset && (GameHeight - GameAreaHeight) / 2
 
-    if (window.NotchOffset) {
+    if (window.notchOffset) {
         // Android native app
-        const offset = window.NotchOffset.offset()
-        if (offset) {
-            NotchOffset = parseFloat(offset) * scale
-        }
+        NotchOffset = window.notchOffset * scale
     } else if (CSS.supports("padding-top: env(safe-area-inset-top)")) {
         let div = document.createElement("div")
         div.style.paddingTop = "env(safe-area-inset-top)"

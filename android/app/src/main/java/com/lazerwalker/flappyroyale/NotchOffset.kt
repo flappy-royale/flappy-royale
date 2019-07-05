@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class NotchOffset(private val context: Context, val webview: WebView) {
     @JavascriptInterface
-    fun offset() : String? {
+    fun offset() : Int? {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // Set notch offset in JS so our client code can read it
             // Inspired by the approach taken by https://github.com/tobspr/cordova-plugin-android-notch
@@ -21,7 +21,7 @@ class NotchOffset(private val context: Context, val webview: WebView) {
             val density = context.resources.displayMetrics.density
 
             if (cutout != null) {
-                return "${cutout.safeInsetTop}";
+                return cutout.safeInsetTop
             }
         }
         return null
