@@ -30,8 +30,8 @@ import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 declare const DEMO: boolean
 
 /** Used on launch, and when you go back to the main menu */
-export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
-    const mainMenu = new MainMenuScene()
+export const launchMainMenu = (game: Phaser.Game, skipUI: boolean = false): MainMenuScene => {
+    const mainMenu = new MainMenuScene(skipUI)
     addScene(game, "MainMenu", mainMenu, true)
     return mainMenu
 }
@@ -43,8 +43,11 @@ export class MainMenuScene extends Phaser.Scene {
     playerNameText: Phaser.GameObjects.BitmapText
     winsLabel: Phaser.GameObjects.BitmapText
 
-    constructor() {
+    skipUI: boolean
+
+    constructor(skipUI: boolean = false) {
         super("MainMenu")
+        this.skipUI = skipUI
     }
 
     preload() {
@@ -94,7 +97,9 @@ export class MainMenuScene extends Phaser.Scene {
 
         const settings = getUserSettings()
 
-        if (hasName()) {
+        if (this.skipUI) {
+            // Do nothing!
+        } else if (hasName()) {
             this.setUpMenu()
         } else if (!settings.hasAskedAboutTutorial) {
             this.loadTutorialFlow()
@@ -144,11 +149,6 @@ export class MainMenuScene extends Phaser.Scene {
 
         const youButton = this.add.image(32, c.GameHeight - 22, "you-button")
 
-        const player = new BirdSprite(this, 8, c.GameHeight - 22, {
-            isPlayer: false,
-            isImage: true,
-            settings: settings
-        })
         becomeButton(youButton, this.loadYourAttire, this)
 
         const statsButton = this.add.image(c.GameWidth / 2 + 10, c.GameHeight - 22, "stats-button")
@@ -158,7 +158,7 @@ export class MainMenuScene extends Phaser.Scene {
         // becomeButton(howToPlayButton, this.loadTutorial, this)
     }
 
-    private loadSettings() {
+    loadSettings() {
         this.removeMenu()
         const settings = new AppSettingsScene()
         addScene(this.game, AppSettingsKey, settings, true)
