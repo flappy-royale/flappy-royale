@@ -22,6 +22,8 @@ import { setupAdsense } from "./util/setupAdsense"
 import { setupGAnalytics } from "./util/setupGAnalytics"
 import { currentPlatform } from "./util/getPlatform"
 import * as PlayFab from "./playFab"
+import { versionIsCurrent, downloadURL } from "./detectVersion"
+import { Prompt, showPrompt } from "./menus/Prompt"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -253,6 +255,24 @@ window.onload = async () => {
     window.currentGame = game
 
     const seed = "1-royale-0"
+
+    if (!versionIsCurrent()) {
+        launchMainMenu(game, true)
+
+        const options = {
+            title: "New Version Available!",
+            subtitle: "Please update to play.",
+            yes: "GET",
+
+            completion: (_, prompt: Prompt) => {
+                window.open(downloadURL())
+            }
+        }
+        setTimeout(() => {
+            showPrompt(options, game)
+        }, 500)
+        return
+    }
 
     // Change this to have it load up into a different screen on save in dev mode
     const startupScreen = StartupScreen.MainMenu as StartupScreen
