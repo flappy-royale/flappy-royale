@@ -4,7 +4,7 @@
 
 import * as uuid from "uuid/v4"
 import * as playFab from "./playFab"
-import { isAndroidApp } from "./nativeComms/deviceDetection"
+import { isAndroidApp, isAppleApp } from "./nativeComms/deviceDetection"
 
 interface FocusPeriod {
     uuid: string
@@ -18,17 +18,16 @@ let queue: PlayFabEventsModels.EventContents[] = []
 
 export const setUpScreenTracking = () => {
     // Android visibility is currently messed up
-    if (isAndroidApp()) {
+    if (isAndroidApp() || isAppleApp()) {
         return
     }
-    window.addEventListener("visibilitychange", () => {
+    document.addEventListener("visibilitychange", () => {
         sessionFocusEvent(!document.hidden)
     })
     startedSession()
 }
 
 export const startedSession = () => {
-    console.log("Started session")
     gameSessionUUID = uuid()
 
     let payload: any = {

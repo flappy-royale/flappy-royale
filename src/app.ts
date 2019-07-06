@@ -209,6 +209,17 @@ declare global {
     }
 }
 
+window.addEventListener("fake-visibilitychange", (e: any) => {
+    const hidden = e.detail.hidden
+    const state = hidden ? "hidden" : "visible"
+
+    // document.hidden is read-only. This is necessary to properly set it!
+    // via https://sqa.stackexchange.com/questions/32152/force-a-browsers-visibility-setting-to-true
+    Object.defineProperty(document, "visibilityState", { value: state, writable: true })
+    Object.defineProperty(document, "hidden", { value: hidden, writable: true })
+    document.dispatchEvent(new Event("visibilitychange"))
+})
+
 if (!PRODUCTION) {
     console.log("Skipping app cache")
 } else {

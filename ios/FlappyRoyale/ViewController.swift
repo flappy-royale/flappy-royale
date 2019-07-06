@@ -114,13 +114,13 @@ window.buildVersion = '\(bundleVersion)';
 
         // WKWebViews don't dispatch visibilitychange events.
         // If we fake support for visibilitychange, pausing the Phaser game will Just Work™
-        webView.evaluateJavaScript("document.hidden = false;", completionHandler: nil)
+        webView.evaluateJavaScript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);", completionHandler: nil)
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) {_ in
-            webView.evaluateJavaScript("document.hidden = true; var evt = new Event('visibilitychange'); window.dispatchEvent(evt);", completionHandler: nil)
+            webView.evaluateJavaScript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: true }}); window.dispatchEvent(evt);", completionHandler: nil)
         }
 
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) {_ in
-            webView.evaluateJavaScript("document.hidden = false; var evt = new Event('visibilitychange'); window.dispatchEvent(evt);", completionHandler: nil)
+            webView.evaluateJavaScript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);", completionHandler: nil)
         }
 
         loadGameURL()
