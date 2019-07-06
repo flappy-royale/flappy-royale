@@ -24,13 +24,17 @@ export const preloadBirdSprites = (scene: BattleScene | Scene) => {
 
 export const preloadBirdAttire = (scene: Phaser.Scene, attire: Attire[]) => {
     for (const piece of attire) {
-        scene.load.image(piece.id, piece.href)
+        if (piece && piece.id) {
+            scene.load.image(piece.id, piece.href)
+        }
     }
 }
 
 export const preloadAllBirdAttire = (scene: Phaser.Scene) => {
     for (const attire of builtInAttire) {
-        scene.load.image(attire.id, attire.href)
+        if (attire && attire.id) {
+            scene.load.image(attire.id, attire.href)
+        }
     }
 }
 
