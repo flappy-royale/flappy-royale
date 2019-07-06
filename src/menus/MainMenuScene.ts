@@ -149,6 +149,11 @@ export class MainMenuScene extends Phaser.Scene {
 
         const youButton = this.add.image(32, c.GameHeight - 22, "you-button")
 
+        const player = new BirdSprite(this, 8, c.GameHeight - 22, {
+            isPlayer: false,
+            isImage: true,
+            settings: settings
+        })
         becomeButton(youButton, this.loadYourAttire, this)
 
         const statsButton = this.add.image(c.GameWidth / 2 + 10, c.GameHeight - 22, "stats-button")
