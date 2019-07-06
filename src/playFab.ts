@@ -50,12 +50,6 @@ export const login = () => {
 
                 isLoggedIn = true
 
-                if (result.data.NewlyCreated) {
-                    const settings = getUserSettings()
-                    updateName(settings.name)
-                    updateAttire(settings.aesthetics.attire)
-                }
-
                 resolve(playerId)
             }
         )
