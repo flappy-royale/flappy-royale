@@ -36,6 +36,7 @@ declare global {
 
         URLLoader?: {
             openURL: (url: string) => void
+            openPlayStoreURL: (url: string) => void
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number)

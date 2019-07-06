@@ -24,6 +24,7 @@ import { currentPlatform } from "./util/getPlatform"
 import * as PlayFab from "./playFab"
 import { versionIsCurrent, downloadURL } from "./detectVersion"
 import { Prompt, showPrompt } from "./menus/Prompt"
+import { isAndroidApp } from "./nativeComms/deviceDetection"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -265,12 +266,16 @@ window.onload = async () => {
     //         yes: "GET",
 
     //         completion: (_, prompt: Prompt) => {
-    //             window.open(downloadURL())
+    //             if (isAndroidApp() && window.URLLoader) {
+    //                 window.URLLoader.openPlayStoreURL(downloadURL())
+    //             } else {
+    //                 window.open(downloadURL())
+    //             }
     //         }
     //     }
     //     setTimeout(() => {
     //         showPrompt(options, game)
-    //     }, 500)
+    //     }, 1000)
     //     return
     // }
 

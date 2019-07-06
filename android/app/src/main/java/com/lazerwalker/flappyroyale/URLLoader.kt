@@ -17,4 +17,14 @@ class URLLoader(private val context: Context, val webview: WebView) {
 
         // TODO: Do we need to explicitly handle mailto, or will Android do that for us?
     }
+
+    // This tells Android to definitely open it in the Play Store, rather than popping an app chooser
+    @JavascriptInterface
+    fun openPlayStoreURL(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(url)
+            setPackage("com.android.vending")
+        }
+        context.startActivity(intent)
+    }
 }
