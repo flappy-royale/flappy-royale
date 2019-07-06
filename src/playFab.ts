@@ -27,9 +27,9 @@ export const login = () => {
     if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
         method = PlayFabClient.LoginWithIOSDeviceID
         loginRequest = { ...loginRequest, ...customAuth.payload }
-        // } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
-        //     method = PlayFabClient.LoginWithAndroidDeviceID
-        //     loginRequest = { ...loginRequest, ...customAuth.payload }
+    } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
+        method = PlayFabClient.LoginWithAndroidDeviceID
+        loginRequest = { ...loginRequest, ...customAuth.payload }
     }
 
     if (method === PlayFabClient.LoginWithCustomID) {
