@@ -251,11 +251,6 @@ export class MainMenuScene extends Phaser.Scene {
         addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
     }
 
-    private loadTutorial() {
-        this.removeMenu()
-        launchTutorial(this.game)
-    }
-
     removeMenu() {
         // We get a JS error if we just remove the scene before the new scene has started (finished?) loading
         // Phaser's docs claim scene.remove() will process the operation, but that seems to not be the case

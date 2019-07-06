@@ -249,6 +249,34 @@ export const v1Attire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/Robin.png")
+    },
+    {
+        id: "mallard-duck",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Duck.png")
+    },
+    {
+        id: "white-rabbit",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/WhiteRabbit.png")
+    },
+    {
+        id: "rocket",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Rocket.png")
+    },
+    {
+        id: "dm-fox",
+        description: "Bird got punk'd",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/DMFox.png")
     }
 ]
 

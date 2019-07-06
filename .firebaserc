@@ -1,6 +1,14 @@
 {
-  "projects": {
-    "default": "flappy-royale-3377a",
-    "prod": "flappy-royale-3377a"
-  }
+    "projects": {
+        "default": "flappy-royale-3377a",
+        "prod": "flappy-royale-3377a"
+    },
+    "targets": {
+        "flappy-royale-3377a": {
+            "hosting": {
+                "prod": ["flappy-royale-3377a"],
+                "staging": ["flappy-staging"]
+            }
+        }
+    }
 }

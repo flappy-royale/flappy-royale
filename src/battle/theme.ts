@@ -5,6 +5,9 @@ export enum GameTheme {
 }
 
 interface Theme {
+    bus: [string, string]
+    busCrashed: [string, string]
+    groundTop: [string, string]
     ground: [string, string]
     bushes: [string, string]
     city: [string, string]
@@ -18,17 +21,23 @@ interface Theme {
 /** We have to statically declare all assets for webpack, so this map ensures we don't do dynamic lookups */
 export const themeMap: { [key: number]: Theme } = {
     [GameTheme.default]: {
-        ground: ["default-ground", require("../../assets/battle/ground.png")],
-        bushes: ["default-bushes", require("../../assets/battle/bushes.png")],
-        city: ["default-city", require("../../assets/battle/city.png")],
-        clouds: ["default-clouds", require("../../assets/battle/clouds.png")],
-        top: ["default-pipe-top", require("../../assets/battle/PipeTop.png")],
-        body: ["default-pipe-body", require("../../assets/battle/PipeLength.png")],
-        bottom: ["default-pipe-bottom", require("../../assets/battle/PipeBottom.png")],
+        bus: ["default-bus", require("../../assets/battle/themes/default/Bus.png")],
+        busCrashed: ["default-bus", require("../../assets/battle/themes/default/BusCrashed.png")],
+        groundTop: ["default-ground-top", require("../../assets/battle/themes/default/ground-top.png")],
+        ground: ["default-ground", require("../../assets/battle/themes/default/ground-tile.png")],
+        bushes: ["default-bushes", require("../../assets/battle/themes/default/bushes.png")],
+        city: ["default-city", require("../../assets/battle/themes/default/city.png")],
+        clouds: ["default-clouds", require("../../assets/battle/themes/default/clouds.png")],
+        top: ["default-pipe-top", require("../../assets/battle/themes/default/PipeTop.png")],
+        body: ["default-pipe-body", require("../../assets/battle/themes/default/PipeLength.png")],
+        bottom: ["default-pipe-bottom", require("../../assets/battle/themes/default/PipeBottom.png")],
         bgColor: 0x62cbe0
     },
     [GameTheme.night]: {
-        ground: ["night-ground", require("../../assets/battle/themes/night-mode/ground.png")],
+        bus: ["default-bus", require("../../assets/battle/themes/night-mode/Bus.png")],
+        busCrashed: ["default-bus", require("../../assets/battle/themes/night-mode/BusCrashed.png")],
+        groundTop: ["night-ground-top", require("../../assets/battle/themes/night-mode/ground-top.png")],
+        ground: ["night-ground", require("../../assets/battle/themes/night-mode/ground-tile.png")],
         bushes: ["night-bushes", require("../../assets/battle/themes/night-mode/bushes.png")],
         city: ["night-city", require("../../assets/battle/themes/night-mode/city.png")],
         clouds: ["night-clouds", require("../../assets/battle/themes/night-mode/clouds.png")],
