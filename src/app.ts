@@ -47,16 +47,10 @@ if (DEMO) {
     // setupAdsense()
 }
 
-// TODO: Delete this line before shipping the production app
-localStorage.setItem("beta", "true")
-
-// ...and uncomment the following
-/*
 if (localStorage.getItem("beta") === "true") {
     localStorage.clear()
     window.location.reload()
 }
-*/
 
 enum StartupScreen {
     Launcher,
