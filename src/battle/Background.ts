@@ -34,9 +34,9 @@ export const createBackgroundSprites = (scene: BattleScene | TutorialScene, them
 
     ground = scene.add.tileSprite(
         constants.GameWidth / 2,
-        constants.GameAreaHeight - 10,
+        constants.GameAreaHeight - 8 + constants.GameAreaTopOffset,
         constants.GameWidth,
-        80,
+        90,
         bg.ground[0]
     )
     ground.setDepth(constants.zLevels.ground)
@@ -44,7 +44,7 @@ export const createBackgroundSprites = (scene: BattleScene | TutorialScene, them
     // 7px for the top
     groundTop = scene.add.tileSprite(
         constants.GameWidth / 2,
-        constants.GameAreaHeight - 50,
+        constants.GameAreaHeight - 50 + constants.GameAreaTopOffset,
         constants.GameWidth,
         7,
         bg.groundTop[0]
