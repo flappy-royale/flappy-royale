@@ -36,6 +36,7 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
+    increment_version_code(gradle_file_path: "app/build.gradle",)
     gradle(task: "clean assembleRelease")
     upload_to_play_store(
       metadata_path: "../assets/fastlane/android"
