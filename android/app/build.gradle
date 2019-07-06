@@ -36,7 +36,7 @@ android {
         applicationId "com.lazerwalker.flappyroyale"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 11
+        versionCode 12
         versionName "1.1"
         signingConfig signingConfigs.playstore
     }
