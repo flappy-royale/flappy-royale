@@ -6,8 +6,7 @@ import { builtInAttire, Attire, defaultAttire } from "../attire"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { isEqual } from "lodash"
-import { analyticsEvent, analyticsSetID } from "../nativeComms/analytics"
-import { usernameIsValid } from "../usernameIsValid"
+import { analyticsEvent } from "../nativeComms/analytics"
 import { NamePromptKey, EnterNameScreen } from "./EnterNameScreen"
 import { addScene } from "./utils/addScene"
 
@@ -101,7 +100,7 @@ export class UserAttireScene extends Phaser.Scene {
 
             if (!attire.base) {
                 const img = document.createElement("img")
-                img.src = require("../../assets/bases/BirdBody.png")
+                img.src = require("../../assets/bases/Hedgehog.png")
                 img.style.opacity = "0.1"
                 div.appendChild(img)
             }

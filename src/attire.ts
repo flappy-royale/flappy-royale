@@ -61,26 +61,13 @@ export const v1Attire: PresentationAttire[] = [
         href: require("../assets/bases/Banana.png")
     },
     dog,
-    {
-        id: "cave",
-        description: "It flaps",
-        fit: "tight",
-        base: true,
-        href: require("../assets/bases/CaveBody.png")
-    },
+
     {
         id: "default-body",
         description: "It flaps",
         fit: "tight",
         base: true,
         href: require("../assets/bases/BirdBody.png")
-    },
-    {
-        id: "bad-beard",
-        description: "A really dodgy beard",
-        fit: "tight",
-        base: false,
-        href: require("../assets/attire/BadBeard.png")
     },
     {
         id: "flat-cap1",
@@ -166,13 +153,13 @@ export const v1Attire: PresentationAttire[] = [
         base: false,
         href: require("../assets/attire/nervous.png")
     },
-    // {
-    //     id: "pig",
-    //     description: "Bird got punk'd",
-    //     fit: "tight",
-    //     base: true,
-    //     href: require("../assets/bases/Pig.png")
-    // },
+    {
+        id: "nimbus",
+        description: "TBD",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/Nimbus.png")
+    },
     {
         id: "tired",
         description: "Bird got punk'd",
@@ -277,6 +264,48 @@ export const v1Attire: PresentationAttire[] = [
         fit: "tight",
         base: true,
         href: require("../assets/bases/DMFox.png")
+    },
+    {
+        id: "flag_trans",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Flag_Trans.png")
+    },
+    {
+        id: "flag_nonbinary",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Flag_Nonbinary.png")
+    },
+    {
+        id: "finish_flag",
+        description: "TBD",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/Finish_Flag.png")
+    }
+]
+
+/**
+ * Unless you find a compelling reason, don't use these, but don't delete
+ * this const as it makes sure they're still in the bundle
+ */
+export const deprecatedAttire = [
+    {
+        id: "bad-beard",
+        description: "A really dodgy beard",
+        fit: "tight",
+        base: false,
+        href: require("../assets/attire/BadBeard.png")
+    },
+    {
+        id: "cave",
+        description: "It flaps",
+        fit: "tight",
+        base: true,
+        href: require("../assets/bases/CaveBody.png")
     }
 ]
 
