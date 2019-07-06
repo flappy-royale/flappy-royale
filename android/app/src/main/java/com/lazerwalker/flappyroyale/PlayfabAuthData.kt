@@ -1,6 +1,5 @@
 package com.lazerwalker.flappyroyale
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
@@ -11,7 +10,9 @@ import com.jaredrummler.android.device.DeviceName
 class PlayfabAuthData(private val context: Context, val webview: WebView) {
     @JavascriptInterface
     fun data() : String {
-        val deviceId = Settings.Secure.ANDROID_ID
+        val deviceId = Settings.Secure.getString(context.contentResolver,
+            Settings.Secure.ANDROID_ID);
+
         val device = DeviceName.getDeviceName();
 
         val osVersion = Build.VERSION.RELEASE

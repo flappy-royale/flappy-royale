@@ -195,7 +195,8 @@ export class TutorialScene extends Phaser.Scene {
         this.prompt = showPrompt(
             {
                 subtitle: "Tap to leave the bus",
-                y: (4 / 5) * constants.GameHeight
+                y: (4 / 5) * constants.GameHeight,
+                drawBgLayer: false
             },
             this.game
         )
@@ -320,7 +321,8 @@ export class TutorialScene extends Phaser.Scene {
                 this.prompt = showPrompt(
                     {
                         subtitle: "Tap to flap",
-                        y: (4 / 5) * constants.GameHeight
+                        y: (4 / 5) * constants.GameHeight,
+                        drawBgLayer: false
                     },
                     this.game
                 )
@@ -365,7 +367,8 @@ export class TutorialScene extends Phaser.Scene {
                     this.prompt = showPrompt(
                         {
                             subtitle: "Fly through the pipes",
-                            y: (4 / 5) * constants.GameHeight
+                            y: (4 / 5) * constants.GameHeight,
+                            drawBgLayer: false
                         },
                         this.game
                     )
@@ -402,6 +405,7 @@ export class TutorialScene extends Phaser.Scene {
                         title: "Nailed it!",
                         yes: "WOO!",
                         y: constants.GameHeight / 3,
+                        drawBgLayer: false,
                         completion: (response: boolean, prompt: Prompt) => {
                             this.scene.remove(prompt)
                             _.defer(() => {

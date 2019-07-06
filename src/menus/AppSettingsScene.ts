@@ -7,6 +7,7 @@ import { saveSettings, getSettings, GameQuality } from "../gameSettings"
 import { launchTutorial } from "../battle/TutorialScene"
 import _ = require("lodash")
 import { openURL } from "../nativeComms/openURL"
+import { Prompt, showPrompt } from "./Prompt"
 
 export const AppSettingsKey = "UserSettings"
 
@@ -117,10 +118,26 @@ export class AppSettingsScene extends Phaser.Scene {
         // this.setButtonState(otherButton, settings.darkMode, settings.autoDarkMode)
 
         document.getElementById("reset")!.addEventListener("click", () => {
-            if (confirm("Are you sure you want to erase all your progress? This cannot be undone.")) {
-                localStorage.clear()
-                window.location.reload()
+            this.game.scene.remove(this)
+            const mainMenu = launchMainMenu(this.game, true)
+
+            const options = {
+                title: "Are you sure? This",
+                subtitle: "will erase everything.",
+                yes: "yes",
+                no: "no",
+
+                completion: (response: boolean, prompt: Prompt) => {
+                    if (response) {
+                        localStorage.clear()
+                        window.location.reload()
+                    } else {
+                        mainMenu.game.scene.remove(prompt)
+                        mainMenu.loadSettings()
+                    }
+                }
             }
+            showPrompt(options, this.game)
         })
 
         document.getElementById("show-tutorial")!.addEventListener("click", () => {

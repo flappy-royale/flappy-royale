@@ -25,6 +25,7 @@ import { shareNatively } from "../../nativeComms/share"
 import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/utils/backgroundColors"
 import { getTrialDeathLeaderboard, Leaderboard, LeaderboardResult } from "../../playFab"
 import _ = require("lodash")
+import { Prompt, showPrompt, PromptOptions } from "../../menus/Prompt"
 
 export interface TrialDeathProps {
     lives: number
@@ -458,11 +459,17 @@ export class TrialDeath extends Phaser.Scene {
 
         addLives(seed, livesToAdd)
 
-        setTimeout(() => {
-            alert(
-                `Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`
-            )
-        }, 200)
+        const options: PromptOptions = {
+            title: `You've earned`,
+            subtitle: `${livesToAdd} more tries!`,
+            drawBgLayer: true,
+            yes: "ok",
+            completion: (response: boolean, prompt: Prompt) => {
+                this.scene.remove(prompt)
+            }
+        }
+
+        showPrompt(options, this.game)
 
         this.againButton.setText("again")
         centerAlignTextLabel(this.againButton, -10)

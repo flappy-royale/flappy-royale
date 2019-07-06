@@ -13,6 +13,7 @@ import com.lazerwalker.flappyadconstants.AdConstants
 
 import android.view.MotionEvent
 import android.view.GestureDetector
+import android.webkit.WebSettings
 import android.webkit.WebView
 import com.ironsource.mediationsdk.ISBannerSize
 import com.ironsource.mediationsdk.IronSource
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.setAppCacheEnabled(true)
+        settings.setAppCachePath(this.cacheDir.absolutePath);
+        settings.databaseEnabled = true;
+        settings.domStorageEnabled = true;
+        settings.allowFileAccess = true;
+        settings.cacheMode = WebSettings.LOAD_DEFAULT;
 
         makeFullScreen()
 
