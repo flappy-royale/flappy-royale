@@ -27,33 +27,22 @@
             </intent-filter>
         </activity>
 
-        <!--<meta-data android:name="applovin.sdk.key"-->
-                   <!--android:value="${ApplovinSdkKey}" />-->
-
-        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
-                   android:value="${AdmobAppId}"/>
-
-        <!-- MoPub's consent dialog -->
-        <activity android:name="com.mopub.common.privacy.ConsentDialogActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-
-        <!-- All ad formats -->
-        <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize"/>
-
-        <!-- Interstitials -->
-        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-
-        <!-- Rewarded Video and Rewarded Playables -->
-        <activity android:name="com.mopub.mobileads.RewardedMraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+    <activity
+            android:name="com.ironsource.sdk.controller.ControllerActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true" />
+    <activity
+            android:name="com.ironsource.sdk.controller.InterstitialActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent" />
+    <activity
+            android:name="com.ironsource.sdk.controller.OpenUrlActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent" />
 
         <meta-data android:name="com.google.android.gms.version"
                    android:value="@integer/google_play_services_version" />
-
-        <activity android:name="com.chartboost.sdk.CBImpressionActivity"
-                  android:excludeFromRecents="true"
-                  android:hardwareAccelerated="true"
-        />
     </application>
-
 </manifest>

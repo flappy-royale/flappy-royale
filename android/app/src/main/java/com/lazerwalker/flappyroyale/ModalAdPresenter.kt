@@ -2,68 +2,36 @@ package com.lazerwalker.flappyroyale
 
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Handler
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.Toast
+import com.ironsource.mediationsdk.IronSource
+import com.ironsource.mediationsdk.logger.IronSourceError
+import com.ironsource.mediationsdk.model.Placement
+import com.ironsource.mediationsdk.sdk.RewardedVideoListener
 import com.lazerwalker.flappyadconstants.AdConstants
-import com.mopub.mobileads.MoPubRewardedVideo
-import com.mopub.mobileads.MoPubRewardedVideos
-import com.mopub.common.MoPubReward
-import com.mopub.mobileads.MoPubErrorCode
-import com.mopub.mobileads.MoPubRewardedVideoListener
+import android.os.Looper
 
 
 
-class ModalAdPresenter(private val mContext: Context, val webview: WebView) {
+
+
+class ModalAdPresenter(private val mContext: Context, val webview: WebView) : RewardedVideoListener {
     @JavascriptInterface
     fun prepareAd(currentState: Int) {
-        val adUnitID = adUnitForState(currentState) ?: return
 
-        MoPubRewardedVideos.loadRewardedVideo(adUnitID);
     }
 
     @JavascriptInterface
     fun requestAd(currentState: Int) {
         val adUnitID = adUnitForState(currentState) ?: return
 
-        val hasReward = MoPubRewardedVideos.hasRewardedVideo(adUnitID)
+        val hasAd = IronSource.isRewardedVideoAvailable()
 
-        if (hasReward) {
-            val rewardedVideoListener = object : MoPubRewardedVideoListener {
-                override fun onRewardedVideoLoadSuccess(adUnitId: String) {
-                    // Called when the video for the given adUnitId has loaded. At this point you should be able to call MoPubRewardedVideos.showRewardedVideo(String) to show the video.
-                }
-
-                override fun onRewardedVideoLoadFailure(adUnitId: String, errorCode: MoPubErrorCode) {
-                    // Called when a video fails to load for the given adUnitId. The provided error code will provide more insight into the reason for the failure to load.
-                }
-
-                override fun onRewardedVideoStarted(adUnitId: String) {
-                    // Called when a rewarded video starts playing.
-                }
-
-                override fun onRewardedVideoPlaybackError(adUnitId: String, errorCode: MoPubErrorCode) {
-                    //  Called when there is an error during video playback.
-                }
-
-                override fun onRewardedVideoClosed(adUnitId: String) {
-                    // Called when a rewarded video is closed. At this point your application should resume.
-                }
-
-                override fun onRewardedVideoClicked(adUnitId: String) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onRewardedVideoCompleted(adUnitIds: Set<String>, reward: MoPubReward) {
-                    if(reward.isSuccessful()) {
-                        webview.evaluateJavascript("window.currentGame.adsHaveBeenUnlocked();") { _ -> }
-                    }
-                }
-            }
-
-            MoPubRewardedVideos.setRewardedVideoListener(rewardedVideoListener)
-            MoPubRewardedVideos.showRewardedVideo(adUnitID)
-
+        if (hasAd) {
+            IronSource.showRewardedVideo(adUnitID)
         } else {
             AlertDialog.Builder(mContext)
                 .setTitle("Sorry!")
@@ -77,18 +45,54 @@ class ModalAdPresenter(private val mContext: Context, val webview: WebView) {
 
     private fun adUnitForState(state: Int): String? {
         if (state == 0) {
-            return AdConstants.fiveLivesMoPub
+            return AdConstants.ironSrcFiveLives
 
         } else if (state == 1) {
-            return AdConstants.tenLivesMoPub
+            return AdConstants.ironSrcTenLives
 
         } else if (state == 2) {
-            return AdConstants.fifteenLivesMobPub
+            return AdConstants.ironSrcFifteenLives
 
         } else {
             assert(state == 4) {  -> "Somehow ended up sending for too many ads" }
             print("Got into a bad state")
             return null
         }
+    }
+
+    /** IronSource rewarded video ad listener */
+
+    override fun onRewardedVideoAdOpened() {
+        Log.i("IronSource", "Rewarded video ad opened")
+    }
+    override fun onRewardedVideoAdClosed() {
+        Log.i("IronSource", "Rewarded video ad closed")
+    }
+
+    override fun onRewardedVideoAvailabilityChanged(available: Boolean) {
+        Log.i("IronSource", "Rewarded video ad avalability changed ${available}")
+    }
+
+    override fun onRewardedVideoAdStarted(){
+        Log.i("IronSource", "Rewarded video ad started")
+    }
+
+    override fun onRewardedVideoAdEnded(){
+        Log.i("IronSource", "Rewarded video ad ended")
+    }
+
+    override fun onRewardedVideoAdRewarded(placement: Placement) {
+        Log.i("IronSource", "Rewarded video ad rewarded!")
+        // Web view must evaluate on main thread
+        Handler(Looper.getMainLooper()).post(Runnable { webview.evaluateJavascript("window.currentGame.adsHaveBeenUnlocked();") { _ -> } })
+    }
+
+    override fun onRewardedVideoAdShowFailed(p0: IronSourceError?) {
+        Log.i("IronSource", "Rewarded video ad error")
+        Log.i("IronSource", p0?.errorMessage)
+    }
+
+    override fun onRewardedVideoAdClicked(placement: Placement) {
+        Log.i("IronSource", "Rewarded video ad clicked")
     }
 }

@@ -1,34 +1,29 @@
 package com.lazerwalker.flappyroyale
 
 import android.content.pm.ActivityInfo
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
+import android.support.constraint.ConstraintLayout
+import android.util.Log
 import android.view.View
 import android.webkit.WebViewClient
-import com.jaredrummler.android.device.DeviceName
 import kotlinx.android.synthetic.main.activity_main.*
 
 import com.lazerwalker.flappyadconstants.AdConstants
 
-import com.mopub.common.MoPub
-import com.mopub.common.SdkConfiguration
-import com.mopub.common.SdkInitializationListener
-import com.mopub.common.logging.MoPubLog
-import com.mopub.mobileads.MoPubView
-import android.text.method.Touch.onTouchEvent
 import android.view.MotionEvent
 import android.view.GestureDetector
-import android.view.WindowInsets
-import android.annotation.TargetApi
-import android.os.Debug
-import android.util.Log
 import android.webkit.WebView
+import com.ironsource.mediationsdk.ISBannerSize
+import com.ironsource.mediationsdk.IronSource
+import com.ironsource.mediationsdk.IronSourceBannerLayout
+import com.ironsource.mediationsdk.logger.IronSourceError
+import com.ironsource.mediationsdk.sdk.BannerListener
 
 
 class MainActivity : AppCompatActivity() {
-    private var moPubView: MoPubView? = null
+    private var adPresenter: ModalAdPresenter? = null
+    private var banner: IronSourceBannerLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +59,16 @@ class MainActivity : AppCompatActivity() {
             )
         })
 
-        setUpMoPub()
+        this.adPresenter = ModalAdPresenter(this, webview)
+
+        IronSource.setUserId(IronSource.getAdvertiserId(this))
+        IronSource.setRewardedVideoListener(this.adPresenter);
+        IronSource.shouldTrackNetworkState(this, true);
+
+        IronSource.init(this, AdConstants.ironsrcAppKey, IronSource.AD_UNIT.REWARDED_VIDEO, IronSource.AD_UNIT.BANNER);
+        loadIronSourceBanner()
+        // This verifies IronSource is set up, including mediation integrations
+        // IntegrationHelper.validateIntegration(this);
     }
 
     override fun onAttachedToWindow() {
@@ -75,11 +79,21 @@ class MainActivity : AppCompatActivity() {
 //        webview.loadUrl("http://192.168.1.6:8085")
 //        WebView.setWebContentsDebuggingEnabled(true);
 
-        webview.addJavascriptInterface(ModalAdPresenter(this, webview), "ModalAdPresenter")
+        webview.addJavascriptInterface((this.adPresenter as ModalAdPresenter), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
         webview.addJavascriptInterface(AndroidStaticData(this, webview), "AndroidStaticData")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        IronSource.onResume(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        IronSource.onPause(this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -102,30 +116,49 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setUpMoPub() {
-        val moPubConfig = SdkConfiguration.Builder(AdConstants.bottomBannerMoPub)
-            .withLogLevel(MoPubLog.LogLevel.DEBUG)
-            .build()
+    private fun loadIronSourceBanner() {
+        this.banner = IronSource.createBanner(this, ISBannerSize.BANNER);
+        bannerAdView.addView(banner)
 
-        val moPubCompletion = object : SdkInitializationListener {
-            override fun onInitializationFinished() {
-                /** Set up the bottom banner ad */
-                moPubView = findViewById(R.id.adview) as? MoPubView
-                moPubView?.adUnitId = AdConstants.bottomBannerMoPub
-                moPubView?.loadAd();
+        val bannerListener = object : BannerListener {
+            override fun onBannerAdLoaded() {
+                Log.i("IronSource", "Banner ad loaded")
+            }
+
+            override fun onBannerAdLoadFailed(error: IronSourceError) {
+                Log.i("IronSource", "Banner ad load failed")
+                Log.i("IronSource", error.errorMessage)
+
+                runOnUiThread({ bannerAdView.removeAllViews() })
+            }
+
+            override fun onBannerAdClicked()
+            {
+                Log.i("IronSource", "Banner ad clicked")
+            }
+
+            override fun onBannerAdScreenPresented()
+            {
+                Log.i("IronSource", "Banner ad presented")
+            }
+
+            override fun onBannerAdScreenDismissed()
+            {
+                Log.i("IronSource", "Banner ad dismissed")
+            }
+
+            override fun onBannerAdLeftApplication()
+            {
+                Log.i("IronSource", "Banner ad left application")
             }
         }
-
-        MoPub.initializeSdk(
-            this,
-            moPubConfig,
-            moPubCompletion
-        )
+        this.banner?.setBannerListener(bannerListener)
+        IronSource.loadBanner(banner);
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        moPubView?.destroy();
+        IronSource.destroyBanner(this.banner);
     }
 }
 

@@ -16,8 +16,10 @@ constants.load(new FileInputStream(constantsFile))
 repositories {
     jcenter() // includes the MoPub SDK and AVID library
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
-    maven { url 'https://adcolony.bintray.com/AdColony' }
     maven { url 'https://jitpack.io' }
+    maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
+    google()
+
 }
 
 android {
@@ -36,10 +38,6 @@ android {
         targetSdkVersion 28
         versionCode 10
         versionName "1.0"
-        manifestPlaceholders = [
-                ApplovinSdkKey: constants["ApplovinSdkKey"],
-                AdmobAppId: constants["AdmobAppId"]
-        ]
         signingConfig signingConfigs.playstore
     }
     buildTypes {
@@ -70,30 +68,10 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.9'
 
-    // Chartboost
-    // This mediated network SDK is not available on JCenter. Ensure you have downloaded and imported it manually into your app project.
-    implementation 'com.mopub.mediation:chartboost:7.3.1.4'
+//    implementation 'com.google.android.gms:play-services-games:18.0.0'
 
-    // AppLovin
-    implementation 'com.applovin:applovin-sdk:9.7.1'
-    implementation 'com.mopub.mediation:applovin:9.7.1.0'
+    implementation 'com.ironsource.sdk:mediationsdk:6.8.5@jar'
 
-    // AdColony
-    implementation 'com.adcolony:sdk:3.3.10'
-    implementation 'com.mopub.mediation:adcolony:3.3.10.0'
-
-    // Google (AdMob)
-    implementation 'com.google.android.gms:play-services-ads:17.2.1'
-    implementation 'com.mopub.mediation:admob:17.2.1.0'
-
-    // Vungle
-    implementation 'com.github.vungle:vungle-android-sdk:6.3.24'
-    implementation 'com.mopub.mediation:vungle:6.3.24.3'
 
     implementation 'com.jaredrummler:android-device-names:1.1.9'
-
-
-    // Google Play Services needed by Chartboost
-//    implementation "com.google.android.gms:play-services-base:$project.ext.googlePlayServicesVersion"
-//    implementation "com.google.android.gms:play-services-ads-identifier:$project.ext.googlePlayServicesVersion"
 }
