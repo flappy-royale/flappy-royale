@@ -1,4 +1,4 @@
-import { PlayFabClient } from "PlayFab-sdk"
+import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
 import { allAttire, Attire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
@@ -11,7 +11,8 @@ export let isLoggedIn: boolean = false
 
 let loginPromise: Promise<string>
 
-let playerId: string | undefined
+export let playfabUserId: string | undefined
+let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
 
@@ -46,17 +47,15 @@ export const login = () => {
                     return
                 }
 
-                playerId = result.data.PlayFabId
+                playfabUserId = result.data.PlayFabId
+
+                if (result.data.EntityToken) {
+                    playfabEntityKey = result.data.EntityToken.Entity
+                }
 
                 isLoggedIn = true
 
-                if (result.data.NewlyCreated) {
-                    const settings = getUserSettings()
-                    updateName(settings.name)
-                    updateAttire(settings.aesthetics.attire)
-                }
-
-                resolve(playerId)
+                resolve(playfabUserId)
             }
         )
     })
@@ -191,6 +190,30 @@ export const event = async (name: string, params: any) => {
     )
 }
 
+export const writeScreenTrackingEvents = async (events: PlayFabEventsModels.EventContents[]) => {
+    await loginPromise
+    events.forEach(e => {
+        if (!e.Entity && playfabEntityKey) {
+            e.Entity = playfabEntityKey
+        }
+
+        if (!e.Payload.UserID) {
+            e.Payload.UserID = playfabUserId
+        }
+    })
+
+    PlayFabEvents.WriteEvents(
+        {
+            Events: events
+        },
+        (err, result) => {
+            if (err) {
+                console.log("Error writing screen tracking events", err)
+            }
+        }
+    )
+}
+
 // LEADERBOARDS
 
 export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
@@ -203,7 +226,7 @@ export const getTrialLobbyLeaderboard = async (): Promise<Leaderboard> => {
     })
     console.log(results)
 
-    const player = results.find(l => l.userId === playerId)
+    const player = results.find(l => l.userId === playfabUserId)
 
     return { results, player }
 }
@@ -227,7 +250,7 @@ export const getTrialDeathLeaderboard = async (): Promise<Leaderboard> => {
     const flattened = _.flatten(twoResults)
     const deduped = _.uniqBy(flattened, "position") // In case the user is in the top 3! this is rare enough we can spare the extra network call
 
-    const player = deduped.find(l => l.userId === playerId)
+    const player = deduped.find(l => l.userId === playfabUserId)
 
     return { results: deduped, player }
 }

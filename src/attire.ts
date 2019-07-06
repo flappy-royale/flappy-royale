@@ -273,11 +273,11 @@ export const v1Attire: PresentationAttire[] = [
         href: require("../assets/attire/Flag_Trans.png")
     },
     {
-        id: "flag_nonbinary",
+        id: "pride_hunter",
         description: "TBD",
         fit: "tight",
         base: false,
-        href: require("../assets/attire/Flag_Nonbinary.png")
+        href: require("../assets/attire/Pride_Hunter.png")
     },
     {
         id: "finish_flag",
@@ -797,13 +797,13 @@ export const versionTwoAttire: PresentationAttire[] = [
         base: false,
         href: require("../assets/attire/Pixel_Spangled_Banner.png")
     },
-    {
-        id: "pride_hunter",
+       {
+        id: "flag_nonbinary",
         description: "TBD",
         fit: "tight",
         base: false,
-        href: require("../assets/attire/Pride_Hunter.png")
-    },
+        href: require("../assets/attire/Flag_Nonbinary.png")
+    }
     {
         id: "flag_trans",
         description: "TBD",

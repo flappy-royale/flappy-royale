@@ -22,6 +22,10 @@ import { setupAdsense } from "./util/setupAdsense"
 import { setupGAnalytics } from "./util/setupGAnalytics"
 import { currentPlatform } from "./util/getPlatform"
 import * as PlayFab from "./playFab"
+import { versionIsCurrent, downloadURL } from "./detectVersion"
+import { Prompt, showPrompt } from "./menus/Prompt"
+import { isAndroidApp } from "./nativeComms/deviceDetection"
+import { setUpScreenTracking } from "./screenTimeTracker"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -205,6 +209,17 @@ declare global {
     }
 }
 
+window.addEventListener("fake-visibilitychange", (e: any) => {
+    const hidden = e.detail.hidden
+    const state = hidden ? "hidden" : "visible"
+
+    // document.hidden is read-only. This is necessary to properly set it!
+    // via https://sqa.stackexchange.com/questions/32152/force-a-browsers-visibility-setting-to-true
+    Object.defineProperty(document, "visibilityState", { value: state, writable: true })
+    Object.defineProperty(document, "hidden", { value: hidden, writable: true })
+    document.dispatchEvent(new Event("visibilitychange"))
+})
+
 if (!PRODUCTION) {
     console.log("Skipping app cache")
 } else {
@@ -252,7 +267,31 @@ window.onload = async () => {
     // This is used by Ads manager etc to get to our game
     window.currentGame = game
 
+    setUpScreenTracking()
+
     const seed = "1-royale-0"
+
+    // if (!versionIsCurrent()) {
+    //     launchMainMenu(game, true)
+
+    //     const options = {
+    //         title: "New Version Available!",
+    //         subtitle: "Please update to play.",
+    //         yes: "GET",
+
+    //         completion: (_, prompt: Prompt) => {
+    //             if (isAndroidApp() && window.URLLoader) {
+    //                 window.URLLoader.openPlayStoreURL(downloadURL())
+    //             } else {
+    //                 window.open(downloadURL())
+    //             }
+    //         }
+    //     }
+    //     setTimeout(() => {
+    //         showPrompt(options, game)
+    //     }, 1000)
+    //     return
+    // }
 
     // Change this to have it load up into a different screen on save in dev mode
     const startupScreen = StartupScreen.MainMenu as StartupScreen
