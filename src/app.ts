@@ -25,6 +25,7 @@ import * as PlayFab from "./playFab"
 import { versionIsCurrent, downloadURL } from "./detectVersion"
 import { Prompt, showPrompt } from "./menus/Prompt"
 import { isAndroidApp } from "./nativeComms/deviceDetection"
+import { setUpScreenTracking } from "./screenTimeTracker"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -254,6 +255,8 @@ window.onload = async () => {
     // @ts-ignore
     // This is used by Ads manager etc to get to our game
     window.currentGame = game
+
+    setUpScreenTracking()
 
     const seed = "1-royale-0"
 
