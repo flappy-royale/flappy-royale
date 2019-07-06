@@ -20,6 +20,7 @@ import { GameTheme } from "../battle/theme"
 import { getTrialLobbyLeaderboard } from "../playFab"
 import { Attire, defaultAttire } from "../attire"
 import { emptySeedData } from "../firebase"
+import { Prompt, showPrompt } from "./Prompt"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -197,11 +198,25 @@ export class TrialLobby extends Phaser.Scene {
 
         addLives(this.seed, livesToAdd)
 
-        setTimeout(() => {
-            alert(
-                `Thanks for supporting Flappy Royale! You've earned an additional ${livesToAdd} tries for today's Daily Trial.`
-            )
-        }, 100)
+        /** Okay, hack ahoy.
+         * We can't display a canvas-based Prompt on top of a DOM-based screen.
+         * Sooo... let's immediately go back to the main menu before displaying it,
+         * and then re-show the trial screen as soon as the user hits okay.
+         */
+        this.game.scene.remove(this)
+        const mainMenu = launchMainMenu(this.game)
+
+        const options = {
+            title: `You've earned`,
+            subtitle: `${livesToAdd} more tries!`,
+            yes: "ok",
+
+            completion: (response: boolean, prompt: Prompt) => {
+                mainMenu.game.scene.remove(prompt)
+                mainMenu.loadTrial()
+            }
+        }
+        showPrompt(options, this.game)
 
         const info = document.getElementById("info")!
         info.innerHTML = `Daily scoreboard<br />${livesToAdd} tries left`

@@ -30,9 +30,10 @@ import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 declare const DEMO: boolean
 
 /** Used on launch, and when you go back to the main menu */
-export const launchMainMenu = (game: Phaser.Game) => {
+export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
     const mainMenu = new MainMenuScene()
     addScene(game, "MainMenu", mainMenu, true)
+    return mainMenu
 }
 
 export class MainMenuScene extends Phaser.Scene {
@@ -236,7 +237,7 @@ export class MainMenuScene extends Phaser.Scene {
         showPrompt(options, this.game)
     }
 
-    private loadTrial() {
+    loadTrial() {
         this.removeMenu()
         const seed = this.seeds.daily.production
         const lobby = new TrialLobby({ seed })

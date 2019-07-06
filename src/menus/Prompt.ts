@@ -4,7 +4,6 @@ import { GameWidth, GameHeight, zLevels } from "../constants"
 import { becomeButton } from "./utils/becomeButton"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { addScene } from "./utils/addScene"
-import { constants } from "fs"
 
 export const PromptKey = "AttirePrompt"
 
@@ -15,7 +14,9 @@ export interface PromptOptions {
     yes?: string
     no?: string
 
-    y: number
+    /** If true, we draw a black background that the user also can't tap over */
+    drawBgLayer?: boolean
+    y?: number
 
     zDepth?: number
     zDepthBg?: number
@@ -23,11 +24,19 @@ export interface PromptOptions {
     completion?: (response: boolean, prompt: Prompt) => void
 }
 
+const defaultOptions = (): PromptOptions => {
+    return {
+        drawBgLayer: true,
+        y: (2 / 5) * GameHeight
+    }
+}
+
 /** Pass in a Game if you want this to be its own scene.
  * Pass in a Scene if you just want these added to an existing scene
  */
 export function showPrompt(options: PromptOptions, game: Phaser.Game): Prompt {
-    const prompt = new Prompt(options)
+    const opts = { ...defaultOptions(), ...options }
+    const prompt = new Prompt(opts)
     addScene(game, PromptKey, prompt, true)
     return prompt
 }
@@ -55,7 +64,13 @@ export class Prompt extends Phaser.Scene {
         const depth = this.options.zDepth || zLevels.ui
         const bgDepth = this.options.zDepthBg || zLevels.uiBg
 
-        let y = this.options.y
+        if (this.options.drawBgLayer) {
+            const bg = this.add.rectangle(GameWidth / 2, GameHeight / 2, GameWidth, GameHeight, 0x000000, 0.4)
+            bg.setDepth(bgDepth)
+            bg.setInteractive()
+        }
+
+        let y = this.options.y!
 
         if (this.options.title) {
             const title = this.add.bitmapText(0, y, "fipps", this.options.title, 8)
@@ -95,7 +110,7 @@ export class Prompt extends Phaser.Scene {
             const noBg = this.add.image(GameWidth / 2, y, "attire-button-small-bg")
             noBg.setDepth(depth)
 
-            const noText = this.add.bitmapText(0, noBg.y - 5, "fipps", "LATER", 8)
+            const noText = this.add.bitmapText(0, noBg.y - 5, "fipps", this.options.no, 8)
             centerAlignTextLabel(noText)
             noText.setDepth(depth)
 
@@ -106,7 +121,7 @@ export class Prompt extends Phaser.Scene {
             const yesBg = this.add.image(GameWidth / 2, y, "attire-button-small-bg-yellow")
             yesBg.setDepth(depth)
 
-            const yesText = this.add.bitmapText(yesBg.x - 20, yesBg.y - 5, "fipps", "YEAH!", 8)
+            const yesText = this.add.bitmapText(yesBg.x - 20, yesBg.y - 5, "fipps", this.options.yes, 8)
             becomeButton(yesBg, this.yes, this, [yesText])
             yesText.setDepth(depth)
 
@@ -115,8 +130,8 @@ export class Prompt extends Phaser.Scene {
 
         y += 10
 
-        const height = y - this.options.y
-        const bgY = this.options.y - 10 + height / 2
+        const height = y - this.options.y!
+        const bgY = this.options.y! - 10 + height / 2
 
         const bg = this.add.rectangle(GameWidth / 2, bgY, GameWidth, height, 0x8991eb)
         bg.setDepth(bgDepth)
