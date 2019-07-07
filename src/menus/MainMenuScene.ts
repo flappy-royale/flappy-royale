@@ -12,7 +12,8 @@ import {
     getUserSettings,
     getUserStatistics,
     hasAskedAboutTutorial,
-    hasName
+    hasName,
+    getSyncedUserSettings
 } from "../user/userManager"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
@@ -101,17 +102,19 @@ export class MainMenuScene extends Phaser.Scene {
 
         setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
 
-        const settings = getUserSettings()
-
-        if (this.props.skipOnboardingUI) {
-            // Do nothing!
-        } else if (hasName()) {
-            this.setUpMenu()
-        } else if (!settings.hasAskedAboutTutorial) {
-            this.loadTutorialFlow()
-        } else {
-            this.loadNamePrompt()
-        }
+        const settings = getSyncedUserSettings().then(settings => {
+            if (this.props.skipOnboardingUI) {
+                // Do nothing!
+                // This is so we can use a dummy main menu as the backdrop for a modal prompt
+                // (This should probably be a different scene)
+            } else if (hasName()) {
+                this.setUpMenu()
+            } else if (!settings.hasAskedAboutTutorial) {
+                this.loadTutorialFlow()
+            } else {
+                this.loadNamePrompt()
+            }
+        })
 
         // This is just used for taking snapshots
         window.dispatchEvent(new Event("gameloaded"))

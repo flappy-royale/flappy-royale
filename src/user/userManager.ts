@@ -73,6 +73,9 @@ export interface PlayerStats {
     bestRoyaleStreak: number
 }
 
+// Which user settings keys — other than 'name' and 'aesthetics' – we want to sync on PlayFab
+export const syncedSettingsKeys = ["hasAskedAboutTutorial"]
+
 // What it is when you first join
 export const defaultSettings: UserSettings = {
     name: "new player",
@@ -90,7 +93,10 @@ export const defaultSettings: UserSettings = {
 export const getUserSettings = (): UserSettings =>
     JSON.parse(localStorage.getItem("settings") || JSON.stringify(defaultSettings))
 
-const saveSettings = (settings: UserSettings) => localStorage.setItem("settings", JSON.stringify(settings))
+const saveSettings = (settings: UserSettings) => {
+    localStorage.setItem("settings", JSON.stringify(settings))
+    PlayFab.updateUserSettings(settings)
+}
 
 /**  For user forms etc */
 export const changeSettings = (settings: Partial<UserSettings>) => {
@@ -110,6 +116,12 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
     }
 
     saveSettings(existingSettings)
+}
+
+// Fetches user settings (just like getUserSettings), but guarantees we've already finished login and thus synced data from the server
+export const getSyncedUserSettings = async (): Promise<UserSettings> => {
+    await PlayFab.loginPromise
+    return getUserSettings()
 }
 
 // The royales are separated from the settings because they can get pretty big
