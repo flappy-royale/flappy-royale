@@ -39,14 +39,14 @@ export const deathPreload = (game: Phaser.Scene) => {
 }
 
 export class RoyaleDeath extends Phaser.Scene {
-    seed: string
-    seedData: SeedData
+    seed!: string
+    seedData!: SeedData
 
     /** True if the user has pressed 'ready', but new seed data isn't available yet  */
     hasReadied: boolean = false
 
-    newGameText: Phaser.GameObjects.BitmapText
-    newGameBG: Phaser.GameObjects.Image
+    newGameText!: Phaser.GameObjects.BitmapText
+    newGameBG!: Phaser.GameObjects.Image
 
     footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
     shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
@@ -128,7 +128,8 @@ export class RoyaleDeath extends Phaser.Scene {
         this.footerObjects.push(this.newGameBG)
         this.footerObjects.push(this.newGameText)
 
-        let share, shareIcon
+        let share: Phaser.GameObjects.Image, shareIcon: Phaser.GameObjects.Image
+
         if (!isAndroidApp()) {
             share = this.add.image(55, GameHeight - 51, "button-small-bg")
             share.setScale(0.6, 1)

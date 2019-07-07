@@ -137,7 +137,7 @@ export class UserAttireScene extends Phaser.Scene {
         }
 
         // Click handling
-        element.on("click", function(event) {
+        element.on("click", function(event: Event) {
             const target = event.target as Element
 
             // Getting a potential attire is tricky, you could hit
