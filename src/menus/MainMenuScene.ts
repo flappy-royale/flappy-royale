@@ -26,6 +26,7 @@ import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { Prompt, showPrompt } from "./Prompt"
 import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
+import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 
 declare const DEMO: boolean
 
@@ -165,8 +166,7 @@ export class MainMenuScene extends Phaser.Scene {
         const statsButton = this.add.image(c.GameWidth / 2 + 10, c.GameHeight - 22, "stats-button")
         becomeButton(statsButton, this.loadStats, this)
 
-        // const howToPlayButton = this.add.image(c.GameWidth - 12, c.GameHeight - 42, "question-mark")
-        // becomeButton(howToPlayButton, this.loadTutorial, this)
+        checkToShowRatingPrompt()
     }
 
     loadSettings() {
