@@ -14,9 +14,11 @@
 		60924F6E22BFF9F90004796A /* URLLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924F6C22BFF9F90004796A /* URLLoader.swift */; };
 		6092CB4D22B0B56600D9480B /* AdPresentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6092CB4C22B0B56600D9480B /* AdPresentor.swift */; };
 		60961B7022B6DEDC0070160A /* ShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60961B6F22B6DEDC0070160A /* ShareManager.swift */; };
+		9259DE29960CE51A434D9725 /* Pods_Flappy_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 131C54B7695E9FDAFC63F6B7 /* Pods_Flappy_Dev.framework */; };
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
 		C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */; };
+		C63A3FC122D1DE6200978948 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C63A3FC022D1DE6200978948 /* GameKit.framework */; };
 		C64C01C922B9068D0037150D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C64C01C822B9068D0037150D /* GoogleService-Info.plist */; };
 		C653149121EE7BB80068609E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149021EE7BB80068609E /* AppDelegate.swift */; };
 		C653149321EE7BB80068609E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C653149221EE7BB80068609E /* ViewController.swift */; };
@@ -53,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		131C54B7695E9FDAFC63F6B7 /* Pods_Flappy_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Flappy_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		605A160B22B5AEDB008A7AFD /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		6067812722AB0A830036A5FC /* AdConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdConstants.swift; path = ../../assets/config/AdConstants.swift; sourceTree = "<group>"; };
 		6067812922AB29B70036A5FC /* FlappyRoyale-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlappyRoyale-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -63,9 +66,11 @@
 		60E170E622CE91640036EC1D /* FlappyRoyale.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlappyRoyale.entitlements; sourceTree = "<group>"; };
 		6CD0CEBE8DE42AE61C6E36A5 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
 		6D1BFD9413EA68359D30A410 /* Pods-FlappyRoyale.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.release.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.release.xcconfig"; sourceTree = "<group>"; };
+		B6FE055AC6820E2929BB18FC /* Pods-Flappy Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flappy Dev.debug.xcconfig"; path = "Target Support Files/Pods-Flappy Dev/Pods-Flappy Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
 		C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewer.swift; sourceTree = "<group>"; };
+		C63A3FC022D1DE6200978948 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		C64C01C822B9068D0037150D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../assets/config/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C653148D21EE7BB80068609E /* FlappyRoyale.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyRoyale.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C653149021EE7BB80068609E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +85,7 @@
 		C6557C4B22BA3F5900F78E06 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		C6BA851A22BE7AE500BCBCC6 /* Flappy Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flappy Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6BA851B22BE7AE500BCBCC6 /* FlappyRoyale copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FlappyRoyale copy-Info.plist"; path = "/Users/lazerwalker/Code/flappy-royale/ios/FlappyRoyale copy-Info.plist"; sourceTree = "<absolute>"; };
+		EC5238C495324FC6C00E8D52 /* Pods-Flappy Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flappy Dev.release.xcconfig"; path = "Target Support Files/Pods-Flappy Dev/Pods-Flappy Dev.release.xcconfig"; sourceTree = "<group>"; };
 		EF76939EB3341111F5AB59A6 /* Pods_FlappyRoyale.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlappyRoyale.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -103,6 +109,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9259DE29960CE51A434D9725 /* Pods_Flappy_Dev.framework in Frameworks */,
+				C63A3FC122D1DE6200978948 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +120,9 @@
 		B779176D50F295FF21F9411F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C63A3FC022D1DE6200978948 /* GameKit.framework */,
 				EF76939EB3341111F5AB59A6 /* Pods_FlappyRoyale.framework */,
+				131C54B7695E9FDAFC63F6B7 /* Pods_Flappy_Dev.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -122,6 +132,8 @@
 			children = (
 				6CD0CEBE8DE42AE61C6E36A5 /* Pods-FlappyRoyale.debug.xcconfig */,
 				6D1BFD9413EA68359D30A410 /* Pods-FlappyRoyale.release.xcconfig */,
+				B6FE055AC6820E2929BB18FC /* Pods-Flappy Dev.debug.xcconfig */,
+				EC5238C495324FC6C00E8D52 /* Pods-Flappy Dev.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -235,9 +247,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C6BA851722BE7AE500BCBCC6 /* Build configuration list for PBXNativeTarget "Flappy Dev" */;
 			buildPhases = (
+				E4715B5F1F800A8D780C2D9A /* [CP] Check Pods Manifest.lock */,
 				C6BA850422BE7AE500BCBCC6 /* Sources */,
 				C6BA850E22BE7AE500BCBCC6 /* Frameworks */,
 				C6BA851022BE7AE500BCBCC6 /* Resources */,
+				28CC20E6F50F8F08879A64F0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -262,6 +276,9 @@
 						CreatedOnToolsVersion = 10.1;
 						LastSwiftMigration = 1020;
 						SystemCapabilities = {
+							com.apple.GameCenter.iOS = {
+								enabled = 1;
+							};
 							com.apple.SafariKeychain = {
 								enabled = 1;
 							};
@@ -270,6 +287,13 @@
 					C6557C4022BA3EF300F78E06 = {
 						CreatedOnToolsVersion = 10.2;
 						TestTargetID = C653148C21EE7BB80068609E;
+					};
+					C6BA850222BE7AE500BCBCC6 = {
+						SystemCapabilities = {
+							com.apple.GameCenter.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -328,6 +352,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		28CC20E6F50F8F08879A64F0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Flappy Dev/Pods-Flappy Dev-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Flappy Dev/Pods-Flappy Dev-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3CFF67C04404CFF923592CC0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -368,6 +416,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-FlappyRoyale-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4715B5F1F800A8D780C2D9A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Flappy Dev-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -663,6 +733,7 @@
 		};
 		C6BA851822BE7AE500BCBCC6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6FE055AC6820E2929BB18FC /* Pods-Flappy Dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -675,7 +746,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyDev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyRoyale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";
@@ -687,6 +758,7 @@
 		};
 		C6BA851922BE7AE500BCBCC6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EC5238C495324FC6C00E8D52 /* Pods-Flappy Dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -699,7 +771,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyDev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lazerwalker.FlappyRoyale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "FlappyRoyale-Bridging-Header.h";

@@ -3,7 +3,6 @@ import { allAttire, Attire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
-import { getUserSettings } from "./user/userManager"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 
@@ -15,6 +14,23 @@ export let playfabUserId: string | undefined
 let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
+
+window.addEventListener("gameCenterLogin", (e: any) => {
+    alert(JSON.stringify(e.detail))
+    ;(window as any).gameCenter = e.detail
+    // const gameCenterId = "bar"
+    // const existingGameCenterId = "foo"
+
+    // if (!existingGameCenterId) {
+    //     // link
+    //     // PlayFabClient.LinkGameCenterAccount({
+    //     // })
+    // } else if (gameCenterId !== existingGameCenterId) {
+    //     // TODO: Not sure what we conceptually want to do here
+    //     // The player has presumably signed out of their Game Center ID and into a new one.
+    //     // Create a new PlayFab user? Unlink Game Center?
+    // }
+})
 
 export const login = () => {
     let method = PlayFabClient.LoginWithCustomID

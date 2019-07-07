@@ -1,4 +1,5 @@
 import UIKit
+import GameKit
 import SafariServices
 import WebKit
 
@@ -33,6 +34,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         share.presentationVC = self
         urlOpener.presentationVC = self
         view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
+
+        loginWithGameCenter()
 
         let userContentController = WKUserContentController()
 
@@ -124,6 +127,52 @@ window.buildVersion = '\(bundleVersion)';
         }
 
         loadGameURL()
+    }
+
+    private func loginWithGameCenter() {
+/** NOTES TO SELF:
+        Currently, my issue is salt + signature are Data blobs that won't UTF-8 encode into strings.
+         PlayFab's API requires strings. Unclear how to handle.
+         Future implementation steps:
+         - In the JS side, we don't loginWithCustomID, just game center login.
+         - If game center ID != previous one, that's fine. Eventually probably want to warn the user.
+         - If game center fails, use old auth flow (customID / UUID). To investigate: can/should we use a Game Center guest ID? (Probably not, cause if we have a custom ID then we can link)
+         - Add in a manual migration path: if a UUID is set in the JS cache, we should (1) log in with it, (2) link to Game Center and (3) delete cache. Next login will be pure game center.
+ */
+        let player = GKLocalPlayer.local
+        player.authenticateHandler = { vc, error in
+            if let vc = vc {
+                self.present(vc, animated: true, completion: nil)
+            } else if player.isAuthenticated {
+                print("Authenticated! \(player.playerID)") // TODO: This is deprecated, newer APIs have gamePlayerID but I don't have the SDK installed
+                player.generateIdentityVerificationSignature(completionHandler: { (url, salt, signature, timestamp, error) in
+                    print("Generated signature!")
+                    if let error = error {
+                        print("Signature error: \(error.localizedDescription)")
+                        return
+                    }
+
+                    print(salt, signature, url, timestamp)
+
+                    guard let salt = salt,
+                        let signature = signature,
+                        let urlString = url?.absoluteString,
+                        let saltString = String(data: salt, encoding: .utf8),
+                        let signatureString = String(data: signature, encoding: .utf8)
+                    else {
+                        print("NO salt or signature")
+                        return
+                    }
+
+                    print("Dispatching")
+                    print("window.dispatchEvent(new CustomEvent('gameCenterLogin', { detail: {playerID: '\(player.playerID)', url: '\(urlString)', salt: '\(saltString)', signature: '\(signatureString)', timestamp: \(timestamp) }}))")
+                    self.webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('gameCenterLogin', { detail: {playerID: '\(player.playerID)', url: '\(urlString)', salt: '\(saltString)', signature: '\(signatureString)', timestamp: \(timestamp) }}))", completionHandler: nil)
+                    self.webView?.evaluateJavaScript("window.gameCenter = {playerID: '\(player.playerID)', url: '\(urlString)', salt: '\(saltString)', signature: '\(signatureString)', timestamp: \(timestamp) }", completionHandler: nil)
+                })
+            } else {
+                print("No game center")
+            }
+        }
     }
 
     private func loadGameURL() {
