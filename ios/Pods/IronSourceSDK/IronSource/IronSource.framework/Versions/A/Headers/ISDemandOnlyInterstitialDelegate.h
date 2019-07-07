@@ -31,11 +31,6 @@
 - (void)interstitialDidClose:(NSString *)instanceId;
 
 /**
- Called after an interstitial has been displayed on the screen.
- */
-- (void)interstitialDidShow:(NSString *)instanceId;
-
-/**
  Called after an interstitial has attempted to show but failed.
 
  @param error The reason for the error

@@ -8,7 +8,6 @@ framework module IronSource {
     
     link framework "AdSupport"
     link framework "CoreGraphics"
-    link framework "CoreLocation"
     link framework "CoreTelephony"
     link framework "MediaPlayer"
     link framework "MessageUI"

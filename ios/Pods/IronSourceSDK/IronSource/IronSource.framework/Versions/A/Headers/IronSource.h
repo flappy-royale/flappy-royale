@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define IS_OFFERWALL @"offerwall"
 #define IS_BANNER @"banner"
 
-static NSString * const MEDIATION_SDK_VERSION     = @"6.8.3";
+static NSString * const MEDIATION_SDK_VERSION     = @"6.8.4";
 
 @interface IronSource : NSObject
 
@@ -244,19 +244,18 @@ static NSString * const MEDIATION_SDK_VERSION     = @"6.8.3";
 + (void)setISDemandOnlyRewardedVideoDelegate:(id<ISDemandOnlyRewardedVideoDelegate>)delegate;
 
 /**
+ @abstract Loads a demand only rewarded video.
+ @discussion This method will load a demand only rewarded video ad.
+ @param instanceId The demand only instance id to be used to display the rewarded video.
+ */
++ (void)loadISDemandOnlyRewardedVideo:(NSString *)instanceId;
+
+/**
  @abstract Shows a demand only rewarded video using the default placement.
  @param viewController The UIViewController to display the rewarded video within.
  @param instanceId The demand only instance id to be used to display the rewarded video.
  */
 + (void)showISDemandOnlyRewardedVideo:(UIViewController *)viewController instanceId:(NSString *)instanceId;
-
-/**
- @abstract Shows a demand only rewarded video using the provided placement name.
- @param viewController The UIViewController to display the rewarded video within.
- @param placementName The placement name as was defined in the platform. If nil is passed, a default placement will be used.
- @param instanceId The demand only instance id to be used to display the rewarded video.
- */
-+ (void)showISDemandOnlyRewardedVideo:(UIViewController *)viewController placement:(nullable NSString *)placementName instanceId:(NSString *)instanceId;
 
 /**
  @abstract Determine if a locally cached demand only rewarded video exists for an instance id.
@@ -341,14 +340,6 @@ static NSString * const MEDIATION_SDK_VERSION     = @"6.8.3";
  @param instanceId The demand only instance id to be used to display the interstitial.
  */
 + (void)showISDemandOnlyInterstitial:(UIViewController *)viewController instanceId:(NSString *)instanceId;
-
-/**
- @abstract Show a demand only rewarded video using the provided placement name.
- @param viewController The UIViewController to display the interstitial within.
- @param placementName The placement name as was defined in the platform. If nil is passed, a default placement will be used.
- @param instanceId The demand only instance id to be used to display the interstitial.
- */
-+ (void)showISDemandOnlyInterstitial:(UIViewController *)viewController placement:(nullable NSString *)placementName instanceId:(NSString *)instanceId;
 
 /**
  @abstract Determine if a locally cached interstitial exists for a demand only instance id.

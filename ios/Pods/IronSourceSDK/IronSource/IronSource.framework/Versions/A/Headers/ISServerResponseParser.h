@@ -11,6 +11,7 @@
 #import "ISProductSettings.h"
 #import "ISEventsSettings.h"
 #import "ISLoggersSettings.h"
+#import "ISAuctionSettings.h"
 
 @interface ISServerResponseParser : NSObject
 
@@ -31,6 +32,7 @@
 @property (nonatomic, strong) ISEventsSettings                    *bannerEvents;
 
 @property (nonatomic, strong) ISLoggersSettings                   *loggers;
+@property (nonatomic, strong) ISAuctionSettings                   *auctionSettings;
 
 @property (nonatomic, strong) NSString                            *segmentName;
 @property (nonatomic, strong) NSString                            *segmentId;
