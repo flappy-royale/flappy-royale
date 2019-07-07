@@ -264,7 +264,7 @@ export class YouScene extends Phaser.Scene {
 
             if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
                 analyticsEvent("new_attire", { ids: newAttireIDs })
-                PlayFab.updateAttire(settings.aesthetics!.attire)
+                PlayFab.updateAttire(newSettings.aesthetics!.attire)
             }
 
             this.game.scene.remove(this)
