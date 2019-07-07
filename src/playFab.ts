@@ -1,10 +1,11 @@
 import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
-import { allAttire, Attire } from "./attire"
+import { Attire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
+import { allAttireInGame } from "./attire/attireSets"
 
 export let isLoggedIn: boolean = false
 
@@ -327,7 +328,7 @@ const asyncGetLeaderboardAroundPlayer = async (
     })
 }
 
-const attireMap = _.keyBy(allAttire, "id")
+const attireMap = _.keyBy(allAttireInGame, "id")
 export const avatarUrlToAttire = (url: string): Attire[] => {
     return (url && url.split(",").map(key => attireMap[key])) || []
 }

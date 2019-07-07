@@ -7,7 +7,7 @@ import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
 import * as appCache from "./appCache"
 import { showLoadingScreen } from "./menus/LoadingScene"
-import { UserAttireKey, UserAttireScene } from "./menus/UserAttireScene"
+import { YouKey, YouScene } from "./menus/YouScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
 import { addScene } from "./menus/utils/addScene"
@@ -18,13 +18,9 @@ import { wait } from "./battle/utils/wait"
 import { AppLaunchScene } from "./menus/AppLaunchScreen"
 import { launchTutorial } from "./battle/TutorialScene"
 import { setupSentry } from "./setupSentry"
-import { setupAdsense } from "./util/setupAdsense"
 import { setupGAnalytics } from "./util/setupGAnalytics"
 import { currentPlatform } from "./util/getPlatform"
 import * as PlayFab from "./playFab"
-import { versionIsCurrent, downloadURL } from "./detectVersion"
-import { Prompt, showPrompt } from "./menus/Prompt"
-import { isAndroidApp } from "./nativeComms/deviceDetection"
 import { setUpScreenTracking } from "./screenTimeTracker"
 import { AppSettingsScene } from "./menus/AppSettingsScene"
 
@@ -202,12 +198,12 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
 
 export const loadUpIntoSettings = (game: Phaser.Game) => {
     const settings = new AppSettingsScene()
-    addScene(game, UserAttireKey, settings, true)
+    addScene(game, YouKey, settings, true)
 }
 
 const loadUpIntoAttire = (game: Phaser.Game) => {
-    const settings = new UserAttireScene()
-    addScene(game, UserAttireKey, settings, true)
+    const settings = new YouScene()
+    addScene(game, YouKey, settings, true)
 }
 
 declare global {

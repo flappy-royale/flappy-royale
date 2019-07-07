@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { UserAttireScene, UserAttireKey } from "./UserAttireScene"
+import { YouScene, YouKey } from "./YouScene"
 import { emptySeedData, getSeeds } from "../firebase"
 import { BattleScene } from "../battle/Scene"
 import * as c from "../constants"
@@ -49,7 +49,6 @@ export class MainMenuScene extends Phaser.Scene {
     playerNameText!: Phaser.GameObjects.BitmapText
     winsLabel!: Phaser.GameObjects.BitmapText
 
-    /*** */
     props: MainMenuProps
 
     constructor(props: MainMenuProps) {
@@ -177,8 +176,8 @@ export class MainMenuScene extends Phaser.Scene {
 
     private loadYourAttire() {
         this.removeMenu()
-        const settings = new UserAttireScene()
-        addScene(this.game, UserAttireKey, settings, true)
+        const settings = new YouScene()
+        addScene(this.game, YouKey, settings, true)
     }
 
     private loadStats() {

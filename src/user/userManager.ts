@@ -107,8 +107,6 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
         if (base.length !== 1) throw "Must be one, and only be one base"
 
         existingSettings.aesthetics = settings.aesthetics!
-
-        PlayFab.updateAttire(settings.aesthetics!.attire)
     }
 
     saveSettings(existingSettings)

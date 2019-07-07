@@ -1,8 +1,9 @@
-import { allAttire, PresentationAttire, defaultAttire } from "../src/attire"
+import { defaultAttire, Attire } from "../src/attire"
+import { defaultAttireSet } from "../src/attire/defaultAttire"
 
 const addSomeButtsToThoseSeats = () => {
-    const bases = allAttire.filter(a => a.base)
-    const hatsIsh = allAttire.filter(a => !a.base)
+    const bases = defaultAttireSet.attire.filter(a => a.base)
+    const hatsIsh = defaultAttireSet.attire.filter(a => !a.base)
 
     const getRandomBird = () => {
         const base = bases[Math.floor(Math.random() * bases.length)]
@@ -12,7 +13,7 @@ const addSomeButtsToThoseSeats = () => {
         return [base, ...hatsToWear]
     }
 
-    const createBirdHTML = (attire: PresentationAttire[]) => {
+    const createBirdHTML = (attire: Attire[]) => {
         const root = document.createElement("div")
         const angle = Math.floor(Math.random() * 12) - 6
         root.style.transform = `rotate(${angle}deg) scale(3.6) `
