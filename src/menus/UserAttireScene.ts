@@ -52,21 +52,6 @@ export class UserAttireScene extends Phaser.Scene {
         const settings = getUserSettings()
         const attireIDsWhenOpening = settings.aesthetics.attire.map(a => a.id)
 
-        const nameDiv = document.getElementById("name")!
-        nameDiv.innerText = settings.name
-        const buttonBG = document.getElementById("button-bg") as HTMLImageElement
-        buttonBG.src = require("../../assets/menu/ButtonBG.png")
-
-        document.getElementById("change-name")!.addEventListener("click", () => {
-            const namePrompt = new EnterNameScreen(true, (name?: string) => {
-                this.scene.remove(namePrompt)
-                if (name) {
-                    nameDiv.innerText = name
-                }
-            })
-            addScene(this.game, NamePromptKey, namePrompt, true)
-        })
-
         /**
          * Runs on every selection change and asserts whether an LI
          * corresponding to attire is selected or not
@@ -209,7 +194,6 @@ export class UserAttireScene extends Phaser.Scene {
         header.src = require("../../assets/menu/RedSash.png")
         const footer = document.getElementById("footer") as HTMLImageElement
         footer.src = require("../../assets/menu/BottomSash.png")
-
         const back = document.getElementById("back") as HTMLImageElement
         back.src = require("../../assets/menu/Back2.png")
 

@@ -8,6 +8,9 @@ import { launchTutorial } from "../battle/TutorialScene"
 import _ = require("lodash")
 import { openURL } from "../nativeComms/openURL"
 import { Prompt, showPrompt } from "./Prompt"
+import { getUserSettings } from "../user/userManager"
+import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
+import { addScene } from "./utils/addScene"
 
 export const AppSettingsKey = "UserSettings"
 
@@ -71,8 +74,12 @@ export class AppSettingsScene extends Phaser.Scene {
         resizeToFullScreen(element)
         element.addListener("click")
 
+        // Handle name changes
+        setupName(this)
+
         const settings = getSettings()
         console.log(settings)
+
         this.makeButton("audio-button", { initialValue: settings.sound, states: BooleanStates }, sound =>
             saveSettings({ sound })
         )
@@ -119,7 +126,7 @@ export class AppSettingsScene extends Phaser.Scene {
 
         document.getElementById("reset")!.addEventListener("click", () => {
             this.game.scene.remove(this)
-            const mainMenu = launchMainMenu(this.game, true)
+            const mainMenu = launchMainMenu(this.game, { skipOnboardingUI: true })
 
             const options = {
                 title: "Are you sure? This",
@@ -206,4 +213,22 @@ export class AppSettingsScene extends Phaser.Scene {
             onChange(currentState.value)
         })
     }
+}
+function setupName(settings: AppSettingsScene) {
+    const userSettings = getUserSettings()
+    const nameDiv = document.getElementById("name")!
+
+    const buttonBG = document.getElementById("button-bg") as HTMLImageElement
+    buttonBG.src = require("../../assets/menu/ButtonBG.png")
+
+    nameDiv.innerText = userSettings.name
+    document.getElementById("change-name")!.addEventListener("click", () => {
+        const namePrompt = new EnterNameScreen(true, (name?: string) => {
+            settings.scene.remove(namePrompt)
+            if (name) {
+                nameDiv.innerText = name
+            }
+        })
+        addScene(settings.game, NamePromptKey, namePrompt, true)
+    })
 }

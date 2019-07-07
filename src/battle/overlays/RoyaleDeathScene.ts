@@ -4,8 +4,7 @@ import { launchMainMenu } from "../../menus/MainMenuScene"
 import { BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import { fetchRecordingsForSeed, SeedData } from "../../firebase"
-import { getRoyales, getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
-import { requestReview } from "../../nativeComms/requestReview"
+import { getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
 import { addScene } from "../../menus/utils/addScene"
 import { GameMode } from "../utils/gameMode"
 import _ = require("lodash")
@@ -139,13 +138,6 @@ export class RoyaleDeath extends Phaser.Scene {
             shareIcon = this.add.image(55, GameHeight - 51, "share-ios")
             this.footerObjects.push(share)
             this.footerObjects.push(shareIcon)
-        }
-
-        // Decide whether to show a rating screen
-        // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
-        // When building this out for Android, it's likely that won't be the case.
-        if (this.props.score > 0 && getRoyales().length >= 10) {
-            requestReview()
         }
 
         // Let you hit ready with spacebar

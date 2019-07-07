@@ -26,6 +26,7 @@ import { versionIsCurrent, downloadURL } from "./detectVersion"
 import { Prompt, showPrompt } from "./menus/Prompt"
 import { isAndroidApp } from "./nativeComms/deviceDetection"
 import { setUpScreenTracking } from "./screenTimeTracker"
+import { AppSettingsScene } from "./menus/AppSettingsScene"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -62,6 +63,7 @@ enum StartupScreen {
     RoyalBattle,
     TrialBattle,
     Settings,
+    Attire,
     RoyaleLobby,
     TrialLobby,
     Tutorial
@@ -199,6 +201,11 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
 }
 
 export const loadUpIntoSettings = (game: Phaser.Game) => {
+    const settings = new AppSettingsScene()
+    addScene(game, UserAttireKey, settings, true)
+}
+
+const loadUpIntoAttire = (game: Phaser.Game) => {
     const settings = new UserAttireScene()
     addScene(game, UserAttireKey, settings, true)
 }
@@ -226,7 +233,7 @@ if (!PRODUCTION) {
     appCache.onDownloadStart(() => {
         // TODO: Let's hooope there's a current game by the time this happens.
         // Otherwise, we'll need to be smarter here.
-        // (Wrting this on 3 July 2019.
+        // (Writing this on 3 July 2019.
         // If you see this months later, we're fine and you can safely delete this comment :) )
         console.log("New version!")
         const launchScreen = window.currentGame.scene.getScene("Launch") as AppLaunchScene
@@ -320,6 +327,10 @@ window.onload = async () => {
 
             case StartupScreen.Settings:
                 loadUpIntoSettings(game)
+                break
+
+            case StartupScreen.Attire:
+                loadUpIntoAttire(game)
                 break
 
             case StartupScreen.MainMenu:
