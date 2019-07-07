@@ -30,10 +30,15 @@ import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 declare const DEMO: boolean
 
 /** Used on launch, and when you go back to the main menu */
-export const launchMainMenu = (game: Phaser.Game, skipUI: boolean = false): MainMenuScene => {
-    const mainMenu = new MainMenuScene(skipUI)
+export const launchMainMenu = (game: Phaser.Game, props?: MainMenuProps): MainMenuScene => {
+    const emptyProps = { skipOnboardingUI: false }
+    const mainMenu = new MainMenuScene(props || emptyProps)
     addScene(game, "MainMenu", mainMenu, true)
     return mainMenu
+}
+
+export interface MainMenuProps {
+    skipOnboardingUI: boolean
 }
 
 export class MainMenuScene extends Phaser.Scene {
@@ -43,11 +48,12 @@ export class MainMenuScene extends Phaser.Scene {
     playerNameText: Phaser.GameObjects.BitmapText
     winsLabel: Phaser.GameObjects.BitmapText
 
-    skipUI: boolean
+    /*** */
+    props: MainMenuProps
 
-    constructor(skipUI: boolean = false) {
+    constructor(props: MainMenuProps) {
         super("MainMenu")
-        this.skipUI = skipUI
+        this.props = props
     }
 
     preload() {
@@ -97,7 +103,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         const settings = getUserSettings()
 
-        if (this.skipUI) {
+        if (this.props.skipOnboardingUI) {
             // Do nothing!
         } else if (hasName()) {
             this.setUpMenu()

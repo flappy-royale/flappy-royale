@@ -17,7 +17,7 @@ import {
     Bird,
     DailyTrialRun
 } from "../../user/userManager"
-import { requestReview } from "../../nativeComms/requestReview"
+
 import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
 import { BirdSprite } from "../BirdSprite"
@@ -101,13 +101,6 @@ export class TrialDeath extends Phaser.Scene {
 
                 if (player.score === this.props.score && player.score > 0) {
                     this.time.delayedCall(500, this.addTopMedal, [player], this)
-                }
-
-                // Decide whether to show a rating screen
-                // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
-                // When building this out for Android, it's likely that won't be the case.
-                if (player.score > 0 && getRoyales().length >= 10) {
-                    requestReview()
                 }
             })
         } else {

@@ -126,7 +126,7 @@ export class AppSettingsScene extends Phaser.Scene {
 
         document.getElementById("reset")!.addEventListener("click", () => {
             this.game.scene.remove(this)
-            const mainMenu = launchMainMenu(this.game, true)
+            const mainMenu = launchMainMenu(this.game, { skipOnboardingUI: true })
 
             const options = {
                 title: "Are you sure? This",

@@ -204,7 +204,7 @@ export class TrialLobby extends Phaser.Scene {
          * and then re-show the trial screen as soon as the user hits okay.
          */
         this.game.scene.remove(this)
-        const mainMenu = launchMainMenu(this.game, true)
+        const mainMenu = launchMainMenu(this.game, { skipOnboardingUI: true })
 
         const options = {
             title: `You've earned`,
