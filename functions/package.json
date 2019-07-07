@@ -16,7 +16,8 @@
         "cors": "^2.8.5",
         "firebase-admin": "^8.2.0",
         "firebase-functions": "^3.0.2",
-        "pako": "^1.0.10"
+        "pako": "^1.0.10",
+        "playfab-sdk": "^2.30.190625"
     },
     "devDependencies": {
         "@types/jest": "^24.0.14",

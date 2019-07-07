@@ -22,7 +22,8 @@ import {
     livesExtensionStateForSeed,
     UserSettings,
     getUserStatistics,
-    saveDailyTrialRun
+    saveDailyTrialRun,
+    Bird
 } from "../user/userManager"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
@@ -309,13 +310,22 @@ export class BattleScene extends Phaser.Scene {
             }
 
             replays.forEach(input => {
+                let settings: Bird
+                if (input.playfabUser) {
+                    settings = {
+                        name: input.playfabUser.name,
+                        aesthetics: { attire: PlayFab.avatarUrlToAttire(input.playfabUser.avatarUrl) }
+                    }
+                } else {
+                    settings = input.user
+                }
                 const ghost = new BirdSprite(
                     this,
                     constants.birdXPosition,
                     constants.birdYPosition + constants.GameAreaTopOffset,
                     {
                         isPlayer: false,
-                        settings: input.user
+                        settings
                     }
                 )
                 ghost.setupForBeingInBus()
@@ -713,9 +723,9 @@ export class BattleScene extends Phaser.Scene {
 
                 uploadReplayForSeed({
                     seed: this.seed,
-                    uuid: settings.name,
                     version: constants.APIVersion,
                     mode: this.mode,
+                    playfabId: PlayFab.playfabUserId,
                     data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
                 })
                     .then(a => a.json())
