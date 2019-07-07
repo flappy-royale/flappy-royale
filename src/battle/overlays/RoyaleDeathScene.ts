@@ -13,6 +13,7 @@ import { centerAlignTextLabel, rightAlignTextLabel } from "../utils/alignTextLab
 import { shareNatively } from "../../nativeComms/share"
 import { GameTheme } from "../theme"
 import { setupLogoCornerImages } from "../../menus/utils/backgroundColors"
+import { isAndroidApp } from "../../nativeComms/deviceDetection"
 
 export interface RoyaleDeathProps {
     score: number
@@ -131,11 +132,14 @@ export class RoyaleDeath extends Phaser.Scene {
         this.footerObjects.push(this.newGameBG)
         this.footerObjects.push(this.newGameText)
 
-        const share = this.add.image(55, GameHeight - 51, "button-small-bg")
-        share.setScale(0.6, 1)
-        const shareIcon = this.add.image(55, GameHeight - 51, "share-ios")
-        this.footerObjects.push(share)
-        this.footerObjects.push(shareIcon)
+        let share, shareIcon
+        if (!isAndroidApp()) {
+            share = this.add.image(55, GameHeight - 51, "button-small-bg")
+            share.setScale(0.6, 1)
+            shareIcon = this.add.image(55, GameHeight - 51, "share-ios")
+            this.footerObjects.push(share)
+            this.footerObjects.push(shareIcon)
+        }
 
         // Decide whether to show a rating screen
         // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
@@ -151,7 +155,10 @@ export class RoyaleDeath extends Phaser.Scene {
         setTimeout(() => {
             becomeButton(back, this.backToMainMenu, this)
             becomeButton(this.newGameBG, this.getReady, this, [this.newGameText])
-            becomeButton(share, this.shareStats, this, [shareIcon])
+
+            if (share) {
+                becomeButton(share, this.shareStats, this, [shareIcon])
+            }
         }, 200)
     }
 

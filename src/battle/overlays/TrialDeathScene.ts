@@ -26,6 +26,7 @@ import { setupLogoCornerImages, preloadBackgroundBlobImages } from "../../menus/
 import { getTrialDeathLeaderboard, Leaderboard, LeaderboardResult } from "../../playFab"
 import _ = require("lodash")
 import { Prompt, showPrompt, PromptOptions } from "../../menus/Prompt"
+import { isAndroidApp } from "../../nativeComms/deviceDetection"
 
 export interface TrialDeathProps {
     lives: number
@@ -153,12 +154,14 @@ export class TrialDeath extends Phaser.Scene {
         becomeButton(newGame, this.again, this, [newGameText])
         this.againButton = newGameText
 
-        const share = this.add.image(125, GameHeight - 51, "button-small-bg")
-        share.setScale(0.6, 1)
-        this.footerObjects.push(share)
-        const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
-        becomeButton(share, this.shareStats, this, [shareIcon])
-        this.footerObjects.push(shareIcon)
+        if (!isAndroidApp()) {
+            const share = this.add.image(125, GameHeight - 51, "button-small-bg")
+            share.setScale(0.6, 1)
+            this.footerObjects.push(share)
+            const shareIcon = this.add.image(125, GameHeight - 51, "share-ios")
+            becomeButton(share, this.shareStats, this, [shareIcon])
+            this.footerObjects.push(shareIcon)
+        }
     }
 
     private cameInFirst(leaderboard: Leaderboard) {
