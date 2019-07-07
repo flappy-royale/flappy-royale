@@ -65,12 +65,18 @@ export const updateName = async (
 ): Promise<PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.UpdateUserTitleDisplayNameResult>> => {
     await loginPromise
     return new Promise((resolve, reject) => {
-        PlayFabClient.UpdateUserTitleDisplayName({ DisplayName: name }, (error: any, result) => {
-            if (error) {
-                reject(error)
+        PlayFabClient.UpdateUserTitleDisplayName(
+            { DisplayName: name },
+            (
+                error: any,
+                result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.UpdateUserTitleDisplayNameResult>
+            ) => {
+                if (error) {
+                    reject(error)
+                }
+                resolve(result)
             }
-            resolve(result)
-        })
+        )
     })
 }
 
@@ -146,7 +152,7 @@ export const playedGame = async (data: {
             {
                 Statistics: stats
             },
-            (err, result) => {
+            (err: any, result: any) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -181,7 +187,7 @@ export const event = async (name: string, params: any) => {
             EventName: name,
             Body: params
         },
-        (err, result) => {
+        (err: any, _: any) => {
             if (err) {
                 console.log("Error writing analytics", err)
             }
@@ -205,7 +211,7 @@ export const writeScreenTrackingEvents = async (events: PlayFabEventsModels.Even
         {
             Events: events
         },
-        (err, result) => {
+        (err: any, _: any) => {
             if (err) {
                 console.log("Error writing screen tracking events", err)
             }
@@ -286,7 +292,7 @@ const asyncGetLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardReque
     }
 
     return new Promise((resolve, reject) => {
-        PlayFabClient.GetLeaderboard({ ...defaultOpts, ...opts }, (err, result) => {
+        PlayFabClient.GetLeaderboard({ ...defaultOpts, ...opts }, (err: any, result: any) => {
             if (err) {
                 reject(err)
             } else if (!result.data.Leaderboard) {
@@ -309,7 +315,7 @@ const asyncGetLeaderboardAroundPlayer = async (
     }
 
     return new Promise((resolve, reject) => {
-        PlayFabClient.GetLeaderboardAroundPlayer({ ...defaultOpts, ...opts }, (err, result) => {
+        PlayFabClient.GetLeaderboardAroundPlayer({ ...defaultOpts, ...opts }, (err: any, result: any) => {
             if (err) {
                 reject(err)
             } else if (!result.data.Leaderboard) {

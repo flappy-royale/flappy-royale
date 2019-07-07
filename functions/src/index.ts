@@ -104,7 +104,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                             ShowDisplayName: true
                         } as unknown) as number // This is a bug in PlayFab's typings
                     },
-                    (error: any, result) => {
+                    (error: any, result: any) => {
                         if (error) {
                             reject(error)
                         }
