@@ -24,8 +24,16 @@ export interface SeedData {
     replays: PlayerData[]
 }
 
+export interface PlayfabUser {
+    name: string
+    playfabId: string
+    avatarUrl: string
+}
+
 export interface PlayerData {
     user: UserSettings
+    playfabUser?: PlayfabUser
+
     /** User input actions */
     actions: PlayerEvent[]
     timestamp: number

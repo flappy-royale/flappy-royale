@@ -323,6 +323,6 @@ const asyncGetLeaderboardAroundPlayer = async (
 }
 
 const attireMap = _.keyBy(allAttire, "id")
-const avatarUrlToAttire = (url: string): Attire[] => {
+export const avatarUrlToAttire = (url: string): Attire[] => {
     return (url && url.split(",").map(key => attireMap[key])) || []
 }

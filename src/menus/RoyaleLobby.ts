@@ -11,7 +11,8 @@ import { random, shuffle } from "lodash"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
-import { defaultAttire } from "../attire"
+import { defaultAttire, Attire } from "../attire"
+import { avatarUrlToAttire } from "../playFab"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -145,12 +146,24 @@ export class RoyaleLobby extends Phaser.Scene {
 
         const birds = document.getElementById("birds")!
         shuffle(seedData.replays).forEach(score => {
-            preloadBirdAttire(this, score.user.aesthetics.attire)
+            let attire: Attire[]
+            let name: string
+
+            if (score.playfabUser) {
+                attire = avatarUrlToAttire(score.playfabUser.avatarUrl)
+                name = score.playfabUser.name
+            } else {
+                attire = score.user.aesthetics.attire
+                name = score.user.name
+            }
 
             const birdLi = document.createElement("li")
-            const previewDiv = this.createUserImage(score.user)
+
+            preloadBirdAttire(this, attire)
+            const previewDiv = this.createUserImage(attire)
+
             const theirName = document.createElement("p")
-            theirName.innerText = score.user.name
+            theirName.innerText = name
 
             birdLi.appendChild(previewDiv)
             birdLi.appendChild(theirName)
@@ -160,16 +173,16 @@ export class RoyaleLobby extends Phaser.Scene {
         this.load.start()
     }
 
-    createUserImage(user: UserSettings) {
+    createUserImage(attire: Attire[]) {
         const root = document.createElement("div")
 
-        const userBase = user.aesthetics.attire.find(a => a.base)
+        const userBase = attire.find(a => a.base)
         const img = document.createElement("img")
         img.src = userBase ? userBase.href : defaultAttire.href
         img.className = "you-attire"
         root.appendChild(img)
 
-        user.aesthetics.attire
+        attire
             .filter(a => !a.base)
             .forEach(a => {
                 const attireImg = document.createElement("img")
