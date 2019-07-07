@@ -5,8 +5,7 @@ import * as pako from "pako"
 import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from "../../src/firebase"
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
-import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
-import { PlayFabServer } from "PlayFab-sdk"
+import { PlayFabServer } from "playfab-sdk"
 
 const cors = require("cors")({
     origin: true
@@ -19,6 +18,10 @@ const cors = require("cors")({
 const numberOfRoyaleSeeds = 50
 
 const numberOfReplaysPerSeed = 200
+
+// PlayFab API secret key for the production app intended to be used with our Firebase cloud fns
+// Stored in firebase:functions:config
+const playfabFirebaseProdSecretKey = functions.config().playfab.secret
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
 // and we'll probably forget to do that!!
@@ -52,7 +55,7 @@ const currentSeedExpiry = (): Date => {
     return expiry
 }
 
-export const yarn = functions.https.onRequest((request, response) => {
+export const seeds = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const version = request.query.version || request.params.version
         const responseJSON = getSeeds(version)
