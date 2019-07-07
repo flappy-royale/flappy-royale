@@ -90,15 +90,19 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
         webview.addJavascriptInterface(AndroidStaticData(this, webview), "AndroidStaticData")
+
+        webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }
     }
 
     override fun onResume() {
         super.onResume()
+        webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }
         IronSource.onResume(this)
     }
 
     override fun onPause() {
         super.onPause()
+        webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: true }}); window.dispatchEvent(evt);") { _ -> }
         IronSource.onPause(this)
     }
 
