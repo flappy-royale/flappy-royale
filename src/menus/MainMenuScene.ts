@@ -251,7 +251,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     private loadRoyale() {
         this.removeMenu()
-        const index = getAndBumpUserCycleSeedIndex(this.seeds.royale.length)
+        const index = getAndBumpUserCycleSeedIndex(this.seeds && this.seeds.royale.length)
         const seed = this.seeds.royale[index]
         const lobby = new RoyaleLobby({ seed })
         addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})

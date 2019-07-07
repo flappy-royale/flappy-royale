@@ -50,7 +50,7 @@ const currentSeedExpiry = (): Date => {
     return expiry
 }
 
-export const seeds = functions.https.onRequest((request, response) => {
+export const yarn = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const version = request.query.version || request.params.version
         const responseJSON = getSeeds(version)

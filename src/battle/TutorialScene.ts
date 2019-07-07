@@ -163,7 +163,7 @@ export class TutorialScene extends Phaser.Scene {
         setupBirdAnimations(this)
         this.setupPhysicsFloor()
 
-        const bus = this.physics.add.sprite(-10, 40 + constants.GameAreaTopOffset, "bus")
+        const bus = this.physics.add.sprite(-10, 40 + constants.GameAreaTopOffset, themeMap[GameTheme.default].bus[0])
         bus.setGravityY(-constants.gravity)
         bus.setAccelerationX(20)
         bus.setDepth(constants.zLevels.birdWings + 1)

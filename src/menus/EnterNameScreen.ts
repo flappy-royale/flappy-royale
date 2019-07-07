@@ -44,13 +44,23 @@ export class EnterNameScreen extends Phaser.Scene {
         button.disabled = true
 
         const cancelButton = document.getElementById("cancel-button") as HTMLButtonElement
+        const loader = document.getElementById("loader") as HTMLElement
+        const ok = document.getElementById("ok") as HTMLElement
+        const errMessage = document.getElementById("error") as HTMLElement
 
         if (!this.showCancelButton) {
             cancelButton.classList.add("hidden")
         }
 
-        const inputIsBad = () => {
-            usernameInput.style.border = "2px red solid"
+        const inputIsBad = (errorMsg?: { error: string; errorMessage: string }) => {
+            usernameInput.style.border = "2px #F6595F solid"
+            if (errorMsg) {
+                if (errorMsg.error === "ProfaneDisplayName") {
+                    errMessage.textContent = "Name is not cool"
+                } else {
+                    errMessage.textContent = errorMsg.errorMessage
+                }
+            }
             button.disabled = true
             buttonBG.src = disabledButton
         }
@@ -85,19 +95,31 @@ export class EnterNameScreen extends Phaser.Scene {
 
             // It's quicker to run local rules than hit PlayFab, so we might as well
             if (!usernameIsValid(nameToTry)) {
+                inputIsBad()
                 return
             }
 
+            loader.style.display = "inline-block"
+            ok.textContent = ""
             const result = await PlayFab.updateName(nameToTry).catch(inputIsBad)
+            loader.style.display = "none"
+            ok.textContent = "Ok"
 
-            if (!result) return
+            if (!result) {
+                usernameInput.focus()
+                return
+            }
 
             if (result.code !== 200) {
                 inputIsBad()
+                usernameInput.focus()
             }
 
             const name = result.data.DisplayName
-            if (!name) return
+            if (!name) {
+                usernameInput.focus()
+                return
+            }
 
             // We have code in place to fix scroll placement on blur,
             // but manually triggering window.blur() or usernameInput.blur() doesn't fire it

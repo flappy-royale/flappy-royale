@@ -1,14 +1,14 @@
 import * as constants from "../constants"
 import { Scene } from "phaser"
 
-import { UserSettings, getUserSettings, Bird } from "../user/userManager"
+import { getUserSettings, Bird } from "../user/userManager"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { builtInAttire, Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
 import { playSound } from "../playSound"
-import { getSettings, useLowQuality } from "../gameSettings"
+import { useLowQuality } from "../gameSettings"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -24,13 +24,17 @@ export const preloadBirdSprites = (scene: BattleScene | Scene) => {
 
 export const preloadBirdAttire = (scene: Phaser.Scene, attire: Attire[]) => {
     for (const piece of attire) {
-        scene.load.image(piece.id, piece.href)
+        if (piece && piece.id) {
+            scene.load.image(piece.id, piece.href)
+        }
     }
 }
 
 export const preloadAllBirdAttire = (scene: Phaser.Scene) => {
     for (const attire of builtInAttire) {
-        scene.load.image(attire.id, attire.href)
+        if (attire && attire.id) {
+            scene.load.image(attire.id, attire.href)
+        }
     }
 }
 
