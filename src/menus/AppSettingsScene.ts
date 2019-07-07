@@ -136,7 +136,10 @@ export class AppSettingsScene extends Phaser.Scene {
 
                 completion: (response: boolean, prompt: Prompt) => {
                     if (response) {
+                        const reviews = localStorage.getItem("reviews")
                         localStorage.clear()
+                        if (reviews) localStorage.setItem("reviews", reviews)
+
                         window.location.reload()
                     } else {
                         mainMenu.game.scene.remove(prompt)

@@ -62,6 +62,9 @@ export interface PlayerStats {
     instaDeaths: number
     totalFlaps: number
 
+    /** All scores added together */
+    totalScore: GameMode
+
     /** The user's current royale streak
      * (number of consecutive royale wins without a loss)*/
     royaleStreak: number
@@ -208,7 +211,8 @@ export const getUserStatistics = (): PlayerStats => {
         instaDeaths: 0,
         totalFlaps: 0,
         royaleStreak: 0,
-        bestRoyaleStreak: 0
+        bestRoyaleStreak: 0,
+        totalScore: 0
     }
 
     let currentRoyaleStreak = 0
@@ -248,6 +252,9 @@ export const getUserStatistics = (): PlayerStats => {
 
         // How many time did you flap
         stats.totalFlaps += run.flaps
+
+        // "You have score 2000 points"
+        stats.totalScore += run.score
     })
 
     stats.royaleStreak = currentRoyaleStreak
