@@ -22,6 +22,7 @@ const numberOfReplaysPerSeed = 200
 // PlayFab API secret key for the production app intended to be used with our Firebase cloud fns
 // Stored in firebase:functions:config
 const playfabFirebaseProdSecretKey = functions.config().playfab.secret
+const playfabTitle = functions.config().playfab.title
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
 // and we'll probably forget to do that!!
@@ -94,6 +95,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         if (playfabId) {
             const user: PlayfabUser = await new Promise((resolve, reject) => {
                 PlayFabServer.settings.developerSecretKey = playfabFirebaseProdSecretKey
+                PlayFabServer.settings.titleId = playfabTitle
                 PlayFabServer.GetPlayerProfile(
                     {
                         PlayFabId: playfabId,
