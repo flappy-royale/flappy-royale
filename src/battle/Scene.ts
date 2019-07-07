@@ -20,7 +20,6 @@ import {
     getHighScore,
     setHighScore,
     livesExtensionStateForSeed,
-    UserSettings,
     getUserStatistics,
     saveDailyTrialRun,
     Bird
@@ -35,13 +34,7 @@ import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
-import {
-    getSettings,
-    saveSettings,
-    useLowQuality,
-    shouldMeasureQuality,
-    enableAutoLowQualityMode
-} from "../gameSettings"
+import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from "../gameSettings"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -75,7 +68,7 @@ const devSettings = {
 
 export class BattleScene extends Phaser.Scene {
     /** The starting bus */
-    private bus: Phaser.Physics.Arcade.Image
+    private bus: Phaser.Physics.Arcade.Image | undefined
 
     /** Your sprite, or if behind the main menu - not set up for this game mode */
     private bird: BirdSprite | undefined
@@ -84,13 +77,13 @@ export class BattleScene extends Phaser.Scene {
     private ghostBirds: BirdSprite[] = []
 
     /** Every pipe is a set of physics objects */
-    private pipes: Phaser.Physics.Arcade.Group[]
+    private pipes: Phaser.Physics.Arcade.Group[] = []
 
     /** All the current scorelines on screen */
-    private scoreLines: Phaser.Physics.Arcade.Image[]
+    private scoreLines: Phaser.Physics.Arcade.Image[] = []
 
     /** A timer for generating new pipes */
-    private newPipeTimer: Phaser.Time.TimerEvent
+    private newPipeTimer: Phaser.Time.TimerEvent | undefined
 
     /** Keeping track of events from the user, sent up later */
     private userInput: PlayerEvent[] = []
@@ -110,19 +103,19 @@ export class BattleScene extends Phaser.Scene {
     private lastSyncedTimestamp = 0
 
     /** Developer logging */
-    private debugLabel: Phaser.GameObjects.Text
+    private debugLabel!: Phaser.GameObjects.Text
 
     /** The RNG function for this current run, pipes, and all ghosts */
-    public rng: () => number
+    public rng!: () => number
 
     /** Track spacebar keypresses to flap */
-    private spacebar: Phaser.Input.Keyboard.Key
+    private spacebar: Phaser.Input.Keyboard.Key | undefined
 
     // See debugging/keyboardShortcuts.ts
-    public devKeys: object
+    public devKeys!: object
 
     // What score did someone just get
-    public score: number
+    public score: number = 0
 
     // What the player's current high score for this seed is
     public highScore: number = 0
@@ -149,17 +142,17 @@ export class BattleScene extends Phaser.Scene {
     public mode: game.GameMode
 
     /** The thing that represents the floor (birds/the bus sit on this) */
-    public floorPhysics: Phaser.Physics.Arcade.Image
+    public floorPhysics!: Phaser.Physics.Arcade.Image
 
     /** How to render the BG */
     private theme: GameTheme
 
     /** FPS AUTO QUALITY DETECTION */
     /** If true, actively measuring FPS (for auto quality detection) */
-    private measuringFps: boolean
+    private measuringFps: boolean = true
 
     /** The last time an update() function ran, for fps/quality detection  */
-    private lastUpdateTimestamp: number
+    private lastUpdateTimestamp: number = 0
 
     /** An array containing implied FPS numbers for each discrete update call */
     private runningFpsTally: number[] = []
@@ -606,8 +599,8 @@ export class BattleScene extends Phaser.Scene {
         }
 
         // Let the bus collide
-        const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
-            busCrashed(bus, this, this.theme)
+        const busCrash = (bus: Phaser.GameObjects.GameObject) => {
+            busCrashed(bus as any, this, this.theme)
             if (this.bird && this.bird.isInBus && !this.bird.isDead) {
                 this.userDied()
                 this.bird.stopBeingInBus()
@@ -615,7 +608,7 @@ export class BattleScene extends Phaser.Scene {
             }
         }
 
-        this.physics.overlap(this.bus, this.pipes, busCrash, undefined, this)
+        if (this.bus) this.physics.overlap(this.bus, this.pipes, busCrash, undefined, this)
 
         pipeOutOfBoundsCheck(this.pipes)
     }
@@ -663,12 +656,12 @@ export class BattleScene extends Phaser.Scene {
 
         this.userInput.push({ action: "flap", timestamp })
 
-        this.bus.setDepth(constants.zLevels.oneBelowBird)
+        if (this.bus) this.bus.setDepth(constants.zLevels.oneBelowBird)
         this.bird && this.bird.flap()
         this.analytics.flap()
     }
 
-    userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
+    userScored(_bird: any, line: any) {
         this.scoreLines.shift()
         line.destroy()
         this.score++
@@ -766,7 +759,7 @@ export class BattleScene extends Phaser.Scene {
             this.ghostBirds.forEach(b => !b.isDead && b.startMovingLeft())
 
             // Stop the bus from moving with the pipes
-            this.bus.setVelocityX(0)
+            if (this.bus) this.bus.setVelocityX(0)
 
             // Remove the UI
             // TODO: Fade?
@@ -845,7 +838,7 @@ const canRecordScore = () => {
 }
 
 // https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number/13627586
-export function getNumberWithOrdinal(n) {
+export function getNumberWithOrdinal(n: number) {
     var s = ["th", "st", "nd", "rd"],
         v = n % 100
     return n + (s[(v - 20) % 10] || s[v] || s[0])

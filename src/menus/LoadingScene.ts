@@ -12,8 +12,8 @@ export const showLoadingScreen = (game: Phaser.Game) => {
 }
 
 export class LoadingScene extends Phaser.Scene {
-    progressBar: Phaser.GameObjects.Rectangle
-    birds: BirdSprite[]
+    progressBar!: Phaser.GameObjects.Rectangle
+    birds: BirdSprite[] = []
     possibleAttires: UserSettings[]
 
     constructor() {

@@ -1,5 +1,5 @@
 const startHandlers: (() => void)[] = []
-const progressHandlers: ((number) => void)[] = []
+const progressHandlers: ((number: number) => void)[] = []
 const endHandlers: (() => void)[] = []
 
 export let downloaded = false
@@ -43,13 +43,13 @@ const downloadStart = () => {
 
 const downloadProgress = (percent: number) => {
     if (percent === 1) {
-        this.downloaded = true
+        downloaded = true
     }
     progressHandlers.forEach(fn => fn(percent))
 }
 
 const downloadEnd = () => {
-    this.downloaded = true
+    downloaded = true
     endHandlers.forEach(fn => fn())
 }
 

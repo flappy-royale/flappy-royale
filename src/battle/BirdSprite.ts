@@ -77,7 +77,7 @@ export class BirdSprite {
     public sprite: Phaser.Physics.Arcade.Sprite
 
     // Focus sprite
-    private focusSprite: Phaser.GameObjects.Image
+    private focusSprite!: Phaser.GameObjects.Image
     // HATS
     private tightAttire: Phaser.GameObjects.Image[] = []
     private looseAttire: Phaser.GameObjects.Image[] = []
@@ -169,7 +169,9 @@ export class BirdSprite {
             2: 0.3
         }
 
+        // @ts-ignore
         if (!_.isUndefined(map[pipes])) {
+            // @ts-ignore
             opacity = map[pipes]
         }
         this.setOpacity(opacity)

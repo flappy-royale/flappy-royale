@@ -11,7 +11,7 @@ export class EnterNameScreen extends Phaser.Scene {
     completion: (name?: string) => void
     showCancelButton: boolean
 
-    constructor(showCancelButton: boolean, completion: (name: string) => void) {
+    constructor(showCancelButton: boolean, completion: (name: string | undefined) => void) {
         super(NamePromptKey)
         this.completion = completion
         this.showCancelButton = showCancelButton

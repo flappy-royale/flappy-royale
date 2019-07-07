@@ -43,11 +43,11 @@ export interface MainMenuProps {
 }
 
 export class MainMenuScene extends Phaser.Scene {
-    seeds: SeedsResponse
-    battleBG: BattleScene
+    seeds: SeedsResponse | undefined
+    battleBG!: BattleScene
 
-    playerNameText: Phaser.GameObjects.BitmapText
-    winsLabel: Phaser.GameObjects.BitmapText
+    playerNameText!: Phaser.GameObjects.BitmapText
+    winsLabel!: Phaser.GameObjects.BitmapText
 
     /*** */
     props: MainMenuProps
@@ -249,18 +249,22 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     loadTrial() {
-        this.removeMenu()
-        const seed = this.seeds.daily.production
-        const lobby = new TrialLobby({ seed })
-        addScene(this.game, "TrialLobby" + seed, lobby, true, {})
+        if (this.seeds) {
+            this.removeMenu()
+            const seed = this.seeds.daily.production
+            const lobby = new TrialLobby({ seed })
+            addScene(this.game, "TrialLobby" + seed, lobby, true, {})
+        }
     }
 
     private loadRoyale() {
-        this.removeMenu()
-        const index = getAndBumpUserCycleSeedIndex(this.seeds && this.seeds.royale.length)
-        const seed = this.seeds.royale[index]
-        const lobby = new RoyaleLobby({ seed })
-        addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+        if (this.seeds) {
+            this.removeMenu()
+            const index = getAndBumpUserCycleSeedIndex(this.seeds && this.seeds.royale.length)
+            const seed = this.seeds.royale[index]
+            const lobby = new RoyaleLobby({ seed })
+            addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+        }
     }
 
     removeMenu() {

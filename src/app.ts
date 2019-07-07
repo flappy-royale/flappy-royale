@@ -191,7 +191,7 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
             lives: 10,
             livesState: 1,
             battle: {} as any,
-            seed: this.seed,
+            seed: "123",
             score: 5,
             isHighScore: false
         })
@@ -256,6 +256,7 @@ window.onload = async () => {
     if (window.AndroidStaticData) {
         let data = JSON.parse(window.AndroidStaticData.fetch())
         for (const key in data) {
+            // @ts-ignore
             window[key] = data[key]
         }
     }

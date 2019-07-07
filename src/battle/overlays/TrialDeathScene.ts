@@ -67,7 +67,7 @@ export class TrialDeath extends Phaser.Scene {
         super(id)
     }
 
-    againButton: Phaser.GameObjects.BitmapText
+    againButton!: Phaser.GameObjects.BitmapText
     footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
     shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
 
