@@ -16,20 +16,30 @@ let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 PlayFabClient.settings.titleId = titleId
 
 window.addEventListener("gameCenterLogin", (e: any) => {
-    alert(JSON.stringify(e.detail))
-    ;(window as any).gameCenter = e.detail
-    // const gameCenterId = "bar"
-    // const existingGameCenterId = "foo"
-
-    // if (!existingGameCenterId) {
-    //     // link
-    //     // PlayFabClient.LinkGameCenterAccount({
-    //     // })
-    // } else if (gameCenterId !== existingGameCenterId) {
-    //     // TODO: Not sure what we conceptually want to do here
-    //     // The player has presumably signed out of their Game Center ID and into a new one.
-    //     // Create a new PlayFab user? Unlink Game Center?
-    // }
+    /** 
+    - In the JS side, we don't loginWithCustomID, just game center login.
+    - If game center ID != previous one, that's fine. Eventually probably want to warn the user.
+    - If game center fails, use old auth flow (customID / UUID). To investigate: can/should we use a Game Center guest ID? (Probably not, cause if we have a custom ID then we can link)
+    - Add in a manual migration path: if a UUID is set in the JS cache, we should (1) log in with it, (2) link to Game Center and (3) delete cache. Next login will be pure game center.
+    */
+    setTimeout(() => {
+        console.log("About to try logging in")
+        console.log(e.detail)
+        PlayFabClient.LoginWithGameCenter(
+            {
+                CreateAccount: true,
+                TitleId: titleId,
+                PlayerId: e.detail.playerId,
+                PublicKeyUrl: e.detail.url,
+                Salt: e.detail.salt,
+                Signature: e.detail.signature,
+                Timestamp: e.detail.timestamp
+            },
+            (err: any, response: any) => {
+                console.log(response)
+            }
+        )
+    }, 10000)
 })
 
 export const login = () => {
