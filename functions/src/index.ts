@@ -6,7 +6,7 @@ import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from 
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
-import { PlayFab, PlayFabServer } from "PlayFab-sdk"
+import { PlayFabServer } from "PlayFab-sdk"
 
 const cors = require("cors")({
     origin: true
