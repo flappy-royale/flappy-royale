@@ -29,3 +29,13 @@ target 'FlappyRoyale' do
 #  # Vungle
 #  pod 'MoPub-Vungle-Adapters', '6.3.2.5'
 end
+
+target 'Flappy Dev' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for FlappyRoyale
+  pod 'Firebase/Core'
+
+  pod 'IronSourceSDK', '~> 6'
+end
