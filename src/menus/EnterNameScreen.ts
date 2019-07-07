@@ -46,13 +46,21 @@ export class EnterNameScreen extends Phaser.Scene {
         const cancelButton = document.getElementById("cancel-button") as HTMLButtonElement
         const loader = document.getElementById("loader") as HTMLElement
         const ok = document.getElementById("ok") as HTMLElement
+        const errMessage = document.getElementById("error") as HTMLElement
 
         if (!this.showCancelButton) {
             cancelButton.classList.add("hidden")
         }
 
-        const inputIsBad = () => {
-            usernameInput.style.border = "2px red solid"
+        const inputIsBad = (errorMsg?: { error: string; errorMessage: string }) => {
+            usernameInput.style.border = "2px #F6595F solid"
+            if (errorMsg) {
+                if (errorMsg.error === "ProfaneDisplayName") {
+                    errMessage.textContent = "Name is not cool"
+                } else {
+                    errMessage.textContent = errorMsg.errorMessage
+                }
+            }
             button.disabled = true
             buttonBG.src = disabledButton
         }
