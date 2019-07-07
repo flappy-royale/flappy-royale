@@ -3,7 +3,6 @@ import { allAttire, Attire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
-import { getUserSettings } from "./user/userManager"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 
@@ -23,7 +22,7 @@ export const login = () => {
         CreateAccount: true
     }
 
-    let customAuth = window.playfabAuth
+    let customAuth = (window as any).playfabAuth
 
     if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
         method = PlayFabClient.LoginWithIOSDeviceID
