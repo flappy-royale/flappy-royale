@@ -324,5 +324,5 @@ const asyncGetLeaderboardAroundPlayer = async (
 
 const attireMap = _.keyBy(allAttire, "id")
 const avatarUrlToAttire = (url: string): Attire[] => {
-    return url.split(",").map(key => attireMap[key])
+    return (url && url.split(",").map(key => attireMap[key])) || []
 }

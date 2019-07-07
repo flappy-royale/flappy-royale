@@ -1,14 +1,14 @@
 import * as constants from "../constants"
 import { Scene } from "phaser"
 
-import { UserSettings, getUserSettings, Bird } from "../user/userManager"
+import { getUserSettings, Bird } from "../user/userManager"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { builtInAttire, Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
 import { playSound } from "../playSound"
-import { getSettings, useLowQuality } from "../gameSettings"
+import { useLowQuality } from "../gameSettings"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
