@@ -95,6 +95,10 @@ export class BirdSprite {
         this.scene = scene
 
         // Setup the base body
+        if (meta.settings.aesthetics.attire.length === 0) {
+            meta.settings.aesthetics.attire = [defaultAttire]
+        }
+
         const base = meta.settings.aesthetics.attire.find(a => a.base)
         if (!base) throw "No base attire found"
 
