@@ -1,15 +1,16 @@
-import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
-import { Attire } from "./attire"
+import { PlayFabClient, PlayFabEvents, PlayFab } from "PlayFab-sdk"
+import { Attire, defaultAttire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
+import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 
 export let isLoggedIn: boolean = false
 
-let loginPromise: Promise<string>
+export let loginPromise: Promise<string>
 
 export let playfabUserId: string | undefined
 let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
@@ -20,7 +21,25 @@ export const login = () => {
     let method = PlayFabClient.LoginWithCustomID
     let loginRequest: PlayFabClientModels.LoginWithCustomIDRequest = {
         TitleId: titleId,
-        CreateAccount: true
+        CreateAccount: true,
+        InfoRequestParameters: {
+            GetUserData: true,
+            GetPlayerProfile: true,
+            GetPlayerStatistics: true,
+            ProfileConstraints: ({
+                ShowAvatarUrl: true,
+                ShowDisplayName: true
+            } as unknown) as number,
+
+            // These are all marked as "required" but also "false by default". The typings say we need them /shrug
+            GetCharacterInventories: false,
+            GetCharacterList: false,
+            GetTitleData: false,
+            GetUserAccountInfo: false,
+            GetUserInventory: false,
+            GetUserReadOnlyData: false,
+            GetUserVirtualCurrency: false
+        }
     }
 
     let customAuth = (window as any).playfabAuth
@@ -45,6 +64,29 @@ export const login = () => {
                     console.log("Login error:", error)
                     reject(error)
                     return
+                }
+
+                console.log(result)
+
+                // Grab the data from the server and shove it in the user object
+                // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
+                const payload = result.data.InfoResultPayload
+                if (payload) {
+                    let settings: Partial<UserSettings> = {}
+                    if (payload.PlayerProfile) {
+                        settings.name = payload.PlayerProfile.DisplayName
+                        settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
+                    }
+
+                    if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
+                        const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
+                        syncedSettingsKeys.forEach(key => {
+                            if (!_.isUndefined(storedSettings[key])) {
+                                ;(settings as any)[key] = storedSettings[key]
+                            }
+                        })
+                    }
+                    changeSettings(settings)
                 }
 
                 playfabUserId = result.data.PlayFabId
@@ -172,12 +214,41 @@ export const updateAttire = async (attire: Attire[]) => {
      * They also offer Tags, which are strings, but aren't editable by clients, only admins/servers.
      * But, uh, the AvatarUrl field doesn't validate URL correctness, so 🎉
      * (the URL is a comma-separated list of IDs, which we'll look up later) */
-    PlayFabClient.UpdateAvatarUrl(
-        {
-            ImageUrl: attire.map(a => a.id).join(",")
-        },
-        () => {}
-    )
+    return new Promise((resolve, reject) => {
+        PlayFabClient.UpdateAvatarUrl(
+            {
+                ImageUrl: attire.map(a => a.id).join(",")
+            },
+            (err: any, result: any) => {
+                if (err) reject(err)
+                resolve(result)
+            }
+        )
+    })
+}
+
+export const updateUserSettings = async (settings: UserSettings) => {
+    await loginPromise
+
+    let delta: any = {}
+    syncedSettingsKeys.forEach(key => {
+        delta[key] = (settings as any)[key]
+    })
+
+    return new Promise((resolve, reject) => {
+        PlayFabClient.UpdateUserData(
+            {
+                Data: { userSettings: JSON.stringify(delta) }
+            },
+            (err: any, result: any) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        )
+    })
 }
 
 export const event = async (name: string, params: any) => {
@@ -330,5 +401,5 @@ const asyncGetLeaderboardAroundPlayer = async (
 
 const attireMap = _.keyBy(allAttireInGame, "id")
 export const avatarUrlToAttire = (url: string): Attire[] => {
-    return (url && url.split(",").map(key => attireMap[key])) || []
+    return (url && url.split(",").map(key => attireMap[key])) || [defaultAttire]
 }
