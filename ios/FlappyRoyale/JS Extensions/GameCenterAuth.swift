@@ -54,7 +54,7 @@ class GameCenterAuth : NSObject, WebViewInteropProvider {
 
         print("window.gameCenter = {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }")
         webView.evaluateJavaScript("window.dispatchEvent(new CustomEvent('gameCenterLogin', { detail: {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }}))", completionHandler: nil)
-        webView.evaluateJavaScript("window.gameCenter = {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }", completionHandler: nil)
+//        webView.evaluateJavaScript("window.gameCenter = {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }", completionHandler: nil)
     }
 
     func auth() {
@@ -75,9 +75,10 @@ class GameCenterAuth : NSObject, WebViewInteropProvider {
 
                         if let salt = salt,
                             let signature = signature,
-                            let urlString = url?.absoluteString,
-                            let saltString = String(data: salt, encoding: .ascii)?.replacingOccurrences(of: "'", with: "\\'"),
-                            let signatureString = String(data: signature, encoding: .ascii)?.replacingOccurrences(of: "'", with: "\\'") {
+                            let urlString = url?.absoluteString {
+
+                            let saltString = salt.base64EncodedString()
+                            let signatureString = signature.base64EncodedString()
 
                             self.authData = GameCenterAuthData(playerID: player.playerID, url: urlString, salt: saltString, signature: signatureString, timestamp: timestamp)
                             self.loginWasValid = true

@@ -134,10 +134,10 @@ const gameCenterPromise = async (): Promise<PlayfabAuth | undefined> => {
                     resolve({
                         method: "LoginWithGameCenter",
                         payload: {
-                            PlayerId: e.detail.playerId,
+                            PlayerId: e.detail.playerID,
                             PublicKeyUrl: e.detail.url,
-                            Salt: e.detail.salt,
-                            Signature: e.detail.signature,
+                            Salt: atob(e.detail.salt),
+                            Signature: atob(e.detail.signature),
                             Timestamp: e.detail.timestamp
                         }
                     })
