@@ -80,24 +80,31 @@ export class MainMenuScene extends Phaser.Scene {
 
         becomeButton(this.battleBG.logo, this.loadRoyale, this)
 
-        const showOnboardingIfAppropriate = (settings: UserSettings) => {
-            if (hasName()) {
-                this.setUpMenu()
-            } else if (!settings.hasAskedAboutTutorial) {
-                this.loadTutorialFlow()
-            } else {
-                this.loadNamePrompt()
-            }
-        }
+        this.setUpMenu()
 
+        // After the user has logged in, we decide whether to show onboarding.
+        // If there's no internet access, we fall back to localStorage esttings
         getSyncedUserSettings()
-            .then(showOnboardingIfAppropriate)
+            .then(this.showOnboardingIfAppropriate)
             .catch(() => {
                 const settings = getUserSettings()
-                showOnboardingIfAppropriate(settings)
+                this.showOnboardingIfAppropriate(settings)
             })
+
         // This is just used for taking snapshots
         window.dispatchEvent(new Event("gameloaded"))
+    }
+
+    private showOnboardingIfAppropriate = (settings: UserSettings) => {
+        if (hasName()) {
+            return
+        }
+
+        if (!settings.hasAskedAboutTutorial) {
+            this.loadTutorialFlow()
+        } else {
+            this.loadNamePrompt()
+        }
     }
 
     private setUpMenu() {
@@ -170,6 +177,8 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private loadTutorialFlow() {
+        this.scene.pause("MainMenu")
+
         const options = {
             title: "",
             subtitle: "Have you played a\nflappy game before?",
@@ -190,7 +199,7 @@ export class MainMenuScene extends Phaser.Scene {
                     if (!hasName()) {
                         this.loadNamePrompt()
                     } else {
-                        this.setUpMenu()
+                        this.scene.resume("ManiMenu")
                     }
                 }
             }
@@ -204,6 +213,7 @@ export class MainMenuScene extends Phaser.Scene {
             this.scene.remove(namePrompt)
             this.loadAttirePrompt()
         })
+        this.scene.pause("MainMenu")
         addScene(this.game, NamePromptKey, namePrompt, true)
     }
 
@@ -222,7 +232,7 @@ export class MainMenuScene extends Phaser.Scene {
                 if (response) {
                     this.loadYourAttire()
                 } else {
-                    this.setUpMenu()
+                    this.scene.resume("MainMenu")
                 }
             }
         }

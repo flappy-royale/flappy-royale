@@ -24,6 +24,8 @@ export class BackgroundScene extends Phaser.Scene {
     battleBG!: BattleScene
     logo!: Phaser.GameObjects.Image
 
+    key = BackgroundSceneKey
+
     constructor() {
         super(BackgroundSceneKey)
     }
@@ -42,13 +44,11 @@ export class BackgroundScene extends Phaser.Scene {
 
     create() {
         this.battleBG = new BattleScene({
-            key: "menu-bg",
-            seed: "menu",
+            seed: "bg",
             gameMode: GameMode.Menu,
             theme: GameTheme.default
         })
-        addScene(this.game, "battlebg", this.battleBG, true)
-        this.game.scene.bringToTop(BackgroundSceneKey)
+        addScene(this.game, this.battleBG.key, this.battleBG, true)
 
         // Fill the BG
         this.add.rectangle(c.GameWidth / 2, c.GameHeight / 2, c.GameWidth, c.GameHeight, 0x000000, 0.4)
@@ -56,6 +56,13 @@ export class BackgroundScene extends Phaser.Scene {
         this.logo = this.add.image(84, 50 + c.NotchOffset, "logo")
 
         setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
+
+        this.bringToTop()
+    }
+
+    bringToTop() {
+        this.game.scene.bringToTop(this.battleBG.key)
+        this.game.scene.bringToTop(this.key)
     }
 
     dismiss() {

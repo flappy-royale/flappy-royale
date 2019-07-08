@@ -94,6 +94,9 @@ export class BattleScene extends Phaser.Scene {
     /** The data (user recordings etc) for this seed  */
     public seedData: SeedData
 
+    /** The phaser Scene manager key */
+    public key: string
+
     /* Scene timestamp for when the most recent round started
      * So recording timestamps can be consistent */
     private timestampOffset: number = 0
@@ -167,6 +170,8 @@ export class BattleScene extends Phaser.Scene {
                 opts
             )
         )
+
+        this.key = "GameScene" + opts.seed
 
         this.analytics = new BattleAnalytics()
         this.seed = opts.seed

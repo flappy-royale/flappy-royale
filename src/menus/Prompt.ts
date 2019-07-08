@@ -4,6 +4,7 @@ import { GameWidth, GameHeight, zLevels } from "../constants"
 import { becomeButton } from "./utils/becomeButton"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { addScene } from "./utils/addScene"
+import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 
 export const PromptKey = "AttirePrompt"
 
@@ -147,5 +148,9 @@ export class Prompt extends Phaser.Scene {
         if (this.options.completion) {
             this.options.completion(false, this)
         }
+    }
+
+    remove() {
+        console.log("Removing!")
     }
 }
