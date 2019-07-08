@@ -5,10 +5,11 @@ import { getUserSettings, Bird } from "../user/userManager"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
-import { builtInAttire, Attire, defaultAttire } from "../attire"
+import { Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
 import { playSound } from "../playSound"
 import { useLowQuality } from "../gameSettings"
+import { defaultAttireSet } from "../attire/defaultAttire"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
@@ -31,7 +32,7 @@ export const preloadBirdAttire = (scene: Phaser.Scene, attire: Attire[]) => {
 }
 
 export const preloadAllBirdAttire = (scene: Phaser.Scene) => {
-    for (const attire of builtInAttire) {
+    for (const attire of defaultAttireSet.attire) {
         if (attire && attire.id) {
             scene.load.image(attire.id, attire.href)
         }
@@ -77,7 +78,7 @@ export class BirdSprite {
     public sprite: Phaser.Physics.Arcade.Sprite
 
     // Focus sprite
-    private focusSprite: Phaser.GameObjects.Image
+    private focusSprite!: Phaser.GameObjects.Image
     // HATS
     private tightAttire: Phaser.GameObjects.Image[] = []
     private looseAttire: Phaser.GameObjects.Image[] = []
@@ -95,6 +96,10 @@ export class BirdSprite {
         this.scene = scene
 
         // Setup the base body
+        if (meta.settings.aesthetics.attire.length === 0) {
+            meta.settings.aesthetics.attire = [defaultAttire]
+        }
+
         const base = meta.settings.aesthetics.attire.find(a => a.base)
         if (!base) throw "No base attire found"
 
@@ -169,7 +174,9 @@ export class BirdSprite {
             2: 0.3
         }
 
+        // @ts-ignore
         if (!_.isUndefined(map[pipes])) {
+            // @ts-ignore
             opacity = map[pipes]
         }
         this.setOpacity(opacity)
@@ -355,14 +362,14 @@ export class BirdSprite {
     }
 
     changeAttireToRandom() {
-        const bases = builtInAttire.filter(a => a.base)
+        const bases = defaultAttireSet.attire.filter(a => a.base)
         const base = bases[Math.floor(Math.random() * bases.length)]
 
         this.bodySprite.destroy()
         this.bodySprite = this.scene.add.sprite(this.sprite.x, this.sprite.y, base.id)
         this.bodySprite.setOrigin(0.13, 0.5)
 
-        const hatsIsh = builtInAttire.filter(a => !a.base)
+        const hatsIsh = defaultAttireSet.attire.filter(a => !a.base)
         const amountOfItems = Math.floor(Math.random() * 3)
         const hatsToWear = hatsIsh.sort(() => 0.5 - Math.random()).slice(0, amountOfItems)
 

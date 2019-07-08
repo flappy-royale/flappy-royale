@@ -21,6 +21,7 @@ import { getTrialLobbyLeaderboard } from "../playFab"
 import { Attire, defaultAttire } from "../attire"
 import { emptySeedData } from "../firebase"
 import { Prompt, showPrompt } from "./Prompt"
+import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 
@@ -63,14 +64,14 @@ export class TrialLobby extends Phaser.Scene {
         const createUserImage = (attire: Attire[]) => {
             const root = document.createElement("div")
 
-            const userBase = attire.find(a => a.base)
+            const userBase = attire.find(a => a && a.base)
             const img = document.createElement("img")
             img.src = userBase ? userBase.href : defaultAttire.href
             img.className = "you-attire"
             root.appendChild(img)
 
             attire
-                .filter(a => !a.base)
+                .filter(a => a && !a.base)
                 .forEach(a => {
                     const attireImg = document.createElement("img")
                     attireImg.src = a.href
@@ -204,7 +205,7 @@ export class TrialLobby extends Phaser.Scene {
          * and then re-show the trial screen as soon as the user hits okay.
          */
         this.game.scene.remove(this)
-        const mainMenu = launchMainMenu(this.game, true)
+        const bgScene = showBackgroundScene(this.game)
 
         const options = {
             title: `You've earned`,
@@ -212,8 +213,10 @@ export class TrialLobby extends Phaser.Scene {
             yes: "ok",
 
             completion: (response: boolean, prompt: Prompt) => {
-                mainMenu.game.scene.remove(prompt)
-                mainMenu.loadTrial()
+                prompt.dismiss()
+                bgScene.dismiss()
+                const lobby = new TrialLobby({ seed: this.seed })
+                addScene(this.game, "TrialLobby" + this.seed, lobby, true, {})
             }
         }
         showPrompt(options, this.game)

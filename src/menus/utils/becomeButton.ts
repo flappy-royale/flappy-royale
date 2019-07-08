@@ -3,7 +3,7 @@ export const becomeButton = (
     button: Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText,
     action: Function,
     context?: any,
-    related?: { setY(number); y: number }[]
+    related?: { setY(y: number): void; y: number }[]
 ) =>
     button
         .setInteractive()

@@ -1,6 +1,5 @@
 import { BattleScene } from "../Scene"
-import { getUserSettings, getRoyales, changeSettings } from "../../user/userManager"
-import { builtInAttire } from "../../attire"
+import { getUserSettings, getRoyales } from "../../user/userManager"
 
 export const setupDeveloperKeyboardShortcuts = (scene: BattleScene) => {
     // Press E to print the current event stream

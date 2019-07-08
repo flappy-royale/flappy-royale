@@ -2,9 +2,10 @@ import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
 import { SeedsResponse } from "./api-contracts"
 import * as pako from "pako"
-import { SeedDataZipped, SeedData, JsonSeedData, PlayerData } from "../../src/firebase"
+import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from "../../src/firebase"
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
+import { PlayFabServer } from "playfab-sdk"
 
 const cors = require("cors")({
     origin: true
@@ -17,6 +18,11 @@ const cors = require("cors")({
 const numberOfRoyaleSeeds = 50
 
 const numberOfReplaysPerSeed = 200
+
+// PlayFab API secret key for the production app intended to be used with our Firebase cloud fns
+// Stored in firebase:functions:config
+const playfabFirebaseProdSecretKey = functions.config().playfab.secret
+const playfabTitle = functions.config().playfab.title
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
 // and we'll probably forget to do that!!
@@ -50,7 +56,7 @@ const currentSeedExpiry = (): Date => {
     return expiry
 }
 
-export const yarn = functions.https.onRequest((request, response) => {
+export const seeds = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const version = request.query.version || request.params.version
         const responseJSON = getSeeds(version)
@@ -60,6 +66,7 @@ export const yarn = functions.https.onRequest((request, response) => {
 
 export interface ReplayUploadRequest {
     uuid?: string
+    playfabId?: string
     version: string
     seed: string
     mode: number
@@ -68,11 +75,8 @@ export interface ReplayUploadRequest {
 
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
-        const { seed, uuid, version, data, mode } = JSON.parse(request.body) as ReplayUploadRequest
+        const { seed, uuid, version, data, mode, playfabId } = JSON.parse(request.body) as ReplayUploadRequest
 
-        if (!uuid) {
-            return response.status(400).send({ error: "Needs a uuid in request" })
-        }
         if (!version) {
             return response.status(400).send({ error: "Needs a version in request" })
         }
@@ -83,12 +87,51 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             return response.status(400).send({ error: "Needs a game mode in request" })
         }
 
+        // "uuid" is currently just display name.
+        // The filename has historically been seed/name-timestamp.json
+        // If playfabId exists, we'll use their playfabId instead of their name/uuid.
+        let userIdentifier = uuid
+
+        if (playfabId) {
+            const user: PlayfabUser = await new Promise((resolve, reject) => {
+                PlayFabServer.settings.developerSecretKey = playfabFirebaseProdSecretKey
+                PlayFabServer.settings.titleId = playfabTitle
+                PlayFabServer.GetPlayerProfile(
+                    {
+                        PlayFabId: playfabId,
+                        ProfileConstraints: ({
+                            ShowAvatarUrl: true,
+                            ShowDisplayName: true
+                        } as unknown) as number // This is a bug in PlayFab's typings
+                    },
+                    (error: any, result: any) => {
+                        if (error) {
+                            reject(error)
+                        }
+                        const profile = result.data.PlayerProfile
+                        if (!profile) {
+                            reject("No profile found")
+                        } else {
+                            resolve({
+                                name: profile.DisplayName!,
+                                playfabId: profile.PlayerId!,
+                                avatarUrl: profile.AvatarUrl!
+                            })
+                        }
+                    }
+                )
+            })
+            console.log("Fetched PlayFab user:", user)
+            data.playfabUser = user
+            userIdentifier = user.playfabId
+        }
+
         const document = { replaysZipped: zippedObj([data]) }
         const json = JSON.stringify(document)
 
         // All replays get saved to the firehose bucket, so we can analyze later
         const firehoseBucket = admin.storage().bucket("flappy-royale-replay-firehose")
-        const firehoseFile = firehoseBucket.file(`${seed}/${uuid}-${new Date()}.json`)
+        const firehoseFile = firehoseBucket.file(`${seed}/${userIdentifier}-${new Date()}.json`)
         await firehoseFile.save(json)
 
         // Only the first N seeds per hour get collated into real in-game ghost data
@@ -96,7 +139,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
 
         if (existingFiles.length < numberOfReplaysPerSeed) {
-            const file = bucket.file(`${seed}/${uuid}-${new Date()}.json`)
+            const file = bucket.file(`${seed}/${userIdentifier}-${new Date()}.json`)
             await file.save(json)
         }
 

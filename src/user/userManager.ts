@@ -62,6 +62,9 @@ export interface PlayerStats {
     instaDeaths: number
     totalFlaps: number
 
+    /** All scores added together */
+    totalScore: GameMode
+
     /** The user's current royale streak
      * (number of consecutive royale wins without a loss)*/
     royaleStreak: number
@@ -69,6 +72,9 @@ export interface PlayerStats {
     /** The user's all-time highest royale streak */
     bestRoyaleStreak: number
 }
+
+// Which user settings keys — other than 'name' and 'aesthetics' – we want to sync on PlayFab
+export const syncedSettingsKeys = ["hasAskedAboutTutorial"]
 
 // What it is when you first join
 export const defaultSettings: UserSettings = {
@@ -87,7 +93,10 @@ export const defaultSettings: UserSettings = {
 export const getUserSettings = (): UserSettings =>
     JSON.parse(localStorage.getItem("settings") || JSON.stringify(defaultSettings))
 
-const saveSettings = (settings: UserSettings) => localStorage.setItem("settings", JSON.stringify(settings))
+const saveSettings = (settings: UserSettings) => {
+    localStorage.setItem("settings", JSON.stringify(settings))
+    PlayFab.updateUserSettings(settings)
+}
 
 /**  For user forms etc */
 export const changeSettings = (settings: Partial<UserSettings>) => {
@@ -104,11 +113,15 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
         if (base.length !== 1) throw "Must be one, and only be one base"
 
         existingSettings.aesthetics = settings.aesthetics!
-
-        PlayFab.updateAttire(settings.aesthetics!.attire)
     }
 
     saveSettings(existingSettings)
+}
+
+// Fetches user settings (just like getUserSettings), but guarantees we've already finished login and thus synced data from the server
+export const getSyncedUserSettings = async (): Promise<UserSettings> => {
+    await PlayFab.loginPromise
+    return getUserSettings()
 }
 
 // The royales are separated from the settings because they can get pretty big
@@ -208,7 +221,8 @@ export const getUserStatistics = (): PlayerStats => {
         instaDeaths: 0,
         totalFlaps: 0,
         royaleStreak: 0,
-        bestRoyaleStreak: 0
+        bestRoyaleStreak: 0,
+        totalScore: 0
     }
 
     let currentRoyaleStreak = 0
@@ -248,6 +262,9 @@ export const getUserStatistics = (): PlayerStats => {
 
         // How many time did you flap
         stats.totalFlaps += run.flaps
+
+        // "You have score 2000 points"
+        stats.totalScore += run.score
     })
 
     stats.royaleStreak = currentRoyaleStreak

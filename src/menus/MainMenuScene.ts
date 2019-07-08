@@ -1,9 +1,7 @@
 import * as Phaser from "phaser"
-import { UserAttireScene, UserAttireKey } from "./UserAttireScene"
-import { emptySeedData, getSeeds } from "../firebase"
-import { BattleScene } from "../battle/Scene"
+import { YouScene, YouKey } from "./YouScene"
+import { getSeeds } from "../firebase"
 import * as c from "../constants"
-import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
@@ -12,42 +10,42 @@ import {
     getUserSettings,
     getUserStatistics,
     hasAskedAboutTutorial,
-    hasName
+    hasName,
+    getSyncedUserSettings,
+    UserSettings
 } from "../user/userManager"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
-import { GameTheme } from "../battle/theme"
 import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { Prompt, showPrompt } from "./Prompt"
 import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
+import { checkToShowRatingPrompt } from "../util/checkToShowRating"
+import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 
 declare const DEMO: boolean
 
 /** Used on launch, and when you go back to the main menu */
-export const launchMainMenu = (game: Phaser.Game, skipUI: boolean = false): MainMenuScene => {
-    const mainMenu = new MainMenuScene(skipUI)
+export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
+    const mainMenu = new MainMenuScene()
     addScene(game, "MainMenu", mainMenu, true)
     return mainMenu
 }
 
 export class MainMenuScene extends Phaser.Scene {
-    seeds: SeedsResponse
-    battleBG: BattleScene
+    seeds: SeedsResponse | undefined
+    battleBG!: BackgroundScene
 
-    playerNameText: Phaser.GameObjects.BitmapText
-    winsLabel: Phaser.GameObjects.BitmapText
+    playerNameText!: Phaser.GameObjects.BitmapText
+    winsLabel!: Phaser.GameObjects.BitmapText
 
-    skipUI: boolean
-
-    constructor(skipUI: boolean = false) {
+    constructor() {
         super("MainMenu")
-        this.skipUI = skipUI
     }
 
     preload() {
@@ -77,38 +75,36 @@ export class MainMenuScene extends Phaser.Scene {
             console.error("Scenes:", existingScenes)
         }
 
-        this.battleBG = new BattleScene({
-            key: "menu-bg",
-            seed: "menu",
-            data: emptySeedData,
-            gameMode: GameMode.Menu,
-            theme: GameTheme.default
-        })
-        addScene(this.game, "battlebg", this.battleBG, true)
+        this.battleBG = showBackgroundScene(this.game)
         this.game.scene.bringToTop("MainMenu")
 
-        // Fill the BG
-        this.add.rectangle(c.GameWidth / 2, c.GameHeight / 2, c.GameWidth, c.GameHeight, 0x000000, 0.4)
+        becomeButton(this.battleBG.logo, this.loadRoyale, this)
 
-        const logo = this.add.image(84, 50 + c.NotchOffset, "logo")
-        becomeButton(logo, this.loadRoyale, this)
+        this.setUpMenu()
 
-        setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
+        // After the user has logged in, we decide whether to show onboarding.
+        // If there's no internet access, we fall back to localStorage esttings
+        getSyncedUserSettings()
+            .then(this.showOnboardingIfAppropriate)
+            .catch(() => {
+                const settings = getUserSettings()
+                this.showOnboardingIfAppropriate(settings)
+            })
 
-        const settings = getUserSettings()
+        // This is just used for taking snapshots
+        window.dispatchEvent(new Event("gameloaded"))
+    }
 
-        if (this.skipUI) {
-            // Do nothing!
-        } else if (hasName()) {
-            this.setUpMenu()
-        } else if (!settings.hasAskedAboutTutorial) {
+    private showOnboardingIfAppropriate = (settings: UserSettings) => {
+        if (hasName()) {
+            return
+        }
+
+        if (!settings.hasAskedAboutTutorial) {
             this.loadTutorialFlow()
         } else {
             this.loadNamePrompt()
         }
-
-        // This is just used for taking snapshots
-        window.dispatchEvent(new Event("gameloaded"))
     }
 
     private setUpMenu() {
@@ -159,8 +155,7 @@ export class MainMenuScene extends Phaser.Scene {
         const statsButton = this.add.image(c.GameWidth / 2 + 10, c.GameHeight - 22, "stats-button")
         becomeButton(statsButton, this.loadStats, this)
 
-        // const howToPlayButton = this.add.image(c.GameWidth - 12, c.GameHeight - 42, "question-mark")
-        // becomeButton(howToPlayButton, this.loadTutorial, this)
+        checkToShowRatingPrompt()
     }
 
     loadSettings() {
@@ -171,8 +166,8 @@ export class MainMenuScene extends Phaser.Scene {
 
     private loadYourAttire() {
         this.removeMenu()
-        const settings = new UserAttireScene()
-        addScene(this.game, UserAttireKey, settings, true)
+        const settings = new YouScene()
+        addScene(this.game, YouKey, settings, true)
     }
 
     private loadStats() {
@@ -182,6 +177,8 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private loadTutorialFlow() {
+        this.scene.pause("MainMenu")
+
         const options = {
             title: "",
             subtitle: "Have you played a\nflappy game before?",
@@ -194,7 +191,7 @@ export class MainMenuScene extends Phaser.Scene {
 
             completion: (response: boolean, prompt: Prompt) => {
                 hasAskedAboutTutorial()
-                this.scene.remove(prompt)
+                prompt.dismiss()
                 if (response) {
                     this.removeMenu()
                     launchTutorial(this.game)
@@ -202,7 +199,7 @@ export class MainMenuScene extends Phaser.Scene {
                     if (!hasName()) {
                         this.loadNamePrompt()
                     } else {
-                        this.setUpMenu()
+                        this.scene.resume("ManiMenu")
                     }
                 }
             }
@@ -216,6 +213,7 @@ export class MainMenuScene extends Phaser.Scene {
             this.scene.remove(namePrompt)
             this.loadAttirePrompt()
         })
+        this.scene.pause("MainMenu")
         addScene(this.game, NamePromptKey, namePrompt, true)
     }
 
@@ -230,11 +228,11 @@ export class MainMenuScene extends Phaser.Scene {
             y: (2 / 5) * c.GameHeight,
 
             completion: (response: boolean, prompt: Prompt) => {
-                this.scene.remove(prompt)
+                prompt.dismiss()
                 if (response) {
                     this.loadYourAttire()
                 } else {
-                    this.setUpMenu()
+                    this.scene.resume("MainMenu")
                 }
             }
         }
@@ -243,18 +241,22 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     loadTrial() {
-        this.removeMenu()
-        const seed = this.seeds.daily.production
-        const lobby = new TrialLobby({ seed })
-        addScene(this.game, "TrialLobby" + seed, lobby, true, {})
+        if (this.seeds) {
+            this.removeMenu()
+            const seed = this.seeds.daily.production
+            const lobby = new TrialLobby({ seed })
+            addScene(this.game, "TrialLobby" + seed, lobby, true, {})
+        }
     }
 
     private loadRoyale() {
-        this.removeMenu()
-        const index = getAndBumpUserCycleSeedIndex(this.seeds && this.seeds.royale.length)
-        const seed = this.seeds.royale[index]
-        const lobby = new RoyaleLobby({ seed })
-        addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+        if (this.seeds) {
+            this.removeMenu()
+            const index = getAndBumpUserCycleSeedIndex(this.seeds && this.seeds.royale.length)
+            const seed = this.seeds.royale[index]
+            const lobby = new RoyaleLobby({ seed })
+            addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+        }
     }
 
     removeMenu() {
@@ -263,7 +265,7 @@ export class MainMenuScene extends Phaser.Scene {
         // Manually pushing the remove action til the next update loop seems to fix it /shrug
         defer(() => {
             this.game.scene.remove(this)
-            this.game.scene.remove(this.battleBG)
+            this.battleBG.dismiss()
         })
     }
 }

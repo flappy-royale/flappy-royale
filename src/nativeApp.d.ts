@@ -39,7 +39,7 @@ declare global {
             openPlayStoreURL: (url: string) => void
         }
 
-        ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number)
+        ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number): void
 
         playfabAuth?: PlayfabAuth
 

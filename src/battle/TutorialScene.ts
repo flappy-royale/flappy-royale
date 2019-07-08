@@ -32,26 +32,26 @@ enum TutorialStep {
 
 export class TutorialScene extends Phaser.Scene {
     /** The starting bus */
-    private bus: Phaser.Physics.Arcade.Image
+    private bus!: Phaser.Physics.Arcade.Image
 
     /** Your sprite, or if behind the main menu - not set up for this game mode */
     private bird: BirdSprite | undefined
 
     /** Every pipe is a set of physics objects */
-    private pipes: Phaser.Physics.Arcade.Group[]
+    private pipes: Phaser.Physics.Arcade.Group[] = []
 
     /** All the current scorelines on screen */
-    private scoreLines: Phaser.Physics.Arcade.Image[]
+    private scoreLines: Phaser.Physics.Arcade.Image[] = []
 
     /* Scene timestamp for when the most recent round started
      * So recording timestamps can be consistent */
     private timestampOffset: number = 0
 
     /** The RNG function for this current run, pipes, and all ghosts */
-    public rng: () => number
+    public rng!: () => number
 
     /** Track spacebar keypresses to flap */
-    private spacebar: Phaser.Input.Keyboard.Key
+    private spacebar!: Phaser.Input.Keyboard.Key
 
     /** What game mode is this scene running in? */
     public mode: game.GameMode = game.GameMode.Tutorial
@@ -62,7 +62,7 @@ export class TutorialScene extends Phaser.Scene {
     public theme: GameTheme = GameTheme.default
 
     /** The thing that represents the floor (birds/the bus sit on this) */
-    public floorPhysics: Phaser.Physics.Arcade.Image
+    public floorPhysics!: Phaser.Physics.Arcade.Image
 
     /** THe current active prompt */
     private prompt?: Prompt
@@ -75,7 +75,7 @@ export class TutorialScene extends Phaser.Scene {
     private disableJumping = false
 
     /** What you see to go back, hides on dying in a royale */
-    private backButton: Phaser.GameObjects.Image
+    private backButton!: Phaser.GameObjects.Image
 
     private isExiting = false
 
@@ -92,7 +92,7 @@ export class TutorialScene extends Phaser.Scene {
     init() {
         this.resetGame()
 
-        const flap = this.userFlap.bind(this)
+        const flap = this.userFlap.bind(this) as any
         window.addEventListener("touchstart", flap)
         window.addEventListener("mousedown", flap)
 
@@ -281,8 +281,8 @@ export class TutorialScene extends Phaser.Scene {
         }
 
         // Let the bus collide
-        const busCrash = (bus: Phaser.Physics.Arcade.Sprite) => {
-            busCrashed(bus, this, this.theme)
+        const busCrash = (bus: Phaser.GameObjects.GameObject) => {
+            busCrashed(bus as any, this, this.theme)
             if (this.bird && this.bird.isInBus && !this.bird.isDead) {
                 this.userDied()
                 this.bird.stopBeingInBus()
@@ -379,7 +379,7 @@ export class TutorialScene extends Phaser.Scene {
         this.bird && this.bird.flap()
     }
 
-    userScored(_bird: Phaser.GameObjects.Sprite, line: Phaser.Physics.Arcade.Sprite) {
+    userScored(_bird: Phaser.GameObjects.GameObject, line: Phaser.GameObjects.GameObject) {
         this.pipeScore += 1
         line.destroy()
 

@@ -57,6 +57,7 @@ let play = (type: string) => {
     }
 
     if (navigator.vibrate) {
+        // @ts-ignore
         navigator.vibrate(map[type] || 50)
     }
 }

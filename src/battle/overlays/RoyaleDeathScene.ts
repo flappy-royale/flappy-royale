@@ -4,8 +4,7 @@ import { launchMainMenu } from "../../menus/MainMenuScene"
 import { BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import { fetchRecordingsForSeed, SeedData } from "../../firebase"
-import { getRoyales, getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
-import { requestReview } from "../../nativeComms/requestReview"
+import { getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
 import { addScene } from "../../menus/utils/addScene"
 import { GameMode } from "../utils/gameMode"
 import _ = require("lodash")
@@ -40,14 +39,14 @@ export const deathPreload = (game: Phaser.Scene) => {
 }
 
 export class RoyaleDeath extends Phaser.Scene {
-    seed: string
-    seedData: SeedData
+    seed!: string
+    seedData!: SeedData
 
     /** True if the user has pressed 'ready', but new seed data isn't available yet  */
     hasReadied: boolean = false
 
-    newGameText: Phaser.GameObjects.BitmapText
-    newGameBG: Phaser.GameObjects.Image
+    newGameText!: Phaser.GameObjects.BitmapText
+    newGameBG!: Phaser.GameObjects.Image
 
     footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
     shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
@@ -64,9 +63,6 @@ export class RoyaleDeath extends Phaser.Scene {
         getAndBumpUserCycleSeed().then(seed => {
             this.seed = seed
             fetchRecordingsForSeed(seed).then(seedData => {
-                if (seedData.replays.length > 99) {
-                    seedData.replays = _.sampleSize(seedData.replays, 99)
-                }
                 this.seedData = seedData
 
                 if (this.hasReadied) {
@@ -132,20 +128,14 @@ export class RoyaleDeath extends Phaser.Scene {
         this.footerObjects.push(this.newGameBG)
         this.footerObjects.push(this.newGameText)
 
-        let share, shareIcon
+        let share: Phaser.GameObjects.Image, shareIcon: Phaser.GameObjects.Image
+
         if (!isAndroidApp()) {
             share = this.add.image(55, GameHeight - 51, "button-small-bg")
             share.setScale(0.6, 1)
             shareIcon = this.add.image(55, GameHeight - 51, "share-ios")
             this.footerObjects.push(share)
             this.footerObjects.push(shareIcon)
-        }
-
-        // Decide whether to show a rating screen
-        // WARNING: iOS will silently not display this if it's already been shown, so we can call this indefinitely
-        // When building this out for Android, it's likely that won't be the case.
-        if (this.props.score > 0 && getRoyales().length >= 10) {
-            requestReview()
         }
 
         // Let you hit ready with spacebar

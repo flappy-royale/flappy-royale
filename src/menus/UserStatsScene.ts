@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { getUserSettings, getUserStatistics, getRoyales } from "../user/userManager"
+import { getUserStatistics, getRoyales } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
@@ -95,6 +95,7 @@ function setUpStatsHTML() {
 
     // convert ^ to HTML
     Object.keys(presentation).forEach(key => {
+        // @ts-ignore
         const value = presentation[key]
         const dataDiv = document.createElement("p")
         dataDiv.innerHTML = `${key}<span>${value}</span>`

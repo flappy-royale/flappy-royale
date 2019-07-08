@@ -9,12 +9,12 @@ import { showLoadingScreen } from "./LoadingScene"
 import * as appCache from "../appCache"
 
 export class AppLaunchScene extends Phaser.Scene {
-    progressBar: Phaser.GameObjects.Rectangle
-    birds: BirdSprite[]
-    possibleAttires: UserSettings[]
+    progressBar!: Phaser.GameObjects.Rectangle
+    birds: BirdSprite[] = []
+    possibleAttires: UserSettings[] = []
 
     // If true, should attempt to show a loading screen after completion
-    showLoadingScreen: boolean
+    showLoadingScreen: boolean = false
 
     constructor() {
         super("Launch")
