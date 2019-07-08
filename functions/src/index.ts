@@ -134,13 +134,16 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         const firehoseFile = firehoseBucket.file(`${seed}/${userIdentifier}-${new Date()}.json`)
         await firehoseFile.save(json)
 
-        // Only the first N seeds per hour get collated into real in-game ghost data
-        const bucket = admin.storage().bucket("flappy-royale-replay-uploads")
-        const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
+        // Non-Playfab users can still get shoved in the firehose bucket, but they can't show up in others' games.
+        if (data.playfabUser) {
+            // Only the first N seeds per hour get collated into real in-game ghost data
+            const bucket = admin.storage().bucket("flappy-royale-replay-uploads")
+            const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
 
-        if (existingFiles.length < numberOfReplaysPerSeed) {
-            const file = bucket.file(`${seed}/${userIdentifier}-${new Date()}.json`)
-            await file.save(json)
+            if (existingFiles.length < numberOfReplaysPerSeed) {
+                const file = bucket.file(`${seed}/${userIdentifier}-${new Date()}.json`)
+                await file.save(json)
+            }
         }
 
         const responseJSON = { success: true }
