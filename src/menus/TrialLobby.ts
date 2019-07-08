@@ -213,6 +213,7 @@ export class TrialLobby extends Phaser.Scene {
             yes: "ok",
 
             completion: (response: boolean, prompt: Prompt) => {
+                prompt.dismiss()
                 bgScene.dismiss()
                 const lobby = new TrialLobby({ seed: this.seed })
                 addScene(this.game, "TrialLobby" + this.seed, lobby, true, {})

@@ -191,7 +191,7 @@ export class MainMenuScene extends Phaser.Scene {
 
             completion: (response: boolean, prompt: Prompt) => {
                 hasAskedAboutTutorial()
-                this.scene.remove(prompt)
+                prompt.dismiss()
                 if (response) {
                     this.removeMenu()
                     launchTutorial(this.game)
@@ -228,7 +228,7 @@ export class MainMenuScene extends Phaser.Scene {
             y: (2 / 5) * c.GameHeight,
 
             completion: (response: boolean, prompt: Prompt) => {
-                this.scene.remove(prompt)
+                prompt.dismiss()
                 if (response) {
                     this.loadYourAttire()
                 } else {

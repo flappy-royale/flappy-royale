@@ -461,7 +461,7 @@ export class TrialDeath extends Phaser.Scene {
             drawBgLayer: true,
             yes: "ok",
             completion: (response: boolean, prompt: Prompt) => {
-                this.scene.remove(prompt)
+                prompt.dismiss()
             }
         }
 

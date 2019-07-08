@@ -143,6 +143,7 @@ export class AppSettingsScene extends Phaser.Scene {
 
                         window.location.reload()
                     } else {
+                        prompt.dismiss()
                         bgScene.dismiss()
                         const settings = new AppSettingsScene()
                         addScene(this.game, AppSettingsKey, settings, true)
