@@ -7,6 +7,10 @@ interface PlayfabAuth {
 
 declare global {
     interface Window {
+        // The timestamp the last time the app lost focus
+        // Used to determine when to force-reload the app
+        dateLastHidden?: Date
+
         // iOS
         isAppleApp: boolean
         webkit: {

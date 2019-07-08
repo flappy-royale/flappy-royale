@@ -223,6 +223,21 @@ window.addEventListener("fake-visibilitychange", (e: any) => {
     document.dispatchEvent(new Event("visibilitychange"))
 })
 
+// If the user last minimized/closed the app > 5 minutes ago, but their OS didn't trigger an app nrestart,
+// let's force them to reload the game so they can check for app updates
+window.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        window.dateLastHidden = new Date()
+    } else if (window.dateLastHidden) {
+        const now = new Date()
+        const msSinceLastOpen = now.getTime() - window.dateLastHidden.getTime()
+
+        if (msSinceLastOpen > 5 * 60 * 1000) {
+            window.location.reload()
+        }
+    }
+})
+
 if (!PRODUCTION) {
     console.log("Skipping app cache")
 } else {
