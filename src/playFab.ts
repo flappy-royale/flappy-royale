@@ -1,4 +1,4 @@
-import { PlayFabClient, PlayFabEvents, PlayFab } from "PlayFab-sdk"
+import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
 import { Attire, defaultAttire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
