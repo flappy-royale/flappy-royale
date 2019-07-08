@@ -1,9 +1,7 @@
 import * as Phaser from "phaser"
 import { YouScene, YouKey } from "./YouScene"
-import { emptySeedData, getSeeds } from "../firebase"
-import { BattleScene } from "../battle/Scene"
+import { getSeeds } from "../firebase"
 import * as c from "../constants"
-import { GameMode } from "../battle/utils/gameMode"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"
 import { RoyaleLobby } from "./RoyaleLobby"
@@ -21,7 +19,6 @@ import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
 import { addScene } from "./utils/addScene"
-import { GameTheme } from "../battle/theme"
 import { rightAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { launchTutorial } from "../battle/TutorialScene"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
@@ -29,33 +26,26 @@ import { Prompt, showPrompt } from "./Prompt"
 import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
+import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 
 declare const DEMO: boolean
 
 /** Used on launch, and when you go back to the main menu */
-export const launchMainMenu = (game: Phaser.Game, props?: MainMenuProps): MainMenuScene => {
-    const emptyProps = { skipOnboardingUI: false }
-    const mainMenu = new MainMenuScene(props || emptyProps)
+export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
+    const mainMenu = new MainMenuScene()
     addScene(game, "MainMenu", mainMenu, true)
     return mainMenu
 }
 
-export interface MainMenuProps {
-    skipOnboardingUI: boolean
-}
-
 export class MainMenuScene extends Phaser.Scene {
     seeds: SeedsResponse | undefined
-    battleBG!: BattleScene
+    battleBG!: BackgroundScene
 
     playerNameText!: Phaser.GameObjects.BitmapText
     winsLabel!: Phaser.GameObjects.BitmapText
 
-    props: MainMenuProps
-
-    constructor(props: MainMenuProps) {
+    constructor() {
         super("MainMenu")
-        this.props = props
     }
 
     preload() {
@@ -85,30 +75,13 @@ export class MainMenuScene extends Phaser.Scene {
             console.error("Scenes:", existingScenes)
         }
 
-        this.battleBG = new BattleScene({
-            key: "menu-bg",
-            seed: "menu",
-            data: emptySeedData,
-            gameMode: GameMode.Menu,
-            theme: GameTheme.default
-        })
-        addScene(this.game, "battlebg", this.battleBG, true)
+        this.battleBG = showBackgroundScene(this.game)
         this.game.scene.bringToTop("MainMenu")
 
-        // Fill the BG
-        this.add.rectangle(c.GameWidth / 2, c.GameHeight / 2, c.GameWidth, c.GameHeight, 0x000000, 0.4)
-
-        const logo = this.add.image(84, 50 + c.NotchOffset, "logo")
-        becomeButton(logo, this.loadRoyale, this)
-
-        setupBackgroundBlobImages(this, { min: 100 + c.NotchOffset, allColors: true })
+        becomeButton(this.battleBG.logo, this.loadRoyale, this)
 
         const showOnboardingIfAppropriate = (settings: UserSettings) => {
-            if (this.props.skipOnboardingUI) {
-                // Do nothing!
-                // This is so we can use a dummy main menu as the backdrop for a modal prompt
-                // (This should probably be a different scene)
-            } else if (hasName()) {
+            if (hasName()) {
                 this.setUpMenu()
             } else if (!settings.hasAskedAboutTutorial) {
                 this.loadTutorialFlow()
@@ -282,7 +255,7 @@ export class MainMenuScene extends Phaser.Scene {
         // Manually pushing the remove action til the next update loop seems to fix it /shrug
         defer(() => {
             this.game.scene.remove(this)
-            this.game.scene.remove(this.battleBG)
+            this.battleBG.dismiss()
         })
     }
 }

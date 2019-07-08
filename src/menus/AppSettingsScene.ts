@@ -11,6 +11,7 @@ import { Prompt, showPrompt } from "./Prompt"
 import { getUserSettings } from "../user/userManager"
 import { EnterNameScreen, NamePromptKey } from "./EnterNameScreen"
 import { addScene } from "./utils/addScene"
+import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 
 export const AppSettingsKey = "UserSettings"
 
@@ -126,7 +127,7 @@ export class AppSettingsScene extends Phaser.Scene {
 
         document.getElementById("reset")!.addEventListener("click", () => {
             this.game.scene.remove(this)
-            const mainMenu = launchMainMenu(this.game, { skipOnboardingUI: true })
+            const bgScene = showBackgroundScene(this.game)
 
             const options = {
                 title: "Are you sure? This",
@@ -142,8 +143,9 @@ export class AppSettingsScene extends Phaser.Scene {
 
                         window.location.reload()
                     } else {
-                        mainMenu.game.scene.remove(prompt)
-                        mainMenu.loadSettings()
+                        bgScene.dismiss()
+                        const settings = new AppSettingsScene()
+                        addScene(this.game, AppSettingsKey, settings, true)
                     }
                 }
             }

@@ -3,7 +3,7 @@ import * as Seed from "seed-random"
 import * as constants from "../constants"
 import * as game from "./utils/gameMode"
 
-import { PlayerEvent, PlayerData, SeedData, uploadReplayForSeed } from "../firebase"
+import { PlayerEvent, PlayerData, SeedData, uploadReplayForSeed, emptySeedData } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addRowOfPipes } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations, preloadAllBirdAttire } from "./BirdSprite"
@@ -40,7 +40,7 @@ export interface BattleSceneSettings {
     /** The string representation for the level */
     seed: string
     /** The data from firebase */
-    data: SeedData
+    data?: SeedData
     /** Game mode */
     gameMode: game.GameMode
     /** a UUID for the game scene  */
@@ -170,7 +170,7 @@ export class BattleScene extends Phaser.Scene {
 
         this.analytics = new BattleAnalytics()
         this.seed = opts.seed
-        this.seedData = opts.data
+        this.seedData = opts.data || emptySeedData
         this.mode = opts.gameMode
 
         if (opts.theme) {
