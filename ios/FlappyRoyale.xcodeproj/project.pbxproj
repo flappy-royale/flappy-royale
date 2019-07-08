@@ -15,6 +15,8 @@
 		6092CB4D22B0B56600D9480B /* AdPresentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6092CB4C22B0B56600D9480B /* AdPresentor.swift */; };
 		60961B7022B6DEDC0070160A /* ShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60961B6F22B6DEDC0070160A /* ShareManager.swift */; };
 		9259DE29960CE51A434D9725 /* Pods_Flappy_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 131C54B7695E9FDAFC63F6B7 /* Pods_Flappy_Dev.framework */; };
+		C61E55BC22D37B8400010550 /* GameCenterAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61E55BB22D37B8400010550 /* GameCenterAuth.swift */; };
+		C61E55BD22D37B8400010550 /* GameCenterAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61E55BB22D37B8400010550 /* GameCenterAuth.swift */; };
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
 		C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */; };
@@ -67,6 +69,7 @@
 		6CD0CEBE8DE42AE61C6E36A5 /* Pods-FlappyRoyale.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.debug.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.debug.xcconfig"; sourceTree = "<group>"; };
 		6D1BFD9413EA68359D30A410 /* Pods-FlappyRoyale.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.release.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.release.xcconfig"; sourceTree = "<group>"; };
 		B6FE055AC6820E2929BB18FC /* Pods-Flappy Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flappy Dev.debug.xcconfig"; path = "Target Support Files/Pods-Flappy Dev/Pods-Flappy Dev.debug.xcconfig"; sourceTree = "<group>"; };
+		C61E55BB22D37B8400010550 /* GameCenterAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterAuth.swift; sourceTree = "<group>"; };
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
 		C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewer.swift; sourceTree = "<group>"; };
@@ -148,6 +151,7 @@
 				605A160B22B5AEDB008A7AFD /* AnalyticsManager.swift */,
 				60961B6F22B6DEDC0070160A /* ShareManager.swift */,
 				60924F6C22BFF9F90004796A /* URLLoader.swift */,
+				C61E55BB22D37B8400010550 /* GameCenterAuth.swift */,
 			);
 			path = "JS Extensions";
 			sourceTree = "<group>";
@@ -456,6 +460,7 @@
 				6067812822AB0A830036A5FC /* AdConstants.swift in Sources */,
 				60961B7022B6DEDC0070160A /* ShareManager.swift in Sources */,
 				60924F6D22BFF9F90004796A /* URLLoader.swift in Sources */,
+				C61E55BC22D37B8400010550 /* GameCenterAuth.swift in Sources */,
 				C653149321EE7BB80068609E /* ViewController.swift in Sources */,
 				605A160C22B5AEDB008A7AFD /* AnalyticsManager.swift in Sources */,
 				C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */,
@@ -482,6 +487,7 @@
 				C6BA850722BE7AE500BCBCC6 /* AdConstants.swift in Sources */,
 				C6BA850822BE7AE500BCBCC6 /* ShareManager.swift in Sources */,
 				60924F6E22BFF9F90004796A /* URLLoader.swift in Sources */,
+				C61E55BD22D37B8400010550 /* GameCenterAuth.swift in Sources */,
 				C6BA850922BE7AE500BCBCC6 /* ViewController.swift in Sources */,
 				C6BA850A22BE7AE500BCBCC6 /* AnalyticsManager.swift in Sources */,
 				C6BA850B22BE7AE500BCBCC6 /* AppStoreReviewer.swift in Sources */,

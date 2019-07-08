@@ -10,6 +10,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let analytics = AnalyticsPresentor()
     let share = ShareManager()
     let urlOpener = URLManager()
+    let gameCenterAuth = GameCenterAuth()
 
     var webView: WKWebView?
 
@@ -30,12 +31,11 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         super.viewDidLoad()
 
         adPresentor.presentationVC = self
-        
         share.presentationVC = self
         urlOpener.presentationVC = self
-        view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
+        gameCenterAuth.presentationVC = self
 
-        loginWithGameCenter()
+        view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
 
         let userContentController = WKUserContentController()
 
@@ -66,7 +66,7 @@ window.buildVersion = '\(bundleVersion)';
         }
 
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, gameCenterAuth]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
@@ -127,43 +127,6 @@ window.buildVersion = '\(bundleVersion)';
         }
 
         loadGameURL()
-    }
-
-    private func loginWithGameCenter() {
-        let player = GKLocalPlayer.local
-        player.authenticateHandler = { vc, error in
-            if let vc = vc {
-                self.present(vc, animated: true, completion: nil)
-            } else if player.isAuthenticated {
-                print("Authenticated! \(player.playerID)") // TODO: This is deprecated, newer APIs have gamePlayerID but I don't have the SDK installed
-                player.generateIdentityVerificationSignature(completionHandler: { (url, salt, signature, timestamp, error) in
-                    print("Generated signature!")
-                    if let error = error {
-                        print("Signature error: \(error.localizedDescription)")
-                        return
-                    }
-
-                    print(salt, signature, url, timestamp)
-
-                    guard let salt = salt,
-                        let signature = signature,
-                        let urlString = url?.absoluteString,
-                        let saltString = String(data: salt, encoding: .ascii)?.replacingOccurrences(of: "'", with: "\\'"),
-                        let signatureString = String(data: signature, encoding: .ascii)?.replacingOccurrences(of: "'", with: "\\'")
-                    else {
-                        print("NO salt or signature")
-                        return
-                    }
-
-                    print("Dispatching")
-                    print("window.gameCenter = {playerID: '\(player.playerID)', url: '\(urlString)', salt: '\(saltString)', signature: '\(signatureString)', timestamp: \(timestamp) }")
-                    self.webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('gameCenterLogin', { detail: {playerID: '\(player.playerID)', url: '\(urlString)', salt: '\(saltString)', signature: '\(signatureString)', timestamp: \(timestamp) }}))", completionHandler: nil)
-                    self.webView?.evaluateJavaScript("window.gameCenter = {playerID: '\(player.playerID)', url: '\(urlString)', salt: '\(saltString)', signature: '\(signatureString)', timestamp: \(timestamp) }", completionHandler: nil)
-                })
-            } else {
-                print("No game center")
-            }
-        }
     }
 
     private func loadGameURL() {
