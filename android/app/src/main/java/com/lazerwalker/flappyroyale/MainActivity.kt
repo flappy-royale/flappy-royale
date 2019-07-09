@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface((this.adPresenter as ModalAdPresenter), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
-        webview.addJavascriptInterface(URLLoader(this, webview), "URLLoader")
+        webview.addJavascriptInterface(URLLoader(this, webview, this), "URLLoader")
         webview.addJavascriptInterface(AndroidStaticData(this, webview), "AndroidStaticData")
 
         webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }

@@ -1,5 +1,6 @@
 package com.lazerwalker.flappyroyale
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -7,9 +8,10 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.vorlonsoft.android.rate.AppRate
 import org.json.JSONObject
 
-class URLLoader(private val context: Context, val webview: WebView) {
+class URLLoader(private val context: Context, val webview: WebView, val activity: Activity) {
     @JavascriptInterface
     fun openURL(url: String) {
         val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -26,5 +28,10 @@ class URLLoader(private val context: Context, val webview: WebView) {
             setPackage("com.android.vending")
         }
         context.startActivity(intent)
+    }
+
+    @JavascriptInterface
+    fun requestReview() {
+        AppRate.with(context).showRateDialog(activity);
     }
 }

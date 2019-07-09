@@ -1,4 +1,5 @@
 import { haptics } from "./haptics"
+import { requestReview } from "./nativeComms/requestReview"
 
 interface PlayfabAuth {
     method: string
@@ -43,6 +44,7 @@ declare global {
         URLLoader?: {
             openURL?: (url: string) => void
             openPlayStoreURL?: (url: string) => void
+            requestReview?: () => void
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number): void

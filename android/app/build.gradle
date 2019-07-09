@@ -73,6 +73,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.9'
 
+    implementation "com.vorlonsoft:androidrate:1.2.1"
+
 //    implementation 'com.google.android.gms:play-services-games:18.0.0'
 
     implementation 'com.jaredrummler:android-device-names:1.1.9'
