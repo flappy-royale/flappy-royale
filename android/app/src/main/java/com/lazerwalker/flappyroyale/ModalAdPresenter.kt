@@ -14,10 +14,6 @@ import com.ironsource.mediationsdk.sdk.RewardedVideoListener
 import com.lazerwalker.flappyadconstants.AdConstants
 import android.os.Looper
 
-
-
-
-
 class ModalAdPresenter(private val mContext: Context, val webview: WebView) : RewardedVideoListener {
     @JavascriptInterface
     fun prepareAd(currentState: Int) {
@@ -25,9 +21,18 @@ class ModalAdPresenter(private val mContext: Context, val webview: WebView) : Re
     }
 
     @JavascriptInterface
+    fun prepareAdWithID(adUnitID: String) {
+    
+    }
+
+    @JavascriptInterface
     fun requestAd(currentState: Int) {
         val adUnitID = adUnitForState(currentState) ?: return
+        requestAdWithID(adUnitID)
+    }
 
+    @JavascriptInterface
+    fun requestAdWithID(adUnitID: String) {
         val hasAd = IronSource.isRewardedVideoAvailable()
 
         if (hasAd) {

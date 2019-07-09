@@ -1,6 +1,5 @@
 import Foundation
 import WebKit
-//import MoPub
 
 class AdPresentor : NSObject, WebViewInteropProvider, ISRewardedVideoDelegate, ISBannerDelegate {
     
@@ -112,36 +111,13 @@ class AdPresentor : NSObject, WebViewInteropProvider, ISRewardedVideoDelegate, I
 
         guard let jsonString = message.body as? String else { return }
         guard let json = try? JSONSerialization.jsonObject(with: jsonString.data(using: .utf8)!, options: []) else { return }
-        guard let dictionary = json as? [String: Int] else { return }
+        guard let dictionary = json as? [String: String] else { return }
         
-        let preload = dictionary["prepare"] as Int?
-        let show = dictionary["show"] as Int?
+//        let preloadID = dictionary["prepare_id"] as String? // Bascially not used
+        let showID = dictionary["show_id"] as String?
         
-        let id = preload ?? show ?? 0
-        
-        var adUnitID: String
-        if (id == 0) {
-            adUnitID = AdConstants.ironSrcFiveLives
-
-        } else if (id == 1) {
-            adUnitID = AdConstants.ironSrcTenLives
-            
-        } else if (id == 2) {
-            adUnitID = AdConstants.ironSrcFifteenLives
-            
-        } else {
-            print("Got into a bad state")
-            assert(true, "Somehow ended up sending for too many ads")
-            return
-        }
-        
-        if preload != nil {
-            
-            
-        }
-        
-        if show != nil {
-            IronSource.showRewardedVideo(with: self.presentationVC, placement: adUnitID)
+        if let showID = showID {
+            IronSource.showRewardedVideo(with: self.presentationVC, placement: showID)
         }
     }
     

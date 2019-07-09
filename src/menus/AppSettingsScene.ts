@@ -138,8 +138,12 @@ export class AppSettingsScene extends Phaser.Scene {
                 completion: (response: boolean, prompt: Prompt) => {
                     if (response) {
                         const reviews = localStorage.getItem("reviews")
+                        const lives = localStorage.getItem("lives-state")
+
                         localStorage.clear()
+
                         if (reviews) localStorage.setItem("reviews", reviews)
+                        if (lives) localStorage.setItem("lives-state", lives)
 
                         window.location.reload()
                     } else {

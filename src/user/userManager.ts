@@ -358,6 +358,22 @@ export const livesExtensionsButtonTitleForState = (state: LifeStateForSeed): str
     return map[state]
 }
 
+export const livesExtensionsButtonToAdID = (state: LifeStateForSeed): string => {
+    // Ironsrc
+
+    // ios - https://platform.ironsrc.com/partners/monetize/adSettings/988bcedd/placements/rv
+    // android - https://platform.ironsrc.com/partners/monetize/adSettings/988ebac5/placements/rv
+    const map = {
+        [LifeStateForSeed.FirstSet]: "5-Lives",
+        [LifeStateForSeed.ExtraFive]: "10-Lives",
+        [LifeStateForSeed.ExtraTen]: "15-Lives",
+        // This *will* get called for preloads etc, so don't raise
+        [LifeStateForSeed.ExtraFifteen]: "DefaultRewardedVideo"
+    }
+
+    return map[state]
+}
+
 /** Moves up through the enum above */
 export const bumpLivesExtensionState = (seed: string) => {
     const livesData = localStorage.getItem("lives-state")

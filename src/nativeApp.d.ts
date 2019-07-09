@@ -25,7 +25,9 @@ declare global {
         // Android
         ModalAdPresenter?: {
             requestAd: (currentState: number) => void
+            requestAdWithID: (adID: string) => void
             prepareAd: (currentState: number) => void
+            prepareAdWithID: (adID: string) => void
         }
 
         Analytics?: {
