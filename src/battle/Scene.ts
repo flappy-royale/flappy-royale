@@ -219,6 +219,11 @@ export class BattleScene extends Phaser.Scene {
         }
 
         window.addEventListener("blur", killBirdOnBlur)
+        window.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                killBirdOnBlur()
+            }
+        })
 
         this.events.on("destroy", () => {
             window.removeEventListener("touchstart", flap)
