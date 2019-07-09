@@ -153,8 +153,7 @@ export class RoyaleLobby extends Phaser.Scene {
                 attire = avatarUrlToAttire(score.playfabUser.avatarUrl)
                 name = score.playfabUser.name
             } else {
-                attire = score.user.aesthetics.attire
-                name = score.user.name
+                return
             }
 
             const birdLi = document.createElement("li")

@@ -401,5 +401,10 @@ const asyncGetLeaderboardAroundPlayer = async (
 
 const attireMap = _.keyBy(allAttireInGame, "id")
 export const avatarUrlToAttire = (url: string): Attire[] => {
-    return (url && url.split(",").map(key => attireMap[key])) || [defaultAttire]
+    if (!url) return [defaultAttire]
+    const keys = url.split(",")
+    if (keys.length === 0) {
+        return [defaultAttire]
+    }
+    return keys.map(key => attireMap[key]).filter(a => !_.isUndefined(a))
 }
