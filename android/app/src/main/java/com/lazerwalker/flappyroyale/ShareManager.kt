@@ -9,7 +9,7 @@ import android.webkit.WebView
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -18,12 +18,12 @@ import java.util.*
 import android.Manifest.permission
 import android.Manifest.permission.WRITE_CONTACTS
 import android.app.Activity
-import android.support.v4.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.requestPermissions
 import android.content.pm.PackageManager
 import android.os.Handler
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.checkSelfPermission
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 
 
 class ShareManager(private val context: Context, val webview: WebView, val activity: Activity) {
