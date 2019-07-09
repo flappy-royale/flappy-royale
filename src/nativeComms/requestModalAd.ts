@@ -7,7 +7,7 @@ export function requestModalAd(adID: string) {
         window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ show_id: adID }))
     } else if (window.ModalAdPresenter) {
         // Android!
-        window.ModalAdPresenter.requestAdWithID(adID)
+        if (window.ModalAdPresenter.requestAdWithID) window.ModalAdPresenter.requestAdWithID(adID)
     } else {
         console.log("Requesting a modal ad!")
     }
@@ -22,7 +22,7 @@ export function prepareModalAd(adID: string) {
         window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ prepare_id: adID }))
     } else if (window.ModalAdPresenter) {
         // Android!
-        window.ModalAdPresenter.prepareAdWithID(adID)
+        if (window.ModalAdPresenter.prepareAdWithID) window.ModalAdPresenter.prepareAdWithID(adID)
     } else {
         console.log("Preparing to maybe show an ad!")
     }
