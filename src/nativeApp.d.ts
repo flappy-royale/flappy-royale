@@ -24,16 +24,16 @@ declare global {
 
         // Android
         ModalAdPresenter?: {
-            requestAd: (currentState: number) => void
-            requestAdWithID: (adID: string) => void
-            prepareAd: (currentState: number) => void
-            prepareAdWithID: (adID: string) => void
+            requestAd?: (currentState: number) => void
+            requestAdWithID?: (adID: string) => void
+            prepareAd?: (currentState: number) => void
+            prepareAdWithID?: (adID: string) => void
         }
 
         Analytics?: {
-            event: (name: string, params: any) => void
-            userProperty: (name: string, value: string) => void
-            setId: (id: string) => void
+            event?: (name: string, params: any) => void
+            userProperty?: (name: string, value: string) => void
+            setId?: (id: string) => void
         }
 
         Sharing?: {
@@ -41,8 +41,8 @@ declare global {
         }
 
         URLLoader?: {
-            openURL: (url: string) => void
-            openPlayStoreURL: (url: string) => void
+            openURL?: (url: string) => void
+            openPlayStoreURL?: (url: string) => void
         }
 
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number): void

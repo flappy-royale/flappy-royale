@@ -309,7 +309,7 @@ window.onload = async () => {
 
             completion: (_: any, prompt: Prompt) => {
                 if (isAndroidApp() && window.URLLoader) {
-                    window.URLLoader.openPlayStoreURL(downloadURL())
+                    if (window.URLLoader.openPlayStoreURL) window.URLLoader.openPlayStoreURL(downloadURL())
                 } else {
                     window.open(downloadURL())
                 }

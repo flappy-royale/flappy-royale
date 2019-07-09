@@ -100,7 +100,7 @@ export class BirdSprite {
             meta.settings.aesthetics.attire = [defaultAttire]
         }
 
-        const base = meta.settings.aesthetics.attire.find(a => a.base)
+        const base = meta.settings.aesthetics.attire.filter(a => !!a).find(a => a.base)
         if (!base) throw "No base attire found"
 
         const baseID = scene.load.textureManager.exists(base.id) ? base.id : defaultAttire.id
@@ -143,7 +143,8 @@ export class BirdSprite {
         this.isInBus = true
 
         this.position = this.body.position
-        const allAttire = this.tightAttire.concat(this.looseAttire)
+
+        const allAttire = (this.tightAttire && this.looseAttire && this.tightAttire.concat(this.looseAttire)) || []
         if (!meta.isPlayer) {
             this.setOpacityBasedOnScore(0)
         } else {
