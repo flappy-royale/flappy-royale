@@ -31,6 +31,8 @@ import { showBackgroundScene } from "./menus/BackgroundScene"
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
 
+let showLoadingScreenOnLaunch = false
+
 // Ensures that webpack picks up the CSS
 // and adds it to the HTML
 require("../style.css")
@@ -246,11 +248,14 @@ if (!PRODUCTION) {
     console.log("Skipping app cache")
 } else {
     appCache.onDownloadStart(() => {
-        // TODO: Let's hooope there's a current game by the time this happens.
-        // Otherwise, we'll need to be smarter here.
-        // (Writing this on 3 July 2019.
-        // If you see this months later, we're fine and you can safely delete this comment :) )
         console.log("New version!")
+
+        // If the game hasn't gotten set up yet, let's set a flag to immediately do the right thing once it does load.
+        if (!window.currentGame) {
+            showLoadingScreenOnLaunch = true
+            return
+        }
+
         const launchScreen = window.currentGame.scene.getScene("Launch") as AppLaunchScene
         if (launchScreen) {
             launchScreen.showLoadingScreen = true
@@ -331,6 +336,9 @@ window.onload = async () => {
         switch (startupScreen) {
             case StartupScreen.Launcher:
                 const scene = new AppLaunchScene()
+                if (showLoadingScreenOnLaunch) {
+                    scene.showLoadingScreen = true
+                }
                 game.scene.add("Launch", scene, true)
                 break
             case StartupScreen.TrialBattle:
