@@ -68,7 +68,7 @@ export class YouScene extends Phaser.Scene {
             const basesRoot = document.getElementById("current-set-clickables")!
             for (const element of basesRoot.getElementsByTagName("li")) {
                 const id = element.id
-                const isWearing = settings.aesthetics.attire.find(a => a.id === id)
+                const isWearing = settings.aesthetics.attire.filter(a => !!a).find(a => a.id === id)
                 const wearing = `url(${require("../../assets/menu/AttireSelected.png")})`
                 const notWearing = `url(${require("../../assets/menu/AttireSelectionEmpty.png")})`
                 element.style.backgroundImage = isWearing ? wearing : notWearing
@@ -116,7 +116,7 @@ export class YouScene extends Phaser.Scene {
                 user.removeChild(user.lastChild!)
             }
 
-            const userBase = settings.aesthetics.attire.find(a => a.base)
+            const userBase = settings.aesthetics.attire.filter(a => !!a).find(a => a.base)
             const img = document.createElement("img")
             img.src = userBase ? userBase.href : defaultAttire.href
             img.className = "you-attire"
