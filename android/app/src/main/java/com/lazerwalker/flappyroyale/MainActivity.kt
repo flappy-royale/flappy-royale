@@ -18,6 +18,7 @@ import android.webkit.WebView
 import com.ironsource.mediationsdk.ISBannerSize
 import com.ironsource.mediationsdk.IronSource
 import com.ironsource.mediationsdk.IronSourceBannerLayout
+import com.ironsource.mediationsdk.integration.IntegrationHelper
 import com.ironsource.mediationsdk.logger.IronSourceError
 import com.ironsource.mediationsdk.sdk.BannerListener
 
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         IronSource.init(this, AdConstants.ironsrcAppKey, IronSource.AD_UNIT.REWARDED_VIDEO, IronSource.AD_UNIT.BANNER);
         loadIronSourceBanner()
         // This verifies IronSource is set up, including mediation integrations
-        // IntegrationHelper.validateIntegration(this);
+//         IntegrationHelper.validateIntegration(this);
     }
 
     override fun onAttachedToWindow() {

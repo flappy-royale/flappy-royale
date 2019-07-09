@@ -18,6 +18,8 @@ repositories {
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
     maven { url 'https://jitpack.io' }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
+    maven { url 'https://dl.bintray.com/ironsource-mobile/android-adapters' }
+
     google()
 
 }
@@ -39,6 +41,9 @@ android {
         versionCode 12
         versionName "1.1"
         signingConfig signingConfigs.playstore
+        manifestPlaceholders = [
+                AdmobAppId: constants["AdmobAppId"]
+        ]
     }
     buildTypes {
         release {
@@ -70,8 +75,35 @@ dependencies {
 
 //    implementation 'com.google.android.gms:play-services-games:18.0.0'
 
+    implementation 'com.jaredrummler:android-device-names:1.1.9'
+
+
+    /** IronSource ads and mediations*/
     implementation 'com.ironsource.sdk:mediationsdk:6.8.5@jar'
 
+    // Add AdMob Network
+    implementation 'com.google.android.gms:play-services-ads:17.2.0'
+    implementation 'com.ironsource.adapters:admobadapter:4.3.3@jar'
 
-    implementation 'com.jaredrummler:android-device-names:1.1.9'
+    // Add Applovin Network
+    implementation 'com.ironsource.adapters:applovinadapter:4.3.4@jar'
+
+    // Add Chartboost Network
+    implementation 'com.ironsource.adapters:chartboostadapter:4.1.9@jar'
+
+    // Add Facebook Network
+    implementation 'com.ironsource.adapters:facebookadapter:4.3.3@jar'
+    implementation 'com.facebook.android:audience-network-sdk:5.3.1'
+    implementation 'com.android.support:recyclerview-v7:25.3.1'
+
+    // Add Tapjoy Network
+    implementation 'com.ironsource.adapters:tapjoyadapter:4.1.5@jar'
+
+    // Add UnityAds Network
+    implementation 'com.ironsource.adapters:unityadsadapter:4.1.4@jar'
+
+    // Add Vungle Network
+    implementation 'com.ironsource.adapters:vungleadapter:4.1.5@jar'
+    implementation 'com.github.vungle:vungle-android-sdk:6.3.24'
+
 }

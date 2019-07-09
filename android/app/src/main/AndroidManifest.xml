@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
 
     <application
             android:allowBackup="true"
@@ -52,5 +54,83 @@
 
         <meta-data android:name="com.google.android.gms.version"
                    android:value="@integer/google_play_services_version" />
+
+        <!-- AdMob Mediation -->
+        <activity android:name="com.google.android.gms.ads.AdActivity"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent" />
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+                   android:value="${AdmobAppId}"/>
+
+        <!-- AppLovin Mediation -->
+        <activity
+                android:name="com.applovin.adview.AppLovinInterstitialActivity"/>
+        <activity
+                android:name="com.applovin.adview.AppLovinConfirmationActivity"/>
+
+        <!-- ChartBoost Mediation -->
+        <activity
+                android:name="com.chartboost.sdk.CBImpressionActivity"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+                android:configChanges="keyboardHidden|orientation|screenSize"
+                android:excludeFromRecents="true"
+                android:hardwareAccelerated="true"/>
+
+        <!-- Facebook Mediation -->
+        <activity
+                android:name="com.facebook.ads.AudienceNetworkActivity"
+                android:hardwareAccelerated="true"
+                android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+                android:name="com.facebook.ads.internal.ipc.RemoteANActivity"
+                android:configChanges="keyboardHidden|orientation|screenSize"
+                android:exported="false"
+                android:process=":adnw" />
+        <service
+                android:name="com.facebook.ads.internal.ipc.AdsProcessPriorityService"
+                android:exported="false" />
+        <service
+                android:name="com.facebook.ads.internal.ipc.AdsMessengerService"
+                android:exported="false"
+                android:process=":adnw" />
+
+        <!-- Unity Ads Mediation -->
+        <activity
+                android:name="com.unity3d.services.ads.adunit.AdUnitActivity"
+                android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+                android:hardwareAccelerated="true"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+                android:name="com.unity3d.services.ads.adunit.AdUnitTransparentActivity"
+                android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+                android:hardwareAccelerated="true"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+        <activity
+                android:name="com.unity3d.services.ads.adunit.AdUnitTransparentSoftwareActivity"
+                android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+                android:hardwareAccelerated="false"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+        <activity
+                android:name="com.unity3d.services.ads.adunit.AdUnitSoftwareActivity"
+                android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+                android:hardwareAccelerated="false"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <!-- Tapjoy Mediation -->
+        <activity
+                android:name="com.tapjoy.TJAdUnitActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:hardwareAccelerated="true"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+        <activity
+                android:name="com.tapjoy.mraid.view.ActionHandler"
+                android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+                android:name="com.tapjoy.mraid.view.Browser"
+                android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+                android:name="com.tapjoy.TJContentActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                android:hardwareAccelerated="true" />
     </application>
 </manifest>
