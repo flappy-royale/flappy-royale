@@ -112,11 +112,17 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                         if (!profile) {
                             reject("No profile found")
                         } else {
-                            resolve({
-                                name: profile.DisplayName!,
-                                playfabId: profile.PlayerId!,
-                                avatarUrl: profile.AvatarUrl!
-                            })
+                            if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
+                                resolve({
+                                    name: profile.DisplayName,
+                                    playfabId: profile.PlayerId,
+                                    avatarUrl: profile.AvatarUrl
+                                })
+                            } else {
+                                console.log("Could not find display name, avatar, or profileId")
+                                console.log(profile)
+                                reject("No profile found")
+                            }
                         }
                     }
                 )
