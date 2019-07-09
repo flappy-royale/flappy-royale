@@ -23,6 +23,10 @@ import { currentPlatform } from "./util/getPlatform"
 import * as PlayFab from "./playFab"
 import { setUpScreenTracking } from "./screenTimeTracker"
 import { AppSettingsScene } from "./menus/AppSettingsScene"
+import { versionIsCurrent, downloadURL } from "./detectVersion"
+import { isAndroidApp } from "./nativeComms/deviceDetection"
+import { Prompt, showPrompt } from "./menus/Prompt"
+import { showBackgroundScene } from "./menus/BackgroundScene"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -290,27 +294,27 @@ window.onload = async () => {
 
     const seed = "1-royale-0"
 
-    // if (!versionIsCurrent()) {
-    //     launchMainMenu(game, true)
+    if (!versionIsCurrent()) {
+        showBackgroundScene(game)
 
-    //     const options = {
-    //         title: "New Version Available!",
-    //         subtitle: "Please update to play.",
-    //         yes: "GET",
+        const options = {
+            title: "New Version Available!",
+            subtitle: "Please update to play.",
+            yes: "GET",
 
-    //         completion: (_, prompt: Prompt) => {
-    //             if (isAndroidApp() && window.URLLoader) {
-    //                 window.URLLoader.openPlayStoreURL(downloadURL())
-    //             } else {
-    //                 window.open(downloadURL())
-    //             }
-    //         }
-    //     }
-    //     setTimeout(() => {
-    //         showPrompt(options, game)
-    //     }, 1000)
-    //     return
-    // }
+            completion: (_: any, prompt: Prompt) => {
+                if (isAndroidApp() && window.URLLoader) {
+                    window.URLLoader.openPlayStoreURL(downloadURL())
+                } else {
+                    window.open(downloadURL())
+                }
+            }
+        }
+        setTimeout(() => {
+            showPrompt(options, game)
+        }, 1000)
+        return
+    }
 
     // Change this to have it load up into a different screen on save in dev mode
     const startupScreen = StartupScreen.MainMenu as StartupScreen

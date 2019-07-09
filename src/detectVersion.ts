@@ -9,7 +9,7 @@ import { currentAppleVersion, currentAndroidVersion } from "../assets/config/cur
  */
 export function versionIsCurrent(): boolean {
     if (isAppleApp()) {
-        return parseFloat(window.appVersion) >= currentAppleVersion
+        return true // parseFloat(window.appVersion) >= currentAppleVersion
     } else if (isAndroidApp()) {
         return parseFloat(window.appVersion) >= currentAndroidVersion
     }
