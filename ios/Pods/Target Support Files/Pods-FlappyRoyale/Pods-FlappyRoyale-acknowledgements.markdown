@@ -421,6 +421,10 @@ Copyright 2019 Google
    limitations under the License.
 
 
+## Google-Mobile-Ads-SDK
+
+Copyright 2019 Google
+
 ## GoogleAppMeasurement
 
 Copyright 2019 Google
@@ -631,7 +635,31 @@ Copyright 2019 Google
    limitations under the License.
 
 
+## IronSourceAdMobAdapter
+
+https://platform.ironsrc.com/partners/terms-and-conditions-new-user
+
+## IronSourceChartboostAdapter
+
+https://platform.ironsrc.com/partners/terms-and-conditions-new-user
+
+## IronSourceFacebookAdapter
+
+https://platform.ironsrc.com/partners/terms-and-conditions-new-user
+
 ## IronSourceSDK
+
+https://platform.ironsrc.com/partners/terms-and-conditions-new-user
+
+## IronSourceTapjoyAdapter
+
+https://platform.ironsrc.com/partners/terms-and-conditions-new-user
+
+## IronSourceUnityAdsAdapter
+
+https://platform.ironsrc.com/partners/terms-and-conditions-new-user
+
+## IronSourceVungleAdapter
 
 https://platform.ironsrc.com/partners/terms-and-conditions-new-user
 

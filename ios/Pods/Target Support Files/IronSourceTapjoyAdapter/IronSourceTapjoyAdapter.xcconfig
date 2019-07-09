@@ -1,0 +1,10 @@
+CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/IronSourceTapjoyAdapter
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/IronSourceSDK/IronSource" "${PODS_ROOT}/IronSourceTapjoyAdapter/ISTapjoyAdapter"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+OTHER_LDFLAGS = $(inherited) -l"c++" -l"sqlite3.0" -l"xml2" -l"z" -framework "CFNetwork" -framework "CoreData" -framework "CoreGraphics" -framework "CoreLocation" -framework "CoreMotion" -framework "EventKit" -framework "EventKitUI" -framework "Foundation" -framework "MapKit" -framework "MediaPlayer" -framework "MessageUI" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit" -weak_framework "AdSupport" -weak_framework "CoreTelephony" -weak_framework "Social" -weak_framework "StoreKit" -weak_framework "Twitter"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_ROOT = ${SRCROOT}
+PODS_TARGET_SRCROOT = ${PODS_ROOT}/IronSourceTapjoyAdapter
+PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.${PRODUCT_NAME:rfc1034identifier}
+SKIP_INSTALL = YES
