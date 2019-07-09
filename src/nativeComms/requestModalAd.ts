@@ -1,29 +1,28 @@
-import { LifeStateForSeed } from "../user/userManager"
 import { analyticsEvent } from "./analytics"
 
-export function requestModalAd(current: LifeStateForSeed) {
-    analyticsEvent("watching_ad", { state: current })
+export function requestModalAd(adID: string) {
+    analyticsEvent("watching_ad", { id: adID })
 
     if (window.isAppleApp) {
-        window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ show: current }))
+        window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ show_id: adID }))
     } else if (window.ModalAdPresenter) {
         // Android!
-        window.ModalAdPresenter.requestAd(current)
+        window.ModalAdPresenter.requestAdWithID(adID)
     } else {
         console.log("Requesting a modal ad!")
     }
 }
 
 // If we're in a situation where the user can view a reward ad, let's preload it
-export function prepareModalAd(current: LifeStateForSeed) {
-    analyticsEvent("preloading_ad", { state: current })
+export function prepareModalAd(adID: string) {
+    analyticsEvent("preloading_ad", { id: adID })
 
     if (window.isAppleApp) {
         // TODO: Actually prepare on iOS
-        window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ prepare: current }))
+        window.webkit.messageHandlers.adManager.postMessage(JSON.stringify({ prepare_id: adID }))
     } else if (window.ModalAdPresenter) {
         // Android!
-        window.ModalAdPresenter.prepareAd(current)
+        window.ModalAdPresenter.prepareAdWithID(adID)
     } else {
         console.log("Preparing to maybe show an ad!")
     }

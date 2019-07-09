@@ -5,7 +5,8 @@ import {
     LifeStateForSeed,
     bumpLivesExtensionState,
     addLives,
-    livesExtensionsButtonTitleForState
+    livesExtensionsButtonTitleForState,
+    livesExtensionsButtonToAdID
 } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
@@ -114,9 +115,9 @@ export class TrialLobby extends Phaser.Scene {
 
             const preloadAssetsDone = () => {
                 const goButton = document.getElementById("button")!
-
+                const adID = livesExtensionsButtonToAdID(livesState)
                 if (lives <= 0) {
-                    prepareModalAd(livesState)
+                    prepareModalAd(adID)
                 }
 
                 goButton.onclick = () => {
@@ -136,7 +137,7 @@ export class TrialLobby extends Phaser.Scene {
                         playGame()
                         return
                     } else {
-                        requestModalAd(livesState)
+                        requestModalAd(adID)
                     }
                     // Show an ad modal for lives, then play the game again
                 }

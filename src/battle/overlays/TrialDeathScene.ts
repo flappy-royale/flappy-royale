@@ -15,7 +15,8 @@ import {
     getUserSettings,
     getUserStatistics,
     Bird,
-    DailyTrialRun
+    DailyTrialRun,
+    livesExtensionsButtonToAdID
 } from "../../user/userManager"
 
 import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
@@ -138,7 +139,8 @@ export class TrialDeath extends Phaser.Scene {
         const outOfLives = this.props.lives <= 0
         if (outOfLives) {
             againText = livesExtensionsButtonTitleForState(this.props.livesState)
-            prepareModalAd(this.props.livesState)
+            const adID = livesExtensionsButtonToAdID(this.props.livesState)
+            prepareModalAd(adID)
         }
 
         const newGameText = this.add.bitmapText(GameWidth / 2, GameHeight - 27, "fipps-bit", againText, 8)
@@ -339,7 +341,8 @@ export class TrialDeath extends Phaser.Scene {
 
     private again() {
         if (getLives(this.props.seed) <= 0) {
-            requestModalAd(this.props.livesState)
+            const adID = livesExtensionsButtonToAdID(this.props.livesState)
+            requestModalAd(adID)
             return
         }
 
