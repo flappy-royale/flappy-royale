@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 import { getUserSettings, changeSettings } from "../user/userManager"
 import { launchMainMenu } from "./MainMenuScene"
-import { Attire, defaultAttire } from "../attire"
+import { Attire, defaultAttire, PresentationAttire } from "../attire"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
 import { isEqual } from "lodash"
 import { analyticsEvent } from "../nativeComms/analytics"
@@ -76,7 +76,7 @@ export class YouScene extends Phaser.Scene {
         }
 
         /** Generates the HTML to create a clickable item for attire, and adds it to the element  */
-        const makeClickableAttire = (attire: Attire, element: Element) => {
+        const makeClickableAttire = (attire: PresentationAttire, element: Element) => {
             const li = document.createElement("li")
             li.id = attire.id
 
@@ -94,6 +94,10 @@ export class YouScene extends Phaser.Scene {
             const img = document.createElement("img")
             img.src = attire.href
             div.appendChild(img)
+
+            if (!attire.free) {
+                li.classList.add("locked")
+            }
 
             element.appendChild(li)
         }
@@ -192,6 +196,12 @@ export class YouScene extends Phaser.Scene {
 
                 const currentAttire = settings.aesthetics.attire
                 const clickedAttire = game.currentAttireSet.attire.find(att => att.id === attire.id)!
+
+                if (!clickedAttire.free) {
+                    // TO DO: Tell the user this attire hasn't been unlocked
+                    console.log("Can't click this!")
+                    return
+                }
 
                 // Should we be replacing the body
                 if (clickedAttire.base) {
