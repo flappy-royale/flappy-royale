@@ -47,6 +47,10 @@ declare global {
             requestReview?: () => void
         }
 
+        LoadingManager?: {
+            gameLoaded: () => void
+        }
+
         ga?(id: "send", event: "event", category: string, action: string, label: string, value?: number): void
 
         playfabAuth?: PlayfabAuth

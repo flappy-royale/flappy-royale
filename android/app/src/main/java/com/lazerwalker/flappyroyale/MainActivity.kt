@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         settings.allowFileAccess = true;
         settings.cacheMode = WebSettings.LOAD_DEFAULT;
 
+        webview.visibility = View.INVISIBLE
+
         makeFullScreen()
 
         webview.setClickable(true)
@@ -89,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 //        webview.loadUrl("http://192.168.1.6:8085")
 //        WebView.setWebContentsDebuggingEnabled(true);
 
+        webview.addJavascriptInterface(LoadingManager(this, webview), "LoadingManager")
         webview.addJavascriptInterface((this.adPresenter as ModalAdPresenter), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")

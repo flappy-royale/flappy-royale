@@ -97,6 +97,8 @@ export class AppLaunchScene extends Phaser.Scene {
             [],
             this
         )
+
+        window.dispatchEvent(new Event("gameloaded"))
     }
 
     showOrta() {

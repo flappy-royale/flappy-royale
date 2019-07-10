@@ -118,5 +118,7 @@ export class LoadingScene extends Phaser.Scene {
         // Add loading box
         this.add.rectangle(constants.GameWidth / 2 - 2, vCenter + 80, constants.GameWidth / 2, 14, 0xffffff, 0.3)
         this.progressBar = this.add.rectangle(constants.GameWidth / 4 - 2, vCenter + 80, 0, 14, 0xffffff)
+
+        window.dispatchEvent(new Event("gameloaded"))
     }
 }
