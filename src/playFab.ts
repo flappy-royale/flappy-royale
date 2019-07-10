@@ -6,7 +6,7 @@ import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
-import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
+import { changeSettings, UserSettings, syncedSettingsKeys, getUserSettings } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
 
@@ -179,15 +179,21 @@ export const playedGame = async (data: {
     return await playfabPromisify(PlayFabClient.UpdatePlayerStatistics)({ Statistics })
 }
 
-export const updateAttire = async (attire: Attire[]) => {
+export const updateAttire = async (attire: Attire[], oldAttire: Attire[]) => {
     await loginPromise
-    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/updateAttire`, {
+
+    const response = await fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/updateAttire`, {
         method: "POST",
         body: JSON.stringify({
             playfabId: playfabUserId,
             attireIds: attire.map(a => a.id)
         })
     })
+
+    if (!response.ok) {
+        console.log("Bad attire!")
+        changeSettings({ aesthetics: { attire: oldAttire } })
+    }
 }
 
 export const updateUserSettings = async (settings: UserSettings) => {
