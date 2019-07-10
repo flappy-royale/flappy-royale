@@ -27,6 +27,7 @@ import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
+import { NewEggFoundScene, NewEggFoundSceneKey } from "./NewEggFoundScene"
 
 declare const DEMO: boolean
 
@@ -156,6 +157,9 @@ export class MainMenuScene extends Phaser.Scene {
         becomeButton(statsButton, this.loadStats, this)
 
         checkToShowRatingPrompt()
+
+        // For working on the Egg ATM
+        // addScene(this.game, AppSettingsKey, new NewEggFoundScene(NewEggFoundSceneKey), true)
     }
 
     loadSettings() {
