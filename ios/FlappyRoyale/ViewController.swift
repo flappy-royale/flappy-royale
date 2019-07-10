@@ -1,4 +1,5 @@
 import UIKit
+import GameKit
 import SafariServices
 import WebKit
 
@@ -9,6 +10,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let analytics = AnalyticsPresentor()
     let share = ShareManager()
     let urlOpener = URLManager()
+    let gameCenterAuth = GameCenterAuth()
 
     var webView: WKWebView?
 
@@ -29,9 +31,10 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         super.viewDidLoad()
 
         adPresentor.presentationVC = self
-        
         share.presentationVC = self
         urlOpener.presentationVC = self
+        gameCenterAuth.presentationVC = self
+
         view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
 
         let userContentController = WKUserContentController()
@@ -63,7 +66,7 @@ window.buildVersion = '\(bundleVersion)';
         }
 
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, gameCenterAuth]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()

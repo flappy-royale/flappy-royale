@@ -9,6 +9,8 @@ import { allAttireInGame } from "./attire/attireSets"
 import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
+import { isAppleApp } from "./nativeComms/deviceDetection"
+import { PlayfabAuth } from "./nativeApp"
 
 export let isLoggedIn: boolean = false
 
@@ -19,7 +21,13 @@ let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
 
-export const login = () => {
+/** 
+            - To investigate: can/should we use a Game Center guest ID? (Probably not, cause if we have a custom ID then we can link)
+            - Add in a manual migration path: if a UUID is set in the JS cache, we should (1) log in with it, (2) link to Game Center and (3) delete cache. Next login will be pure game center.
+            - Since this event only fires once, what happens on browser reload (e.g. update)?
+            */
+
+export const login = async () => {
     let method = PlayFabClient.LoginWithCustomID
     let loginRequest: PlayFabClientModels.LoginWithCustomIDRequest = {
         TitleId: titleId,
@@ -46,9 +54,17 @@ export const login = () => {
 
     let customAuth = (window as any).playfabAuth
 
-    if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
-        method = PlayFabClient.LoginWithIOSDeviceID
-        loginRequest = { ...loginRequest, ...customAuth.payload }
+    if (isAppleApp()) {
+        const response = await gameCenterPromise()
+        if (response) {
+            if (response.method === "LoginWithGameCenter") {
+                method = PlayFabClient.LoginWithGameCenter
+            }
+            loginRequest = { ...loginRequest, ...response.payload }
+        } else if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
+            method = PlayFabClient.LoginWithIOSDeviceID
+            loginRequest = { ...loginRequest, ...customAuth.payload }
+        }
     } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
         method = PlayFabClient.LoginWithAndroidDeviceID
         loginRequest = { ...loginRequest, ...customAuth.payload }
@@ -99,6 +115,39 @@ export const login = () => {
             return playfabUserId
         }
     )
+}
+
+const gameCenterPromise = async (): Promise<PlayfabAuth | undefined> => {
+    console.log("gameCenterPrmise")
+    return new Promise((resolve, reject) => {
+        console.log("In promise")
+        // This iOS code will potentially wait for auth to complete or fail, then trigger the below event
+        try {
+            console.log("Trying")
+            window.webkit.messageHandlers.gameCenterLogin.postMessage(true)
+
+            window.addEventListener("gameCenterLogin", (e: any) => {
+                console.log("MEssage returned", e.detail)
+                if (e.detail) {
+                    resolve({
+                        method: "LoginWithGameCenter",
+                        payload: {
+                            PlayerId: e.detail.playerID,
+                            PublicKeyUrl: e.detail.url,
+                            Salt: atob(e.detail.salt),
+                            Signature: atob(e.detail.signature),
+                            Timestamp: e.detail.timestamp
+                        }
+                    })
+                } else {
+                    resolve(undefined)
+                }
+            })
+        } catch {
+            console.log("Catch")
+            resolve(undefined)
+        }
+    })
 }
 
 export const updateName = async (
