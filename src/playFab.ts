@@ -7,10 +7,11 @@ import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
 import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
+import playfabPromisify from "./playfabPromisify"
 
 export let isLoggedIn: boolean = false
 
-export let loginPromise: Promise<string>
+export let loginPromise: Promise<string | undefined>
 
 export let playfabUserId: string | undefined
 let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
@@ -56,71 +57,49 @@ export const login = () => {
         loginRequest.CustomId = cache.getUUID(titleId)
     }
 
-    loginPromise = new Promise((resolve, reject) => {
-        method(
-            loginRequest,
-            (error: any, result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
-                if (error) {
-                    console.log("Login error:", error)
-                    reject(error)
-                    return
+    loginPromise = playfabPromisify(method)(loginRequest).then(
+        (result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
+            console.log(result)
+
+            // Grab the data from the server and shove it in the user object
+            // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
+            const payload = result.data.InfoResultPayload
+            if (payload) {
+                let settings: Partial<UserSettings> = {}
+                if (payload.PlayerProfile) {
+                    settings.name = payload.PlayerProfile.DisplayName
+                    settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
                 }
 
-                console.log(result)
-
-                // Grab the data from the server and shove it in the user object
-                // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
-                const payload = result.data.InfoResultPayload
-                if (payload) {
-                    let settings: Partial<UserSettings> = {}
-                    if (payload.PlayerProfile) {
-                        settings.name = payload.PlayerProfile.DisplayName
-                        settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
-                    }
-
-                    if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
-                        const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
-                        syncedSettingsKeys.forEach(key => {
-                            if (!_.isUndefined(storedSettings[key])) {
-                                ;(settings as any)[key] = storedSettings[key]
-                            }
-                        })
-                    }
-                    changeSettings(settings)
+                if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
+                    const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
+                    syncedSettingsKeys.forEach(key => {
+                        if (!_.isUndefined(storedSettings[key])) {
+                            ;(settings as any)[key] = storedSettings[key]
+                        }
+                    })
                 }
-
-                playfabUserId = result.data.PlayFabId
-
-                if (result.data.EntityToken) {
-                    playfabEntityKey = result.data.EntityToken.Entity
-                }
-
-                isLoggedIn = true
-
-                resolve(playfabUserId)
+                changeSettings(settings)
             }
-        )
-    })
+
+            playfabUserId = result.data.PlayFabId
+
+            if (result.data.EntityToken) {
+                playfabEntityKey = result.data.EntityToken.Entity
+            }
+
+            isLoggedIn = true
+
+            return playfabUserId
+        }
+    )
 }
 
 export const updateName = async (
     name: string
 ): Promise<PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.UpdateUserTitleDisplayNameResult>> => {
     await loginPromise
-    return new Promise((resolve, reject) => {
-        PlayFabClient.UpdateUserTitleDisplayName(
-            { DisplayName: name },
-            (
-                error: any,
-                result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.UpdateUserTitleDisplayNameResult>
-            ) => {
-                if (error) {
-                    reject(error)
-                }
-                resolve(result)
-            }
-        )
-    })
+    return playfabPromisify(PlayFabClient.UpdateUserTitleDisplayName)({ DisplayName: name })
 }
 
 export const playedGame = async (data: {
@@ -190,20 +169,8 @@ export const playedGame = async (data: {
         })
     }
 
-    return new Promise((resolve, reject) => {
-        PlayFabClient.UpdatePlayerStatistics(
-            {
-                Statistics: stats
-            },
-            (err: any, result: any) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(result)
-                }
-            }
-        )
-    })
+    const Statistics = stats
+    return await playfabPromisify(PlayFabClient.UpdatePlayerStatistics)({ Statistics })
 }
 
 export const updateAttire = async (attire: Attire[]) => {
@@ -214,16 +181,8 @@ export const updateAttire = async (attire: Attire[]) => {
      * They also offer Tags, which are strings, but aren't editable by clients, only admins/servers.
      * But, uh, the AvatarUrl field doesn't validate URL correctness, so 🎉
      * (the URL is a comma-separated list of IDs, which we'll look up later) */
-    return new Promise((resolve, reject) => {
-        PlayFabClient.UpdateAvatarUrl(
-            {
-                ImageUrl: attire.map(a => a.id).join(",")
-            },
-            (err: any, result: any) => {
-                if (err) reject(err)
-                resolve(result)
-            }
-        )
+    return await playfabPromisify(PlayFabClient.UpdateAvatarUrl)({
+        ImageUrl: attire.map(a => a.id).join(",")
     })
 }
 
@@ -235,19 +194,8 @@ export const updateUserSettings = async (settings: UserSettings) => {
         delta[key] = (settings as any)[key]
     })
 
-    return new Promise((resolve, reject) => {
-        PlayFabClient.UpdateUserData(
-            {
-                Data: { userSettings: JSON.stringify(delta) }
-            },
-            (err: any, result: any) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(result)
-                }
-            }
-        )
+    return await playfabPromisify(PlayFabClient.UpdateUserData)({
+        Data: { userSettings: JSON.stringify(delta) }
     })
 }
 
@@ -279,16 +227,7 @@ export const writeScreenTrackingEvents = async (events: PlayFabEventsModels.Even
         }
     })
 
-    PlayFabEvents.WriteEvents(
-        {
-            Events: events
-        },
-        (err: any, _: any) => {
-            if (err) {
-                console.log("Error writing screen tracking events", err)
-            }
-        }
-    )
+    return await playfabPromisify(PlayFabEvents.WriteEvents)({ Events: events })
 }
 
 // LEADERBOARDS
@@ -363,17 +302,12 @@ const asyncGetLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardReque
         } as unknown) as number // sigh, the PlayFab TS typings are wrong
     }
 
-    return new Promise((resolve, reject) => {
-        PlayFabClient.GetLeaderboard({ ...defaultOpts, ...opts }, (err: any, result: any) => {
-            if (err) {
-                reject(err)
-            } else if (!result.data.Leaderboard) {
-                reject("No leaderboard returned")
-            } else {
-                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
-            }
-        })
-    })
+    const result = await playfabPromisify(PlayFabClient.GetLeaderboard)({ ...defaultOpts, ...opts })
+    if (!result.data.Leaderboard) {
+        return []
+    } else {
+        return result.data.Leaderboard.map(convertPlayFabLeaderboardData)
+    }
 }
 
 const asyncGetLeaderboardAroundPlayer = async (
@@ -386,17 +320,12 @@ const asyncGetLeaderboardAroundPlayer = async (
         } as unknown) as number // sigh, the PlayFab TS typings are wrong
     }
 
-    return new Promise((resolve, reject) => {
-        PlayFabClient.GetLeaderboardAroundPlayer({ ...defaultOpts, ...opts }, (err: any, result: any) => {
-            if (err) {
-                reject(err)
-            } else if (!result.data.Leaderboard) {
-                reject("No leaderboard returned")
-            } else {
-                resolve(result.data.Leaderboard.map(convertPlayFabLeaderboardData))
-            }
-        })
-    })
+    const result = await playfabPromisify(PlayFabClient.GetLeaderboardAroundPlayer)({ ...defaultOpts, ...opts })
+    if (!result.data.Leaderboard) {
+        return []
+    } else {
+        return result.data.Leaderboard.map(convertPlayFabLeaderboardData)
+    }
 }
 
 const attireMap = _.keyBy(allAttireInGame, "id")
