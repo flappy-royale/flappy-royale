@@ -16,9 +16,13 @@ export class YouScene extends Phaser.Scene {
     currentAttireSet: AttireSet = defaultAttireSet
     initialAttire: Attire[]
 
+    currentAttire: Attire[] = []
+
     constructor() {
         super(YouKey)
-        this.initialAttire = getUserSettings().aesthetics.attire
+
+        const settings = getUserSettings()
+        this.initialAttire = settings.aesthetics.attire
     }
 
     preload() {
@@ -46,8 +50,7 @@ export class YouScene extends Phaser.Scene {
         youBG.src = require("../../assets/menu/Circle.png")
 
         // Set the default value
-        const settings = getUserSettings()
-        const attireIDsWhenOpening = settings.aesthetics.attire.map(a => a.id)
+        const attireIDsWhenOpening = this.initialAttire.map(a => a.id)
 
         const tabbar = document.getElementById("tabbar")!
         allAttireSets.forEach(a => {
@@ -60,16 +63,17 @@ export class YouScene extends Phaser.Scene {
             tabbar.appendChild(li)
         })
 
+        const settings = getUserSettings()
+
         /**
          * Runs on every selection change and asserts whether an LI
          * corresponding to attire is selected or not
          */
         const updateWearables = () => {
-            const settings = getUserSettings()
             const basesRoot = document.getElementById("current-set-clickables")!
             for (const element of basesRoot.getElementsByTagName("li")) {
                 const id = element.id
-                const isWearing = settings.aesthetics.attire.filter(a => !!a).find(a => a.id === id)
+                const isWearing = this.currentAttire.filter(a => !!a).find(a => a.id === id)
                 const wearing = `url(${require("../../assets/menu/AttireSelected.png")})`
                 const notWearing = `url(${require("../../assets/menu/AttireSelectionEmpty.png")})`
                 element.style.backgroundImage = isWearing ? wearing : notWearing
@@ -113,21 +117,19 @@ export class YouScene extends Phaser.Scene {
         }
 
         /** Creates and updates the unique 'you' preview along the side */
-        const showUser = () => {
-            const settings = getUserSettings()
-
+        const updateUserDisplay = () => {
             const user = document.getElementById("you")!
             while (user.hasChildNodes()) {
                 user.removeChild(user.lastChild!)
             }
 
-            const userBase = settings.aesthetics.attire.filter(a => !!a).find(a => a.base)
+            const userBase = this.currentAttire.filter(a => !!a).find(a => a.base)
             const img = document.createElement("img")
             img.src = userBase ? userBase.href : defaultAttire.href
             img.className = "you-attire"
             user.appendChild(img)
 
-            const attire = settings.aesthetics.attire.filter(a => !a.base)
+            const attire = this.currentAttire.filter(a => !a.base)
             attire.forEach(a => {
                 const attireImg = document.createElement("img")
                 attireImg.src = a.href
@@ -170,14 +172,11 @@ export class YouScene extends Phaser.Scene {
         attires.forEach(divID => {
             const div = document.getElementById(divID)!
             div.onclick = () => {
-                const settings = getUserSettings()
-                const currentAttire = settings.aesthetics.attire
                 console.log("removing", div.dataset["attire"])
-                const currentClothes = currentAttire.filter(a => a.id !== div.dataset["attire"])
-                console.log("now", currentClothes)
-                changeSettings({ aesthetics: { attire: currentClothes } })
+                this.currentAttire = this.currentAttire.filter(a => a.id !== div.dataset["attire"])
+                console.log("now", this.currentAttire)
 
-                showUser()
+                updateUserDisplay()
                 updateWearables()
             }
         })
@@ -185,17 +184,15 @@ export class YouScene extends Phaser.Scene {
         const game = this
 
         // Click handling
-        element.on("click", function(event: Event) {
+        element.on("click", (event: Event) => {
             const target = event.target as Element
 
             // Getting a potential attire is tricky, you could hit
             // either the li, the div or the img, so always get to the li.
-            const settings = getUserSettings()
             const maybeLI = findUpTag(target, "LI")
             if (maybeLI && maybeLI.id) {
                 const attire = maybeLI as Element
 
-                const currentAttire = settings.aesthetics.attire
                 const clickedAttire = game.currentAttireSet.attire.find(att => att.id === attire.id)!
 
                 if (!canWearAttire(settings, clickedAttire)) {
@@ -207,24 +204,23 @@ export class YouScene extends Phaser.Scene {
                 // Should we be replacing the body
                 if (clickedAttire.base) {
                     // Replace the base
-                    const currentClothes = currentAttire.filter(a => !a.base)
-                    changeSettings({ aesthetics: { attire: [clickedAttire, ...currentClothes] } })
+                    const currentClothes = this.currentAttire.filter(a => !a.base)
+                    this.currentAttire = [clickedAttire, ...currentClothes]
                 } else {
-                    const isWearingAttire = currentAttire.find(a => a.id === clickedAttire.id)
+                    const isWearingAttire = this.currentAttire.find(a => a.id === clickedAttire.id)
                     if (!isWearingAttire) {
                         // Add the clothes, up to three items
-                        const currentAttireLength = currentAttire.filter(a => !a.base).length
+                        const currentAttireLength = this.currentAttire.filter(a => !a.base).length
                         if (currentAttireLength < 3) {
-                            changeSettings({ aesthetics: { attire: [...currentAttire, clickedAttire] } })
+                            this.currentAttire.push(clickedAttire)
                         }
                     } else {
                         // remove it
-                        const currentClothes = currentAttire.filter(a => a.id !== clickedAttire.id)
-                        changeSettings({ aesthetics: { attire: currentClothes } })
+                        this.currentAttire = this.currentAttire.filter(a => a.id !== clickedAttire.id)
                     }
                 }
 
-                showUser()
+                updateUserDisplay()
                 updateWearables()
             }
         })
@@ -264,9 +260,9 @@ export class YouScene extends Phaser.Scene {
             }
         }
 
+        this.currentAttire = this.initialAttire
         setupForAttireSet(this.currentAttireSet)
-
-        showUser()
+        updateUserDisplay()
 
         const header = document.getElementById("header") as HTMLImageElement
         header.src = require("../../assets/menu/RedSash.png")
@@ -276,12 +272,11 @@ export class YouScene extends Phaser.Scene {
         back.src = require("../../assets/menu/Back2.png")
 
         back.onclick = () => {
-            const newSettings = getUserSettings()
-            const newAttireIDs = newSettings.aesthetics.attire.map(a => a.id)
-
+            const newAttireIDs = this.currentAttire.map(a => a.id)
             if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
                 analyticsEvent("new_attire", { ids: newAttireIDs })
-                PlayFab.updateAttire(newSettings.aesthetics!.attire)
+                PlayFab.updateAttire(this.currentAttire)
+                changeSettings({ aesthetics: { attire: this.currentAttire } })
             }
 
             this.game.scene.remove(this)
