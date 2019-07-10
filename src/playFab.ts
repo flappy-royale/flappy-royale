@@ -6,7 +6,7 @@ import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
-import { changeSettings, UserSettings, syncedSettingsKeys, getUserSettings } from "./user/userManager"
+import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
 

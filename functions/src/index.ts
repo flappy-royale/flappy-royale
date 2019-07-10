@@ -93,7 +93,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         let userIdentifier = uuid
 
         if (playfabId) {
-            const user: PlayfabUser = await new Promise((resolve, reject) => {
+            const user: PlayfabUser | undefined = await new Promise((resolve, reject) => {
                 PlayFabServer.GetPlayerProfile(
                     {
                         PlayFabId: playfabId,
@@ -104,11 +104,14 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                     },
                     (error: any, result: any) => {
                         if (error) {
-                            reject(error)
+                            resolve(undefined)
                         }
+                        if (!(result && result.data)) reject("No result or data")
+
                         const profile = result.data.PlayerProfile
                         if (!profile) {
-                            reject("No profile found")
+                            console.log("No profile found")
+                            resolve(undefined)
                         } else {
                             if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
                                 resolve({
@@ -119,15 +122,18 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                             } else {
                                 console.log("Could not find display name, avatar, or profileId")
                                 console.log(profile)
-                                reject("No profile found")
+                                resolve(undefined)
                             }
                         }
                     }
                 )
             })
-            console.log("Fetched PlayFab user:", user)
-            data.playfabUser = user
-            userIdentifier = user.playfabId
+
+            if (user) {
+                console.log("Fetched PlayFab user:", user)
+                data.playfabUser = user
+                userIdentifier = user.playfabId
+            }
         }
 
         const document = { replaysZipped: zippedObj([data]) }
