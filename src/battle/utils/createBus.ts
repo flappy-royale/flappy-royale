@@ -57,11 +57,11 @@ export const busCrashed = (bus: Phaser.Physics.Arcade.Sprite, game: Phaser.Scene
 
     // give them a hint of spin
     const trash1Body = trash1.body as Phaser.Physics.Arcade.Body
-    trash1Body.setAngularVelocity(2)
+    trash1Body.setAngularVelocity(200)
 
     const trash2body = trash2.body as Phaser.Physics.Arcade.Body
-    trash2body.setAngularVelocity(4)
+    trash2body.setAngularVelocity(400)
 
     const trash3Body = trash3.body as Phaser.Physics.Arcade.Body
-    trash3Body.setAngularVelocity(-6)
+    trash3Body.setAngularVelocity(-600)
 }
