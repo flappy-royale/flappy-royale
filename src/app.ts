@@ -244,6 +244,17 @@ window.addEventListener("visibilitychange", () => {
     }
 })
 
+// Tell Android to dismiss the splash screen
+window.addEventListener(
+    "gameloaded",
+    () => {
+        if (window.LoadingManager) {
+            window.LoadingManager.gameLoaded()
+        }
+    },
+    { once: true }
+)
+
 if (!PRODUCTION) {
     console.log("Skipping app cache")
 } else {

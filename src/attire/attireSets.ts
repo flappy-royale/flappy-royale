@@ -5,6 +5,9 @@ export interface AttireSet {
     /** Displayed at the top */
     name: string
 
+    /** Unique ID used in PlayFab. Will stay constant, as name might change  */
+    id: string
+
     /** Displayed on the egg, and on the tabs */
     iconPath: string
 
@@ -16,7 +19,7 @@ export interface AttireSet {
     darkHexColor: string
 
     /** Stuff in the box */
-    attire: Attire[] | PresentationAttire[]
+    attire: PresentationAttire[]
 }
 
 /** Each available set of attire you could use  */

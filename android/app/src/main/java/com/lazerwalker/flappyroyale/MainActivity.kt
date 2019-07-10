@@ -1,6 +1,7 @@
 package com.lazerwalker.flappyroyale
 
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         settings.allowFileAccess = true;
         settings.cacheMode = WebSettings.LOAD_DEFAULT;
 
+        webview.visibility = View.INVISIBLE
+
         makeFullScreen()
 
         webview.setClickable(true)
@@ -74,6 +77,8 @@ class MainActivity : AppCompatActivity() {
 
         IronSource.init(this, AdConstants.ironsrcAppKey, IronSource.AD_UNIT.REWARDED_VIDEO, IronSource.AD_UNIT.BANNER);
         loadIronSourceBanner()
+
+        bannerAdView.setBackgroundColor(Color.parseColor("#482305"))
         // This verifies IronSource is set up, including mediation integrations
 //         IntegrationHelper.validateIntegration(this);
     }
@@ -86,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 //        webview.loadUrl("http://192.168.1.6:8085")
 //        WebView.setWebContentsDebuggingEnabled(true);
 
+        webview.addJavascriptInterface(LoadingManager(this, webview), "LoadingManager")
         webview.addJavascriptInterface((this.adPresenter as ModalAdPresenter), "ModalAdPresenter")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
