@@ -3,8 +3,9 @@
 
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {
-    /** A text description for the UI  */
+    name?: string
     description: string
+    free: boolean
 }
 
 export interface Attire {
@@ -23,7 +24,8 @@ export const hedgehog: PresentationAttire = {
     description: "Whole hedgehog",
     fit: "tight",
     base: true,
-    href: require("../assets/bases/Hedgehog.png")
+    href: require("../assets/bases/Hedgehog.png"),
+    free: true
 }
 
 export const dog: PresentationAttire = {
@@ -31,7 +33,8 @@ export const dog: PresentationAttire = {
     description: "Woof woof",
     fit: "tight",
     base: true,
-    href: require("../assets/bases/Dog1.png")
+    href: require("../assets/bases/Dog1.png"),
+    free: true
 }
 
 export const sheep: PresentationAttire = {
@@ -39,7 +42,8 @@ export const sheep: PresentationAttire = {
     description: "Bird got punk'd",
     fit: "tight",
     base: true,
-    href: require("../assets/bases/Sheep.png")
+    href: require("../assets/bases/Sheep.png"),
+    free: true
 }
 
 export const defaultAttire = hedgehog

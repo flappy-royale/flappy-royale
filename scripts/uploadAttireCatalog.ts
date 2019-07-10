@@ -40,9 +40,8 @@ const attireToCatalogItem = (item: PresentationAttire): PlayFabAdminModels.Catal
 const attireToStoreItem = (attire: PresentationAttire): PlayFabAdminModels.StoreItem => {
     return {
         ItemId: attire.id,
-        // TODO: This will change when we have unlocks
         VirtualCurrencyPrices: {
-            RM: 0
+            RM: attire.free ? 0 : 1
         }
     }
 }
