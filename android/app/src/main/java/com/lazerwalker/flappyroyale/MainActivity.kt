@@ -1,6 +1,7 @@
 package com.lazerwalker.flappyroyale
 
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -74,6 +75,8 @@ class MainActivity : AppCompatActivity() {
 
         IronSource.init(this, AdConstants.ironsrcAppKey, IronSource.AD_UNIT.REWARDED_VIDEO, IronSource.AD_UNIT.BANNER);
         loadIronSourceBanner()
+
+        bannerAdView.setBackgroundColor(Color.parseColor("#482305"))
         // This verifies IronSource is set up, including mediation integrations
 //         IntegrationHelper.validateIntegration(this);
     }
