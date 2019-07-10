@@ -1,4 +1,4 @@
-import { Attire, PresentationAttire } from "../attire"
+import { PresentationAttire } from "../attire"
 import { defaultAttireSet } from "./defaultAttire"
 
 export interface AttireSet {

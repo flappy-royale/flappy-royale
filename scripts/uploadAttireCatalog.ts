@@ -33,7 +33,11 @@ const attireToCatalogItem = (item: PresentationAttire): PlayFabAdminModels.Catal
         InitialLimitedEditionCount: 0,
         IsLimitedEdition: false,
         IsStackable: false,
-        IsTradable: false
+        IsTradable: false,
+
+        VirtualCurrencyPrices: {
+            RM: item.free ? 0 : 1
+        }
     }
 }
 

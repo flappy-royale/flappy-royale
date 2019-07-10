@@ -8,6 +8,7 @@ import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
 import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
+import { firebaseConfig } from "../assets/config/firebaseConfig"
 
 export let isLoggedIn: boolean = false
 
@@ -180,14 +181,12 @@ export const playedGame = async (data: {
 
 export const updateAttire = async (attire: Attire[]) => {
     await loginPromise
-    /* We want attire information to be attached to each player in a way that a GetLeaderboard() call returns attire data for all users
-     * (so we're not making a million discrete network requests).
-     * PlayFab offers Statistics, which are an int32, but I'm too lazy to set up a bitmask.
-     * They also offer Tags, which are strings, but aren't editable by clients, only admins/servers.
-     * But, uh, the AvatarUrl field doesn't validate URL correctness, so 🎉
-     * (the URL is a comma-separated list of IDs, which we'll look up later) */
-    return await playfabPromisify(PlayFabClient.UpdateAvatarUrl)({
-        ImageUrl: attire.map(a => a.id).join(",")
+    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/updateAttire`, {
+        method: "POST",
+        body: JSON.stringify({
+            playfabId: playfabUserId,
+            attireIds: attire.map(a => a.id)
+        })
     })
 }
 

@@ -21,8 +21,8 @@ const numberOfReplaysPerSeed = 200
 
 // PlayFab API secret key for the production app intended to be used with our Firebase cloud fns
 // Stored in firebase:functions:config
-const playfabFirebaseProdSecretKey = functions.config().playfab.secret
-const playfabTitle = functions.config().playfab.title
+PlayFabServer.settings.developerSecretKey = functions.config().playfab.secret
+PlayFabServer.settings.titleId = functions.config().playfab.title
 
 // TODO: Right now, if we bump this in the app, we need to bump this here
 // and we'll probably forget to do that!!
@@ -94,8 +94,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
 
         if (playfabId) {
             const user: PlayfabUser = await new Promise((resolve, reject) => {
-                PlayFabServer.settings.developerSecretKey = playfabFirebaseProdSecretKey
-                PlayFabServer.settings.titleId = playfabTitle
                 PlayFabServer.GetPlayerProfile(
                     {
                         PlayFabId: playfabId,
@@ -210,7 +208,6 @@ const migrationTask = async () => {
     }
 }
 
-// TODO: Each JSON file should support an `expiry` for client downloaders
 export const migrateReplaysFromDbToJson = functions
     .runWith({ timeoutSeconds: 540, memory: "1GB" })
     .pubsub.schedule("every 1 hours")
@@ -221,6 +218,72 @@ export const manualMigration = functions.https.onRequest(async (request, respons
         await migrationTask()
 
         return response.status(200).send({ success: true })
+    })
+})
+
+export interface AttireChangeRequest {
+    playfabId: string
+    attireIds: string[] // Attire IDs
+}
+
+export const updateAttire = functions.https.onRequest(async (request, response) => {
+    cors(request, response, async () => {
+        const { playfabId, attireIds } = JSON.parse(request.body) as AttireChangeRequest
+
+        const inventory = (await playfabPromisify(PlayFabServer.GetCatalogItems)({})).data.Catalog
+        if (!inventory) {
+            return response.status(500).send({ error: "Could not fetch inventory catalog" })
+        }
+
+        const attire: PlayFabAdminModels.CatalogItem[] = attireIds.map(id => {
+            return inventory.find(i => i.ItemId === id)!
+        })
+
+        if (attire.length !== attireIds.length) {
+            return response.status(500).send({ error: "Could not find at least one item" })
+        }
+
+        const rawInventory = (await playfabPromisify(PlayFabServer.GetUserInventory)({
+            PlayFabId: playfabId
+        })).data.Inventory
+        if (!rawInventory) {
+            return response.status(500).send({ error: "Could not fetch player inventory" })
+        }
+
+        const playerInventory = rawInventory.map(i => i.ItemId)
+
+        let allAttireIsValid = true
+
+        for (const a of attire) {
+            // Let's assume anything with no price set is free
+            if (!a.VirtualCurrencyPrices) {
+                continue
+            }
+
+            // Otherwise, something with an explicit price of 0 is free
+            if (a.VirtualCurrencyPrices && a.VirtualCurrencyPrices.RM === 0) {
+                continue
+            }
+
+            // If it is a loot box item, the user might own it!
+            if (_.includes(playerInventory, a.ItemId)) {
+                continue
+            }
+
+            allAttireIsValid = false
+        }
+
+        if (!allAttireIsValid) {
+            return response.status(403).send({ error: "Player tried to wear attire they did not have access to" })
+        }
+
+        // TODO: How do we verify that the given user actually made this request themself?
+        await playfabPromisify(PlayFabServer.UpdateAvatarUrl)({
+            ImageUrl: attire.map(a => a.ItemId).join(","),
+            PlayFabId: playfabId
+        })
+
+        return response.status(204).send()
     })
 })
 
@@ -266,5 +329,21 @@ const getSeeds = (version: string): SeedsResponse => {
             production: hourlySeed(version, 0)
         },
         expiry: currentSeedExpiry().toJSON()
+    }
+}
+
+// Copy/pasted from the file of the same name in src, don't want to deal with include logic
+function playfabPromisify<T extends PlayFabModule.IPlayFabResultCommon>(
+    fn: (request: any, cb: PlayFabModule.ApiCallback<T>) => void
+): (request: PlayFabModule.IPlayFabRequestCommon) => Promise<PlayFabModule.IPlayFabSuccessContainer<T>> {
+    return (request: PlayFabModule.IPlayFabRequestCommon) => {
+        return new Promise((resolve, reject) => {
+            fn(request, (error: PlayFabModule.IPlayFabError, result: PlayFabModule.IPlayFabSuccessContainer<T>) => {
+                if (error) {
+                    reject(error)
+                }
+                resolve(result)
+            })
+        })
     }
 }
