@@ -66,7 +66,7 @@ window.buildVersion = '\(bundleVersion)';
         }
 
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, gameCenterAuth]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener] //, gameCenterAuth]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
