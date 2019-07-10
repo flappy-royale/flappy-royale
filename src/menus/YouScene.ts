@@ -7,6 +7,7 @@ import { isEqual } from "lodash"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { defaultAttireSet } from "../attire/defaultAttire"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
+import { canWearAttire } from "../user/canWearAttire"
 import * as PlayFab from "../playFab"
 
 export const YouKey = "YouScene"
@@ -95,7 +96,7 @@ export class YouScene extends Phaser.Scene {
             img.src = attire.href
             div.appendChild(img)
 
-            if (!attire.free) {
+            if (!canWearAttire(settings, attire)) {
                 li.classList.add("locked")
             }
 
@@ -197,7 +198,7 @@ export class YouScene extends Phaser.Scene {
                 const currentAttire = settings.aesthetics.attire
                 const clickedAttire = game.currentAttireSet.attire.find(att => att.id === attire.id)!
 
-                if (!clickedAttire.free) {
+                if (!canWearAttire(settings, clickedAttire)) {
                     // TO DO: Tell the user this attire hasn't been unlocked
                     console.log("Can't click this!")
                     return
@@ -241,10 +242,12 @@ export class YouScene extends Phaser.Scene {
 
             // This filter/concat chain is silly, but maintains ordering other than locked status
             let bases = set.attire.filter(a => a.base)
-            bases = bases.filter(b => b.free).concat(bases.filter(b => !b.free))
+            bases = bases.filter(a => canWearAttire(settings, a)).concat(bases.filter(a => !canWearAttire(settings, a)))
 
             let attires = set.attire.filter(a => !a.base)
-            attires = attires.filter(a => a.free).concat(attires.filter(a => !a.free))
+            attires = attires
+                .filter(a => canWearAttire(settings, a))
+                .concat(attires.filter(a => !canWearAttire(settings, a)))
 
             const basesUL = element.node.getElementsByClassName("bases").item(0)!
             const attiresUL = element.node.getElementsByClassName("attires").item(0)!

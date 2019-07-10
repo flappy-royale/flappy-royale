@@ -48,6 +48,9 @@ export interface UserSettings extends Bird {
 
     /** Whether or not the player has been asked if they know how to play onboarding */
     hasAskedAboutTutorial: boolean
+
+    // An array of IDs
+    unlockedAttire: string[]
 }
 
 export interface PlayerStats {
@@ -86,7 +89,8 @@ export const defaultSettings: UserSettings = {
         // It'll auto-add one when you go into a royale
         seedIndex: -1
     },
-    hasAskedAboutTutorial: false
+    hasAskedAboutTutorial: false,
+    unlockedAttire: []
 }
 
 // localStorage only works with text, so we need to marshall
@@ -113,6 +117,10 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
         if (base.length !== 1) throw "Must be one, and only be one base"
 
         existingSettings.aesthetics = settings.aesthetics!
+    }
+
+    if (settings.unlockedAttire) {
+        existingSettings.unlockedAttire = settings.unlockedAttire
     }
 
     saveSettings(existingSettings)

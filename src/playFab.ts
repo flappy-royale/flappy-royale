@@ -27,6 +27,7 @@ export const login = () => {
             GetUserData: true,
             GetPlayerProfile: true,
             GetPlayerStatistics: true,
+            GetUserInventory: true,
             ProfileConstraints: ({
                 ShowAvatarUrl: true,
                 ShowDisplayName: true
@@ -37,7 +38,6 @@ export const login = () => {
             GetCharacterList: false,
             GetTitleData: false,
             GetUserAccountInfo: false,
-            GetUserInventory: false,
             GetUserReadOnlyData: false,
             GetUserVirtualCurrency: false
         }
@@ -79,6 +79,11 @@ export const login = () => {
                         }
                     })
                 }
+
+                if (payload.UserInventory) {
+                    settings.unlockedAttire = payload.UserInventory.map(i => i.ItemId!)
+                }
+
                 changeSettings(settings)
             }
 
