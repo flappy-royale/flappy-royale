@@ -27,6 +27,7 @@ export const sheep: PresentationAttire = {
 
 export const defaultAttireSet: AttireSet = {
     name: "Starter pack",
+    id: "default",
     attributedTo: "Orta/Em/Zach",
     attributedURL: "https://flappyroyale.io",
     iconPath: require("../../assets/attire/set-logos/Default.png"),
