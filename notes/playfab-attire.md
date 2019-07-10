@@ -26,3 +26,19 @@ There are two network calls: `PlayFabAdmin.SetCatalogItems` overwrites the curre
 This file lives in `scripts`, but right now isn't runnable outside of `src` (there are shenanigans with the way we load
 the image files that causes non-webpack execution to try to load in PNG data as text, rather than resolving to a file
 path). For now, when I need to run this, I copy it into `src` and import/call it from user-land code.
+
+## Locked attire items
+
+The client's login request returns us both the user's current attire, and an array of ID strings of all attires the user
+has unlocked (= their UserInventory on PlayFab).
+
+When viewing the attire screen, we show items as "locked" if (a) the Attire object's `free` property is `false`, and (b)
+the Attire object's id isn't found in the list of owned attire IDs.
+
+However, let's say the user somehow manages to submit an attire update request with items they don't actually own. The
+attire update goes through a Firebase cloud fn that looks up the user and cross-references all the items they want to
+update. On the server, we consider an item to be "free" if the CatalogItem's`VirtualCurrencyPrices.RM` price, or if
+it's 0. If an item is not free, and the player doesn't own it, we bail on the entire attire request.
+
+Currently, the client doesn't rely on Catalog/Store information at all, everything is loaded from client codebase files.
+Our syncing functions (see above) are responsible for e.g. setting the RM VirtualCurrencyPrice accordingly.
