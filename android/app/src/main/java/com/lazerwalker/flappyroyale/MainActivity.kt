@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import android.view.View
 import android.webkit.WebViewClient
@@ -15,18 +14,30 @@ import com.lazerwalker.flappyadconstants.AdConstants
 import android.view.MotionEvent
 import android.view.GestureDetector
 import android.webkit.WebSettings
-import android.webkit.WebView
+
 import com.ironsource.mediationsdk.ISBannerSize
 import com.ironsource.mediationsdk.IronSource
 import com.ironsource.mediationsdk.IronSourceBannerLayout
-import com.ironsource.mediationsdk.integration.IntegrationHelper
 import com.ironsource.mediationsdk.logger.IronSourceError
 import com.ironsource.mediationsdk.sdk.BannerListener
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.tasks.OnCompleteListener
+import com.lazerwalker.flappyadconstants.AdConstants.Companion.googlePlayGamesServerClientId
+import android.content.Intent
+import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
 
 
-class MainActivity : AppCompatActivity() {
+const val GOOGLE_SIGNIN_MAGIC_NUMBER = 9001 // Provided by Google's example code and not explained :/
+
+class MainActivity() : AppCompatActivity() {
     private var adPresenter: ModalAdPresenter? = null
     private var banner: IronSourceBannerLayout? = null
+    private var googleSignInClient : GoogleSignInClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +92,48 @@ class MainActivity : AppCompatActivity() {
         bannerAdView.setBackgroundColor(Color.parseColor("#482305"))
         // This verifies IronSource is set up, including mediation integrations
 //         IntegrationHelper.validateIntegration(this);
+
+
+        // Google Play Games
+        googleSignInClient = GoogleSignIn.getClient(
+            this,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
+                .requestServerAuthCode(googlePlayGamesServerClientId, false)
+                .build()
+        )
     }
+
+    private fun signInSilently() {
+        Log.d("AUTH", "signInSilently()")
+
+        googleSignInClient?.silentSignIn()?.addOnCompleteListener(this)  { task ->
+                if (task.isSuccessful) {
+                    Log.d("AUTH", "signInSilently(): success")
+                    //onConnected(task.result)
+                } else {
+                    Log.d("AUTH", "signInSilently(): failure", task.exception)
+                    val intent = googleSignInClient?.signInIntent
+                    startActivityForResult(intent, GOOGLE_SIGNIN_MAGIC_NUMBER)
+                }
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.i("AUTH", "In onActivityResult")
+        if (requestCode == GOOGLE_SIGNIN_MAGIC_NUMBER) {
+            Log.i("AUTH", "right requestcode")
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            if (result.isSuccess) {
+                Log.i("AUTH", "is success")
+                val mServerAuthCode = result.signInAccount!!.serverAuthCode
+                // TODO: Send to PlayFab
+            } else {
+                Log.i("AUTH", "is not success, ${result.status}")
+            }
+        }
+    }
+
 
     override fun onAttachedToWindow() {
         // Notch offsets aren't available until we attach to window
@@ -105,7 +157,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }
         IronSource.onResume(this)
+        signInSilently();
     }
+
 
     override fun onPause() {
         super.onPause()
