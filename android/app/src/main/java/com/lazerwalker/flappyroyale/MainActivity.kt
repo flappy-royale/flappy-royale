@@ -20,24 +20,17 @@ import com.ironsource.mediationsdk.IronSource
 import com.ironsource.mediationsdk.IronSourceBannerLayout
 import com.ironsource.mediationsdk.logger.IronSourceError
 import com.ironsource.mediationsdk.sdk.BannerListener
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.tasks.OnCompleteListener
-import com.lazerwalker.flappyadconstants.AdConstants.Companion.googlePlayGamesServerClientId
 import android.content.Intent
-import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
 
 
 const val GOOGLE_SIGNIN_MAGIC_NUMBER = 9001 // Provided by Google's example code and not explained :/
 
 class MainActivity() : AppCompatActivity() {
     private var adPresenter: ModalAdPresenter? = null
+    private var gamesAuth: GooglePlayGames? = null
+
     private var banner: IronSourceBannerLayout? = null
-    private var googleSignInClient : GoogleSignInClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,29 +86,8 @@ class MainActivity() : AppCompatActivity() {
         // This verifies IronSource is set up, including mediation integrations
 //         IntegrationHelper.validateIntegration(this);
 
+        this.gamesAuth = GooglePlayGames(this, webview, this)
 
-        // Google Play Games
-        googleSignInClient = GoogleSignIn.getClient(
-            this,
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
-                .requestServerAuthCode(googlePlayGamesServerClientId, false)
-                .build()
-        )
-    }
-
-    private fun signInSilently() {
-        Log.d("AUTH", "signInSilently()")
-
-        googleSignInClient?.silentSignIn()?.addOnCompleteListener(this)  { task ->
-                if (task.isSuccessful) {
-                    Log.d("AUTH", "signInSilently(): success")
-                    //onConnected(task.result)
-                } else {
-                    Log.d("AUTH", "signInSilently(): failure", task.exception)
-                    val intent = googleSignInClient?.signInIntent
-                    startActivityForResult(intent, GOOGLE_SIGNIN_MAGIC_NUMBER)
-                }
-            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -123,14 +95,7 @@ class MainActivity() : AppCompatActivity() {
         Log.i("AUTH", "In onActivityResult")
         if (requestCode == GOOGLE_SIGNIN_MAGIC_NUMBER) {
             Log.i("AUTH", "right requestcode")
-            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-            if (result.isSuccess) {
-                Log.i("AUTH", "is success")
-                val mServerAuthCode = result.signInAccount!!.serverAuthCode
-                // TODO: Send to PlayFab
-            } else {
-                Log.i("AUTH", "is not success, ${result.status}")
-            }
+            gamesAuth?.finishSignIn(data)
         }
     }
 
@@ -143,8 +108,9 @@ class MainActivity() : AppCompatActivity() {
 //        webview.loadUrl("http://192.168.1.6:8085")
 //        WebView.setWebContentsDebuggingEnabled(true);
 
-        webview.addJavascriptInterface(LoadingManager(this, webview), "LoadingManager")
         webview.addJavascriptInterface((this.adPresenter as ModalAdPresenter), "ModalAdPresenter")
+        webview.addJavascriptInterface((this.gamesAuth as GooglePlayGames), "GooglePlayGames")
+        webview.addJavascriptInterface(LoadingManager(this, webview), "LoadingManager")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview, this), "URLLoader")
@@ -157,7 +123,7 @@ class MainActivity() : AppCompatActivity() {
         super.onResume()
         webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }
         IronSource.onResume(this)
-        signInSilently();
+        gamesAuth?.signInSilently();
     }
 
 

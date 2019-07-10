@@ -1,16 +1,18 @@
 import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
-import { Attire, defaultAttire } from "./attire"
+import { Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
-import { cache } from "./localCache"
-import { titleId } from "../assets/config/playfabConfig"
-import { GameMode } from "./battle/utils/gameMode"
-import { APIVersion } from "./constants"
-import { allAttireInGame } from "./attire/attireSets"
-import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
+import { cache } from "../localCache"
+import { titleId } from "../../assets/config/playfabConfig"
+import { GameMode } from "../battle/utils/gameMode"
+import { APIVersion } from "../constants"
+import { allAttireInGame } from "../attire/attireSets"
+import { changeSettings, UserSettings, syncedSettingsKeys } from "../user/userManager"
 import playfabPromisify from "./playfabPromisify"
-import { firebaseConfig } from "../assets/config/firebaseConfig"
-import { isAppleApp } from "./nativeComms/deviceDetection"
-import { PlayfabAuth } from "./nativeApp"
+import { firebaseConfig } from "../../assets/config/firebaseConfig"
+import { isAppleApp, isAndroidApp } from "../nativeComms/deviceDetection"
+import { PlayfabAuth } from "../nativeApp"
+import { gameCenterPromise } from "./gameCenter"
+import { googlePlayGamesPromise } from "./googlePlay"
 
 export let isLoggedIn: boolean = false
 
@@ -65,9 +67,13 @@ export const login = async () => {
             method = PlayFabClient.LoginWithIOSDeviceID
             loginRequest = { ...loginRequest, ...customAuth.payload }
         }
-    } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
-        method = PlayFabClient.LoginWithAndroidDeviceID
-        loginRequest = { ...loginRequest, ...customAuth.payload }
+    } else if (isAndroidApp()) {
+        const response = await googlePlayGamesPromise()
+        if (response) {
+        } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
+            method = PlayFabClient.LoginWithAndroidDeviceID
+            loginRequest = { ...loginRequest, ...customAuth.payload }
+        }
     }
 
     if (method === PlayFabClient.LoginWithCustomID) {
@@ -115,39 +121,6 @@ export const login = async () => {
             return playfabUserId
         }
     )
-}
-
-const gameCenterPromise = async (): Promise<PlayfabAuth | undefined> => {
-    console.log("gameCenterPrmise")
-    return new Promise((resolve, reject) => {
-        console.log("In promise")
-        // This iOS code will potentially wait for auth to complete or fail, then trigger the below event
-        try {
-            console.log("Trying")
-            window.webkit.messageHandlers.gameCenterLogin.postMessage(true)
-
-            window.addEventListener("gameCenterLogin", (e: any) => {
-                console.log("MEssage returned", e.detail)
-                if (e.detail) {
-                    resolve({
-                        method: "LoginWithGameCenter",
-                        payload: {
-                            PlayerId: e.detail.playerID,
-                            PublicKeyUrl: e.detail.url,
-                            Salt: atob(e.detail.salt),
-                            Signature: atob(e.detail.signature),
-                            Timestamp: e.detail.timestamp
-                        }
-                    })
-                } else {
-                    resolve(undefined)
-                }
-            })
-        } catch {
-            console.log("Catch")
-            resolve(undefined)
-        }
-    })
 }
 
 export const updateName = async (
