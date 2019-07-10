@@ -239,8 +239,12 @@ export class YouScene extends Phaser.Scene {
             title.textContent = set.name
             title.style.backgroundColor = set.darkHexColor
 
-            const bases = set.attire.filter(a => a.base)
-            const attires = set.attire.filter(a => !a.base)
+            // This filter/concat chain is silly, but maintains ordering other than locked status
+            let bases = set.attire.filter(a => a.base)
+            bases = bases.filter(b => b.free).concat(bases.filter(b => !b.free))
+
+            let attires = set.attire.filter(a => !a.base)
+            attires = attires.filter(a => a.free).concat(attires.filter(a => !a.free))
 
             const basesUL = element.node.getElementsByClassName("bases").item(0)!
             const attiresUL = element.node.getElementsByClassName("attires").item(0)!
