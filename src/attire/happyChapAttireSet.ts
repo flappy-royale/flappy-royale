@@ -14,7 +14,7 @@ export const happyChapAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Big_Beak.png"),
+            href: require("../../assets/bases/happy-chap/Big_Beak.png"),
             free: false
         },
         {
@@ -22,7 +22,7 @@ export const happyChapAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Cthulu_Bird.png"),
+            href: require("../../assets/bases/happy-chap/Cthulu_Bird.png"),
             free: false
         },
         {
@@ -30,7 +30,7 @@ export const happyChapAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/BlueChog.png"),
+            href: require("../../assets/bases/happy-chap/BlueChog.png"),
             free: false
         },
 
@@ -39,7 +39,7 @@ export const happyChapAttireSet: AttireSet = {
             description: "TBD",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/War_Spoon.png"),
+            href: require("../../assets/attire/happy-chap/War_Spoon.png"),
             free: false
         }
     ]

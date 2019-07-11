@@ -14,7 +14,6 @@ import { openURL } from "../nativeComms/openURL"
 export const YouKey = "YouScene"
 
 const removeChildren = (div: Element) => {
-    console.log(div)
     while (div.hasChildNodes()) {
         div.removeChild(div.lastChild!)
     }
@@ -31,6 +30,7 @@ export class YouScene extends Phaser.Scene {
 
         const settings = getUserSettings()
         this.initialAttire = settings.aesthetics.attire
+        this.currentAttire = settings.aesthetics.attire
     }
 
     preload() {
@@ -96,6 +96,7 @@ export class YouScene extends Phaser.Scene {
          * corresponding to attire is selected or not
          */
         const updateWearables = () => {
+            console.log("---------------")
             const basesRoot = document.getElementById("current-set-clickables")!
             for (const element of basesRoot.getElementsByTagName("li")) {
                 const id = element.id
@@ -117,7 +118,7 @@ export class YouScene extends Phaser.Scene {
 
             if (!attire.base) {
                 const img = document.createElement("img")
-                img.src = require("../../assets/bases/Hedgehog.png")
+                img.src = require("../../assets/bases/default/Hedgehog.png")
                 img.style.opacity = "0.1"
                 div.appendChild(img)
             }
@@ -296,6 +297,7 @@ export class YouScene extends Phaser.Scene {
         const firstItem = tabbar.getElementsByTagName("li").item(0)!
         if (firstItem.onclick) firstItem.onclick({} as any)
 
+        // Makes sure the user is set up
         updateUserDisplay()
 
         const header = document.getElementById("header") as HTMLImageElement

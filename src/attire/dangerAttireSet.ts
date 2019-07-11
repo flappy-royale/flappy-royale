@@ -14,7 +14,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Fish.png"),
+            href: require("../../assets/bases/danger/Fish.png"),
             free: false
         },
         {
@@ -22,7 +22,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Frog.png"),
+            href: require("../../assets/bases/danger/Frog.png"),
             free: false
         },
         {
@@ -30,7 +30,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Whale.png"),
+            href: require("../../assets/bases/danger/Whale.png"),
             free: false
         },
         {
@@ -38,7 +38,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Rabbit.png"),
+            href: require("../../assets/bases/danger/Rabbit.png"),
             free: false
         },
         {
@@ -46,7 +46,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Tie.png"),
+            href: require("../../assets/attire/danger/Tie.png"),
             free: false
         }
     ]
