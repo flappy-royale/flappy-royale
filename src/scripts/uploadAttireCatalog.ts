@@ -2,15 +2,10 @@ import { PresentationAttire } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
 import { titleId } from "../../assets/config/playfabConfig"
-import playfabPromisify from "../playfabPromisify"
-import { AttireSet } from "../attire/attireSets"
+import playfabPromisify from "../playfab/playfabPromisify"
+import { AttireSet, allAttireSets } from "../attire/attireSets"
+import _ = require("lodash")
 
-/** TODO: This conceptually belongs in `scripts`
- * However, I was running into import issues, where attire's require("some_image_url") was resolving to an actual image instead of a URL,
- * and thus blowing up outside the context of our webpack config.
- *
- * For now, I'm running this by copy/pasting into the src/ directory and triggering with local client code. Not great.
- */
 PlayFabAdmin.settings.developerSecretKey = playfabFirebaseProdSecretKey
 PlayFabAdmin.settings.titleId = titleId
 
@@ -63,26 +58,30 @@ const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingMode
 }
 
 const setEntireAttire = async (items: PresentationAttire[]) => {
-    console.log({
+    return await playfabPromisify(PlayFabAdmin.SetCatalogItems)({
         Catalog: items.map(attireToCatalogItem)
     })
-    const result = await playfabPromisify(PlayFabAdmin.SetCatalogItems)({
-        Catalog: items.map(attireToCatalogItem)
-    })
-    console.log(result)
 }
 
-// WARNING: This currently only works with a single set of attire, and doesn't do what you want
-// Namely, the entire Catalog will be JUST this set, wiping away all other sets
-// Future work for Em when we have two sets: this should take in an array of AttireSets.
-// setEntireAttire should be passed the combination of all of those attire sets' attire, then we call SetStoreItems on each set.
+export const setAttireSets = async (sets: AttireSet[]) => {
+    const allAttire = _.flatten(sets.map(s => s.attire))
+    await setEntireAttire(allAttire)
 
-// You can use allAttireInGame BTW
-export const setAttireSet = async (set: AttireSet) => {
-    await setEntireAttire(set.attire)
-    await playfabPromisify(PlayFabAdmin.SetStoreItems)({
-        StoreId: set.id,
-        Store: set.attire.map(attireToStoreItem),
-        MarketingData: attireSetToStore(set)
-    })
+    // These need to be serial, not parallel, or PlayFab will yell at us.
+    for (let set of sets) {
+        await playfabPromisify(PlayFabAdmin.SetStoreItems)({
+            StoreId: set.id,
+            Store: set.attire.map(attireToStoreItem),
+            MarketingData: attireSetToStore(set)
+        })
+    }
+}
+
+// TO RUN THIS:
+// For now, I just go into app.ts and shove this call into the critical path.
+// Could/should eventually make an admin page, but I can't be bothered right now.
+// If we do, we want to make *sure* none of this code gets bundled into a production build,
+// since it includes our deveoper secret key
+export const setAllAttireSets = async () => {
+    setAttireSets(allAttireSets)
 }
