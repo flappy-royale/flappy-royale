@@ -1,14 +1,14 @@
 import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
-import { Attire, defaultAttire } from "../attire"
+import { Attire, defaultAttire } from "./attire"
 import _ = require("lodash")
-import { cache } from "../localCache"
-import { titleId } from "../../assets/config/playfabConfig"
-import { GameMode } from "../battle/utils/gameMode"
-import { APIVersion } from "../constants"
-import { allAttireInGame } from "../attire/attireSets"
-import { changeSettings, UserSettings, syncedSettingsKeys } from "../user/userManager"
+import { cache } from "./localCache"
+import { titleId } from "../assets/config/playfabConfig"
+import { GameMode } from "./battle/utils/gameMode"
+import { APIVersion } from "./constants"
+import { allAttireInGame } from "./attire/attireSets"
+import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
-import { firebaseConfig } from "../../assets/config/firebaseConfig"
+import { firebaseConfig } from "../assets/config/firebaseConfig"
 
 export let isLoggedIn: boolean = false
 
