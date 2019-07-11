@@ -9,8 +9,16 @@ import { defaultAttireSet } from "../attire/defaultAttire"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import { canWearAttire } from "../user/canWearAttire"
 import * as PlayFab from "../playFab"
+import { openURL } from "../nativeComms/openURL"
 
 export const YouKey = "YouScene"
+
+const removeChildren = (div: Element) => {
+    console.log(div)
+    while (div.hasChildNodes()) {
+        div.removeChild(div.lastChild!)
+    }
+}
 
 export class YouScene extends Phaser.Scene {
     currentAttireSet: AttireSet = defaultAttireSet
@@ -61,6 +69,24 @@ export class YouScene extends Phaser.Scene {
             img.src = a.iconPath
             li.appendChild(img)
             tabbar.appendChild(li)
+
+            li.onclick = () => {
+                // Reset
+                for (const sibling of li.parentElement!.children) {
+                    const htmlSib = sibling as HTMLElement
+                    htmlSib.style.borderBottom = "none"
+                    htmlSib.style.height = `25px`
+                    htmlSib.style.opacity = "0.6"
+                }
+
+                // Set up the active state
+                li.style.borderBottom = `2px solid ${a.darkHexColor}`
+                li.style.height = `23px`
+                li.style.opacity = "1"
+
+                // Update the content
+                setupForAttireSet(a)
+            }
         })
 
         const settings = getUserSettings()
@@ -119,9 +145,7 @@ export class YouScene extends Phaser.Scene {
         /** Creates and updates the unique 'you' preview along the side */
         const updateUserDisplay = () => {
             const user = document.getElementById("you")!
-            while (user.hasChildNodes()) {
-                user.removeChild(user.lastChild!)
-            }
+            removeChildren(user)
 
             const userBase = this.currentAttire.filter(a => !!a).find(a => a.base)
             const img = document.createElement("img")
@@ -146,9 +170,7 @@ export class YouScene extends Phaser.Scene {
             attires.forEach((divID, index) => {
                 const div = document.getElementById(divID)!
                 // Clean up
-                while (div.hasChildNodes()) {
-                    div.removeChild(div.lastChild!)
-                }
+                removeChildren(div)
 
                 const showingAttire = attire[index]
                 if (showingAttire) {
@@ -248,6 +270,8 @@ export class YouScene extends Phaser.Scene {
             const basesUL = element.node.getElementsByClassName("bases").item(0)!
             const attiresUL = element.node.getElementsByClassName("attires").item(0)!
 
+            removeChildren(basesUL)
+            removeChildren(attiresUL)
             bases.forEach(a => makeClickableAttire(a, basesUL))
             attires.forEach(a => makeClickableAttire(a, attiresUL))
 
@@ -258,10 +282,20 @@ export class YouScene extends Phaser.Scene {
                 const element = title as HTMLElement
                 element.style.color = set.darkHexColor
             }
+
+            const attribution = document.getElementById("current-set-attribution")!
+            const attributionA = attribution.getElementsByTagName("a").item(0)!
+            attributionA.text = set.attributedTo
+            attributionA.style.color = set.darkHexColor
+            attributionA.onclick = () => {
+                openURL(set.attributedURL)
+            }
         }
 
-        this.currentAttire = this.initialAttire
-        setupForAttireSet(this.currentAttireSet)
+        // Click the first tab bar, this actually ignores the initialAttire
+        const firstItem = tabbar.getElementsByTagName("li").item(0)!
+        if (firstItem.onclick) firstItem.onclick({} as any)
+
         updateUserDisplay()
 
         const header = document.getElementById("header") as HTMLImageElement

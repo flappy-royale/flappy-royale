@@ -76,6 +76,8 @@ const setEntireAttire = async (items: PresentationAttire[]) => {
 // Namely, the entire Catalog will be JUST this set, wiping away all other sets
 // Future work for Em when we have two sets: this should take in an array of AttireSets.
 // setEntireAttire should be passed the combination of all of those attire sets' attire, then we call SetStoreItems on each set.
+
+// You can use allAttireInGame BTW
 export const setAttireSet = async (set: AttireSet) => {
     await setEntireAttire(set.attire)
     await playfabPromisify(PlayFabAdmin.SetStoreItems)({

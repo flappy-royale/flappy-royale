@@ -1,5 +1,7 @@
 import { PresentationAttire } from "../attire"
 import { defaultAttireSet } from "./defaultAttire"
+import { dangerAttireSet } from "./dangerAttireSet"
+import { happyChapAttireSet } from "./happyChapAttireSet"
 
 export interface AttireSet {
     /** Displayed at the top */
@@ -23,7 +25,7 @@ export interface AttireSet {
 }
 
 /** Each available set of attire you could use  */
-export const allAttireSets = [defaultAttireSet]
+export const allAttireSets = [defaultAttireSet, dangerAttireSet, happyChapAttireSet]
 
 /** All of the attire available in the game ATM */
-export const allAttireInGame = [...defaultAttireSet.attire]
+export const allAttireInGame = [...defaultAttireSet.attire, ...dangerAttireSet.attire, ...happyChapAttireSet.attire]

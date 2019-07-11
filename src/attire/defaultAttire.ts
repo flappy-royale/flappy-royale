@@ -32,7 +32,7 @@ export const defaultAttireSet: AttireSet = {
     name: "Starter pack",
     id: "default",
     attributedTo: "Orta/Em/Zach",
-    attributedURL: "https://flappyroyale.io",
+    attributedURL: "https://flappyroyale.io/media.html",
     iconPath: require("../../assets/attire/set-logos/Default.png"),
     lightHexColor: "#E7D866",
     darkHexColor: "#8A7A00",

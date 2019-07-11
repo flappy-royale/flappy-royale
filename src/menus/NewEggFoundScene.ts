@@ -7,9 +7,9 @@ import { random } from "lodash"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { becomeButton } from "./utils/becomeButton"
 import { AttireSet } from "../attire/attireSets"
-import { threadId } from "worker_threads"
-import { addScene } from "./utils/addScene"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
+
+// TODO: haptics!
 
 interface EggProps {
     attireSet: AttireSet
