@@ -1,9 +1,9 @@
-import { PresentationAttire } from "../src/attire"
+import { PresentationAttire } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
-import { playfabFirebaseProdSecretKey } from "../assets/config/playfabServerConfig"
-import { titleId } from "../assets/config/playfabConfig"
-import playfabPromisify from "../src/playfabPromisify"
-import { AttireSet } from "../src/attire/attireSets"
+import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
+import { titleId } from "../../assets/config/playfabConfig"
+import playfabPromisify from "../playfabPromisify"
+import { AttireSet } from "../attire/attireSets"
 
 /** TODO: This conceptually belongs in `scripts`
  * However, I was running into import issues, where attire's require("some_image_url") was resolving to an actual image instead of a URL,
