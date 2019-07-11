@@ -293,6 +293,42 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
     })
 })
 
+export const openLootBox = functions.https.onRequest(async (request, response) => {
+    cors(request, response, async () => {
+        // TODO: The user should have a 'lootbox' inventory item assigned by the ad reward
+        // Consume that, and have some logic in the weird case the user has > 1
+        // That should also determine what loot table we consult
+
+        const { playfabId } = JSON.parse(request.body)
+        if (!playfabId) {
+            return response.status(400).send({ error: "Needs a playfabId in request" })
+        }
+
+        const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({
+            PlayFabId: playfabId
+        })
+
+        const inventory = inventoryResult.data.Inventory
+        if (!inventory) {
+            return response.status(400).send({ error: "Could not fetch inventory for player" })
+        }
+
+        const lootResult = await playfabPromisify(PlayFabServer.EvaluateRandomResultTable)({
+            TableId: "test-lootbox"
+        })
+        const item = lootResult.data.ResultItemId
+
+        if (!item) {
+            return response.status(400).send({ error: "Could not find item" })
+        }
+
+        // TODO: Check the user doesn't have the item, and reroll if so
+
+        // TODO: Actually grant to the user
+        return response.status(200).send({ item })
+    })
+})
+
 const unzip = (bin: string) => {
     if (!bin) {
         throw new Error("No bin param passed to unzip")
