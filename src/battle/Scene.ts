@@ -32,7 +32,7 @@ import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
-import * as PlayFab from "../playFab"
+import * as PlayFab from "../playfab"
 import { playSound } from "../playSound"
 import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from "../gameSettings"
 
@@ -728,7 +728,7 @@ export class BattleScene extends Phaser.Scene {
                     seed: this.seed,
                     version: constants.APIVersion,
                     mode: this.mode,
-                    playfabId: PlayFab.playfabUserId,
+                    playfabId: PlayFab.getPlayfabId(),
                     data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
                 })
                     .then(a => a.json())

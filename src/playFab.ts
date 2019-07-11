@@ -15,6 +15,11 @@ export let isLoggedIn: boolean = false
 export let loginPromise: Promise<string | undefined>
 
 export let playfabUserId: string | undefined
+
+export const getPlayfabId = () => {
+    return localStorage.getItem("playfabId") || undefined
+}
+
 let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
@@ -89,6 +94,11 @@ export const login = () => {
             }
 
             playfabUserId = result.data.PlayFabId
+            if (playfabUserId) {
+                localStorage.setItem("playfabId", playfabUserId)
+            }
+
+            console.log("Setting user id", playfabUserId)
 
             if (result.data.EntityToken) {
                 playfabEntityKey = result.data.EntityToken.Entity

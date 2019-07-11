@@ -2,7 +2,7 @@ import { PresentationAttire } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
 import { titleId } from "../../assets/config/playfabConfig"
-import playfabPromisify from "../playfab/playfabPromisify"
+import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import _ = require("lodash")
 

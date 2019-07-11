@@ -8,6 +8,7 @@ import { cache } from "./localCache"
 import { unzip } from "./zip"
 import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 import _ = require("lodash")
+import { playfabUserId, loginPromise, getPlayfabId } from "./playfab"
 
 /** How it's stored in the DB to save on fs space */
 export interface SeedDataZipped {
@@ -160,6 +161,19 @@ export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
         method: "POST",
         body: JSON.stringify(replay)
     })
+}
+
+export const openLootBox = async () => {
+    await loginPromise
+    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openLootBox`, {
+        // return fetch(`http://localhost:5000/${firebaseConfig.projectId}/us-central1/addReplayToSeed`, {
+        method: "POST",
+        body: JSON.stringify({ playfabId: getPlayfabId() })
+    })
+        .then(r => r.json() as Promise<string>)
+        .then((json: any) => {
+            return json.item
+        })
 }
 
 /** Used in training */

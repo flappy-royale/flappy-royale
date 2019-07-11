@@ -6,7 +6,9 @@ import { preloadPipeSprites } from "../battle/PipeManager"
 import { random } from "lodash"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { becomeButton } from "./utils/becomeButton"
-import { AttireSet } from "../attire/attireSets"
+import { AttireSet, allAttireInGame } from "../attire/attireSets"
+import { openLootBox } from "../firebase"
+import { PresentationAttire } from "../attire"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -25,6 +27,8 @@ export class NewEggFoundScene extends Phaser.Scene {
     bottomLabel!: Phaser.GameObjects.BitmapText
     buttonLabel!: Phaser.GameObjects.BitmapText
 
+    unlockedItem: PresentationAttire | undefined
+
     constructor(props: EggProps) {
         super(NewEggFoundSceneKey)
         this.props = props
@@ -42,7 +46,6 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.load.image("egg-bottom", require("../../assets/menu/EggGoldBottom.png"))
         this.load.image("button-bg", require("../../assets/menu/ButtonBG.png"))
         this.load.image("attire-set-icon", this.props.attireSet.iconPath)
-        this.load.image("unlocked", require("../../assets/bases/DMFox.png"))
 
         this.load.bitmapFont(
             "fipps-bit",
@@ -276,19 +279,51 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.buttonLabel = buttonText
     }
 
-    tappedButton() {
+    tappedButton = async () => {
         this.particles.destroy()
+
         if (this.seenAd) {
             // remove the scene
         } else {
-            this.returnFromSeeingAd()
-            this.bottomLabel.setText("You got an X")
-            this.buttonLabel.setText("Cool")
+            this.vibrateEgg()
+
+            openLootBox().then(attireId => {
+                const attire = allAttireInGame.find(a => a.id === attireId)
+                if (!attire) {
+                    console.log("Could not find item ", attireId)
+                    return
+                }
+                this.unlockedItem = attire
+                this.load.image("unlocked", attire.href)
+                this.load.on("filecomplete", this.openEgg, this)
+                this.load.start()
+            })
+
             // show add
         }
     }
 
-    returnFromSeeingAd() {
+    vibrateEgg() {
+        this.add.tween({
+            targets: [this.egg, this.eggWings, this.assetSetLogo],
+            scaleX: 1,
+            scaleY: 1,
+            x: "+= 1",
+            y: "+=1",
+            angle: "5",
+            _ease: "Sine.easeInOut",
+            ease: "Power2",
+            duration: 50,
+            repeat: -1,
+            yoyo: true
+        })
+    }
+
+    openEgg() {
+        if (!this.unlockedItem) return
+        this.bottomLabel.setText(`${this.unlockedItem.description}`)
+        this.buttonLabel.setText("Cool")
+
         const unlockedItem = this.add.image(this.egg.x, this.egg.y, "unlocked")
         this.add.tween({
             targets: [unlockedItem],
