@@ -6,7 +6,7 @@ export const hedgehog: PresentationAttire = {
     description: "Whole hedgehog",
     fit: "tight",
     base: true,
-    href: require("../../assets/bases/Hedgehog.png"),
+    href: require("../../assets/bases/default/Hedgehog.png"),
     free: true
 }
 
@@ -15,7 +15,7 @@ export const dog: PresentationAttire = {
     description: "Woof woof",
     fit: "tight",
     base: true,
-    href: require("../../assets/bases/Dog1.png"),
+    href: require("../../assets/bases/default/Dog1.png"),
     free: true
 }
 
@@ -24,7 +24,7 @@ export const sheep: PresentationAttire = {
     description: "Bird got punk'd",
     fit: "tight",
     base: true,
-    href: require("../../assets/bases/Sheep.png"),
+    href: require("../../assets/bases/default/Sheep.png"),
     free: true
 }
 
@@ -43,7 +43,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Flapping in a half-shell",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Turtle.png"),
+            href: require("../../assets/bases/default/Turtle.png"),
             free: true
         },
         {
@@ -51,7 +51,7 @@ export const defaultAttireSet: AttireSet = {
             description: "It's a banana or A COISS, kk",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Banana.png"),
+            href: require("../../assets/bases/default/Banana.png"),
             free: true
         },
         dog,
@@ -60,7 +60,7 @@ export const defaultAttireSet: AttireSet = {
             description: "It flaps",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/BirdBody.png"),
+            href: require("../../assets/bases/default/BirdBody.png"),
             free: true
         },
         {
@@ -68,7 +68,7 @@ export const defaultAttireSet: AttireSet = {
             description: "A good old flat cap",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/FlatCap.png"),
+            href: require("../../assets/attire/default/FlatCap.png"),
             free: true
         },
         {
@@ -76,7 +76,7 @@ export const defaultAttireSet: AttireSet = {
             description: "We can all be royale-ty",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/Crown1.png"),
+            href: require("../../assets/attire/default/Crown1.png"),
             free: true
         },
         {
@@ -84,7 +84,7 @@ export const defaultAttireSet: AttireSet = {
             description: "We can all be royale-ty",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/Crown2.png"),
+            href: require("../../assets/attire/default/Crown2.png"),
             free: true
         },
         {
@@ -92,7 +92,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Going to a generic game",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/Baseball-Whiteblue.png"),
+            href: require("../../assets/attire/default/Baseball-Whiteblue.png"),
             free: true
         },
         {
@@ -100,7 +100,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Keeping your noggin wawrm",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/BobbleHat.png"),
+            href: require("../../assets/attire/default/BobbleHat.png"),
             free: true
         },
         {
@@ -108,7 +108,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Going to a generic game",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Sunnies.png"),
+            href: require("../../assets/attire/default/Sunnies.png"),
             free: true
         },
         {
@@ -116,7 +116,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Going to a generic game",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/TopHat.png"),
+            href: require("../../assets/attire/default/TopHat.png"),
             free: true
         },
         {
@@ -124,7 +124,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Going to a generic game",
             fit: "loose",
             base: false,
-            href: require("../../assets/attire/SummerHat.png"),
+            href: require("../../assets/attire/default/SummerHat.png"),
             free: true
         },
         {
@@ -132,7 +132,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Mohawk.png"),
+            href: require("../../assets/attire/default/Mohawk.png"),
             free: true
         },
         {
@@ -140,7 +140,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/bad-dana.png"),
+            href: require("../../assets/attire/default/bad-dana.png"),
             free: true
         },
         {
@@ -148,7 +148,7 @@ export const defaultAttireSet: AttireSet = {
             description: "See no evil",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/zen.png"),
+            href: require("../../assets/attire/default/zen.png"),
             free: true
         },
         {
@@ -156,7 +156,7 @@ export const defaultAttireSet: AttireSet = {
             description: ":|",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/nervous.png"),
+            href: require("../../assets/attire/default/nervous.png"),
             free: true
         },
         {
@@ -164,7 +164,7 @@ export const defaultAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Nimbus.png"),
+            href: require("../../assets/bases/default/Nimbus.png"),
             free: true
         },
         {
@@ -172,7 +172,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/tired.png"),
+            href: require("../../assets/attire/default/tired.png"),
             free: true
         },
         {
@@ -180,7 +180,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Paranoid.png"),
+            href: require("../../assets/attire/default/Paranoid.png"),
             free: true
         },
         {
@@ -188,7 +188,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/halo.png"),
+            href: require("../../assets/attire/default/halo.png"),
             free: true
         },
         {
@@ -196,7 +196,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/bigmouth.png"),
+            href: require("../../assets/attire/default/bigmouth.png"),
             free: true
         },
         {
@@ -204,7 +204,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/drool.png"),
+            href: require("../../assets/attire/default/drool.png"),
             free: true
         },
         {
@@ -212,7 +212,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Tiny_eyes.png"),
+            href: require("../../assets/bases/default/Tiny_eyes.png"),
             free: true
         },
         {
@@ -220,7 +220,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Ghost.png"),
+            href: require("../../assets/bases/default/Ghost.png"),
             free: true
         },
         {
@@ -228,7 +228,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Fantasy.png"),
+            href: require("../../assets/bases/default/Fantasy.png"),
             free: true
         },
         {
@@ -236,7 +236,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Sheep.png"),
+            href: require("../../assets/bases/default/Sheep.png"),
             free: true
         },
         {
@@ -244,7 +244,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Pug.png"),
+            href: require("../../assets/bases/default/Pug.png"),
             free: true
         },
         {
@@ -252,7 +252,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Robin.png"),
+            href: require("../../assets/bases/default/Robin.png"),
             free: true
         },
         {
@@ -260,7 +260,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Duck.png"),
+            href: require("../../assets/bases/default/Duck.png"),
             free: true
         },
         {
@@ -268,7 +268,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/WhiteRabbit.png"),
+            href: require("../../assets/bases/default/WhiteRabbit.png"),
             free: true
         },
         {
@@ -276,7 +276,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/Rocket.png"),
+            href: require("../../assets/bases/default/Rocket.png"),
             free: true
         },
         {
@@ -284,7 +284,7 @@ export const defaultAttireSet: AttireSet = {
             description: "Bird got punk'd",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/DMFox.png"),
+            href: require("../../assets/bases/default/DMFox.png"),
             free: true
         },
         {
@@ -292,7 +292,7 @@ export const defaultAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Flag_Trans.png"),
+            href: require("../../assets/attire/default/Flag_Trans.png"),
             free: true
         },
         {
@@ -300,7 +300,7 @@ export const defaultAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Pride_Hunter.png"),
+            href: require("../../assets/attire/default/Pride_Hunter.png"),
             free: true
         },
         {
@@ -308,7 +308,7 @@ export const defaultAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: false,
-            href: require("../../assets/attire/Finish_Flag.png"),
+            href: require("../../assets/attire/default/Finish_Flag.png"),
             free: true
         }
     ]
