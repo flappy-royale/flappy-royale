@@ -7,10 +7,9 @@ import { GameMode } from "../battle/utils/gameMode"
 import { APIVersion } from "../constants"
 import { allAttireInGame } from "../attire/attireSets"
 import { changeSettings, UserSettings, syncedSettingsKeys } from "../user/userManager"
-import playfabPromisify from "./playfabPromisify"
+import playfabPromisify, { PlayFabApiMethod } from "./playfabPromisify"
 import { firebaseConfig } from "../../assets/config/firebaseConfig"
 import { isAppleApp, isAndroidApp } from "../nativeComms/deviceDetection"
-import { PlayfabAuth } from "../nativeApp"
 import { gameCenterPromise } from "./gameCenter"
 import { googlePlayGamesPromise } from "./googlePlay"
 
@@ -23,15 +22,9 @@ let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
 
-/** 
-            - To investigate: can/should we use a Game Center guest ID? (Probably not, cause if we have a custom ID then we can link)
-            - Add in a manual migration path: if a UUID is set in the JS cache, we should (1) log in with it, (2) link to Game Center and (3) delete cache. Next login will be pure game center.
-            - Since this event only fires once, what happens on browser reload (e.g. update)?
-            */
-
-export const login = async () => {
-    let method = PlayFabClient.LoginWithCustomID
-    let loginRequest: PlayFabClientModels.LoginWithCustomIDRequest = {
+const defaultLogin = {
+    method: PlayFabClient.LoginWithCustomID,
+    payload: {
         TitleId: titleId,
         CreateAccount: true,
         InfoRequestParameters: {
@@ -53,74 +46,105 @@ export const login = async () => {
             GetUserVirtualCurrency: false
         }
     }
+}
 
-    let customAuth = (window as any).playfabAuth
+export const login = async () => {
+    loginPromise = new Promise(async (resolve, reject) => {
+        let customAuth = (window as any).playfabAuth
 
-    if (isAppleApp()) {
-        const response = await gameCenterPromise()
-        if (response) {
-            if (response.method === "LoginWithGameCenter") {
-                method = PlayFabClient.LoginWithGameCenter
+        /** TO DO:
+         * A localstorage flag of "have we authed with gamecenter/googleplay?"
+         * If no: login with device ID, then link with the thing, then set flag
+         * If yes: just log in.
+         */
+        if (isAppleApp()) {
+            // TODO: Should we use a guest game center ID? What does that mean exactly?
+            const response = await gameCenterPromise()
+            if (response) {
+                const result = await playfabPromisify(PlayFabClient.LoginWithGameCenter)({
+                    ...defaultLogin,
+                    ...response.payload
+                })
+                resolve(handleLogin(result))
+                return
+            } else if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
+                // TODO: Go through this flow if Game Center fails on PlayFab's end
+                const result = await playfabPromisify(PlayFabClient.LoginWithIOSDeviceID)({
+                    ...defaultLogin,
+                    ...customAuth.payload
+                })
+                resolve(handleLogin(result))
+                return
             }
-            loginRequest = { ...loginRequest, ...response.payload }
-        } else if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
-            method = PlayFabClient.LoginWithIOSDeviceID
-            loginRequest = { ...loginRequest, ...customAuth.payload }
+        } else if (isAndroidApp()) {
+            const response = await googlePlayGamesPromise()
+            if (response) {
+                const result = await playfabPromisify(PlayFabClient.LoginWithGoogleAccount)({
+                    ...defaultLogin,
+                    ...response.payload
+                })
+                resolve(handleLogin(result))
+                return
+            } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
+                // TODO: Fall back to this flow
+                const result = await playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
+                    ...defaultLogin,
+                    ...customAuth.payload
+                })
+                resolve(handleLogin(result))
+                return
+            }
         }
-    } else if (isAndroidApp()) {
-        const response = await googlePlayGamesPromise()
-        if (response) {
-        } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
-            method = PlayFabClient.LoginWithAndroidDeviceID
-            loginRequest = { ...loginRequest, ...customAuth.payload }
+
+        const result = await playfabPromisify(PlayFabClient.LoginWithCustomID)({
+            ...defaultLogin,
+            CustomId: cache.getUUID(titleId)
+        })
+        return handleLogin(result)
+    })
+    return loginPromise
+}
+
+const handleLogin = (
+    result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>
+): string | undefined => {
+    console.log(result)
+
+    // Grab the data from the server and shove it in the user object
+    // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
+    const payload = result.data.InfoResultPayload
+    if (payload) {
+        let settings: Partial<UserSettings> = {}
+        if (payload.PlayerProfile) {
+            settings.name = payload.PlayerProfile.DisplayName
+            settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
         }
+
+        if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
+            const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
+            syncedSettingsKeys.forEach(key => {
+                if (!_.isUndefined(storedSettings[key])) {
+                    ;(settings as any)[key] = storedSettings[key]
+                }
+            })
+        }
+
+        if (payload.UserInventory) {
+            settings.unlockedAttire = payload.UserInventory.map(i => i.ItemId!)
+        }
+
+        changeSettings(settings)
     }
 
-    if (method === PlayFabClient.LoginWithCustomID) {
-        loginRequest.CustomId = cache.getUUID(titleId)
+    playfabUserId = result.data.PlayFabId
+
+    if (result.data.EntityToken) {
+        playfabEntityKey = result.data.EntityToken.Entity
     }
 
-    loginPromise = playfabPromisify(method)(loginRequest).then(
-        (result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
-            console.log(result)
+    isLoggedIn = true
 
-            // Grab the data from the server and shove it in the user object
-            // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
-            const payload = result.data.InfoResultPayload
-            if (payload) {
-                let settings: Partial<UserSettings> = {}
-                if (payload.PlayerProfile) {
-                    settings.name = payload.PlayerProfile.DisplayName
-                    settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
-                }
-
-                if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
-                    const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
-                    syncedSettingsKeys.forEach(key => {
-                        if (!_.isUndefined(storedSettings[key])) {
-                            ;(settings as any)[key] = storedSettings[key]
-                        }
-                    })
-                }
-
-                if (payload.UserInventory) {
-                    settings.unlockedAttire = payload.UserInventory.map(i => i.ItemId!)
-                }
-
-                changeSettings(settings)
-            }
-
-            playfabUserId = result.data.PlayFabId
-
-            if (result.data.EntityToken) {
-                playfabEntityKey = result.data.EntityToken.Entity
-            }
-
-            isLoggedIn = true
-
-            return playfabUserId
-        }
-    )
+    return playfabUserId
 }
 
 export const updateName = async (
