@@ -8,7 +8,7 @@ import { cache } from "./localCache"
 import { unzip } from "./zip"
 import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 import _ = require("lodash")
-import { playfabUserId, loginPromise, getPlayfabId } from "./playfab"
+import { loginPromise, getPlayfabId } from "./playfab"
 
 /** How it's stored in the DB to save on fs space */
 export interface SeedDataZipped {

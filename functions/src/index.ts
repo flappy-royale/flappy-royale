@@ -312,20 +312,53 @@ export const openLootBox = functions.https.onRequest(async (request, response) =
         if (!inventory) {
             return response.status(400).send({ error: "Could not fetch inventory for player" })
         }
+        const inventoryIds = inventory.map(i => i.ItemId)
 
-        const lootResult = await playfabPromisify(PlayFabServer.EvaluateRandomResultTable)({
-            TableId: "test-lootbox"
+        const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
+            TableIDs: ["test-lootbox"]
         })
-        const item = lootResult.data.ResultItemId
+        if (!lootTables.data.Tables) {
+            return response.status(400).send({ error: "Could not fetch drop tables" })
+        }
 
-        if (!item) {
+        const table = lootTables.data.Tables["test-lootbox"]
+        if (!table) {
+            return response.status(400).send({ error: `Could not fetch drop table 'test-lootbox'` })
+        }
+
+        // Remove all items the player already has
+        // TODO: If the player already has all these items, we probably want to draw from a different table?
+        const nodes = table.Nodes.filter(n => !_.includes(inventoryIds, n.ResultItem))
+
+        // Get total number to draw from
+        const rngMax = _.sumBy(nodes, "Weight")
+
+        const resultNumber = _.random(rngMax - 1)
+
+        let count = 0
+        let rewardedItem: PlayFabServerModels.ResultTableNode | undefined = undefined
+        for (const node of nodes) {
+            if (resultNumber <= count) {
+                rewardedItem = node
+                break
+            }
+            count += node.Weight
+        }
+
+        if (!rewardedItem) {
             return response.status(400).send({ error: "Could not find item" })
         }
 
-        // TODO: Check the user doesn't have the item, and reroll if so
+        // TODO: This needs to recurse if node.ResultItemType is another table
+        await playfabPromisify(PlayFabServer.GrantItemsToUser)({
+            Annotation: "Loot box",
+            PlayFabId: playfabId,
+            ItemIds: [rewardedItem.ResultItem]
+        }).catch(e => {
+            return response.status(400).send({ error: "Could not grant item to user" })
+        })
 
-        // TODO: Actually grant to the user
-        return response.status(200).send({ item })
+        return response.status(200).send({ item: rewardedItem.ResultItem })
     })
 })
 
