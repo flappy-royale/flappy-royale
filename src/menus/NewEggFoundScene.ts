@@ -3,19 +3,46 @@ import * as c from "../constants"
 import { GameTheme, themeMap } from "../battle/theme"
 import { preloadPipeSprites } from "../battle/PipeManager"
 
-import { random, shuffle } from "lodash"
+import { random } from "lodash"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
+import { becomeButton } from "./utils/becomeButton"
+import { AttireSet } from "../attire/attireSets"
+import { threadId } from "worker_threads"
+import { addScene } from "./utils/addScene"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
+interface EggProps {
+    attireSet: AttireSet
+}
+
 export class NewEggFoundScene extends Phaser.Scene {
+    particles!: Phaser.GameObjects.Particles.ParticleEmitterManager
+    props: EggProps
+    egg!: Phaser.GameObjects.Image
+    eggWings!: Phaser.GameObjects.Sprite
+    assetSetLogo!: Phaser.GameObjects.Image
+    seenAd: boolean = false
+    bottomLabel!: Phaser.GameObjects.BitmapText
+    buttonLabel!: Phaser.GameObjects.BitmapText
+
+    constructor(props: EggProps) {
+        super(NewEggFoundSceneKey)
+        this.props = props
+    }
+
     preload() {
         this.load.image("confetti-green", require("../../assets/battle/confetti-green.png"))
         this.load.image("confetti-blue", require("../../assets/battle/confetti-blue.png"))
+        this.load.image("confetti-yellow", require("../../assets/battle/confetti-yellow.png"))
         this.load.image("flap1", require("../../assets/battle/Flap1.png"))
         this.load.image("flap2", require("../../assets/battle/Flap2.png"))
         this.load.image("flap3", require("../../assets/battle/Flap3.png"))
-
         this.load.image("egg", require("../../assets/menu/EggGold.png"))
+        this.load.image("egg-top", require("../../assets/menu/EggGoldTop.png"))
+        this.load.image("egg-bottom", require("../../assets/menu/EggGoldBottom.png"))
+        this.load.image("button-bg", require("../../assets/menu/ButtonBG.png"))
+        this.load.image("attire-set-icon", this.props.attireSet.iconPath)
+        this.load.image("unlocked", require("../../assets/bases/DMFox.png"))
 
         this.load.bitmapFont(
             "fipps-bit",
@@ -43,52 +70,48 @@ export class NewEggFoundScene extends Phaser.Scene {
 
         this.time.delayedCall(1600, this.showBottomMessage, [], this)
         this.time.delayedCall(1610, this.flapEggIn, [], this)
-
-        this.bringToTop()
     }
 
     flapEggIn() {
-        const egg = this.add.image(c.GameWidth / 2, c.GameHeight / 2, "egg")
-        egg.setAngle(24)
+        this.particles = this.add.particles("", {
+            x: c.GameWidth / 2,
+            y: c.GameAreaHeight / 2,
+            scale: { start: 0.02, end: 0.05 },
+            blendMode: "ADD",
+            maxParticles: 0,
+            lifespan: 11000,
+            speed: 10,
+            tint: 0x221199
+        })
+
+        const egg = this.add.image(c.GameWidth / 2 - 200, c.GameHeight / 2, "egg")
+        egg.setAngle(20)
+        this.egg = egg
+
+        const stamp = this.add.image(egg.x + 3, egg.y - 4, "attire-set-icon")
+        this.assetSetLogo = stamp
+        stamp.setAngle(20)
 
         const wings = this.add.sprite(egg.x, egg.y, "flap1")
         wings.play("flap")
         wings.setScale(2, 2)
+        this.eggWings = wings
 
-        // eBody.setGravityX(120)
-        // eBody.setVelocityY(c.flapStrength * -2)
-        // egg.setAngle(40)
+        this.add.tween({
+            targets: [egg, wings, stamp],
+            delay: 300,
+            x: "+=200",
+            ease: "Sine.easeInOut"
+        })
 
-        // this.add.tween({
-        //     targets: egg,
-        //     delay: 200,
-        //     angle: 0,
-        //     ease: "Sine.easeInOut"
-        // })
-
-        // this.time.delayedCall(
-        //     1150,
-        //     () => {
-        //         eBody.setVelocity(0, 0)
-        //         eBody.setGravityX(0)
-        //         eBody.setGravityY(-c.gravity)
-        //         egg.setAngle(0)
-
-        //         // Yeah, these particles are green. Deal with it,
-        //         // it's a bug but I think I like it this way
-        //         this.add.particles("particle").createEmitter({
-        //             x: egg.x,
-        //             y: egg.y,
-        //             scale: { start: 0.02, end: 0.02 },
-        //             blendMode: "SCREEN",
-        //             maxParticles: 0,
-        //             lifespan: 15000,
-        //             speed: 10
-        //         })
-        //     },
-        //     [],
-        //     this
-        // )
+        this.add.tween({
+            targets: [egg, wings, stamp],
+            delay: 300,
+            duration: 1200,
+            y: "-=30",
+            ease: "Sine.easeInOut",
+            yoyo: true
+        })
     }
 
     private setupPipes() {
@@ -213,11 +236,11 @@ export class NewEggFoundScene extends Phaser.Scene {
     }
 
     private showBottomMessage() {
-        const highest = this.add.rectangle(c.GameWidth / 2, c.GameHeight + 50, c.GameWidth, 140, 0x000000, 0.3)
+        const highest = this.add.rectangle(c.GameWidth / 2, c.GameHeight + 70, c.GameWidth, 140, 0x000000, 0.3)
         this.add.tween({
             targets: highest,
             delay: 300,
-            y: "-=100",
+            y: "-=120",
             ease: "Sine.easeInOut"
         })
 
@@ -241,10 +264,75 @@ export class NewEggFoundScene extends Phaser.Scene {
     }
 
     showText() {
-        centerAlignTextLabel(this.add.bitmapText(0, c.GameHeight / 2 + 34, "fipps-bit", `You've found an egg`, 8))
+        const text = this.add.bitmapText(0, c.GameHeight - 68, "fipps-bit", `You found an egg!`, 8)
+        centerAlignTextLabel(text)
+
+        const buttonBG = this.add.image(c.GameWidth / 2, c.GameHeight - 30, "button-bg")
+        const buttonText = this.add.bitmapText(c.GameWidth / 2, c.GameHeight - 37, "fipps-bit", "OPEN VIA AD", 8)
+        centerAlignTextLabel(buttonText)
+        becomeButton(buttonBG, this.tappedButton, this, [buttonText])
+
+        this.bottomLabel = text
+        this.buttonLabel = buttonText
     }
 
-    bringToTop() {
-        this.game.scene.bringToTop(NewEggFoundSceneKey)
+    tappedButton() {
+        this.particles.destroy()
+        if (this.seenAd) {
+            // remove the scene
+        } else {
+            this.returnFromSeeingAd()
+            this.bottomLabel.setText("You got an X")
+            this.buttonLabel.setText("Cool")
+            // show add
+        }
+    }
+
+    returnFromSeeingAd() {
+        const unlockedItem = this.add.image(this.egg.x, this.egg.y, "unlocked")
+        this.add.tween({
+            targets: [unlockedItem],
+            y: "-= 20",
+            delay: 400,
+            duration: 300
+        })
+
+        const eggTop = this.add.image(this.egg.x, this.egg.y, "egg-top")
+        eggTop.setAngle(20)
+        const eggBottom = this.add.image(this.egg.x, this.egg.y, "egg-bottom")
+        eggBottom.setAngle(20)
+
+        this.egg.destroy()
+
+        this.add.tween({
+            targets: [eggBottom],
+            angle: 0,
+            delay: 100,
+            duration: 300
+        })
+
+        this.add.tween({
+            targets: [eggTop, this.assetSetLogo, this.eggWings],
+            angle: -270
+        })
+
+        this.add.tween({
+            targets: [eggTop, this.assetSetLogo, this.eggWings],
+            x: "-=20",
+            y: "-=30",
+            ease: "Cubic.easeIn",
+            duration: 300,
+            onComplete: (_: any, targets) => {
+                this.add.tween({
+                    targets,
+                    x: "-=40",
+                    y: "+=180",
+                    ease: "Cubic.easeOut",
+                    duration: 1400
+                })
+            }
+        })
+
+        // this.egg
     }
 }

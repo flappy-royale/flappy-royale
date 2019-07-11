@@ -28,6 +28,7 @@ import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 import { NewEggFoundScene, NewEggFoundSceneKey } from "./NewEggFoundScene"
+import { defaultAttireSet } from "../attire/defaultAttire"
 
 declare const DEMO: boolean
 
@@ -159,7 +160,7 @@ export class MainMenuScene extends Phaser.Scene {
         checkToShowRatingPrompt()
 
         // For working on the Egg ATM
-        // addScene(this.game, AppSettingsKey, new NewEggFoundScene(NewEggFoundSceneKey), true)
+        // addScene(this.game, AppSettingsKey, new NewEggFoundScene({ attireSet: defaultAttireSet }), true)
     }
 
     loadSettings() {
