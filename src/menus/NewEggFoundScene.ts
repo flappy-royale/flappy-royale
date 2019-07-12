@@ -325,6 +325,9 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.bottomLabel.setText(`${this.unlockedItem.description}`)
         this.buttonLabel.setText("Cool")
 
+        this.assetSetLogo.destroy()
+        this.eggWings.destroy()
+
         const unlockedItem = this.add.image(this.egg.x, this.egg.y, "unlocked")
         this.add.tween({
             targets: [unlockedItem],
