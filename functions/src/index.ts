@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
-import { SeedsResponse } from "./api-contracts"
+import { SeedsResponse, LootBoxRequest } from "./api-contracts"
 import * as pako from "pako"
 import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from "../../src/firebase"
 import { File } from "@google-cloud/storage"
@@ -299,7 +299,7 @@ export const openLootBox = functions.https.onRequest(async (request, response) =
         // Consume that, and have some logic in the weird case the user has > 1
         // That should also determine what loot table we consult
 
-        const { playfabId } = JSON.parse(request.body)
+        const { playfabId, dropTableName } = JSON.parse(request.body) as LootBoxRequest
         if (!playfabId) {
             return response.status(400).send({ error: "Needs a playfabId in request" })
         }
@@ -315,15 +315,15 @@ export const openLootBox = functions.https.onRequest(async (request, response) =
         const inventoryIds = inventory.map(i => i.ItemId)
 
         const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
-            TableIDs: ["test-lootbox"]
+            TableIDs: [dropTableName]
         })
         if (!lootTables.data.Tables) {
             return response.status(400).send({ error: "Could not fetch drop tables" })
         }
 
-        const table = lootTables.data.Tables["test-lootbox"]
+        const table = lootTables.data.Tables[dropTableName]
         if (!table) {
-            return response.status(400).send({ error: `Could not fetch drop table 'test-lootbox'` })
+            return response.status(400).send({ error: `Could not fetch drop table '${dropTableName}'` })
         }
 
         // Remove all items the player already has

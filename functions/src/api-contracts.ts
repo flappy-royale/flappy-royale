@@ -14,3 +14,8 @@ export interface SeedsResponse {
     /** ISO 8601 string for when the client should next fetch seeds */
     expiry: string
 }
+
+export interface LootBoxRequest {
+    dropTableName: string
+    playfabId: string
+}

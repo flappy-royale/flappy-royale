@@ -9,6 +9,7 @@ import { becomeButton } from "./utils/becomeButton"
 import { AttireSet, allAttireInGame } from "../attire/attireSets"
 import { openLootBox } from "../firebase"
 import { PresentationAttire } from "../attire"
+import { testLootbox } from "../../assets/config/playfabConfig"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -287,7 +288,7 @@ export class NewEggFoundScene extends Phaser.Scene {
         } else {
             this.vibrateEgg()
 
-            openLootBox().then(attireId => {
+            openLootBox(testLootbox).then(attireId => {
                 const attire = allAttireInGame.find(a => a.id === attireId)
                 if (!attire) {
                     console.log("Could not find item ", attireId)

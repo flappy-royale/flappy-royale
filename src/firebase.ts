@@ -2,7 +2,7 @@ import * as firebase from "firebase/app"
 import "firebase/firestore"
 
 import { UserSettings } from "./user/userManager"
-import { SeedsResponse } from "../functions/src/api-contracts"
+import { SeedsResponse, LootBoxRequest } from "../functions/src/api-contracts"
 import { ReplayUploadRequest } from "../functions/src"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
@@ -163,12 +163,17 @@ export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
     })
 }
 
-export const openLootBox = async () => {
+export const openLootBox = async (table: string) => {
     await loginPromise
+    const playfabId = getPlayfabId()
+    if (!playfabId) return Promise.reject("No playfabId")
+
+    const request: LootBoxRequest = { playfabId, dropTableName: table }
+
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openLootBox`, {
         // return fetch(`http://localhost:5000/${firebaseConfig.projectId}/us-central1/addReplayToSeed`, {
         method: "POST",
-        body: JSON.stringify({ playfabId: getPlayfabId() })
+        body: JSON.stringify(request)
     })
         .then(r => r.json() as Promise<string>)
         .then((json: any) => {
