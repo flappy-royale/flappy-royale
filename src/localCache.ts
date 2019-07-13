@@ -73,7 +73,7 @@ export const cache = {
     },
 
     /** Always returns the same UUID for a given user / app ID */
-    getUUID: (appId: string): string => {
+    getUUID: (): string => {
         const stored = localStorage.getItem("uuid")
         if (stored) {
             return stored
@@ -82,5 +82,13 @@ export const cache = {
         const generated = uuid()
         localStorage.setItem("uuid", generated)
         return generated
-    }
+    },
+
+    hasPreviouslyLoggedInWithCustomId: (): boolean => {
+        return !_.isUndefined(localStorage.getItem("uuid"))
+    },
+
+    setDeviceId: (id: string) => localStorage.setItem("deviceId", id),
+
+    getDeviceId: (): string | undefined => localStorage.getItem("deviceId") || undefined
 }
