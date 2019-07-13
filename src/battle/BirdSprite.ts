@@ -60,6 +60,21 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
     })
 }
 
+/**
+ * OK, so rotation in a container is a bit complex. The bid shouldn't just rotate around
+ * its center point, it needs to rotate around a fixed point behind and up a bit for it to feel right.
+ *
+ * In the original version we used `setOrigin` to move the point back and to the left, however that API
+ * was relative to the size of the base/attire which meant if everything was the same png size it would look
+ * right. This was fine with test data, but not fine once we hit artists who weren't us.
+ *
+ * Instead we put all the artwork into a container, where it's 0,0 is back in the top left because
+ * we use internalXOffset and internalYOffset to move any images into the container at those pixel positions
+ */
+
+const internalXOffset = 10
+const internalYOffset = 4
+
 export class BirdSprite {
     position: Phaser.Math.Vector2
 
@@ -69,13 +84,16 @@ export class BirdSprite {
     isDead: boolean = false
     isAtRest: boolean = false
 
-    // The bird itself
-    private bodySprite: Phaser.GameObjects.Sprite
+    // The bird base
+    private baseSprite: Phaser.GameObjects.Sprite
+
+    // The wings which animate above
+    private wingsSprite: Phaser.GameObjects.Sprite
 
     // Actually the wings
     // NOTE: This is public so I can futz with it more easily in the tutorial
     // but in general you shouldn't touch this ;)
-    public sprite: Phaser.Physics.Arcade.Sprite
+    public container: Phaser.GameObjects.Container
 
     // Focus sprite
     private focusSprite!: Phaser.GameObjects.Image
@@ -104,13 +122,11 @@ export class BirdSprite {
         if (!base) throw "No base attire found"
 
         const baseID = scene.load.textureManager.exists(base.id) ? base.id : defaultAttire.id
-        this.bodySprite = scene.add.sprite(x, y, baseID)
-        this.bodySprite.setOrigin(0.13, 0.5)
+        this.baseSprite = scene.add.sprite(internalXOffset, internalYOffset, baseID)
 
         // Setup the focus sprite
         if (this.isPlayer) {
-            this.focusSprite = scene.add.sprite(x, y, "focusBackdrop")
-            this.focusSprite.setOrigin(0.13, 0.5)
+            this.focusSprite = scene.add.sprite(internalXOffset, internalYOffset, "focusBackdrop")
         }
 
         if (!useLowQuality() || (this.isPlayer || this.isImage)) {
@@ -118,39 +134,46 @@ export class BirdSprite {
             this.tightAttire = meta.settings.aesthetics.attire
                 .filter(a => !a.base && scene.load.textureManager.exists(a.id))
                 .filter(a => !meta.isPlayer || a.fit === "tight")
-                .map(a => {
-                    const image = scene.add.image(x, y, a.id)
-                    image.setOrigin(0.13, 0.55)
-                    return image
-                })
+                .map(a => scene.add.image(internalXOffset, internalYOffset, a.id))
 
             // See updateRelatedSprite for more info
             this.looseAttire = meta.settings.aesthetics.attire
                 .filter(a => !a.base && meta.isPlayer && scene.load.textureManager.exists(a.id))
                 .filter(a => a.fit === "loose")
-                .map(a => {
-                    const image = scene.add.image(x, y, a.id)
-                    image.setOrigin(0.13, 0.55)
-                    return image
-                })
+                .map(a => scene.add.image(internalXOffset, internalYOffset, a.id))
         }
 
-        this.sprite = scene.physics.add.sprite(x, y, "flap1")
-        this.sprite.setOrigin(0.13, 0.6)
+        this.container = scene.add.container(x, y)
+        scene.physics.add.existing(this.container)
+
+        this.body = this.container.body as Phaser.Physics.Arcade.Body
+        this.wingsSprite = scene.add.sprite(internalXOffset, internalYOffset, "flap1")
+
+        this.container.add(this.baseSprite)
+
+        const allAttire = (this.tightAttire && this.looseAttire && this.tightAttire.concat(this.looseAttire)) || []
+        // to retain player choice of ordering we add the containers based on the order of user attire settings
+        meta.settings.aesthetics.attire.forEach(attire => {
+            const foundImage = allAttire.find(i => i.texture.key === attire.id)
+            if (foundImage) this.container.add(foundImage)
+        })
+
+        this.container.add(this.wingsSprite)
+        // this.container.move
+
+        /// TODO! this.container.setOrigin(0.13, 0.6)
 
         // Set up
-        this.body = this.sprite.body as Phaser.Physics.Arcade.Body
         this.isInBus = true
 
         this.position = this.body.position
 
-        const allAttire = (this.tightAttire && this.looseAttire && this.tightAttire.concat(this.looseAttire)) || []
         if (!meta.isPlayer) {
             this.setOpacityBasedOnScore(0)
         } else {
-            this.bodySprite.setDepth(constants.zLevels.playerBird)
+            this.baseSprite.setDepth(constants.zLevels.playerBird)
             if (this.isPlayer) this.focusSprite.setDepth(constants.zLevels.focusBackdrop)
-            this.sprite.setDepth(constants.zLevels.birdWings)
+            this.container.setDepth(constants.zLevels.birdWings)
             allAttire.forEach(a => (a.depth = constants.zLevels.birdAttire + 1))
         }
 
@@ -184,7 +207,7 @@ export class BirdSprite {
     }
 
     addCollideForSprite(scene: Scene, otherPhysicsObj: Phaser.Physics.Arcade.Image) {
-        scene.physics.add.collider(this.sprite, otherPhysicsObj)
+        scene.physics.add.collider(this.container, otherPhysicsObj)
     }
 
     checkCollision(
@@ -192,7 +215,7 @@ export class BirdSprite {
         objects: Phaser.Types.Physics.Arcade.ArcadeColliderType,
         callback: ArcadePhysicsCallback
     ) {
-        return scene.physics.overlap(this.sprite, objects, callback, undefined, scene)
+        return scene.physics.overlap(this.container, objects, callback, undefined, scene)
     }
 
     flap() {
@@ -202,7 +225,7 @@ export class BirdSprite {
         }
 
         this.body.setVelocityY(-1 * constants.flapStrength)
-        this.sprite.play("flap")
+        this.wingsSprite.play("flap")
 
         if (this.isPlayer) {
             playSound(this.scene, "flap")
@@ -215,16 +238,16 @@ export class BirdSprite {
     }
 
     setOpacity(opacity: number) {
-        this.bodySprite.setAlpha(opacity)
-        this.sprite.setAlpha(opacity)
+        this.baseSprite.setAlpha(opacity)
+        this.container.setAlpha(opacity)
 
         const allAttire = this.tightAttire.concat(this.looseAttire)
         allAttire.forEach(a => a.setAlpha(opacity))
     }
 
     setScale(scale: number) {
-        this.bodySprite.setScale(scale, scale)
-        this.sprite.setScale(scale, scale)
+        this.baseSprite.setScale(scale, scale)
+        this.container.setScale(scale, scale)
 
         const allAttire = this.tightAttire.concat(this.looseAttire)
         allAttire.forEach(a => a.setScale(scale, scale))
@@ -232,26 +255,26 @@ export class BirdSprite {
 
     rotateSprite() {
         if (this.body.velocity.y >= 100) {
-            this.sprite.play("dive")
+            this.wingsSprite.play("dive")
         }
 
         let newAngle = remapClamped(this.body.velocity.y, 105, 200, -15, 90)
-        this.sprite.setAngle(newAngle)
+        this.container.setAngle(newAngle)
 
         const defaultWidth = 17
-        const defaultHeight = 11
+        const defaultHeight = 14
         let physicsWidth = remapClamped(this.body.velocity.y, 105, 200, defaultWidth - 2, 12 - 2)
         let physicsHeight = remapClamped(this.body.velocity.y, 105, 200, defaultHeight - 2, 16 - 2)
 
-        this.sprite.body.setSize(physicsWidth, physicsHeight)
-        this.sprite.body.offset = new Phaser.Math.Vector2(
-            remapClamped(this.body.velocity.y, 105, 200, -1, 3) * -1,
-            remapClamped(this.body.velocity.y, 105, 200, 1, 8)
+        this.body.setSize(physicsWidth, physicsHeight)
+        this.body.offset = new Phaser.Math.Vector2(
+            remapClamped(this.body.velocity.y, 105, 200, -1, 8) * -1,
+            remapClamped(this.body.velocity.y, 105, 200, -5, 2)
         )
     }
 
     destroy() {
-        const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
+        const sprites = [this.baseSprite, this.container, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(s => s.destroy())
     }
 
@@ -284,36 +307,46 @@ export class BirdSprite {
     // and a custom (slower) gravity
 
     setupForBeingInBus() {
-        this.sprite.setGravityY(-450)
-        this.sprite.setAccelerationX(20)
+        this.body.setGravityY(-450)
+        this.body.setAccelerationX(20)
     }
 
     stopBeingInBus() {
-        this.sprite.setGravityY(0)
-        this.sprite.setAccelerationX(0)
-        this.sprite.setVelocityX(0)
+        this.body.setGravityY(0)
+        this.body.setAccelerationX(0)
+        this.body.setVelocityX(0)
+    }
+
+    setupForTutorialBus() {
+        this.body.setGravityY(-constants.gravity)
+        this.body.setAccelerationX(20)
+    }
+
+    pauseInTutorialBus() {
+        this.body.setAccelerationX(0)
+        this.body.setVelocityX(0)
     }
 
     actAsImage() {
         this.isAtRest = true
-        this.sprite.setGravityY(constants.gravity * -1)
-        const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
+        this.body.setGravityY(constants.gravity * -1)
+        const sprites = [this.baseSprite, this.container, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setAlpha(1))
-        this.sprite.setAngle(0)
+        this.container.setAngle(0)
     }
 
     actAsUIElement() {
         this.actAsImage()
 
-        const sprites = [this.bodySprite, this.sprite, ...this.tightAttire, ...this.looseAttire]
+        const sprites = [this.baseSprite, this.container, ...this.tightAttire, ...this.looseAttire]
         sprites.forEach(a => a.setDepth(constants.zLevels.ui))
     }
 
     hasHitFloor() {
         if (!this.isAtRest) {
             this.isAtRest = true
-            this.sprite.setGravityY(constants.gravity * -1)
-            this.sprite.setVelocityY(0)
+            this.body.setGravityY(constants.gravity * -1)
+            this.body.setVelocityY(0)
 
             haptics.playHeavy()
         }
@@ -321,11 +354,11 @@ export class BirdSprite {
 
     // When a player dies in royale, the rest if the birds move forwards
     startMovingLeft(velocity = constants.pipeSpeed) {
-        this.sprite.setVelocityX(velocity)
+        this.body.setVelocityX(velocity)
     }
 
     updateRelatedSprites(settings: { tight: boolean }) {
-        if (!this.sprite.anims) return
+        if (!this.wingsSprite.anims) return
 
         // When the bird has hit the floor, stop running rotations
         // also, only do it once per render run.
@@ -337,38 +370,38 @@ export class BirdSprite {
         // so attire is just manually kept up to date with the positioning
         // of the sprite, this means attire needs to be centered on the bird
 
-        this.bodySprite.setPosition(this.sprite.x, this.sprite.y)
-        this.bodySprite.rotation = this.sprite.rotation
+        // this.baseSprite.setPosition(this.container.x, this.container.y)
+        // this.baseSprite.rotation = this.container.rotation
 
-        if (this.isPlayer) {
-            this.focusSprite.setPosition(this.sprite.x, this.sprite.y)
-            this.focusSprite.rotation = this.sprite.rotation
-        }
-        // There are two loops, one that is done _after_ the physics resolution
-        // layer (coming from scene.sys.events.addListener("postupdate") above )
-        // and another coming from the 'preUpdate' loop which comes from the game
-        // which occurs before physics is decided.
-        //
-        // This means that attire in the before loop is exactly up to date with
-        // the body, and the after one just happens to be a tick out. This tick out
-        // ends up giving this really cool effect of bouncing attire as though the
-        // item is loosely held.
-        //
-        // Note: This function will only be called with loose attire  on the player
-        const attireCount = settings.tight ? this.tightAttire : this.looseAttire
-        attireCount.forEach(item => {
-            item.setPosition(this.bodySprite.x - 1, this.bodySprite.y + 1)
-            item.rotation = this.bodySprite.rotation
-        })
+        // if (this.isPlayer) {
+        //     this.focusSprite.setPosition(this.container.x, this.container.y)
+        //     this.focusSprite.rotation = this.container.rotation
+        // }
+        // // There are two loops, one that is done _after_ the physics resolution
+        // // layer (coming from scene.sys.events.addListener("postupdate") above )
+        // // and another coming from the 'preUpdate' loop which comes from the game
+        // // which occurs before physics is decided.
+        // //
+        // // This means that attire in the before loop is exactly up to date with
+        // // the body, and the after one just happens to be a tick out. This tick out
+        // // ends up giving this really cool effect of bouncing attire as though the
+        // // item is loosely held.
+        // //
+        // // Note: This function will only be called with loose attire  on the player
+        // const attireCount = settings.tight ? this.tightAttire : this.looseAttire
+        // attireCount.forEach(item => {
+        //     item.setPosition(this.baseSprite.x - 1, this.baseSprite.y + 1)
+        //     item.rotation = this.baseSprite.rotation
+        // })
     }
 
     changeAttireToRandom() {
         const bases = defaultAttireSet.attire.filter(a => a.base)
         const base = bases[Math.floor(Math.random() * bases.length)]
 
-        this.bodySprite.destroy()
-        this.bodySprite = this.scene.add.sprite(this.sprite.x, this.sprite.y, base.id)
-        this.bodySprite.setOrigin(0.13, 0.5)
+        this.baseSprite.destroy()
+        this.baseSprite = this.scene.add.sprite(this.container.x, this.container.y, base.id)
+        this.baseSprite.setOrigin(0.13, 0.5)
 
         const hatsIsh = defaultAttireSet.attire.filter(a => !a.base)
         const amountOfItems = Math.floor(Math.random() * 3)
@@ -382,7 +415,7 @@ export class BirdSprite {
             .filter(a => !a.base)
             .filter(a => !this.isPlayer || a.fit === "tight")
             .map(a => {
-                const image = this.scene.add.image(this.bodySprite.x, this.bodySprite.y, a.id)
+                const image = this.scene.add.image(this.baseSprite.x, this.baseSprite.y, a.id)
                 image.setOrigin(0.13, 0.55)
                 image.setDepth(constants.zLevels.birdAttire + 1)
                 return image
@@ -393,7 +426,7 @@ export class BirdSprite {
             .filter(a => !a.base && this.isPlayer)
             .filter(a => a.fit === "loose")
             .map(a => {
-                const image = this.scene.add.image(this.bodySprite.x, this.bodySprite.y, a.id)
+                const image = this.scene.add.image(this.baseSprite.x, this.baseSprite.y, a.id)
                 image.setOrigin(0.13, 0.55)
                 image.setDepth(constants.zLevels.birdAttire + 1)
                 return image
@@ -402,7 +435,7 @@ export class BirdSprite {
 
     /** Lets you pass a func through for when the image is tapped */
     makeClickable(func: Function, context?: any) {
-        becomeButton(this.bodySprite, func, context)
+        becomeButton(this.baseSprite, func, context)
     }
 }
 

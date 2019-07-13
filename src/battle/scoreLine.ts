@@ -1,4 +1,3 @@
-import { BattleScene } from "./Scene"
 import * as constants from "../constants"
 
 // An invisible sprite with a physics body that covers the whole space
