@@ -1,5 +1,5 @@
 const f = require("node-fetch")
-const meta = require("../assets/scripts/meta.json")
+const meta = require("../../assets/scripts/meta.json")
 
 var webhook = {
     name: "DeployBot",
