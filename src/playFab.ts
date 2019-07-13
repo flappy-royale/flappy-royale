@@ -24,9 +24,120 @@ let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
 
-export const login = () => {
-    let method = PlayFabClient.LoginWithCustomID
-    let loginRequest: PlayFabClientModels.LoginWithCustomIDRequest = {
+export const login = async () => {
+    if (!cache.hasPreviouslyLoggedInWithCustomId()) {
+        // This is either a new user, or someone on the legacy flow who's only ever logged in via native deviceId
+        let customAuth = (window as any).playfabAuth
+        if (customAuth) {
+            // It's a native app!
+            const deviceId = cache.getDeviceId()
+            if (!deviceId) {
+                // It's either a new user, or an existing user who's only used the legacy flow
+                // Log in with native auth, then store device ID + link with custom ID
+
+                if (customAuth.method === "LoginWithIOSDeviceID") {
+                    await playfabPromisify(PlayFabClient.LoginWithIOSDeviceID)({
+                        ...loginRequest(),
+                        ...customAuth.payload
+                    }).then(handleLoginResponse)
+
+                    await playfabPromisify(PlayFabClient.LinkCustomID)({
+                        CustomId: cache.getUUID(),
+                        ForceLink: true
+                    })
+
+                    return getPlayfabId()
+                } else if (customAuth.method === "LoginWithAndroidDeviceID") {
+                    await playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
+                        ...loginRequest(),
+                        ...customAuth.payload
+                    }).then(handleLoginResponse)
+
+                    await playfabPromisify(PlayFabClient.LinkCustomID)({
+                        CustomId: cache.getUUID(),
+                        ForceLink: true
+                    })
+
+                    return getPlayfabId()
+                }
+            } else {
+                // We shouldn't hit this flow — anyone with a localStorage deviceID should have also logged in with a customId
+                // If that happens, I guess we'll just let it fall through to customID auth.
+            }
+        }
+
+        // If there's no custom auth, it's a web user. They should always login with customID.
+    }
+
+    return await loginWithCustomID()
+}
+
+const loginWithCustomID = async () => {
+    const request = { ...loginRequest(), CustomId: cache.getUUID() }
+    loginPromise = playfabPromisify(PlayFabClient.LoginWithCustomID)(request).then(handleLoginResponse)
+}
+
+const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
+    console.log(result)
+
+    // Grab the data from the server and shove it in the user object
+    // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
+    const payload = result.data.InfoResultPayload
+    if (payload) {
+        let settings: Partial<UserSettings> = {}
+        if (payload.PlayerProfile) {
+            settings.name = payload.PlayerProfile.DisplayName
+            settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
+        }
+
+        if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
+            const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
+            syncedSettingsKeys.forEach(key => {
+                if (!_.isUndefined(storedSettings[key])) {
+                    ;(settings as any)[key] = storedSettings[key]
+                }
+            })
+        }
+
+        if (payload.UserInventory) {
+            settings.unlockedAttire = payload.UserInventory.map(i => i.ItemId!)
+        }
+
+        changeSettings(settings)
+    }
+
+    playfabUserId = result.data.PlayFabId
+    if (playfabUserId) {
+        localStorage.setItem("playfabId", playfabUserId)
+    }
+
+    console.log("Setting user id", playfabUserId)
+
+    if (result.data.EntityToken) {
+        playfabEntityKey = result.data.EntityToken.Entity
+    }
+
+    if (window.playfabAuth && !cache.getDeviceId()) {
+        // Native device auth data exists, but needs to be linked
+        if (window.playfabAuth.method === "LoginWithIOSDeviceID") {
+            await playfabPromisify(PlayFabClient.LinkIOSDeviceID)({ ...window.playfabAuth.payload, ForceLink: true })
+            cache.setDeviceId(window.playfabAuth.payload.DeviceId)
+        } else if (window.playfabAuth.method === "LoginWithAndroidDeviceID") {
+            await playfabPromisify(PlayFabClient.LinkAndroidDeviceID)({
+                ...window.playfabAuth.payload,
+                ForceLink: true
+            })
+            cache.setDeviceId(window.playfabAuth.payload.AndroidDeviceId)
+        }
+    }
+
+    isLoggedIn = true
+
+    return playfabUserId
+}
+
+const loginRequest = (): PlayFabClientModels.LoginWithCustomIDRequest => {
+    return {
         TitleId: titleId,
         CreateAccount: true,
         InfoRequestParameters: {
@@ -48,67 +159,6 @@ export const login = () => {
             GetUserVirtualCurrency: false
         }
     }
-
-    let customAuth = (window as any).playfabAuth
-
-    if (customAuth && customAuth.method === "LoginWithIOSDeviceID") {
-        method = PlayFabClient.LoginWithIOSDeviceID
-        loginRequest = { ...loginRequest, ...customAuth.payload }
-    } else if (customAuth && customAuth.method === "LoginWithAndroidDeviceID") {
-        method = PlayFabClient.LoginWithAndroidDeviceID
-        loginRequest = { ...loginRequest, ...customAuth.payload }
-    }
-
-    if (method === PlayFabClient.LoginWithCustomID) {
-        loginRequest.CustomId = cache.getUUID(titleId)
-    }
-
-    loginPromise = playfabPromisify(method)(loginRequest).then(
-        (result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
-            console.log(result)
-
-            // Grab the data from the server and shove it in the user object
-            // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
-            const payload = result.data.InfoResultPayload
-            if (payload) {
-                let settings: Partial<UserSettings> = {}
-                if (payload.PlayerProfile) {
-                    settings.name = payload.PlayerProfile.DisplayName
-                    settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
-                }
-
-                if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
-                    const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
-                    syncedSettingsKeys.forEach(key => {
-                        if (!_.isUndefined(storedSettings[key])) {
-                            ;(settings as any)[key] = storedSettings[key]
-                        }
-                    })
-                }
-
-                if (payload.UserInventory) {
-                    settings.unlockedAttire = payload.UserInventory.map(i => i.ItemId!)
-                }
-
-                changeSettings(settings)
-            }
-
-            playfabUserId = result.data.PlayFabId
-            if (playfabUserId) {
-                localStorage.setItem("playfabId", playfabUserId)
-            }
-
-            console.log("Setting user id", playfabUserId)
-
-            if (result.data.EntityToken) {
-                playfabEntityKey = result.data.EntityToken.Entity
-            }
-
-            isLoggedIn = true
-
-            return playfabUserId
-        }
-    )
 }
 
 export const updateName = async (
