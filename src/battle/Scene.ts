@@ -53,11 +53,11 @@ const devSettings = {
     // Turn off for release builds
     developer: constants.isInDevMode,
     // Allows flying through pipes
-    skipPipeCollision: true,
+    skipPipeCollision: false,
     // Allows falling off the bottom
     skipBottomCollision: false,
     // Show bounding boxes for physics objs
-    debugPhysics: true,
+    debugPhysics: false,
     // Lets you easily hide all UI elements
     showUI: true,
     // Lets you load all attire in
@@ -439,7 +439,7 @@ export class BattleScene extends Phaser.Scene {
             this.highScoreLabel.setDepth(constants.zLevels.ui)
 
             const settings = getUserSettings()
-            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 12 + constants.NotchOffset, {
+            this.highScoreIcon = new BirdSprite(this, constants.GameWidth - 20, 7 + constants.NotchOffset, {
                 isPlayer: false,
                 settings: settings
             })

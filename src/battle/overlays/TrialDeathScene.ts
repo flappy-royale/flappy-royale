@@ -4,7 +4,6 @@ import { launchMainMenu } from "../../menus/MainMenuScene"
 import { BattleScene, getNumberWithOrdinal } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
 import {
-    getRoyales,
     livesExtensionStateForSeed,
     livesExtensionsButtonTitleForState,
     LifeStateForSeed,
@@ -183,7 +182,7 @@ export class TrialDeath extends Phaser.Scene {
         circle.setScale(1.6, 1.6)
 
         const settings = getUserSettings()
-        const bird = new BirdSprite(this, 33, top + 18, { isPlayer: false, isImage: true, settings: settings })
+        new BirdSprite(this, 33, top + 18, { isPlayer: false, isImage: true, settings: settings })
 
         // 1st of x
         this.add.bitmapText(10, top + 20, "fipps-bit-black", "1st", 24)
@@ -284,7 +283,7 @@ export class TrialDeath extends Phaser.Scene {
 
         // white circle for your bird + pos
         this.add.image(80, top + 70 + yOffset, "white-sash")
-        const circle = this.add.image(48, top + 70 + yOffset, "white-circle")
+        const circle = this.add.image(56, top + 70 + yOffset, "white-circle")
         circle.setScale(0.8, 0.8)
 
         if (results[3]) {
@@ -321,7 +320,7 @@ export class TrialDeath extends Phaser.Scene {
 
         // TODO: Generate birdSprite UserSettings from leaderboard
         const leaderboardBird: Bird = { name: data.name, aesthetics: { attire: data.attire } }
-        const bird = new BirdSprite(this, offset, config.y, {
+        const bird = new BirdSprite(this, offset - 2, config.y - 6, {
             isPlayer: false,
             isImage: true,
             settings: leaderboardBird
