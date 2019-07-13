@@ -126,7 +126,7 @@ export class FlappyGame extends Phaser.Game {
 // The normal game flow
 
 export const loadUpIntoTraining = async (game: FlappyGame, settings: { offline: boolean; mode: GameMode }) => {
-    let seed = "0-royale-1"
+    let seed = "1-royale-1"
     let data = emptySeedData
 
     if (!settings.offline) {
@@ -331,9 +331,14 @@ window.onload = async () => {
         }, 1000)
         return
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Change this to have it load up into a different screen on save in dev mode
     const startupScreen = StartupScreen.MainMenu as StartupScreen
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (PRODUCTION) {
         if (localStorage.getItem("skipLaunchScreen") === "true") {

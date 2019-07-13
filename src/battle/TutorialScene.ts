@@ -187,8 +187,7 @@ export class TutorialScene extends Phaser.Scene {
             birdConfig
         )
 
-        this.bird.sprite.setGravityY(-constants.gravity)
-        this.bird.sprite.setAccelerationX(20)
+        this.bird.setupForTutorialBus()
 
         this.bird.addCollideForSprite(this, this.floorPhysics)
 
@@ -248,8 +247,7 @@ export class TutorialScene extends Phaser.Scene {
                 this.bus.setAccelerationX(0)
                 this.bus.setVelocityX(0)
 
-                this.bird.sprite.setAccelerationX(0)
-                this.bird.sprite.setVelocityX(0)
+                this.bird.pauseInTutorialBus()
             }
 
             // Flap if appropriate
