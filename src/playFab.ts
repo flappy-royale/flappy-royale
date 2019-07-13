@@ -39,9 +39,7 @@ export const login = async () => {
                     await playfabPromisify(PlayFabClient.LoginWithIOSDeviceID)({
                         ...loginRequest(),
                         ...customAuth.payload
-                    })
-
-                    cache.setDeviceId(customAuth.payload.DeviceId)
+                    }).then(handleLoginResponse)
 
                     await playfabPromisify(PlayFabClient.LinkCustomID)({
                         CustomId: cache.getUUID(),
@@ -53,9 +51,7 @@ export const login = async () => {
                     await playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
                         ...loginRequest(),
                         ...customAuth.payload
-                    })
-
-                    cache.setDeviceId(customAuth.payload.AndroidDeviceId)
+                    }).then(handleLoginResponse)
 
                     await playfabPromisify(PlayFabClient.LinkCustomID)({
                         CustomId: cache.getUUID(),
