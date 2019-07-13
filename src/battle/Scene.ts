@@ -32,7 +32,7 @@ import { TrialDeath } from "./overlays/TrialDeathScene"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
-import * as PlayFab from "../playfab"
+import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
 import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from "../gameSettings"
 

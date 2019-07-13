@@ -14,7 +14,7 @@ import {
     getSyncedUserSettings,
     UserSettings
 } from "../user/userManager"
-import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
+import { preloadBackgroundBlobImages } from "./utils/backgroundColors"
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
 import { defer } from "lodash"
@@ -27,8 +27,6 @@ import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
-import { NewEggFoundScene, NewEggFoundSceneKey } from "./NewEggFoundScene"
-import { defaultAttireSet } from "../attire/defaultAttire"
 
 declare const DEMO: boolean
 
@@ -128,6 +126,7 @@ export class MainMenuScene extends Phaser.Scene {
         // NOTE: ASYNC!
         getSeeds(c.APIVersion).then(seeds => {
             if (seeds) this.seeds = seeds
+            else console.log("!!!")
         })
 
         const settings = getUserSettings()
@@ -251,6 +250,8 @@ export class MainMenuScene extends Phaser.Scene {
             const seed = this.seeds.daily.production
             const lobby = new TrialLobby({ seed })
             addScene(this.game, "TrialLobby" + seed, lobby, true, {})
+        } else {
+            console.log("Not got seeds")
         }
     }
 
@@ -261,6 +262,8 @@ export class MainMenuScene extends Phaser.Scene {
             const seed = this.seeds.royale[index]
             const lobby = new RoyaleLobby({ seed })
             addScene(this.game, "RoyaleLobby" + seed, lobby, true, {})
+        } else {
+            console.log("Not got seeds")
         }
     }
 
