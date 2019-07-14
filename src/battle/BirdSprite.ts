@@ -238,11 +238,7 @@ export class BirdSprite {
     }
 
     setOpacity(opacity: number) {
-        this.baseSprite.setAlpha(opacity)
         this.container.setAlpha(opacity)
-
-        const allAttire = this.tightAttire.concat(this.looseAttire)
-        allAttire.forEach(a => a.setAlpha(opacity))
     }
 
     setScale(scale: number) {
