@@ -42,6 +42,24 @@ if (!PRODUCTION) {
 
 if (PRODUCTION) {
     appCache.configure()
+
+    appCache.onDownloadProgress((percent: number) => {
+        // onDownloadEnd isn't 100% reliable
+        // so this is a backup, where it'll call it with a bit of a delay
+        // https://github.com/lazerwalker/flappy-royale/issues/102
+        if (percent === 1) {
+            setTimeout(() => {
+                localStorage.setItem("skipLaunchScreen", "true")
+                window.location.reload()
+            }, 300)
+        }
+    })
+
+    appCache.onDownloadEnd(() => {
+        localStorage.setItem("skipLaunchScreen", "true")
+        window.location.reload()
+    })
+
     setupSentry()
 
     if (currentPlatform === "web") {
