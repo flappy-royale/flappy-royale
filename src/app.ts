@@ -397,4 +397,3 @@ window.onload = async () => {
         // testTrialDeathScreen(game, 7)
     }
 }
-// updateAllAttireCatalogue()
