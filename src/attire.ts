@@ -1,7 +1,7 @@
 // Careful now! Please don't import the game code into this module
 // so that site's webpack run only imports our code
 
-export type LootboxTiers = -1 | 0 | 1 | 2 | 3
+export type LootboxTier = -1 | 0 | 1 | 2 | 3
 
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {
@@ -15,7 +15,7 @@ export interface PresentationAttire extends Attire {
      *  2 = common
      *  3 = everywhere
      */
-    tier: LootboxTiers
+    tier: LootboxTier
 }
 
 export interface Attire {

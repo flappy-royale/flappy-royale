@@ -6,6 +6,9 @@ import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from 
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
 import { PlayFabServer } from "playfab-sdk"
+import { lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
+import { LootboxTier } from "../../src/attire"
+import { getItemFromLootBoxStartingWith } from "./getItemFromLootBox"
 
 const cors = require("cors")({
     origin: true
@@ -312,11 +315,12 @@ export const openLootBox = functions.https.onRequest(async (request, response) =
         if (!inventory) {
             return response.status(400).send({ error: "Could not fetch inventory for player" })
         }
-        const inventoryIds = inventory.map(i => i.ItemId)
+        const inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
 
         const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
             TableIDs: [dropTableName]
         })
+
         if (!lootTables.data.Tables) {
             return response.status(400).send({ error: "Could not fetch drop tables" })
         }
@@ -326,30 +330,25 @@ export const openLootBox = functions.https.onRequest(async (request, response) =
             return response.status(400).send({ error: `Could not fetch drop table '${dropTableName}'` })
         }
 
-        // Remove all items the player already has
-        // TODO: If the player already has all these items, we probably want to draw from a different table?
-        const nodes = table.Nodes.filter(n => !_.includes(inventoryIds, n.ResultItem))
+        const currentTier = Object.keys(lookupBoxesForTiers).find(
+            k => lookupBoxesForTiers[(k as any) as LootboxTier] === dropTableName
+        )
 
-        // Get total number to draw from
-        const rngMax = _.sumBy(nodes, "Weight")
-
-        const resultNumber = _.random(rngMax - 1)
-
-        let count = 0
-        let rewardedItem: PlayFabServerModels.ResultTableNode | undefined = undefined
-        for (const node of nodes) {
-            if (resultNumber <= count) {
-                rewardedItem = node
-                break
-            }
-            count += node.Weight
+        if (!currentTier) {
+            return response.status(400).send({ error: `Could not fetch find a tier for '${dropTableName}'` })
         }
+
+        const rewardedItem = getItemFromLootBoxStartingWith(
+            parseInt(currentTier) as any,
+            Object.values(lootTables.data.Tables),
+            inventoryIds
+        )
 
         if (!rewardedItem) {
-            return response.status(400).send({ error: "Could not find item" })
+            // You've unlocked them all.
+            return response.status(204).send({ item: null })
         }
 
-        // TODO: This needs to recurse if node.ResultItemType is another table
         await playfabPromisify(PlayFabServer.GrantItemsToUser)({
             Annotation: "Loot box",
             PlayFabId: playfabId,

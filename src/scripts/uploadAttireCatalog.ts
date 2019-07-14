@@ -1,4 +1,4 @@
-import { PresentationAttire, LootboxTiers } from "../attire"
+import { PresentationAttire, LootboxTier } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
 import { titleId, lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
@@ -59,7 +59,7 @@ const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingMode
     }
 }
 
-const createTieredLootBox = async (tier: LootboxTiers, allAttire: PresentationAttire[]) => {
+const createTieredLootBox = async (tier: LootboxTier, allAttire: PresentationAttire[]) => {
     const id = lookupBoxesForTiers[tier]
     await await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
         Tables: [
@@ -84,7 +84,7 @@ const setEntireAttire = async (items: PresentationAttire[]) => {
     })
 }
 
-const emptyAttireLootbox = async (tier: LootboxTiers) => {
+const emptyAttireLootbox = async (tier: LootboxTier) => {
     const id = lookupBoxesForTiers[tier]
     await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
         Tables: [{ Nodes: [{ ResultItem: hedgehog.id, ResultItemType: "ItemId", Weight: 10 }], TableId: id }]
