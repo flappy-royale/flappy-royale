@@ -1,11 +1,21 @@
 // Careful now! Please don't import the game code into this module
 // so that site's webpack run only imports our code
 
+export type LootboxTier = -1 | 0 | 1 | 2 | 3
+
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {
     name?: string
     description: string
     free: boolean
+    /**
+     * -1 = built in
+     *  0 = s-tier
+     *  1 = rare
+     *  2 = common
+     *  3 = everywhere
+     */
+    tier: LootboxTier
 }
 
 export interface Attire {
@@ -25,7 +35,8 @@ export const hedgehog: PresentationAttire = {
     fit: "tight",
     base: true,
     href: require("../assets/bases/default/Hedgehog.png"),
-    free: true
+    free: true,
+    tier: -1
 }
 
 export const dog: PresentationAttire = {
@@ -34,7 +45,8 @@ export const dog: PresentationAttire = {
     fit: "tight",
     base: true,
     href: require("../assets/bases/default/Dog1.png"),
-    free: true
+    free: true,
+    tier: -1
 }
 
 export const sheep: PresentationAttire = {
@@ -43,7 +55,8 @@ export const sheep: PresentationAttire = {
     fit: "tight",
     base: true,
     href: require("../assets/bases/default/Sheep.png"),
-    free: true
+    free: true,
+    tier: -1
 }
 
 export const defaultAttire = hedgehog

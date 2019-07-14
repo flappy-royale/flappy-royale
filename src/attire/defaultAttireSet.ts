@@ -7,7 +7,8 @@ export const hedgehog: PresentationAttire = {
     fit: "tight",
     base: true,
     href: require("../../assets/bases/default/Hedgehog.png"),
-    free: true
+    free: true,
+    tier: -1
 }
 
 export const dog: PresentationAttire = {
@@ -16,7 +17,8 @@ export const dog: PresentationAttire = {
     fit: "tight",
     base: true,
     href: require("../../assets/bases/default/Dog1.png"),
-    free: true
+    free: true,
+    tier: -1
 }
 
 export const sheep: PresentationAttire = {
@@ -25,7 +27,8 @@ export const sheep: PresentationAttire = {
     fit: "tight",
     base: true,
     href: require("../../assets/bases/default/Sheep.png"),
-    free: true
+    free: true,
+    tier: -1
 }
 
 export const defaultAttireSet: AttireSet = {
@@ -44,7 +47,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Turtle.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "banana",
@@ -52,7 +56,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Banana.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         dog,
         {
@@ -61,7 +66,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/BirdBody.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "flat-cap1",
@@ -69,7 +75,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/FlatCap.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "crown1",
@@ -77,7 +84,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/Crown1.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "crown2",
@@ -85,7 +93,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/Crown2.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "baseball-1",
@@ -93,7 +102,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/Baseball-Whiteblue.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "bobble-1",
@@ -101,7 +111,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/BobbleHat.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "sunnies-1",
@@ -109,7 +120,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/Sunnies.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "tophat-1",
@@ -117,7 +129,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/TopHat.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "straw-1",
@@ -125,7 +138,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "loose",
             base: false,
             href: require("../../assets/attire/default/SummerHat.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "mohawk-1",
@@ -133,7 +147,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/Mohawk.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "bandana1",
@@ -141,7 +156,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/bad-dana.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "zen",
@@ -149,7 +165,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/zen.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "nervous",
@@ -157,7 +174,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/nervous.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "nimbus",
@@ -165,7 +183,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Nimbus.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "tired",
@@ -173,7 +192,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/tired.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "paranoid",
@@ -181,7 +201,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/Paranoid.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "halo",
@@ -189,7 +210,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/halo.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "big-mouth",
@@ -197,7 +219,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/bigmouth.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "drool",
@@ -205,7 +228,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/drool.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "tiny-eye",
@@ -213,7 +237,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Tiny_eyes.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "ghost",
@@ -221,7 +246,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Ghost.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "fantasy",
@@ -229,7 +255,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Fantasy.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "sheep",
@@ -237,7 +264,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Sheep.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "pug",
@@ -245,7 +273,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Pug.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "robin",
@@ -253,7 +282,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Robin.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "mallard-duck",
@@ -261,7 +291,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Duck.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "white-rabbit",
@@ -269,7 +300,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/WhiteRabbit.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "rocket",
@@ -277,7 +309,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/Rocket.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "dm-fox",
@@ -285,7 +318,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/default/DMFox.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "flag_trans",
@@ -293,7 +327,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/Flag_Trans.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "pride_hunter",
@@ -301,7 +336,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/Pride_Hunter.png"),
-            free: true
+            free: true,
+            tier: -1
         },
         {
             id: "finish_flag",
@@ -309,7 +345,8 @@ export const defaultAttireSet: AttireSet = {
             fit: "tight",
             base: false,
             href: require("../../assets/attire/default/Finish_Flag.png"),
-            free: true
+            free: true,
+            tier: -1
         }
     ]
 }

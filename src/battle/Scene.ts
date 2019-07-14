@@ -73,7 +73,7 @@ export class BattleScene extends Phaser.Scene {
     /** Your sprite, or if behind the main menu - not set up for this game mode */
     private bird: BirdSprite | undefined
 
-    /** opponent */
+    /** Opponent */
     private ghostBirds: BirdSprite[] = []
 
     /** Every pipe is a set of physics objects */
