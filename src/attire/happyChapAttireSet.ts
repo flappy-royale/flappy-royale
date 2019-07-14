@@ -18,6 +18,14 @@ export const happyChapAttireSet: AttireSet = {
             free: false
         },
         {
+            id: "happy-chap-cthulu_bird",
+            description: "TBD",
+            fit: "tight",
+            base: true,
+            href: require("../../assets/bases/happy-chap/Cthulu_Bird.png"),
+            free: false
+        },
+        {
             id: "happy-chap-baby_chick",
             description: "TBD",
             fit: "tight",
@@ -95,14 +103,6 @@ export const happyChapAttireSet: AttireSet = {
             fit: "tight",
             base: true,
             href: require("../../assets/bases/happy-chap/Cooked.png"),
-            free: false
-        },
-        {
-            id: "happy-chap-cthulu_bird",
-            description: "TBD",
-            fit: "tight",
-            base: true,
-            href: require("../../assets/bases/happy-chap/Cthulu_Bird.png"),
             free: false
         },
         {
@@ -625,11 +625,12 @@ export const happyChapAttireSet: AttireSet = {
             href: require("../../assets/bases/happy-chap/toaster.png"),
             free: false
         },
+
         {
             id: "happy-chap-2_eye_shades",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/2_Eye_Shades.png"),
             free: false
         },
@@ -637,7 +638,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-bandit_mask",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Bandit_Mask.png"),
             free: false
         },
@@ -645,7 +646,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-beard_disguise",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Beard_Disguise.png"),
             free: false
         },
@@ -653,7 +654,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-blue_mask",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Blue_Mask.png"),
             free: false
         },
@@ -661,7 +662,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-bowler_hat",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Bowler_Hat.png"),
             free: false
         },
@@ -669,7 +670,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-brolly_2",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Brolly 2.png"),
             free: false
         },
@@ -677,7 +678,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-brolly_3",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Brolly 3.png"),
             free: false
         },
@@ -685,7 +686,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-brolly",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Brolly.png"),
             free: false
         },
@@ -693,7 +694,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-chicken_hair",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Chicken_Hair.png"),
             free: false
         },
@@ -701,23 +702,15 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-crown",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Crown.png"),
-            free: false
-        },
-        {
-            id: "happy-chap-cthulu_bird",
-            description: "TBD",
-            fit: "tight",
-            base: true,
-            href: require("../../assets/attire/happy-chap/Cthulu_Bird.png"),
             free: false
         },
         {
             id: "happy-chap-deep_blue_mask",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Deep_Blue_Mask.png"),
             free: false
         },
@@ -725,7 +718,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-disguise",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Disguise.png"),
             free: false
         },
@@ -733,7 +726,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-face_scar",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Face_Scar.png"),
             free: false
         },
@@ -741,7 +734,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-flame_aura",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Flame_Aura.png"),
             free: false
         },
@@ -749,7 +742,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-great_hair",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Great_Hair.png"),
             free: false
         },
@@ -757,7 +750,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-green_mask",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Green_Mask.png"),
             free: false
         },
@@ -765,7 +758,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-holiday_hat",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Holiday_Hat.png"),
             free: false
         },
@@ -773,7 +766,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-magic_hat",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Magic_Hat.png"),
             free: false
         },
@@ -781,7 +774,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-mask",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Mask.png"),
             free: false
         },
@@ -789,7 +782,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-meat_leg",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Meat_Leg.png"),
             free: false
         },
@@ -797,7 +790,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-mustachio_",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Mustachio_.png"),
             free: false
         },
@@ -805,7 +798,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-one_eye_shades",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/One_Eye_Shades.png"),
             free: false
         },
@@ -813,7 +806,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-open_beak",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Open_Beak.png"),
             free: false
         },
@@ -821,7 +814,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-pixel_spangled_banner",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Pixel_Spangled_Banner.png"),
             free: false
         },
@@ -829,7 +822,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rabbit_ears",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rabbit_Ears.png"),
             free: false
         },
@@ -837,7 +830,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainbow_bird_2",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainbow_Bird 2.png"),
             free: false
         },
@@ -845,7 +838,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainbow_bird_3",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainbow_Bird 3.png"),
             free: false
         },
@@ -853,7 +846,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainbow_bird_4",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainbow_Bird 4.png"),
             free: false
         },
@@ -861,7 +854,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainbow_bird_5",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainbow_Bird 5.png"),
             free: false
         },
@@ -869,7 +862,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainbow_bird",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainbow_Bird.png"),
             free: false
         },
@@ -877,7 +870,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainbrolly",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainbrolly.png"),
             free: false
         },
@@ -885,7 +878,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-rainfro_",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Rainfro_.png"),
             free: false
         },
@@ -893,7 +886,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-sentient_baseball_cap",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Sentient_Baseball_Cap.png"),
             free: false
         },
@@ -901,7 +894,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-sik_hat",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Sik_Hat.png"),
             free: false
         },
@@ -909,7 +902,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-sparkle_aura",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Sparkle_Aura.png"),
             free: false
         },
@@ -917,7 +910,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-stilts",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Stilts.png"),
             free: false
         },
@@ -925,7 +918,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-unicorn_horn",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Unicorn_Horn.png"),
             free: false
         },
@@ -933,7 +926,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-war_spoon",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/War_Spoon.png"),
             free: false
         },
@@ -941,7 +934,7 @@ export const happyChapAttireSet: AttireSet = {
             id: "happy-chap-yellow_mask",
             description: "TBD",
             fit: "tight",
-            base: true,
+            base: false,
             href: require("../../assets/attire/happy-chap/Yellow_Mask.png"),
             free: false
         }

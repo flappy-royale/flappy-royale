@@ -44,6 +44,7 @@ const attireToStoreItem = (attire: PresentationAttire): PlayFabAdminModels.Store
         }
     }
 }
+
 const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingModel => {
     return {
         DisplayName: set.name,
@@ -58,16 +59,18 @@ const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingMode
 }
 
 const setEntireAttire = async (items: PresentationAttire[]) => {
+    const catalogue = items.map(attireToCatalogItem)
     return await playfabPromisify(PlayFabAdmin.SetCatalogItems)({
-        Catalog: items.map(attireToCatalogItem)
+        Catalog: catalogue
     })
 }
 
 export const setAttireSets = async (sets: AttireSet[]) => {
-    const allAttire = _.flatten(sets.map(s => s.attire))
+    const allAttire = _.uniq(_.flatten(sets.map(s => s.attire)))
+
     await setEntireAttire(allAttire)
 
-    // These need to be serial, not parallel, or PlayFab will yell at us.
+    // These need to be serial, not parallel, or PlayFab wil`l yell at us.
     for (let set of sets) {
         await playfabPromisify(PlayFabAdmin.SetStoreItems)({
             StoreId: set.id,
@@ -81,7 +84,7 @@ export const setAttireSets = async (sets: AttireSet[]) => {
 // For now, I just go into app.ts and shove this call into the critical path.
 // Could/should eventually make an admin page, but I can't be bothered right now.
 // If we do, we want to make *sure* none of this code gets bundled into a production build,
-// since it includes our deveoper secret key
+// since it includes our developer secret key
 export const setAllAttireSets = async () => {
     setAttireSets(allAttireSets)
 }
