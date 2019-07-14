@@ -413,7 +413,7 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/pig.png"),
             free: false,
-            tier: 1
+            tier: 0
         },
         {
             id: "danger-racoon",

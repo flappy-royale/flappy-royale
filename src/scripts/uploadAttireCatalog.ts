@@ -1,7 +1,7 @@
-import { PresentationAttire } from "../attire"
+import { PresentationAttire, LootboxTiers } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
-import { titleId } from "../../assets/config/playfabConfig"
+import { titleId, lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
 import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import _ = require("lodash")
@@ -59,21 +59,22 @@ const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingMode
     }
 }
 
-const attireSetLootBoxTable = (set: AttireSet): PlayFabAdminModels.RandomResultTable => {
-    const weightMap = {
-        "-1": 0,
-        1: 30,
-        2: 50,
-        3: 70
-    }
-    return {
-        Nodes: set.attire.map(a => ({
-            ResultItem: a.id,
-            ResultItemType: "ItemId",
-            Weight: weightMap[a.tier]
-        })),
-        TableId: set.id + "-loot"
-    }
+const createTieredLootBox = async (tier: LootboxTiers, allAttire: PresentationAttire[]) => {
+    const id = lookupBoxesForTiers[tier]
+    await await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
+        Tables: [
+            {
+                TableId: id,
+                Nodes: allAttire
+                    .filter(a => a.tier === tier)
+                    .map(a => ({
+                        ResultItem: a.id,
+                        ResultItemType: "ItemId",
+                        Weight: 10
+                    }))
+            }
+        ]
+    })
 }
 
 const setEntireAttire = async (items: PresentationAttire[]) => {
@@ -83,29 +84,22 @@ const setEntireAttire = async (items: PresentationAttire[]) => {
     })
 }
 
+const emptyAttireLootbox = async (tier: LootboxTiers) => {
+    const id = lookupBoxesForTiers[tier]
+    await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
+        Tables: [{ Nodes: [{ ResultItem: hedgehog.id, ResultItemType: "ItemId", Weight: 10 }], TableId: id }]
+    })
+}
+
 export const setAttireSets = async (sets: AttireSet[]) => {
-    for (let set of sets) {
-        if (set.id !== defaultAttireSet.id) {
-            await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
-                Tables: [
-                    {
-                        Nodes: [
-                            {
-                                ResultItem: hedgehog.id,
-                                ResultItemType: "ItemId",
-                                Weight: 100
-                            }
-                        ],
-                        TableId: set.id + "-loot"
-                    }
-                ]
-            })
-        }
+    const allAttire = _.uniq(_.flatten(sets.map(s => s.attire)))
+
+    // Briefly empty the lootboxes so we can make changes
+    for (let tier of lootboxTiers) {
+        await emptyAttireLootbox(tier)
     }
 
-    const allAttire = _.uniq(_.flatten(sets.map(s => s.attire)))
     await setEntireAttire(allAttire)
-
     // These need to be serial, not parallel, or PlayFab will yell at us.
     // Note - sometimes it will yell anyway, re-run and it'll probably work.
     for (let set of sets) {
@@ -114,12 +108,11 @@ export const setAttireSets = async (sets: AttireSet[]) => {
             Store: set.attire.map(attireToStoreItem),
             MarketingData: attireSetToStore(set)
         })
+    }
 
-        if (set.id !== defaultAttireSet.id) {
-            await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
-                Tables: [attireSetLootBoxTable(set)]
-            })
-        }
+    // Upload the new lootboxen
+    for (let tier of lootboxTiers) {
+        await createTieredLootBox(tier, allAttire)
     }
 }
 
