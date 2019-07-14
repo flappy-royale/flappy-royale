@@ -17,7 +17,8 @@ const imgToJSON = (name: string, set: string, base: boolean) => {
     fit: "tight",
     base: ${base ? "true" : "false"},
     href: require("../../${set}/${name}"),
-    free: false
+    free: false,
+tier: 3
 }`
 }
 

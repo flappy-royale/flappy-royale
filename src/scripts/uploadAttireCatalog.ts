@@ -5,6 +5,7 @@ import { titleId } from "../../assets/config/playfabConfig"
 import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import _ = require("lodash")
+import { defaultAttireSet } from "../attire/defaultAttireSet"
 
 PlayFabAdmin.settings.developerSecretKey = playfabFirebaseProdSecretKey
 PlayFabAdmin.settings.titleId = titleId
@@ -19,7 +20,7 @@ const attireToCatalogItem = (item: PresentationAttire): PlayFabAdminModels.Catal
 
     return {
         ItemId: item.id,
-        ItemImageUrl: item.href,
+        ItemImageUrl: item.href, // This isn't used in-game anywhere
         Tags: tags,
         Description: item.description,
         ItemClass: itemClass,
@@ -58,6 +59,23 @@ const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingMode
     }
 }
 
+const attireSetLootBoxTable = (set: AttireSet): PlayFabAdminModels.RandomResultTable => {
+    const weightMap = {
+        "-1": 0,
+        1: 70,
+        2: 50,
+        3: 30
+    }
+    return {
+        Nodes: set.attire.map(a => ({
+            ResultItem: a.id,
+            ResultItemType: "ItemId",
+            Weight: weightMap[a.tier]
+        })),
+        TableId: set.id + "-loot"
+    }
+}
+
 const setEntireAttire = async (items: PresentationAttire[]) => {
     const catalogue = items.map(attireToCatalogItem)
     return await playfabPromisify(PlayFabAdmin.SetCatalogItems)({
@@ -70,13 +88,20 @@ export const setAttireSets = async (sets: AttireSet[]) => {
 
     await setEntireAttire(allAttire)
 
-    // These need to be serial, not parallel, or PlayFab wil`l yell at us.
+    // These need to be serial, not parallel, or PlayFab will yell at us.
+    // Note - sometimes it will yell anyway, re-run and it'll probably work.
     for (let set of sets) {
         await playfabPromisify(PlayFabAdmin.SetStoreItems)({
             StoreId: set.id,
             Store: set.attire.map(attireToStoreItem),
             MarketingData: attireSetToStore(set)
         })
+
+        if (set.id !== defaultAttireSet.id) {
+            await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
+                Tables: [attireSetLootBoxTable(set)]
+            })
+        }
     }
 }
 
@@ -85,6 +110,6 @@ export const setAttireSets = async (sets: AttireSet[]) => {
 // Could/should eventually make an admin page, but I can't be bothered right now.
 // If we do, we want to make *sure* none of this code gets bundled into a production build,
 // since it includes our developer secret key
-export const setAllAttireSets = async () => {
+export const updateAllAttireCatalogue = async () => {
     setAttireSets(allAttireSets)
 }

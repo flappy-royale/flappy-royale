@@ -9,6 +9,10 @@ if (!appTS.includes("const startupScreen = StartupScreen.MainMenu")) {
     throw "The app is not set up to launch into the Main Menu"
 }
 
+if (appTS.includes("updateAllAttireCatalogue")) {
+    throw "The src/app.ts should never include updateAllAttireCatalogue() "
+}
+
 // Ensures we ship submodules
 const subm = execSync("git submodule status", { encoding: "utf8" }).split(" ")
 if (subm.length === 4) {

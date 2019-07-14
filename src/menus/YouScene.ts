@@ -96,7 +96,6 @@ export class YouScene extends Phaser.Scene {
          * corresponding to attire is selected or not
          */
         const updateWearables = () => {
-            console.log("---------------")
             const basesRoot = document.getElementById("current-set-clickables")!
             for (const element of basesRoot.getElementsByTagName("li")) {
                 const id = element.id
@@ -251,6 +250,8 @@ export class YouScene extends Phaser.Scene {
         // Sets up the attires
 
         const setupForAttireSet = (set: AttireSet) => {
+            this.currentAttireSet = set
+
             const bg = document.getElementsByClassName("screen").item(0)!
             const bgElement = bg as HTMLElement
             bgElement.style.backgroundColor = set.lightHexColor
