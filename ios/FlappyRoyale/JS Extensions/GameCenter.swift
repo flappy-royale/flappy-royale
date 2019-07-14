@@ -12,6 +12,7 @@ import WebKit
 
 struct GameCenterAuthData {
     let playerID: String
+    let name: String
     let url: String
     let salt: String
     let signature: String
@@ -52,9 +53,9 @@ class GameCenterAuth : NSObject, WebViewInteropProvider {
 
         self.waitingOnData = false
 
-        print("window.gameCenter = {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }")
-        webView.evaluateJavaScript("window.dispatchEvent(new CustomEvent('gameCenterLogin', { detail: {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }}))", completionHandler: nil)
-        webView.evaluateJavaScript("window.gameCenter = {playerID: '\(data.playerID)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }", completionHandler: nil)
+        print("window.gameCenter = {playerID: '\(data.playerID)', name: '\(data.name)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }")
+        webView.evaluateJavaScript("window.dispatchEvent(new CustomEvent('gameCenterLogin', { detail: {playerID: '\(data.playerID)', name: '\(data.name)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }}))", completionHandler: nil)
+        webView.evaluateJavaScript("window.gameCenter = {playerID: '\(data.playerID)', name: '\(data.name)', url: '\(data.url)', salt: '\(data.salt)', signature: '\(data.signature)', timestamp: \(data.timestamp) }", completionHandler: nil)
     }
 
     func auth() {
@@ -80,7 +81,10 @@ class GameCenterAuth : NSObject, WebViewInteropProvider {
                             let saltString = salt.base64EncodedString()
                             let signatureString = signature.base64EncodedString()
 
-                            self.authData = GameCenterAuthData(playerID: player.playerID, url: urlString, salt: saltString, signature: signatureString, timestamp: timestamp)
+                            // Fun fact: player.displayName is "Me" if you're looking at yourself. "Alias" gives us the actual name.
+                            let name = player.alias
+
+                            self.authData = GameCenterAuthData(playerID: player.playerID, name: name, url: urlString, salt: saltString, signature: signatureString, timestamp: timestamp)
                             self.loginWasValid = true
                         } else {
                             self.loginWasValid = false
