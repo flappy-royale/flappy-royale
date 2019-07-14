@@ -5,7 +5,7 @@ import { titleId } from "../../assets/config/playfabConfig"
 import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import _ = require("lodash")
-import { defaultAttireSet } from "../attire/defaultAttireSet"
+import { defaultAttireSet, hedgehog } from "../attire/defaultAttireSet"
 
 PlayFabAdmin.settings.developerSecretKey = playfabFirebaseProdSecretKey
 PlayFabAdmin.settings.titleId = titleId
@@ -62,9 +62,9 @@ const attireSetToStore = (set: AttireSet): PlayFabAdminModels.StoreMarketingMode
 const attireSetLootBoxTable = (set: AttireSet): PlayFabAdminModels.RandomResultTable => {
     const weightMap = {
         "-1": 0,
-        1: 70,
+        1: 30,
         2: 50,
-        3: 30
+        3: 70
     }
     return {
         Nodes: set.attire.map(a => ({
@@ -84,8 +84,26 @@ const setEntireAttire = async (items: PresentationAttire[]) => {
 }
 
 export const setAttireSets = async (sets: AttireSet[]) => {
-    const allAttire = _.uniq(_.flatten(sets.map(s => s.attire)))
+    for (let set of sets) {
+        if (set.id !== defaultAttireSet.id) {
+            await playfabPromisify(PlayFabAdmin.UpdateRandomResultTables)({
+                Tables: [
+                    {
+                        Nodes: [
+                            {
+                                ResultItem: hedgehog.id,
+                                ResultItemType: "ItemId",
+                                Weight: 100
+                            }
+                        ],
+                        TableId: set.id + "-loot"
+                    }
+                ]
+            })
+        }
+    }
 
+    const allAttire = _.uniq(_.flatten(sets.map(s => s.attire)))
     await setEntireAttire(allAttire)
 
     // These need to be serial, not parallel, or PlayFab will yell at us.

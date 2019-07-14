@@ -8,9 +8,9 @@ export interface PresentationAttire extends Attire {
     free: boolean
     /**
      * -1 = built in
-     *  1 = common
+     *  1 = s-tier
      *  2 = rare
-     *  3 = s-tier
+     *  3 = common
      */
     tier: -1 | 1 | 2 | 3
 }
