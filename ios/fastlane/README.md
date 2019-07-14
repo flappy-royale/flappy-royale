@@ -26,6 +26,16 @@ Push a new beta build to TestFlight
 fastlane ios appstore
 ```
 Submit a new build and metadata to the App Store
+### ios add_device
+```
+fastlane ios add_device
+```
+
+### ios refresh_profiles
+```
+fastlane ios refresh_profiles
+```
+
 
 ----
 

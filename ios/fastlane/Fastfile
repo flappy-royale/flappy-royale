@@ -37,4 +37,21 @@ platform :ios do
     build_app(workspace: "FlappyRoyale.xcworkspace", scheme: "FlappyRoyale")
     upload_to_app_store
   end
+
+  lane :add_device do
+    device_name = prompt(text: "Enter the device name: ")
+    device_udid = prompt(text: "Enter the device UDID: ")
+    device_hash = {}
+    device_hash[device_name] = device_udid
+    register_devices(
+      devices: device_hash
+    )
+    refresh_profiles
+  end
+
+  lane :refresh_profiles do
+    match(
+      force_for_new_devices: true
+  )
+  end
 end
