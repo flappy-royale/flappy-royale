@@ -14,8 +14,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
 
         registerForPushNotifs()
-        
+
+        let notificationOption = launchOptions?[.remoteNotification]
+        if let notification = notificationOption as? [String: AnyObject],
+            let aps = notification["aps"] as? [String: AnyObject] {
+
+            // Launched via push notif!
+            (window?.rootViewController as? ViewController)?.pushNotifs.receivedNotification(aps)
+        }
+
         return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler:
+        @escaping (UIBackgroundFetchResult) -> Void
+        ) {
+        guard let aps = userInfo["aps"] as? [String: AnyObject] else {
+            completionHandler(.failed)
+            return
+        }
+        (window?.rootViewController as? ViewController)?.pushNotifs.openedAppViaNotification(aps)
     }
 
     func registerForPushNotifs() {

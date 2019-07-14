@@ -33,4 +33,19 @@ class PushNotificationManager : NSObject, WebViewInteropProvider {
         webView?.evaluateJavaScript("window.apnsDeviceToken=\"\(token)\";", completionHandler: nil)
         webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('apnsDeviceToken', { detail: { token: '\(token)' }}));", completionHandler: nil)
     }
+
+    // TODO: Is there a better way to safely serialize these JSON objects other than base64-ing them?
+    func receivedNotification(_ notification: [String: AnyObject]) {
+        do { let data = try JSONSerialization.data(withJSONObject: notification, options: .prettyPrinted)
+            let jsonString = data.base64EncodedString()
+            webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('receivedPushNotification', { default: { payload: \"\(jsonString)\")", completionHandler: nil)
+        } catch { return }
+    }
+
+    func openedAppViaNotification(_ notification: [String: AnyObject]) {
+        do { let data = try JSONSerialization.data(withJSONObject: notification, options: .prettyPrinted)
+            let jsonString = data.base64EncodedString()
+            webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('openedAppViaNotification', { default: { payload: \"\(jsonString)\")", completionHandler: nil)
+        } catch { return }
+    }
 }
