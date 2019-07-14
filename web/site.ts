@@ -1,5 +1,5 @@
 import { defaultAttire, Attire } from "../src/attire"
-import { defaultAttireSet } from "../src/attire/defaultAttire"
+import { defaultAttireSet } from "../src/attire/defaultAttireSet"
 
 const addSomeButtsToThoseSeats = () => {
     const bases = defaultAttireSet.attire.filter(a => a.base)

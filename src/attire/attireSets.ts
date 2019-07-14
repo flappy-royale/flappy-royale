@@ -1,5 +1,5 @@
 import { PresentationAttire } from "../attire"
-import { defaultAttireSet } from "./defaultAttire"
+import { defaultAttireSet } from "./defaultAttireSet"
 import { dangerAttireSet } from "./dangerAttireSet"
 import { happyChapAttireSet } from "./happyChapAttireSet"
 

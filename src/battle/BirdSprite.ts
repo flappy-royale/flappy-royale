@@ -9,7 +9,7 @@ import { Attire, defaultAttire } from "../attire"
 import _ = require("lodash")
 import { playSound } from "../playSound"
 import { useLowQuality } from "../gameSettings"
-import { defaultAttireSet } from "../attire/defaultAttire"
+import { defaultAttireSet } from "../attire/defaultAttireSet"
 
 export const preloadBirdSprites = (scene: BattleScene | Scene) => {
     scene.load.image("flap1", require("../../assets/battle/Flap1.png"))
