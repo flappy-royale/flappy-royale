@@ -9,7 +9,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let analytics = AnalyticsPresentor()
     let share = ShareManager()
     let urlOpener = URLManager()
-
+    let gameCenterAuth = GameCenterAuth()
+    
     var webView: WKWebView?
 
     var serverOverride: URL? {
@@ -29,7 +30,8 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
         super.viewDidLoad()
 
         adPresentor.presentationVC = self
-        
+        gameCenterAuth.presentationVC = self
+
         share.presentationVC = self
         urlOpener.presentationVC = self
         view.backgroundColor = UIColor(red:0.19, green:0.09, blue:0.02, alpha:1.0)
@@ -63,7 +65,7 @@ window.buildVersion = '\(bundleVersion)';
         }
 
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, gameCenterAuth]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()

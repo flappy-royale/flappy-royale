@@ -9,6 +9,7 @@ import { allAttireInGame } from "./attire/attireSets"
 import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
+import { isAppleApp } from "./nativeComms/deviceDetection"
 
 export let isLoggedIn: boolean = false
 
@@ -24,7 +25,45 @@ let playfabEntityKey: PlayFabClientModels.EntityKey | undefined
 
 PlayFabClient.settings.titleId = titleId
 
-export const login = async () => {
+export const login = async (): Promise<string | undefined> => {
+    // Game Center flow
+    if (isAppleApp() && window.webkit.messageHandlers.gameCenterLogin) {
+        // This is the path for people who have previously logged in with not-Game Center
+        if (cache.hasPreviouslyLoggedInWithCustomId() && !cache.getNativeAuthID()) {
+            const loginResult = await loginWithCustomID()
+
+            const request = await gameCenterRequest()
+            if (request) {
+                const result = await playfabPromisify(PlayFabClient.LinkGameCenterAccount)(request).catch(async e => {
+                    console.log("ERROR", e)
+                    console.log("Going to naively try just logging in with game center instead")
+                    const result = await playfabPromisify(PlayFabClient.LoginWithGameCenter)({
+                        ...loginRequest(),
+                        ...request
+                    })
+                    console.log(result)
+                    return handleLoginResponse(result)
+                })
+                console.log(result)
+                cache.setNativeAuthID((request as PlayFabClientModels.LinkGameCenterAccountRequest).GameCenterId)
+
+                return loginResult
+            }
+        } else {
+            // For anyone who HAS logged in with Game Center, just use that as login
+            console.log("Just logging in with game center")
+            const request = await gameCenterRequest()
+            if (request) {
+                const result = await playfabPromisify(PlayFabClient.LoginWithGameCenter)({
+                    ...loginRequest(),
+                    ...request
+                })
+                console.log(result)
+                return handleLoginResponse(result)
+            }
+        }
+    }
+
     if (!cache.hasPreviouslyLoggedInWithCustomId()) {
         // This is either a new user, or someone on the legacy flow who's only ever logged in via native deviceId
         let customAuth = (window as any).playfabAuth
@@ -75,6 +114,7 @@ export const login = async () => {
 const loginWithCustomID = async () => {
     const request = { ...loginRequest(), CustomId: cache.getUUID() }
     loginPromise = playfabPromisify(PlayFabClient.LoginWithCustomID)(request).then(handleLoginResponse)
+    return loginPromise
 }
 
 const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContainer<PlayFabClientModels.LoginResult>) => {
@@ -159,6 +199,39 @@ const loginRequest = (): PlayFabClientModels.LoginWithCustomIDRequest => {
             GetUserVirtualCurrency: false
         }
     }
+}
+
+export const gameCenterRequest = async (): Promise<
+    PlayFabClientModels.LinkGameCenterAccountRequest | PlayFabClientModels.LoginWithGameCenterRequest | undefined
+> => {
+    console.log("gameCenterPromise")
+    return new Promise((resolve, reject) => {
+        // This iOS code will potentially wait for auth to complete or fail, then trigger the below event
+        try {
+            window.webkit.messageHandlers.gameCenterLogin.postMessage(true)
+
+            window.addEventListener("gameCenterLogin", (e: any) => {
+                console.log("MEssage returned", e.detail)
+                if (e.detail) {
+                    // TODO: This is massively insecure
+                    // But PlayFab is giving us 500s when we pass them secure login details
+                    resolve({
+                        GameCenterId: e.detail.playerID,
+                        PlayerId: e.detail.playerID
+                        // PublicKeyUrl: e.detail.url,
+                        // Salt: atob(e.detail.salt),
+                        // Signature: atob(e.detail.signature),
+                        // Timestamp: e.detail.timestamp
+                    })
+                } else {
+                    resolve(undefined)
+                }
+            })
+        } catch {
+            console.log("Catch")
+            resolve(undefined)
+        }
+    })
 }
 
 export const updateName = async (

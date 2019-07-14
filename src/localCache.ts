@@ -89,6 +89,9 @@ export const cache = {
     },
 
     setDeviceId: (id: string) => localStorage.setItem("deviceId", id),
+    getDeviceId: (): string | undefined => localStorage.getItem("deviceId") || undefined,
 
-    getDeviceId: (): string | undefined => localStorage.getItem("deviceId") || undefined
+    /** "Native auth ID" = Google Play Games ID or Game Center ID */
+    setNativeAuthID: (id: string) => localStorage.setItem("nativeAuthID", id),
+    getNativeAuthID: (): string | undefined => localStorage.getItem("nativeAuthID") || undefined
 }
