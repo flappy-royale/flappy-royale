@@ -10,7 +10,7 @@ export const dangerAttireSet: AttireSet = {
     darkHexColor: "#547846",
     attire: [
         {
-            id: "fish",
+            id: "danger-fish",
             description: "TBD",
             fit: "tight",
             base: true,
@@ -18,7 +18,7 @@ export const dangerAttireSet: AttireSet = {
             free: false
         },
         {
-            id: "frog",
+            id: "danger-frog",
             description: "TBD",
             fit: "tight",
             base: true,
@@ -26,7 +26,7 @@ export const dangerAttireSet: AttireSet = {
             free: false
         },
         {
-            id: "whale",
+            id: "danger-whale",
             description: "TBD",
             fit: "tight",
             base: true,
@@ -34,19 +34,27 @@ export const dangerAttireSet: AttireSet = {
             free: false
         },
         {
-            id: "rabbit",
+            id: "danger-pug",
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/danger/Rabbit.png"),
+            href: require("../../assets/bases/danger/Pig.png"),
             free: false
         },
         {
-            id: "tie",
+            id: "danger-tie",
             description: "TBD",
             fit: "tight",
             base: false,
             href: require("../../assets/attire/danger/Tie.png"),
+            free: false
+        },
+        {
+            id: "danger-horse",
+            description: "TBD",
+            fit: "tight",
+            base: true,
+            href: require("../../assets/bases/danger/horse.png"),
             free: false
         }
     ]
