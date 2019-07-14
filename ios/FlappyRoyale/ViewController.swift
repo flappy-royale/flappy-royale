@@ -10,6 +10,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, UISc
     let share = ShareManager()
     let urlOpener = URLManager()
     let gameCenterAuth = GameCenterAuth()
+    let pushNotifs = PushNotificationManager()
     
     var webView: WKWebView?
 
@@ -65,7 +66,7 @@ window.buildVersion = '\(bundleVersion)';
         }
 
 
-        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, gameCenterAuth]
+        let interopProviders: [WebViewInteropProvider] = [haptics, storeReviews, adPresentor, analytics, share, urlOpener, gameCenterAuth, pushNotifs]
         interopProviders.forEach({ $0.inject(userContentController) })
 
         let configuration = WKWebViewConfiguration()
@@ -113,6 +114,7 @@ window.buildVersion = '\(bundleVersion)';
         ])
         
         self.webView = webView
+        pushNotifs.webView = webView
 
         // WKWebViews don't dispatch visibilitychange events.
         // If we fake support for visibilitychange, pausing the Phaser game will Just Work™

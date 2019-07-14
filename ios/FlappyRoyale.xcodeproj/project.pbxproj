@@ -21,6 +21,8 @@
 		C61E55C122DA97BF00010550 /* GameCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61E55BF22DA979900010550 /* GameCenter.swift */; };
 		C61E55C322DA9BC300010550 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C61E55C222DA9BC300010550 /* GameKit.framework */; };
 		C61E55C422DA9BD800010550 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C61E55C222DA9BC300010550 /* GameKit.framework */; };
+		C61E55C722DB650A00010550 /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61E55C622DB650A00010550 /* PushNotifications.swift */; };
+		C61E55C822DB675D00010550 /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61E55C622DB650A00010550 /* PushNotifications.swift */; };
 		C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626521F22AA9C1400720FE0 /* HapticManager.swift */; };
 		C626522222AA9CDD00720FE0 /* WebViewInteropProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */; };
 		C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */; };
@@ -77,6 +79,8 @@
 		6D1BFD9413EA68359D30A410 /* Pods-FlappyRoyale.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlappyRoyale.release.xcconfig"; path = "Target Support Files/Pods-FlappyRoyale/Pods-FlappyRoyale.release.xcconfig"; sourceTree = "<group>"; };
 		C61E55BF22DA979900010550 /* GameCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenter.swift; sourceTree = "<group>"; };
 		C61E55C222DA9BC300010550 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		C61E55C522DB623800010550 /* Flappy Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Flappy Dev.entitlements"; sourceTree = "<group>"; };
+		C61E55C622DB650A00010550 /* PushNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotifications.swift; sourceTree = "<group>"; };
 		C626521F22AA9C1400720FE0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		C626522122AA9CDD00720FE0 /* WebViewInteropProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewInteropProvider.swift; sourceTree = "<group>"; };
 		C6309E4622AD1FFE00D0E0E1 /* AppStoreReviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewer.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 				60961B6F22B6DEDC0070160A /* ShareManager.swift */,
 				60924F6C22BFF9F90004796A /* URLLoader.swift */,
 				C61E55BF22DA979900010550 /* GameCenter.swift */,
+				C61E55C622DB650A00010550 /* PushNotifications.swift */,
 			);
 			path = "JS Extensions";
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 		C653148421EE7BB80068609E = {
 			isa = PBXGroup;
 			children = (
+				C61E55C522DB623800010550 /* Flappy Dev.entitlements */,
 				C653148F21EE7BB80068609E /* FlappyRoyale */,
 				C6557C4222BA3EF300F78E06 /* FlappyRoyaleUITests */,
 				C653148E21EE7BB80068609E /* Products */,
@@ -306,6 +312,9 @@
 					C6BA850222BE7AE500BCBCC6 = {
 						SystemCapabilities = {
 							com.apple.GameCenter.iOS = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -496,6 +505,7 @@
 				C61E55C022DA979900010550 /* GameCenter.swift in Sources */,
 				C653149321EE7BB80068609E /* ViewController.swift in Sources */,
 				605A160C22B5AEDB008A7AFD /* AnalyticsManager.swift in Sources */,
+				C61E55C722DB650A00010550 /* PushNotifications.swift in Sources */,
 				C6309E4722AD1FFE00D0E0E1 /* AppStoreReviewer.swift in Sources */,
 				C626522022AA9C1400720FE0 /* HapticManager.swift in Sources */,
 				C653149121EE7BB80068609E /* AppDelegate.swift in Sources */,
@@ -523,6 +533,7 @@
 				C61E55C122DA97BF00010550 /* GameCenter.swift in Sources */,
 				C6BA850922BE7AE500BCBCC6 /* ViewController.swift in Sources */,
 				C6BA850A22BE7AE500BCBCC6 /* AnalyticsManager.swift in Sources */,
+				C61E55C822DB675D00010550 /* PushNotifications.swift in Sources */,
 				C6BA850B22BE7AE500BCBCC6 /* AppStoreReviewer.swift in Sources */,
 				C6BA850C22BE7AE500BCBCC6 /* HapticManager.swift in Sources */,
 				C6BA850D22BE7AE500BCBCC6 /* AppDelegate.swift in Sources */,
@@ -776,6 +787,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Flappy Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 48WB56AE4K;
@@ -801,6 +813,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Flappy Dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 48WB56AE4K;

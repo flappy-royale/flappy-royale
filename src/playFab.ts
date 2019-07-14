@@ -10,6 +10,7 @@ import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userMan
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
 import { isAppleApp } from "./nativeComms/deviceDetection"
+import { registerForPushNotifications } from "./registerForPushNotifications"
 
 export let isLoggedIn: boolean = false
 
@@ -172,6 +173,8 @@ const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContaine
     }
 
     isLoggedIn = true
+
+    registerForPushNotifications()
 
     return playfabUserId
 }
