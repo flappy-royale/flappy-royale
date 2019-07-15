@@ -166,7 +166,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 await file.save(json)
             }
 
-            if (!userName.startsWith("ort") || !userName.startsWith("laz")) {
+            if (!userName.startsWith("ort")) {
                 return response.status(200).send({ success: true })
             }
 
