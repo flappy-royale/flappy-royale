@@ -57,6 +57,10 @@ declare global {
 
         AndroidStaticData?: { fetch: () => string }
         notchOffset?: number
+
+        GooglePlayGames?: {
+            auth(): () => void
+        }
     }
 }
 

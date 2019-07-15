@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import android.view.View
 import android.webkit.WebViewClient
@@ -15,17 +14,22 @@ import com.lazerwalker.flappyadconstants.AdConstants
 import android.view.MotionEvent
 import android.view.GestureDetector
 import android.webkit.WebSettings
-import android.webkit.WebView
+
 import com.ironsource.mediationsdk.ISBannerSize
 import com.ironsource.mediationsdk.IronSource
 import com.ironsource.mediationsdk.IronSourceBannerLayout
-import com.ironsource.mediationsdk.integration.IntegrationHelper
 import com.ironsource.mediationsdk.logger.IronSourceError
 import com.ironsource.mediationsdk.sdk.BannerListener
+import android.content.Intent
+import android.webkit.WebView
 
+
+const val GOOGLE_SIGNIN_MAGIC_NUMBER = 9001 // Provided by Google's example code and not explained :/
 
 class MainActivity : AppCompatActivity() {
     private var adPresenter: ModalAdPresenter? = null
+    private var gamesAuth: GooglePlayGames? = null
+
     private var banner: IronSourceBannerLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +85,20 @@ class MainActivity : AppCompatActivity() {
         bannerAdView.setBackgroundColor(Color.parseColor("#482305"))
         // This verifies IronSource is set up, including mediation integrations
 //         IntegrationHelper.validateIntegration(this);
+
+        this.gamesAuth = GooglePlayGames(this, webview, this)
+
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.i("AUTH", "In onActivityResult")
+        if (requestCode == GOOGLE_SIGNIN_MAGIC_NUMBER) {
+            Log.i("AUTH", "right requestcode")
+            gamesAuth?.finishSignIn(data)
+        }
+    }
+
 
     override fun onAttachedToWindow() {
         // Notch offsets aren't available until we attach to window
@@ -91,8 +108,9 @@ class MainActivity : AppCompatActivity() {
 //        webview.loadUrl("http://192.168.1.6:8085")
 //        WebView.setWebContentsDebuggingEnabled(true);
 
-        webview.addJavascriptInterface(LoadingManager(this, webview), "LoadingManager")
         webview.addJavascriptInterface((this.adPresenter as ModalAdPresenter), "ModalAdPresenter")
+        webview.addJavascriptInterface((this.gamesAuth as GooglePlayGames), "GooglePlayGames")
+        webview.addJavascriptInterface(LoadingManager(this, webview), "LoadingManager")
         webview.addJavascriptInterface(AnalyticsManager(this, webview), "Analytics")
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview, this), "URLLoader")
@@ -105,7 +123,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }
         IronSource.onResume(this)
+        gamesAuth?.signInSilently();
     }
+
 
     override fun onPause() {
         super.onPause()
@@ -178,4 +198,3 @@ class MainActivity : AppCompatActivity() {
         IronSource.destroyBanner(this.banner);
     }
 }
-

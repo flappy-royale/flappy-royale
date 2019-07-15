@@ -9,7 +9,7 @@ import { allAttireInGame } from "./attire/attireSets"
 import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
-import { isAppleApp } from "./nativeComms/deviceDetection"
+import { isAppleApp, isAndroidApp } from "./nativeComms/deviceDetection"
 import { registerForPushNotifications } from "./registerForPushNotifications"
 
 export let isLoggedIn: boolean = false
@@ -56,6 +56,43 @@ export const login = async (): Promise<string | undefined> => {
             const request = await gameCenterRequest()
             if (request) {
                 const result = await playfabPromisify(PlayFabClient.LoginWithGameCenter)({
+                    ...loginRequest(),
+                    ...request
+                })
+                console.log(result)
+                return handleLoginResponse(result)
+            }
+        }
+    } else if (isAndroidApp() && window.GooglePlayGames) {
+        if (cache.hasPreviouslyLoggedInWithCustomId() && !cache.getNativeAuthID()) {
+            const loginResult = await loginWithCustomID()
+
+            const request = await googlePlayGamesRequest()
+            if (request) {
+                const result = await playfabPromisify(PlayFabClient.LinkGoogleAccount)(request).catch(async e => {
+                    console.log("ERROR", e)
+                    console.log("Going to naively try just logging in with google account instead")
+                    const result = await playfabPromisify(PlayFabClient.LoginWithGoogleAccount)({
+                        ...loginRequest(),
+                        ...request
+                    })
+                    console.log(result)
+                    return handleLoginResponse(result)
+                })
+                console.log(result)
+
+                if (request.ServerAuthCode) {
+                    cache.setNativeAuthID(request.ServerAuthCode!)
+                }
+
+                return loginResult
+            }
+        } else {
+            // For anyone who HAS logged in with Google, just use that as login
+            console.log("Just logging in with google")
+            const request = await googlePlayGamesRequest()
+            if (request) {
+                const result = await playfabPromisify(PlayFabClient.LoginWithGoogleAccount)({
                     ...loginRequest(),
                     ...request
                 })
@@ -232,6 +269,33 @@ export const gameCenterRequest = async (): Promise<
             })
         } catch {
             console.log("Catch")
+            resolve(undefined)
+        }
+    })
+}
+
+export const googlePlayGamesRequest = async (): Promise<
+    PlayFabClientModels.LinkGoogleAccountRequest | PlayFabClientModels.LoginWithGoogleAccountRequest | undefined
+> => {
+    console.log("google play games promise")
+    return new Promise((resolve, reject) => {
+        // This iOS code will potentially wait for auth to complete or fail, then trigger the below event
+        try {
+            if (!window.GooglePlayGames) {
+                return resolve(undefined)
+            }
+            window.GooglePlayGames.auth()
+
+            window.addEventListener("googlePlayLogin", (e: any) => {
+                console.log("MEssage returned", e.detail)
+                if (e.detail.serverAuthCode) {
+                    resolve({ ServerAuthCode: e.detail.serverAuthCode })
+                } else {
+                    resolve(undefined)
+                }
+            })
+        } catch (e) {
+            console.log("Catch", e)
             resolve(undefined)
         }
     })

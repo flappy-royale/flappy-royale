@@ -42,7 +42,8 @@ android {
         versionName "1.2"
         signingConfig signingConfigs.playstore
         manifestPlaceholders = [
-                AdmobAppId: constants["AdmobAppId"]
+                AdmobAppId: constants["AdmobAppId"],
+                GooglePlayGamesAppId: constants["GooglePlayGamesAppId"]
         ]
     }
     buildTypes {
@@ -71,11 +72,11 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
 
     implementation "com.vorlonsoft:androidrate:1.2.1"
 
-//    implementation 'com.google.android.gms:play-services-games:18.0.0'
+    implementation 'com.google.android.gms:play-services-games:18.0.0'
 
     implementation 'com.jaredrummler:android-device-names:1.1.9'
 
@@ -84,7 +85,7 @@ dependencies {
     implementation 'com.ironsource.sdk:mediationsdk:6.8.5@jar'
 
     // Add AdMob Network
-    implementation 'com.google.android.gms:play-services-ads:17.2.0'
+    implementation 'com.google.android.gms:play-services-ads:18.1.0'
     implementation 'com.ironsource.adapters:admobadapter:4.3.3@jar'
 
     // Add Applovin Network
@@ -107,5 +108,5 @@ dependencies {
     // Add Vungle Network
     implementation 'com.ironsource.adapters:vungleadapter:4.1.5@jar'
     implementation 'com.github.vungle:vungle-android-sdk:6.3.24'
-
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
