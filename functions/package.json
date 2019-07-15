@@ -2,6 +2,7 @@
     "name": "functions",
     "scripts": {
         "build": "yarn tsc && mv lib/functions/src/* lib; rm  -r lib/functions lib/src",
+        "type-check": "yarn tsc --noEmit",
         "serve": "yarn build && yarn firebase serve --only functions",
         "shell": "yarn build && yarn firebase functions:shell",
         "start": "yarn serve",

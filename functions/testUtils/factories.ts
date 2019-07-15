@@ -1,6 +1,6 @@
 import { Attire } from "../../src/attire"
-import { UserSettings } from "../../src/user/userManager"
-import { PlayerData } from "../../src/firebase"
+import { UserSettings } from "../../src/user/UserSettingsTypes"
+import { PlayerData } from "../../src/firebaseTypes"
 
 // Loading the actual default attire requires resolving an image URL,
 // which requires going through the main app's webpack config.

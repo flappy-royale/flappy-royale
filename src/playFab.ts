@@ -6,7 +6,8 @@ import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
-import { changeSettings, UserSettings, syncedSettingsKeys } from "./user/userManager"
+import { changeSettings, syncedSettingsKeys } from "./user/userManager"
+import { UserSettings } from "./user/UserSettingsTypes"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
 import { isAppleApp, isAndroidApp } from "./nativeComms/deviceDetection"
@@ -14,10 +15,9 @@ import { registerForPushNotifications } from "./registerForPushNotifications"
 
 export let isLoggedIn: boolean = false
 
-export let loginPromise: Promise<string | undefined>
-
 export let playfabUserId: string | undefined
 
+export let loginPromise: Promise<string | undefined>
 export const getPlayfabId = () => {
     return localStorage.getItem("playfabId") || undefined
 }

@@ -1,6 +1,7 @@
 import * as Phaser from "phaser"
 import * as constants from "../constants"
-import { getUserSettings, UserSettings } from "../user/userManager"
+import { getUserSettings } from "../user/userManager"
+import { UserSettings } from "../user/UserSettingsTypes";
 import { preloadBirdSprites, setupBirdAnimations, BirdSprite } from "../battle/BirdSprite"
 import { launchMainMenu } from "./MainMenuScene"
 import { becomeButton } from "./utils/becomeButton"

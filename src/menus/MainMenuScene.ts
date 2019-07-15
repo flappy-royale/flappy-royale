@@ -11,9 +11,8 @@ import {
     getUserStatistics,
     hasAskedAboutTutorial,
     hasName,
-    getSyncedUserSettings,
-    UserSettings
-} from "../user/userManager"
+    getSyncedUserSettings} from "../user/userManager"
+import { UserSettings } from "../user/UserSettingsTypes";
 import { preloadBackgroundBlobImages } from "./utils/backgroundColors"
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"

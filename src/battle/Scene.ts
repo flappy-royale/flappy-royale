@@ -3,7 +3,7 @@ import * as Seed from "seed-random"
 import * as constants from "../constants"
 import * as game from "./utils/gameMode"
 
-import { PlayerEvent, PlayerData, SeedData, uploadReplayForSeed, emptySeedData } from "../firebase"
+import { uploadReplayForSeed, emptySeedData } from "../firebase"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addRowOfPipes } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations, preloadAllBirdAttire } from "./BirdSprite"
@@ -21,9 +21,9 @@ import {
     setHighScore,
     livesExtensionStateForSeed,
     getUserStatistics,
-    saveDailyTrialRun,
-    Bird
+    saveDailyTrialRun
 } from "../user/userManager"
+import { Bird } from "../user/UserSettingsTypes"
 import { launchMainMenu } from "../menus/MainMenuScene"
 import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
@@ -35,8 +35,9 @@ import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
 import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from "../gameSettings"
-import { ReplayUploadResponse } from "../../functions/src"
 import { NewEggFoundScene } from "../menus/NewEggFoundScene"
+import { ReplayUploadResponse } from "../../functions/src/api-contracts"
+import { SeedData, PlayerEvent } from "../firebaseTypes"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -739,10 +740,13 @@ export class BattleScene extends Phaser.Scene {
                     .then((response: ReplayUploadResponse) => {
                         if ("error" in response) {
                             console.error(response)
-                        } else if ("item" in response) {
-                            if (response.item) {
-                                // const
-                                // const egg = new NewEggFoundScene({})
+                        } else if ("itemInstanceId" in response) {
+                            if (response.itemInstanceId) {
+                                const egg = new NewEggFoundScene({
+                                    eggItemInstanceId: response.itemInstanceId,
+                                    tier: response.egg
+                                })
+                                this.game.scene.start("won-egg", egg)
                             }
                         }
                         // Otherwise it's just a success NOOP
@@ -754,7 +758,7 @@ export class BattleScene extends Phaser.Scene {
             // This is (currently) only in trial mode
             const newLives = subtractALife(this.seed)
             if (newLives === 0) {
-                // TODO: Modal instead
+                // TODO: Modal insteadx
                 console.log("Out of lives :(")
             }
         }

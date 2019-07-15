@@ -6,21 +6,25 @@ import { preloadPipeSprites } from "../battle/PipeManager"
 import { random } from "lodash"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { becomeButton } from "./utils/becomeButton"
-import { AttireSet, allAttireInGame } from "../attire/attireSets"
-import { openLootBox } from "../firebase"
-import { PresentationAttire } from "../attire"
-import { testLootbox } from "../../assets/config/playfabConfig"
+import { allAttireInGame } from "../attire/attireSets"
+import { PresentationAttire, LootboxTier } from "../attire"
+import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
+import { consumeEgg } from "../firebase"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
 
+const eggAdID = "Hatch-an-Egg"
+
 interface EggProps {
-    attireSet: AttireSet
+    eggItemInstanceId: string
+    tier?: LootboxTier
 }
 
 export class NewEggFoundScene extends Phaser.Scene {
-    particles!: Phaser.GameObjects.Particles.ParticleEmitterManager
     props: EggProps
+
+    particles!: Phaser.GameObjects.Particles.ParticleEmitterManager
     egg!: Phaser.GameObjects.Image
     eggWings!: Phaser.GameObjects.Sprite
     assetSetLogo!: Phaser.GameObjects.Image
@@ -46,7 +50,6 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.load.image("egg-top", require("../../assets/menu/EggGoldTop.png"))
         this.load.image("egg-bottom", require("../../assets/menu/EggGoldBottom.png"))
         this.load.image("button-bg", require("../../assets/menu/ButtonBG.png"))
-        this.load.image("attire-set-icon", this.props.attireSet.iconPath)
 
         this.load.bitmapFont(
             "fipps-bit",
@@ -74,6 +77,8 @@ export class NewEggFoundScene extends Phaser.Scene {
 
         this.time.delayedCall(1600, this.showBottomMessage, [], this)
         this.time.delayedCall(1610, this.flapEggIn, [], this)
+
+        prepareModalAd(eggAdID)
     }
 
     flapEggIn() {
@@ -92,24 +97,20 @@ export class NewEggFoundScene extends Phaser.Scene {
         egg.setAngle(20)
         this.egg = egg
 
-        const stamp = this.add.image(egg.x + 3, egg.y - 4, "attire-set-icon")
-        this.assetSetLogo = stamp
-        stamp.setAngle(20)
-
         const wings = this.add.sprite(egg.x, egg.y, "flap1")
         wings.play("flap")
         wings.setScale(2, 2)
         this.eggWings = wings
 
         this.add.tween({
-            targets: [egg, wings, stamp],
+            targets: [egg, wings],
             delay: 300,
             x: "+=200",
             ease: "Sine.easeInOut"
         })
 
         this.add.tween({
-            targets: [egg, wings, stamp],
+            targets: [egg, wings],
             delay: 300,
             duration: 1200,
             y: "-=30",
@@ -285,22 +286,15 @@ export class NewEggFoundScene extends Phaser.Scene {
 
         if (this.seenAd) {
             // remove the scene
+            this.game.scene.remove(this)
         } else {
             this.vibrateEgg()
 
-            openLootBox(testLootbox).then(attireId => {
-                const attire = allAttireInGame.find(a => a.id === attireId)
-                if (!attire) {
-                    console.log("Could not find item ", attireId)
-                    return
-                }
-                this.unlockedItem = attire
-                this.load.image("unlocked", attire.href)
-                this.load.on("filecomplete", this.openEgg, this)
-                this.load.start()
-            })
-
-            // show add
+            if (c.isInDevMode) {
+                this.time.delayedCall(510, this.adsHaveBeenUnlocked, [], this)
+            } else {
+                this.time.delayedCall(510, requestModalAd, [eggAdID], this)
+            }
         }
     }
 
@@ -320,9 +314,36 @@ export class NewEggFoundScene extends Phaser.Scene {
         })
     }
 
+    adsHaveBeenUnlocked() {
+        // OK, we can now unlock
+        this.seenAd = true
+        this.unlockEgg()
+    }
+
+    async unlockEgg() {
+        const response = await consumeEgg(this.props.eggItemInstanceId)
+        if ("error" in response) {
+            return alert("Sorry, there was a problem unlocking your egg")
+        }
+
+        if (!response.item) {
+            return alert("You have unlocked everything, congrats!")
+        }
+
+        const attire = allAttireInGame.find(a => a.id === response.item)
+        if (!attire) {
+            console.log("Could not find item ", response.item)
+            return
+        }
+
+        this.unlockedItem = attire
+        this.load.image("unlocked", attire.href)
+        this.load.on("filecomplete", this.openEgg, this)
+        this.load.start()
+    }
+
     openEgg() {
-        if (!this.unlockedItem) return
-        this.bottomLabel.setText(`${this.unlockedItem.description}`)
+        this.bottomLabel.setText(`${this.unlockedItem!.name}`)
         this.buttonLabel.setText("Cool")
 
         this.assetSetLogo.destroy()
@@ -371,7 +392,5 @@ export class NewEggFoundScene extends Phaser.Scene {
                 })
             }
         })
-
-        // this.egg
     }
 }

@@ -3,7 +3,7 @@ import * as Phaser from "phaser"
 import { launchMainMenu } from "../../menus/MainMenuScene"
 import { BattleScene } from "../Scene"
 import { becomeButton } from "../../menus/utils/becomeButton"
-import { fetchRecordingsForSeed, SeedData } from "../../firebase"
+import { fetchRecordingsForSeed } from "../../firebase"
 import { getUserStatistics, getAndBumpUserCycleSeed } from "../../user/userManager"
 import { addScene } from "../../menus/utils/addScene"
 import { GameMode } from "../utils/gameMode"
@@ -13,6 +13,7 @@ import { shareNatively } from "../../nativeComms/share"
 import { GameTheme } from "../theme"
 import { setupLogoCornerImages } from "../../menus/utils/backgroundColors"
 import { isAndroidApp } from "../../nativeComms/deviceDetection"
+import { SeedData } from "../../firebaseTypes"
 
 export interface RoyaleDeathProps {
     score: number

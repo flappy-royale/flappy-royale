@@ -1,5 +1,5 @@
 import { PresentationAttire } from "../attire"
-import { UserSettings } from "./userManager"
+import { UserSettings } from "./UserSettingsTypes";
 import { includes } from "lodash"
 
 // This can be fairly naive because we'll verify actual ownership on the server.

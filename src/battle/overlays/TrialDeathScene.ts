@@ -13,10 +13,10 @@ import {
     getLives,
     getUserSettings,
     getUserStatistics,
-    Bird,
     DailyTrialRun,
     livesExtensionsButtonToAdID
 } from "../../user/userManager"
+import { Bird } from "../../user/UserSettingsTypes";
 
 import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
