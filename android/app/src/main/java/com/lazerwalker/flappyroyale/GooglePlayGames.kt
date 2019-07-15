@@ -16,6 +16,12 @@ import com.lazerwalker.flappyadconstants.AdConstants
 
 class GooglePlayGames(private val context: Context, val webview: WebView, val activity: Activity) {
     private var serverAuthCode: String? = null
+
+    /** Google explicitly recommends against using the ID for server authentication purposes.
+     * However, right now we're blocked on serverAuthCode not working, so this is a mediocre – but hopefully passable – workaround for now
+     * (See https://community.playfab.com/questions/31628/loginlink-with-google-invalid-grant-token-issueinv.html) */
+    private var googleId: String? = null
+
     private var waitingOnData: Boolean = false
     private var loginWasValid: Boolean = false
 
@@ -23,6 +29,7 @@ class GooglePlayGames(private val context: Context, val webview: WebView, val ac
         activity,
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
             .requestProfile()
+            .requestId()
             .requestServerAuthCode(AdConstants.googlePlayGamesServerClientId, false)
             .build()
     )
@@ -35,8 +42,9 @@ class GooglePlayGames(private val context: Context, val webview: WebView, val ac
     fun finishSignIn(data: Intent?) {
         val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
         if (result.isSuccess) {
-            Log.i("AUTH", "is success")
+            Log.i("AUTH", "is successFinish")
             serverAuthCode = result.signInAccount!!.serverAuthCode
+            googleId = result.signInAccount!!.id
             loginWasValid = true
 
 
@@ -59,6 +67,7 @@ class GooglePlayGames(private val context: Context, val webview: WebView, val ac
             if (task.isSuccessful) {
                 Log.d("AUTH", "signInSilently(): success")
                 serverAuthCode = task.result!!.serverAuthCode
+                googleId = task.result!!.id
                 loginWasValid = true
                 sendData()
             } else {
@@ -91,8 +100,8 @@ class GooglePlayGames(private val context: Context, val webview: WebView, val ac
         waitingOnData = false
 
         Handler(Looper.getMainLooper()).post(Runnable {
-            webview.evaluateJavascript("window.dispatchEvent(new CustomEvent('googlePlayLogin', { detail: { serverAuthCode: '$serverAuthCode' }}))") { _ -> }
-            webview.evaluateJavascript("window.googlePlay = { serverAuthCode: '$serverAuthCode' };") { _ -> }
+            webview.evaluateJavascript("window.dispatchEvent(new CustomEvent('googlePlayLogin', { detail: { serverAuthCode: '$serverAuthCode', googleId: '$googleId' }}))") { _ -> }
+            webview.evaluateJavascript("window.googlePlay = { serverAuthCode: '$serverAuthCode', googleId: '$googleId' };") { _ -> }
         })
     }
 }

@@ -64,15 +64,23 @@ export const login = async (): Promise<string | undefined> => {
             }
         }
     } else if (isAndroidApp() && window.GooglePlayGames) {
+        // TODO: These should be using LinkGoogleAccount/LoginWithGoogleAccount, but Google auth currently isn't working
+        // So we're faking it by using the Google ID as an 'android device id'
+        // Track https://community.playfab.com/questions/31628/loginlink-with-google-invalid-grant-token-issueinv.html for updates
+
         if (cache.hasPreviouslyLoggedInWithCustomId() && !cache.getNativeAuthID()) {
+            // This is the path for people who have previously logged in with not-Google
             const loginResult = await loginWithCustomID()
 
             const request = await googlePlayGamesRequest()
             if (request) {
-                const result = await playfabPromisify(PlayFabClient.LinkGoogleAccount)(request).catch(async e => {
+                const result = await playfabPromisify(PlayFabClient.LinkAndroidDeviceID)({
+                    ...request,
+                    ForceLink: true
+                }).catch(async e => {
                     console.log("ERROR", e)
                     console.log("Going to naively try just logging in with google account instead")
-                    const result = await playfabPromisify(PlayFabClient.LoginWithGoogleAccount)({
+                    const result = await playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
                         ...loginRequest(),
                         ...request
                     })
@@ -81,8 +89,8 @@ export const login = async (): Promise<string | undefined> => {
                 })
                 console.log(result)
 
-                if (request.ServerAuthCode) {
-                    cache.setNativeAuthID(request.ServerAuthCode!)
+                if (request.AndroidDeviceId) {
+                    cache.setNativeAuthID(request.AndroidDeviceId)
                 }
 
                 return loginResult
@@ -92,7 +100,7 @@ export const login = async (): Promise<string | undefined> => {
             console.log("Just logging in with google")
             const request = await googlePlayGamesRequest()
             if (request) {
-                const result = await playfabPromisify(PlayFabClient.LoginWithGoogleAccount)({
+                const result = await playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
                     ...loginRequest(),
                     ...request
                 })
@@ -274,9 +282,13 @@ export const gameCenterRequest = async (): Promise<
     })
 }
 
+// TODO: This should be returning a LinkGoogleAccount request, but Google auth currently isn't working
+// So we're faking it by using the Google ID as an 'android device id'
+// Track https://community.playfab.com/questions/31628/loginlink-with-google-invalid-grant-token-issueinv.html for updates
 export const googlePlayGamesRequest = async (): Promise<
-    PlayFabClientModels.LinkGoogleAccountRequest | PlayFabClientModels.LoginWithGoogleAccountRequest | undefined
+    PlayFabClientModels.LoginWithAndroidDeviceIDRequest | undefined
 > => {
+    //Promise<PlayFabClientModels.LinkGoogleAccountRequest | PlayFabClientModels.LoginWithGoogleAccountRequest | undefined>
     console.log("google play games promise")
     return new Promise((resolve, reject) => {
         // This iOS code will potentially wait for auth to complete or fail, then trigger the below event
@@ -288,8 +300,18 @@ export const googlePlayGamesRequest = async (): Promise<
 
             window.addEventListener("googlePlayLogin", (e: any) => {
                 console.log("MEssage returned", e.detail)
-                if (e.detail.serverAuthCode) {
-                    resolve({ ServerAuthCode: e.detail.serverAuthCode })
+                // if (e.detail.serverAuthCode) {
+                //     resolve({ ServerAuthCode: e.detail.serverAuthCode })
+                if (e.detail.googleId) {
+                    const login: PlayFabClientModels.LoginWithAndroidDeviceIDRequest = {
+                        AndroidDeviceId: e.detail.googleId
+                    }
+                    if (window.playfabAuth && window.playfabAuth.payload) {
+                        ;(login.AndroidDevice = window.playfabAuth.payload.AndroidDevice),
+                            (login.OS = window.playfabAuth.payload.OS)
+                    }
+
+                    resolve(login)
                 } else {
                     resolve(undefined)
                 }
