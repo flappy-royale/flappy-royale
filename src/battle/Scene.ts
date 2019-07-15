@@ -35,6 +35,8 @@ import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
 import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from "../gameSettings"
+import { ReplayUploadResponse } from "../../functions/src"
+import { NewEggFoundScene } from "../menus/NewEggFoundScene"
 
 export interface BattleSceneSettings {
     /** The string representation for the level */
@@ -705,11 +707,12 @@ export class BattleScene extends Phaser.Scene {
         const stats = this.analytics.getResults()
 
         const userStats = getUserStatistics()
+        const won = position === 0 && this.hasOpponents()
         const playFabSubmission = PlayFab.playedGame({
             mode: this.mode,
             score: this.score,
             flaps: stats.flaps,
-            won: position === 0 && this.hasOpponents(),
+            won,
             winStreak: userStats.royaleStreak,
             birdsPast: stats.totalBirds
         })
@@ -725,6 +728,7 @@ export class BattleScene extends Phaser.Scene {
                 const settings = getUserSettings()
 
                 uploadReplayForSeed({
+                    won,
                     seed: this.seed,
                     version: constants.APIVersion,
                     mode: this.mode,
@@ -732,7 +736,17 @@ export class BattleScene extends Phaser.Scene {
                     data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
                 })
                     .then(a => a.json())
-                    .then(r => console.log(r))
+                    .then((response: ReplayUploadResponse) => {
+                        if ("error" in response) {
+                            console.error(response)
+                        } else if ("item" in response) {
+                            if (response.item) {
+                                // const
+                                // const egg = new NewEggFoundScene({})
+                            }
+                        }
+                        // Otherwise it's just a success NOOP
+                    })
             }
         }
 

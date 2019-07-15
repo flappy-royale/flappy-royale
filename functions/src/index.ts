@@ -6,9 +6,10 @@ import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from 
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
 import { PlayFabServer } from "playfab-sdk"
-import { lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
+import { lookupBoxesForTiers } from "../../assets/config/playfabConfig"
 import { LootboxTier } from "../../src/attire"
-import { getItemFromLootBoxStartingWith } from "./getItemFromLootBox"
+import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
+import express = require("express")
 
 const cors = require("cors")({
     origin: true
@@ -73,12 +74,19 @@ export interface ReplayUploadRequest {
     version: string
     seed: string
     mode: number
+    won: boolean
     data: import("../../src/firebase").PlayerData
 }
 
+/** Potential responses from the addReplayToSeed */
+export type ReplayUploadResponse =
+    | { success: true } // congrats, but no egg
+    | { error: string } // uh oh
+    | { item: null | PlayFabAdminModels.ResultTableNode } // could have an egg
+
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
-        const { seed, uuid, version, data, mode, playfabId } = JSON.parse(request.body) as ReplayUploadRequest
+        const { seed, uuid, version, data, mode, playfabId, won } = JSON.parse(request.body) as ReplayUploadRequest
 
         if (!version) {
             return response.status(400).send({ error: "Needs a version in request" })
@@ -148,7 +156,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         await firehoseFile.save(json)
 
         // Non-Playfab users can still get shoved in the firehose bucket, but they can't show up in others' games.
-        if (data.playfabUser) {
+        if (data.playfabUser && playfabId) {
             // Only the first N seeds per hour get collated into real in-game ghost data
             const bucket = admin.storage().bucket("flappy-royale-replay-uploads")
             const [existingFiles] = await bucket.getFiles({ prefix: `${seed}/` })
@@ -157,10 +165,23 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 const file = bucket.file(`${seed}/${userIdentifier}-${new Date()}.json`)
                 await file.save(json)
             }
-        }
 
-        const responseJSON = { success: true }
-        return response.status(200).send(responseJSON)
+            // Try figure out if we want to give a lootbox
+            if (won) {
+                return await openLootBox(playfabId, 3, response)
+            } else {
+                // Try run the lootbox
+                const tier = tierForScore(data.score)
+                // If you got a lootbox tier
+                if (tier) {
+                    return await openLootBox(playfabId, tier, response)
+                }
+            }
+            return
+        } else {
+            const responseJSON = { success: true }
+            return response.status(200).send(responseJSON)
+        }
     })
 })
 
@@ -296,70 +317,44 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
     })
 })
 
-export const openLootBox = functions.https.onRequest(async (request, response) => {
-    cors(request, response, async () => {
-        // TODO: The user should have a 'lootbox' inventory item assigned by the ad reward
-        // Consume that, and have some logic in the weird case the user has > 1
-        // That should also determine what loot table we consult
+export const openLootBox = async (playfabId: string, initialTier: LootboxTier, response: express.Response) => {
+    const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({ PlayFabId: playfabId })
 
-        const { playfabId, dropTableName } = JSON.parse(request.body) as LootBoxRequest
-        if (!playfabId) {
-            return response.status(400).send({ error: "Needs a playfabId in request" })
-        }
+    const inventory = inventoryResult.data.Inventory
+    if (!inventory) {
+        return response.status(400).send({ error: "Could not fetch inventory for player" })
+    }
+    const inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
 
-        const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({
-            PlayFabId: playfabId
-        })
-
-        const inventory = inventoryResult.data.Inventory
-        if (!inventory) {
-            return response.status(400).send({ error: "Could not fetch inventory for player" })
-        }
-        const inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
-
-        const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
-            TableIDs: [dropTableName]
-        })
-
-        if (!lootTables.data.Tables) {
-            return response.status(400).send({ error: "Could not fetch drop tables" })
-        }
-
-        const table = lootTables.data.Tables[dropTableName]
-        if (!table) {
-            return response.status(400).send({ error: `Could not fetch drop table '${dropTableName}'` })
-        }
-
-        const currentTier = Object.keys(lookupBoxesForTiers).find(
-            k => lookupBoxesForTiers[(k as any) as LootboxTier] === dropTableName
-        )
-
-        if (!currentTier) {
-            return response.status(400).send({ error: `Could not fetch find a tier for '${dropTableName}'` })
-        }
-
-        const rewardedItem = getItemFromLootBoxStartingWith(
-            parseInt(currentTier) as any,
-            Object.values(lootTables.data.Tables),
-            inventoryIds
-        )
-
-        if (!rewardedItem) {
-            // You've unlocked them all.
-            return response.status(204).send({ item: null })
-        }
-
-        await playfabPromisify(PlayFabServer.GrantItemsToUser)({
-            Annotation: "Loot box",
-            PlayFabId: playfabId,
-            ItemIds: [rewardedItem.ResultItem]
-        }).catch(e => {
-            return response.status(400).send({ error: "Could not grant item to user" })
-        })
-
-        return response.status(200).send({ item: rewardedItem.ResultItem })
+    const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
+        TableIDs: [Object.values(lookupBoxesForTiers)]
     })
-})
+
+    if (!lootTables.data.Tables) {
+        return response.status(400).send({ error: "Could not fetch drop tables" })
+    }
+
+    const rewardedItem = getItemFromLootBoxStartingWith(
+        initialTier,
+        Object.values(lootTables.data.Tables),
+        inventoryIds
+    )
+
+    if (!rewardedItem) {
+        // You've unlocked them all.
+        return response.status(204).send({ item: null })
+    }
+
+    await playfabPromisify(PlayFabServer.GrantItemsToUser)({
+        Annotation: "Loot box",
+        PlayFabId: playfabId,
+        ItemIds: [rewardedItem.ResultItem]
+    }).catch(e => {
+        return response.status(400).send({ error: "Could not grant item to user" })
+    })
+
+    return response.status(200).send({ item: rewardedItem.ResultItem })
+}
 
 const unzip = (bin: string) => {
     if (!bin) {
