@@ -265,8 +265,8 @@ export class BirdSprite {
 
         this.body.setSize(physicsWidth, physicsHeight)
         this.body.offset = new Phaser.Math.Vector2(
-            remapClamped(this.body.velocity.y, 105, 200, -1, 8) * -1,
-            remapClamped(this.body.velocity.y, 105, 200, -5, 2)
+            remapClamped(this.body.velocity.y, 105, 200, 3, 4) * -1,
+            remapClamped(this.body.velocity.y, 105, 200, -8, 0)
         )
     }
 
