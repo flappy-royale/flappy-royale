@@ -9,7 +9,16 @@ import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest } from "./api-con
 import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
 
 /// Careful with any ../ - you need to make sure they don't make contact with game-code
-import { lookupBoxesForTiers } from "../../assets/config/playfabConfig"
+
+// This is duped in playfabConfig
+export const lookupBoxesForTiers = {
+    "-1": "loot-box-tier-unknown",
+    0: "s-tier-lootbox",
+    1: "a-tier-lootbox",
+    2: "b-tier-lootbox",
+    3: "c-tier-lootbox"
+}
+
 import { LootboxTier } from "../../src/attire"
 import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
 

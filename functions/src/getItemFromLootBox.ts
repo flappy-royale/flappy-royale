@@ -1,4 +1,4 @@
-import { lookupBoxesForTiers } from "../../assets/config/playfabConfig"
+import { lookupBoxesForTiers } from "./index"
 import { LootboxTier } from "../../src/attire"
 import _ = require("lodash")
 

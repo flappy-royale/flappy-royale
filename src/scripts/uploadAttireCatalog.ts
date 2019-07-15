@@ -5,7 +5,7 @@ import { titleId, lootboxTiers, lookupBoxesForTiers } from "../../assets/config/
 import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import _ = require("lodash")
-import { defaultAttireSet, hedgehog } from "../attire/defaultAttireSet"
+import { hedgehog } from "../attire/defaultAttireSet"
 
 PlayFabAdmin.settings.developerSecretKey = playfabFirebaseProdSecretKey
 PlayFabAdmin.settings.titleId = titleId
