@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         webview.addJavascriptInterface(ShareManager(this, webview, this), "Sharing")
         webview.addJavascriptInterface(URLLoader(this, webview, this), "URLLoader")
         webview.addJavascriptInterface(AndroidStaticData(this, webview), "AndroidStaticData")
+        webview.addJavascriptInterface(PushNotifications(this, webview), "PushNotifications")
 
         webview.evaluateJavascript("var evt = new CustomEvent('fake-visibilitychange', { detail: { hidden: false }}); window.dispatchEvent(evt);") { _ -> }
     }

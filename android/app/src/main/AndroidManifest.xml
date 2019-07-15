@@ -58,6 +58,14 @@
         <meta-data android:name="com.google.android.gms.games.APP_ID"
                    android:value="\${GooglePlayGamesAppId}" />
 
+        <service
+                android:name=".FirebaseMessagingService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <!-- AdMob Mediation -->
         <activity android:name="com.google.android.gms.ads.AdActivity"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent" />

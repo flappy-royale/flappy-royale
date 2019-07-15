@@ -73,6 +73,7 @@ dependencies {
     }
 
     implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
     implementation "com.vorlonsoft:androidrate:1.2.1"
 
