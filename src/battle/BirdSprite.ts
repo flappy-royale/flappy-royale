@@ -73,8 +73,8 @@ export const setupBirdAnimations = (scene: Phaser.Scene) => {
  * we use internalXOffset and internalYOffset to move any images into the container at those pixel positions
  */
 
-const internalXOffset = 10
-const internalYOffset = 4
+const internalXOffset = 5
+const internalYOffset = -1
 
 export class BirdSprite {
     position: Phaser.Math.Vector2
@@ -265,8 +265,8 @@ export class BirdSprite {
 
         this.body.setSize(physicsWidth, physicsHeight)
         this.body.offset = new Phaser.Math.Vector2(
-            remapClamped(this.body.velocity.y, 105, 200, -1, 8) * -1,
-            remapClamped(this.body.velocity.y, 105, 200, -5, 2)
+            remapClamped(this.body.velocity.y, 105, 200, 3, 4) * -1,
+            remapClamped(this.body.velocity.y, 105, 200, -8, 0)
         )
     }
 
