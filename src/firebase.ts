@@ -1,51 +1,19 @@
 import * as firebase from "firebase/app"
 import "firebase/firestore"
 
-import { UserSettings } from "./user/userManager"
-import { SeedsResponse, LootBoxRequest } from "../functions/src/api-contracts"
-import { ReplayUploadRequest } from "../functions/src"
+import { UserSettings } from "./user/UserSettingsTypes"
+import {
+    SeedsResponse,
+    ReplayUploadRequest,
+    ConsumeEggResponse,
+    ConsumeEggRequest
+} from "../functions/src/api-contracts"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
 import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 import _ = require("lodash")
 import { loginPromise, getPlayfabId } from "./playFab"
-
-/** How it's stored in the DB to save on fs space */
-export interface SeedDataZipped {
-    replaysZipped: string
-}
-
-export interface JsonSeedData {
-    replaysZipped: string
-    expiry: string
-}
-
-/** How it's unzipped in the client */
-export interface SeedData {
-    replays: PlayerData[]
-}
-
-export interface PlayfabUser {
-    name: string
-    playfabId: string
-    avatarUrl: string
-}
-
-export interface PlayerData {
-    user: UserSettings
-    playfabUser?: PlayfabUser
-
-    /** User input actions */
-    actions: PlayerEvent[]
-    timestamp: number
-    score: number
-}
-
-export interface PlayerEvent {
-    timestamp: number
-    action: "flap" | "sync" | "died"
-    value?: number
-}
+import { SeedData, JsonSeedData, SeedDataZipped } from "./firebaseTypes"
 
 firebase.initializeApp(firebaseConfig)
 
@@ -163,15 +131,14 @@ export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
     })
 }
 
-export const openLootBox = async (table: string) => {
+export const consumeEgg = async (itemInstanceId: string): Promise<ConsumeEggResponse> => {
     await loginPromise
     const playfabId = getPlayfabId()
     if (!playfabId) return Promise.reject("No playfabId")
 
-    const request: LootBoxRequest = { playfabId, dropTableName: table }
+    const request: ConsumeEggRequest = { playfabId, itemInstanceId }
 
-    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openLootBox`, {
-        // return fetch(`http://localhost:5000/${firebaseConfig.projectId}/us-central1/addReplayToSeed`, {
+    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openConsumableEgg`, {
         method: "POST",
         body: JSON.stringify(request)
     })

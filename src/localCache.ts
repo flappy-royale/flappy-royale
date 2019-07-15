@@ -1,5 +1,6 @@
 import { SeedsResponse } from "../functions/src/api-contracts"
-import { JsonSeedData } from "./firebase"
+import { JsonSeedData } from "./firebaseTypes"
+
 import _ = require("lodash")
 import * as uuid from "uuid/v4"
 

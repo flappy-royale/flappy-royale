@@ -2,6 +2,7 @@
 // so that site's webpack run only imports our code
 
 export type LootboxTier = -1 | 0 | 1 | 2 | 3
+export const allLootBoxTiers = [0, 1, 2, 3] as const
 
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {

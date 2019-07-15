@@ -1,6 +1,7 @@
 import * as Phaser from "phaser"
 import * as constants from "../constants"
-import { getUserSettings, UserSettings } from "../user/userManager"
+import { getUserSettings } from "../user/userManager"
+import { UserSettings } from "../user/UserSettingsTypes";
 import * as appCache from "../appCache"
 import { preloadBirdSprites, setupBirdAnimations, BirdSprite, preloadBirdAttire } from "../battle/BirdSprite"
 import { dog, hedgehog, sheep } from "../attire"

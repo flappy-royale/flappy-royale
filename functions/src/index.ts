@@ -1,15 +1,17 @@
 import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
-import { SeedsResponse, LootBoxRequest } from "./api-contracts"
 import * as pako from "pako"
-import { SeedDataZipped, SeedData, JsonSeedData, PlayerData, PlayfabUser } from "../../src/firebase"
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
-import { PlayFabServer } from "playfab-sdk"
+import { PlayFabServer, PlayFabClient } from "playfab-sdk"
+
+import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest } from "./api-contracts"
+import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
+
+/// Careful with any ../ - you need to make sure they don't make contact with game-code
 import { lookupBoxesForTiers } from "../../assets/config/playfabConfig"
 import { LootboxTier } from "../../src/attire"
-import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
-import express = require("express")
+import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
 
 const cors = require("cors")({
     origin: true
@@ -68,22 +70,6 @@ export const seeds = functions.https.onRequest((request, response) => {
     })
 })
 
-export interface ReplayUploadRequest {
-    uuid?: string
-    playfabId?: string
-    version: string
-    seed: string
-    mode: number
-    won: boolean
-    data: import("../../src/firebase").PlayerData
-}
-
-/** Potential responses from the addReplayToSeed */
-export type ReplayUploadResponse =
-    | { success: true } // congrats, but no egg
-    | { error: string } // uh oh
-    | { item: null | PlayFabAdminModels.ResultTableNode } // could have an egg
-
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
         const { seed, uuid, version, data, mode, playfabId, won } = JSON.parse(request.body) as ReplayUploadRequest
@@ -102,6 +88,9 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         // The filename has historically been seed/name-timestamp.json
         // If playfabId exists, we'll use their playfabId instead of their name/uuid.
         let userIdentifier = uuid
+
+        // So we can do dev-specific code
+        let userName = ""
 
         if (playfabId) {
             const user: PlayfabUser | undefined = await new Promise((resolve, reject) => {
@@ -125,6 +114,8 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                             resolve(undefined)
                         } else {
                             if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
+                                userName = profile.DisplayName
+
                                 resolve({
                                     name: profile.DisplayName,
                                     playfabId: profile.PlayerId,
@@ -166,18 +157,30 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 await file.save(json)
             }
 
-            // Try figure out if we want to give a lootbox
-            if (won) {
-                return await openLootBox(playfabId, 3, response)
-            } else {
-                // Try run the lootbox
-                const tier = tierForScore(data.score)
-                // If you got a lootbox tier
-                if (tier) {
-                    return await openLootBox(playfabId, tier, response)
+            if (!userName.startsWith("ort") || !userName.startsWith("laz")) {
+                return response.status(200).send({ success: true })
+            }
+
+            // Give them a run through the lootbox check
+            const tier = won ? 3 : tierForScore(data.score)
+            if (tier !== undefined) {
+                // Give the consumable egg
+                const eggInstance = await playfabPromisify(PlayFabClient.PurchaseItem)({
+                    // PlayFabId: playfabId
+                    ItemId: `egg-${tier}`,
+                    Price: 0,
+                    VirtualCurrency: "RM"
+                })
+
+                if (eggInstance.data && eggInstance.data.Items && eggInstance.data.Items.length > 0) {
+                    const itemInstanceId = eggInstance.data.Items[0].ItemInstanceId
+                    return response.status(200).send({ egg: tier, itemInstanceId })
+                } else {
+                    return response.status(400).send({ error: "Could not get an egg for the player" })
                 }
             }
-            return
+            const responseJSON = { egg: tier }
+            return response.status(200).send(responseJSON)
         } else {
             const responseJSON = { success: true }
             return response.status(200).send(responseJSON)
@@ -317,44 +320,83 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
     })
 })
 
-export const openLootBox = async (playfabId: string, initialTier: LootboxTier, response: express.Response) => {
-    const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({ PlayFabId: playfabId })
+export const openConsumableEgg = functions.https.onRequest(async (request, response) => {
+    cors(request, response, async () => {
+        const { itemInstanceId, playfabId } = JSON.parse(request.body) as ConsumeEggRequest
 
-    const inventory = inventoryResult.data.Inventory
-    if (!inventory) {
-        return response.status(400).send({ error: "Could not fetch inventory for player" })
-    }
-    const inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
+        ////
+        ////  Step 1, grab all of the inventory - this is used in 2 ways
+        ////    - Confirming you have an egg to consume
+        ////    - Filtering out taken options for the lootbox
+        ////
+        const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({ PlayFabId: playfabId })
+        const inventory = inventoryResult.data.Inventory
+        if (!inventory) {
+            return response.status(400).send({ error: "Could not fetch inventory for player" })
+        }
 
-    const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
-        TableIDs: [Object.values(lookupBoxesForTiers)]
+        const inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
+
+        ////
+        ////  Step 2, consume the hopefully existing egg
+        ////
+
+        const itemToConsume = inventory.find(i => i.ItemInstanceId === itemInstanceId)
+        if (!itemToConsume) {
+            return response
+                .status(400)
+                .send({ error: "Could not find an item with the sent itemInstanceId in player's inventory" })
+        }
+
+        const consumeResult = await playfabPromisify(PlayFabClient.ConsumeItem)({ itemInstanceId, ConsumeCount: 1 })
+        if (consumeResult.data.error) {
+            return response.status(400).send({ error: "Could not consume itemInstanceId" })
+        }
+
+        ////
+        ////  Step 4, grab all of the loot tables which are sets of tiered loot
+        ////
+        const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
+            TableIDs: [Object.values(lookupBoxesForTiers)]
+        })
+
+        if (!lootTables.data.Tables) {
+            return response.status(400).send({ error: "Could not fetch drop tables" })
+        }
+
+        ////
+        ////  Step 5, roll the dice
+        ////
+
+        // "egg-3".split("egg-") > [ '', '3' ]
+        const initialTier = (itemToConsume.ItemId!.split("egg-")[1] as any) as LootboxTier
+        const rewardedItem = getItemFromLootBoxStartingWith(
+            initialTier,
+            Object.values(lootTables.data.Tables),
+            inventoryIds
+        )
+
+        if (!rewardedItem) {
+            // You've unlocked them all. Congrats. You should never
+            // get here because you won't get a consumable egg, but best to be prepared
+            return response.status(204).send({ item: null })
+        }
+
+        ////
+        ////  Step 6, Grant the new item
+        ////
+
+        await playfabPromisify(PlayFabServer.GrantItemsToUser)({
+            Annotation: "Loot box",
+            PlayFabId: playfabId,
+            ItemIds: [rewardedItem.ResultItem]
+        }).catch(e => {
+            return response.status(400).send({ error: "Could not grant item to user" })
+        })
+
+        return response.status(200).send({ item: rewardedItem.ResultItem })
     })
-
-    if (!lootTables.data.Tables) {
-        return response.status(400).send({ error: "Could not fetch drop tables" })
-    }
-
-    const rewardedItem = getItemFromLootBoxStartingWith(
-        initialTier,
-        Object.values(lootTables.data.Tables),
-        inventoryIds
-    )
-
-    if (!rewardedItem) {
-        // You've unlocked them all.
-        return response.status(204).send({ item: null })
-    }
-
-    await playfabPromisify(PlayFabServer.GrantItemsToUser)({
-        Annotation: "Loot box",
-        PlayFabId: playfabId,
-        ItemIds: [rewardedItem.ResultItem]
-    }).catch(e => {
-        return response.status(400).send({ error: "Could not grant item to user" })
-    })
-
-    return response.status(200).send({ item: rewardedItem.ResultItem })
-}
+})
 
 const unzip = (bin: string) => {
     if (!bin) {
@@ -409,6 +451,9 @@ function playfabPromisify<T extends PlayFabModule.IPlayFabResultCommon>(
         return new Promise((resolve, reject) => {
             fn(request, (error: PlayFabModule.IPlayFabError, result: PlayFabModule.IPlayFabSuccessContainer<T>) => {
                 if (error) {
+                    console.error("Issue with API request:")
+                    console.error(error)
+                    console.error(request)
                     reject(error)
                 }
                 resolve(result)

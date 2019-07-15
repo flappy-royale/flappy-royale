@@ -1,4 +1,4 @@
-import { PresentationAttire, LootboxTier } from "../attire"
+import { PresentationAttire, LootboxTier, allLootBoxTiers } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
 import { titleId, lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
@@ -36,6 +36,25 @@ const attireToCatalogItem = (item: PresentationAttire): PlayFabAdminModels.Catal
         }
     }
 }
+
+const consumableEggToken = (tier: LootboxTier): PlayFabAdminModels.CatalogItem => ({
+    ItemId: `egg-${tier}`,
+    ItemImageUrl: "",
+    Tags: [""],
+    Description: `Egg to unlock any  tier ${tier} attire`,
+    ItemClass: "",
+
+    CanBecomeCharacter: false,
+    InitialLimitedEditionCount: 0,
+    IsLimitedEdition: false,
+    IsStackable: false,
+    IsTradable: false,
+    Consumable: { UsageCount: 1 },
+
+    VirtualCurrencyPrices: {
+        RM: 0
+    }
+})
 
 const attireToStoreItem = (attire: PresentationAttire): PlayFabAdminModels.StoreItem => {
     return {
@@ -79,8 +98,9 @@ const createTieredLootBox = async (tier: LootboxTier, allAttire: PresentationAtt
 
 const setEntireAttire = async (items: PresentationAttire[]) => {
     const catalogue = items.map(attireToCatalogItem)
+    const eggs = allLootBoxTiers.map(consumableEggToken)
     return await playfabPromisify(PlayFabAdmin.SetCatalogItems)({
-        Catalog: catalogue
+        Catalog: [...catalogue, ...eggs]
     })
 }
 

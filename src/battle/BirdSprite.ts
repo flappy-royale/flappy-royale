@@ -1,7 +1,8 @@
 import * as constants from "../constants"
 import { Scene } from "phaser"
 
-import { getUserSettings, Bird } from "../user/userManager"
+import { getUserSettings } from "../user/userManager"
+import { Bird } from "../user/UserSettingsTypes"
 import { BattleScene } from "./Scene"
 import { haptics } from "../haptics"
 import { becomeButton } from "../menus/utils/becomeButton"
