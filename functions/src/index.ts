@@ -118,7 +118,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                     ShowDisplayName: true
                 } as unknown) as number // This is a bug in PlayFab's typings
             })
-            // if (!(result && result.data)) reject("No result or data")
 
             if (result && result.data && result.data.PlayerProfile) {
                 const profile = result.data.PlayerProfile
@@ -168,11 +167,18 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             }
 
             // Upload stats
-            const stats = replayDataToStats(replay)
+            const { stats, userData } = await replayDataToStats(replay, playfabId)
             if (stats) {
                 await playfabPromisify(PlayFabServer.UpdatePlayerStatistics)({
                     PlayFabId: playfabId,
                     Statistics: stats
+                })
+            }
+
+            if (userData) {
+                await playfabPromisify(PlayFabServer.UpdateUserData)({
+                    PlayFabId: playfabId,
+                    Data: userData
                 })
             }
 
@@ -205,12 +211,38 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
     })
 })
 
-export const replayDataToStats = (replay: ReplayUploadRequest): Partial<PlayfabUserStats> | undefined => {
+export const replayDataToStats = async (
+    replay: ReplayUploadRequest,
+    playfabId: string
+): Promise<{
+    stats?: Partial<PlayfabUserStats>
+    userData?: { scoreHistory: number[]; winStreak: number }
+}> => {
     // Guard against old clients without valid stats data
-    if (!replay.opponents || !replay.time || !replay.position) return undefined
+    if (!replay.opponents || !replay.time || !replay.position) return {}
 
     const { position, data, opponents, mode, time } = replay
     const { actions, score } = data
+
+    // Fetch and increment score history
+    const historyRequest = await playfabPromisify(PlayFabServer.GetUserData)({
+        PlayFabId: playfabId,
+        Keys: ["scoreHistory", "winStreak"]
+    })
+    let scoreHistory: number[] = []
+    let winStreak = 0
+
+    if (historyRequest.data && historyRequest.data.Data) {
+        if (historyRequest.data.Data.scoreHistory && historyRequest.data.Data.scoreHistory.Value) {
+            scoreHistory = JSON.parse(historyRequest.data.Data.scoreHistory.Value!) || []
+        }
+
+        if (historyRequest.data.Data.scoreHistory && historyRequest.data.Data.winStreak.Value) {
+            winStreak = parseInt(historyRequest.data.Data.winStreak.Value!) || 0
+        }
+    }
+
+    scoreHistory.unshift(score)
 
     let result: Partial<PlayfabUserStats> = {
         BestPosition: position,
@@ -229,14 +261,14 @@ export const replayDataToStats = (replay: ReplayUploadRequest): Partial<PlayfabU
     } else if (mode === GameMode.Royale) {
         result.RoyaleGamesPlayed = 1
         if (position === 0 && opponents > 0) {
+            winStreak += 1
             result.RoyaleGamesWon = 1
-            // Sort out win streak
-            // result.RoyaleWinStreak: 0,
-            // CurrentRoyaleStreak: 0
+            result.RoyaleWinStreak = winStreak
+            result.CurrentRoyaleStreak = winStreak
         }
     }
 
-    return result
+    return { stats: result, userData: { scoreHistory, winStreak } }
 }
 
 /**
