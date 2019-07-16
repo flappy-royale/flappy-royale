@@ -161,11 +161,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 await file.save(json)
             }
 
-            // Web folks can never earn eggs
-            if (demo) {
-                return response.status(200).send({ success: true })
-            }
-
             // Upload stats
             const { stats, userData } = await replayDataToStats(replay, playfabId)
             if (stats) {
@@ -189,6 +184,12 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 })
             }
 
+            // Web folks can never earn eggs
+            // if (demo) {
+            if (true) {
+                return response.status(200).send({ success: true })
+            }
+
             // Give them a run through the lootbox check
             const tier = won ? 3 : tierForScore(data.score)
             if (tier !== undefined) {
@@ -201,9 +202,9 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 if (
                     eggInstance.data &&
                     eggInstance.data.ItemGrantResults &&
-                    eggInstance.data.ItemGrantResults.length > 0
+                    eggInstance.data.ItemGrantResults!.length > 0
                 ) {
-                    const itemInstanceId = eggInstance.data.ItemGrantResults[0].ItemInstanceId
+                    const itemInstanceId = eggInstance.data.ItemGrantResults![0].ItemInstanceId
                     return response.status(200).send({ egg: tier, itemInstanceId })
                 } else {
                     return response.status(400).send({ error: "Could not get an egg for the player" })
