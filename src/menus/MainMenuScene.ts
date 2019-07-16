@@ -29,8 +29,6 @@ import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 import { NewEggFoundScene } from "./NewEggFoundScene"
 
-declare const DEMO: boolean
-
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
     const mainMenu = new MainMenuScene()
@@ -139,11 +137,7 @@ export class MainMenuScene extends Phaser.Scene {
         becomeButton(royaleButton, this.loadRoyale, this)
 
         const trial = this.add.image(74, 152 + c.NotchOffset, "trial-button")
-        if (!DEMO) {
-            becomeButton(trial, this.loadTrial, this)
-        } else {
-            trial.setAlpha(0.3)
-        }
+        becomeButton(trial, this.loadTrial, this)
 
         const settingsButton = this.add.image(c.GameWidth - 20, c.GameHeight - 21, "settings-button")
         becomeButton(settingsButton, this.loadSettings, this)
