@@ -181,8 +181,50 @@ const emptyStats: PlayerStats = {
     scoreHistory: []
 }
 
-export const setUserStatistics = (stats: Partial<PlayerStats>) => {
-    localStorage["stats"] = JSON.stringify({ ...emptyStats, ...stats })
+export const updateUserStatisticsFromPlayFab = (data: {
+    statistics?: PlayFabClientModels.StatisticValue[]
+    scoreHistory?: string
+    winStreak?: string
+}) => {
+    let userStatistics: Partial<PlayerStats> = {}
+
+    const statsMap: any = {
+        BestPosition: "bestPosition",
+        BirdsPast: "birdsBeaten",
+        Crashes: "crashes",
+        CurrentRoyaleStreak: "royaleStreak",
+        FirstPipeFails: "instaDeaths",
+        Flaps: "totalFlaps",
+        RoyaleGamesWon: "royaleWins",
+        RoyaleWinStreak: "bestRoyaleStreak",
+        Score: "bestScore",
+        TotalGamesPlayed: "gamesPlayed",
+        TotalScore: "totalScore",
+        TotalTimeInGame: "totalTime"
+    }
+
+    ;(data.statistics || []).forEach(stat => {
+        const key = statsMap[stat.StatisticName!]
+        if (key) {
+            ;(userStatistics as any)[key] = stat.Value
+        }
+    })
+
+    if (data.scoreHistory) {
+        const scoreHistory: number[] = JSON.parse(data.scoreHistory)
+        userStatistics.scoreHistory = scoreHistory
+    }
+
+    if (data.winStreak) {
+        const winStreak = parseInt(data.winStreak)
+        userStatistics.royaleStreak = winStreak
+    }
+
+    updateUserStatistics(userStatistics)
+}
+
+export const updateUserStatistics = (stats: Partial<PlayerStats>) => {
+    localStorage["stats"] = JSON.stringify({ ...getUserStatistics(), ...stats })
 
     // This is a convenient place to make sure the user doesn't have royales floating around
     localStorage.removeItem("royales")

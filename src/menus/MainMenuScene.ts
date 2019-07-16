@@ -28,6 +28,7 @@ import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 import { NewEggFoundScene } from "./NewEggFoundScene"
+import { loginPromise, fetchLatestPlayerInfo } from "../playFab"
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
@@ -92,6 +93,10 @@ export class MainMenuScene extends Phaser.Scene {
                 const settings = getUserSettings()
                 this.showOnboardingIfAppropriate(settings)
             })
+
+        loginPromise.then(() => {
+            fetchLatestPlayerInfo()
+        })
 
         // This is just used for taking snapshots
         window.dispatchEvent(new Event("gameloaded"))

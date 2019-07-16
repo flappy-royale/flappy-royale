@@ -6,7 +6,7 @@ import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
-import { changeSettings, syncedSettingsKeys, PlayerStats, setUserStatistics } from "./user/userManager"
+import { changeSettings, syncedSettingsKeys, updateUserStatisticsFromPlayFab } from "./user/userManager"
 import { UserSettings } from "./user/UserSettingsTypes"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
@@ -174,70 +174,7 @@ const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContaine
     // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
     const payload = result.data.InfoResultPayload
     if (payload) {
-        let settings: Partial<UserSettings> = {}
-        if (payload.PlayerProfile) {
-            settings.name = payload.PlayerProfile.DisplayName
-            settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
-        }
-
-        if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
-            const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
-            syncedSettingsKeys.forEach(key => {
-                if (!_.isUndefined(storedSettings[key])) {
-                    ;(settings as any)[key] = storedSettings[key]
-                }
-            })
-        }
-
-        // Stats
-        let userStatistics: Partial<PlayerStats> = {}
-
-        if (payload.PlayerStatistics) {
-            const statsMap: any = {
-                BestPosition: "bestPosition",
-                BirdsPast: "birdsBeaten",
-                Crashes: "crashes",
-                CurrentRoyaleStreak: "royaleStreak",
-                FirstPipeFails: "instaDeaths",
-                Flaps: "totalFlaps",
-                RoyaleGamesWon: "royaleWins",
-                RoyaleWinStreak: "bestRoyaleStreak",
-                Score: "bestScore",
-                TotalGamesPlayed: "gamesPlayed",
-                TotalScore: "totalScore",
-                TotalTimeInGame: "totalTime"
-            }
-            payload.PlayerStatistics.forEach(stat => {
-                const key = statsMap[stat.StatisticName!]
-                if (key) {
-                    ;(userStatistics as any)[key] = stat.Value
-                }
-            })
-        }
-
-        if (payload.UserData && payload.UserData.scoreHistory && payload.UserData.scoreHistory.Value) {
-            const scoreHistory: number[] = JSON.parse(payload.UserData.scoreHistory.Value!)
-            userStatistics.scoreHistory = scoreHistory
-        }
-
-        if (payload.UserData && payload.UserData.winStreak && payload.UserData.winStreak.Value) {
-            const winStreak = parseInt(payload.UserData.winStreak.Value!)
-            userStatistics.royaleStreak = winStreak
-        }
-
-        setUserStatistics(userStatistics)
-
-        // Attire unlocks
-        if (payload.UserInventory) {
-            const eggs = payload.UserInventory.filter(i => i.ItemId && i.ItemId.startsWith("egg-"))
-            const attire = payload.UserInventory.filter(i => i.ItemId && !i.ItemId.startsWith("egg-"))
-
-            changeSettings({
-                unlockedAttire: attire.map(i => i.ItemId!)
-            })
-        }
-
-        changeSettings(settings)
+        handleCombinedPayload(payload)
     }
 
     playfabUserId = result.data.PlayFabId
@@ -294,6 +231,48 @@ const loginRequest = (): PlayFabClientModels.LoginWithCustomIDRequest => {
             GetUserReadOnlyData: false,
             GetUserVirtualCurrency: false
         }
+    }
+}
+
+const handleCombinedPayload = (payload: PlayFabClientModels.GetPlayerCombinedInfoResultPayload) => {
+    if (payload) {
+        let settings: Partial<UserSettings> = {}
+        if (payload.PlayerProfile) {
+            settings.name = payload.PlayerProfile.DisplayName
+            settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
+        }
+
+        if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
+            const storedSettings = JSON.parse(payload.UserData.userSettings.Value)
+            syncedSettingsKeys.forEach(key => {
+                if (!_.isUndefined(storedSettings[key])) {
+                    ;(settings as any)[key] = storedSettings[key]
+                }
+            })
+        }
+
+        // Stats
+        const scoreHistory =
+            payload.UserData && payload.UserData.scoreHistory ? payload.UserData.scoreHistory.Value : undefined
+        const winStreak = payload.UserData && payload.UserData.winStreak ? payload.UserData.winStreak.Value : undefined
+
+        updateUserStatisticsFromPlayFab({
+            statistics: payload.PlayerStatistics,
+            scoreHistory,
+            winStreak
+        })
+
+        // Attire unlocks
+        if (payload.UserInventory) {
+            const eggs = payload.UserInventory.filter(i => i.ItemId && i.ItemId.startsWith("egg-"))
+            const attire = payload.UserInventory.filter(i => i.ItemId && !i.ItemId.startsWith("egg-"))
+
+            changeSettings({
+                unlockedAttire: attire.map(i => i.ItemId!)
+            })
+        }
+
+        changeSettings(settings)
     }
 }
 
@@ -408,6 +387,20 @@ export const updateUserSettings = async (settings: UserSettings) => {
     })
 }
 
+export const fetchLatestPlayerInfo = async () => {
+    const result = await playfabPromisify(PlayFabClient.GetPlayerCombinedInfo)({
+        InfoRequestParameters: {
+            GetUserData: true,
+            GetPlayerProfile: true,
+            GetPlayerStatistics: true,
+            GetUserInventory: true
+        }
+    })
+    const payload = result.data.InfoResultPayload
+    if (payload) {
+        handleCombinedPayload(payload)
+    }
+}
 export const event = async (name: string, params: any) => {
     await loginPromise
 
