@@ -77,11 +77,10 @@ const saveSettings = (settings: UserSettings) => {
 export const changeSettings = (settings: Partial<UserSettings>) => {
     const existingSettings = getUserSettings()
 
-    if ("name" in settings) {
-        existingSettings.name = settings.name!
-    }
+    if ("name" in settings) existingSettings.name = settings.name!
     if ("royale" in settings) existingSettings.royale = settings.royale!
     if ("hasAskedAboutTutorial" in settings) existingSettings.hasAskedAboutTutorial = settings.hasAskedAboutTutorial!
+    if ("unlockedAttire" in settings) existingSettings.unlockedAttire = settings.unlockedAttire!
 
     if (settings.aesthetics) {
         const base = settings.aesthetics!.attire.filter(a => a.base)
@@ -91,10 +90,6 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
         }
 
         existingSettings.aesthetics = settings.aesthetics!
-    }
-
-    if (settings.unlockedAttire) {
-        existingSettings.unlockedAttire = settings.unlockedAttire
     }
 
     saveSettings(existingSettings)

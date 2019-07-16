@@ -83,7 +83,7 @@ export const seeds = functions.https.onRequest((request, response) => {
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
         const replay = JSON.parse(request.body) as ReplayUploadRequest
-        const { seed, uuid, version, data, mode, position, opponents, playfabId } = replay
+        const { seed, uuid, version, data, mode, position, opponents, playfabId, demo } = replay
         const won = position === 0 && opponents > 0
 
         if (!version) {
@@ -162,7 +162,8 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 await file.save(json)
             }
 
-            if (!userName.startsWith("ort")) {
+            // Web folks can never earn eggs
+            if (demo) {
                 return response.status(200).send({ success: true })
             }
 

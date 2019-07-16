@@ -12,7 +12,7 @@
     },
     "scripts": {
         "build": "yarn webpack-prod; yarn webpack-site",
-        "start": "yarn webpack-dev --watch & yarn live-server --port=8085 --wait=1000",
+        "start": "yarn webpack-dev --watch & yarn live-server --port=8085 --ignorePattern='ts$'",
         "start-site": "yarn parcel serve web/index.pug",
         "type-check": "yarn tsc --noEmit",
         "pre-deploy": "yarn ts-node src/scripts/post-build.ts",

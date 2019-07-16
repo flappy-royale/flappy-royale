@@ -24,6 +24,6 @@ export interface UserSettings extends Bird {
     }
     /** Whether or not the player has been asked if they know how to play onboarding */
     hasAskedAboutTutorial: boolean
-    // An array of IDs
+    /**  An array of IDs */
     unlockedAttire: string[]
 }

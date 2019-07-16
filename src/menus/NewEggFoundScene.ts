@@ -51,6 +51,7 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.load.image("egg-top", require("../../assets/menu/EggGoldTop.png"))
         this.load.image("egg-bottom", require("../../assets/menu/EggGoldBottom.png"))
         this.load.image("button-bg", require("../../assets/menu/ButtonBG.png"))
+        this.load.image("egg-exit", require("../../assets/menu/x.png"))
 
         this.load.bitmapFont(
             "fipps-bit",
@@ -280,6 +281,10 @@ export class NewEggFoundScene extends Phaser.Scene {
 
         this.bottomLabel = text
         this.buttonLabel = buttonText
+
+        const back = this.add.image(c.GameWidth - 24, c.GameAreaTopOffset + 18, "egg-exit").setAlpha(0)
+        becomeButton(back, this.exit, this)
+        this.add.tween({ targets: back, alpha: "0.5", ease: "Sine.easeInOut" })
     }
 
     tappedButton = async () => {
@@ -287,14 +292,34 @@ export class NewEggFoundScene extends Phaser.Scene {
 
         if (this.seenAd) {
             // remove the scene
-            this.game.scene.remove(this)
+            this.exit()
         } else {
             this.vibrateEgg()
 
             if (c.isInDevMode) {
-                this.time.delayedCall(510, this.adsHaveBeenUnlocked, [], this)
+                this.time.delayedCall(100, this.adsHaveBeenUnlocked, [], this)
             } else {
-                this.time.delayedCall(510, requestModalAd, [eggAdID], this)
+                this.time.delayedCall(300, requestModalAd, [eggAdID], this)
+            }
+        }
+    }
+
+    exit() {
+        if (this.seenAd) {
+            this.game.scene.remove(this)
+        } else {
+            if (this.egg && this.eggWings) {
+                this.seenAd = true
+                this.add.tween({
+                    targets: [this.egg, this.eggWings],
+                    delay: 700,
+                    x: "+=300",
+                    ease: "Sine.easeInOut",
+                    onComplete: this.exit,
+                    onCompleteScope: this
+                })
+            } else {
+                this.game.scene.remove(this)
             }
         }
     }
@@ -337,7 +362,7 @@ export class NewEggFoundScene extends Phaser.Scene {
             return
         }
 
-        analyticsEvent("egg_found", { tier: this.props.tier, id: attire.id })
+        analyticsEvent("egg_opened", { tier: this.props.tier, id: attire.id })
 
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)
@@ -348,6 +373,8 @@ export class NewEggFoundScene extends Phaser.Scene {
     openEgg() {
         this.bottomLabel.setText(`${this.unlockedItem!.name}`)
         this.buttonLabel.setText("Cool")
+        centerAlignTextLabel(this.buttonLabel)
+        centerAlignTextLabel(this.bottomLabel)
 
         this.eggWings.destroy()
 

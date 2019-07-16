@@ -39,6 +39,8 @@ import { NewEggFoundScene } from "../menus/NewEggFoundScene"
 import { ReplayUploadResponse } from "../../functions/src/api-contracts"
 import { SeedData, PlayerEvent } from "../firebaseTypes"
 
+declare const DEMO: boolean
+
 export interface BattleSceneSettings {
     /** The string representation for the level */
     seed: string
@@ -743,6 +745,7 @@ export class BattleScene extends Phaser.Scene {
                     timestamp: Date.now(),
                     score: this.score
                 },
+                demo: DEMO,
                 position: this.userPositionAgainstGhosts(),
                 opponents: this.seedData.replays.length,
                 time: Date.now() - this.startTimestamp!
