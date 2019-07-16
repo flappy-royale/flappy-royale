@@ -729,34 +729,32 @@ export class BattleScene extends Phaser.Scene {
             recordGamePlayed(stats)
             analyticsEvent("game_played", stats)
 
-            if (hasJumped) {
-                const settings = getUserSettings()
+            const settings = getUserSettings()
 
-                uploadReplayForSeed({
-                    won,
-                    seed: this.seed,
-                    version: constants.APIVersion,
-                    mode: this.mode,
-                    playfabId: PlayFab.getPlayfabId(),
-                    data: { actions: this.userInput, timestamp: Date.now(), score: this.score }
-                })
-                    .then(a => a.json())
-                    .then((response: ReplayUploadResponse) => {
-                        if ("error" in response) {
-                            console.error(response)
-                        } else if ("itemInstanceId" in response) {
-                            if (response.itemInstanceId) {
-                                analyticsEvent("egg_found", { tier: response.egg })
-                                const egg = new NewEggFoundScene({
-                                    eggItemInstanceId: response.itemInstanceId,
-                                    tier: response.egg
-                                })
-                                this.game.scene.add("won-egg", egg, true, {})
-                            }
+            uploadReplayForSeed({
+                won,
+                seed: this.seed,
+                version: constants.APIVersion,
+                mode: this.mode,
+                playfabId: PlayFab.getPlayfabId(),
+                data: { actions: this.userInput, timestamp: Date.now(), score: this.score }
+            })
+                .then(a => a.json())
+                .then((response: ReplayUploadResponse) => {
+                    if ("error" in response) {
+                        console.error(response)
+                    } else if ("itemInstanceId" in response) {
+                        if (response.itemInstanceId) {
+                            analyticsEvent("egg_found", { tier: response.egg })
+                            const egg = new NewEggFoundScene({
+                                eggItemInstanceId: response.itemInstanceId,
+                                tier: response.egg
+                            })
+                            this.game.scene.add("won-egg", egg, true, {})
                         }
-                        // Otherwise it's just a success NOOP
-                    })
-            }
+                    }
+                    // Otherwise it's just a success NOOP
+                })
         }
 
         if (game.usesLives(this.mode)) {

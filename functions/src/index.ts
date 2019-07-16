@@ -93,6 +93,11 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             return response.status(400).send({ error: "Needs a game mode in request" })
         }
 
+        const hasFlapped = data.actions.filter(a => a.action === "flap").length > 2
+        if (!hasFlapped) {
+            return response.status(200).send({ status: "Did not flap, not doing anything with recording data" })
+        }
+
         // "uuid" is currently just display name.
         // The filename has historically been seed/name-timestamp.json
         // If playfabId exists, we'll use their playfabId instead of their name/uuid.
