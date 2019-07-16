@@ -27,6 +27,7 @@ import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
+import { NewEggFoundScene } from "./NewEggFoundScene"
 
 declare const DEMO: boolean
 
@@ -159,7 +160,7 @@ export class MainMenuScene extends Phaser.Scene {
         checkToShowRatingPrompt()
 
         // For working on the Egg ATM
-        // addScene(this.game, AppSettingsKey, new NewEggFoundScene({ attireSet: defaultAttireSet }), true)
+        // addScene(this.game, AppSettingsKey, new NewEggFoundScene({ eggItemInstanceId: "123" }), true)
     }
 
     loadSettings() {
