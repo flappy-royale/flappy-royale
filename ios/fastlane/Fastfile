@@ -31,8 +31,8 @@ platform :ios do
   lane :appstore do
     ensure_git_status_clean
 
-    increment_build_number(xcodeproj: "FlappyRoyale.xcworkspace")
-    commit_version_bump(xcodeproj: "FlappyRoyale.xcworkspace")
+    increment_build_number(xcodeproj: "FlappyRoyale.xcodeproj")
+    commit_version_bump(xcodeproj: "FlappyRoyale.xcodeproj")
 
     build_app(workspace: "FlappyRoyale.xcworkspace", scheme: "FlappyRoyale")
     upload_to_app_store
