@@ -23,7 +23,7 @@ class GooglePlayGames(private val context: Context, val webview: WebView, val ac
     private var googleId: String? = null
 
     private var waitingOnData: Boolean = false
-    private var loginWasValid: Boolean = false
+    private var loginWasValid: Boolean? = null
 
     private val googleSignInClient = GoogleSignIn.getClient(
         activity,
@@ -84,7 +84,7 @@ class GooglePlayGames(private val context: Context, val webview: WebView, val ac
     }
 
     private fun sendData() {
-        if (!loginWasValid) {
+        if (loginWasValid == false) {
             waitingOnData = false
             Handler(Looper.getMainLooper()).post(Runnable {
                 webview.evaluateJavascript("window.dispatchEvent(new Event('googlePlayLogin'))") { _ -> }

@@ -334,8 +334,8 @@ export const googlePlayGamesRequest = async (): Promise<
                         AndroidDeviceId: e.detail.googleId
                     }
                     if (window.playfabAuth && window.playfabAuth.payload) {
-                        ;(login.AndroidDevice = window.playfabAuth.payload.AndroidDevice),
-                            (login.OS = window.playfabAuth.payload.OS)
+                        login.AndroidDevice = window.playfabAuth.payload.AndroidDevice
+                        login.OS = window.playfabAuth.payload.OS
                     }
 
                     resolve(login)
