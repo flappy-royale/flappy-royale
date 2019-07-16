@@ -20,8 +20,7 @@ export const lookupBoxesForTiers = {
 }
 
 import { LootboxTier } from "../../src/attire"
-import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData, PlayerEvent } from "../../src/firebaseTypes"
-import { GameMode } from "../../src/battle/utils/gameMode"
+import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
 
 const cors = require("cors")({
     origin: true
@@ -170,9 +169,16 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             // Upload stats
             const { stats, userData } = await replayDataToStats(replay, playfabId)
             if (stats) {
+                const statsArray = []
+                for (const key in stats) {
+                    statsArray.push({
+                        StatisticName: key,
+                        Value: (stats as any)[key]
+                    })
+                }
                 await playfabPromisify(PlayFabServer.UpdatePlayerStatistics)({
                     PlayFabId: playfabId,
-                    Statistics: stats
+                    Statistics: statsArray
                 })
             }
 
@@ -217,7 +223,7 @@ export const replayDataToStats = async (
     playfabId: string
 ): Promise<{
     stats?: Partial<PlayfabUserStats>
-    userData?: { scoreHistory: number[]; winStreak: number }
+    userData?: { scoreHistory: string; winStreak: number }
 }> => {
     // Guard against old clients without valid stats data
     if (!replay.opponents || !replay.time || !replay.position) return {}
@@ -245,10 +251,13 @@ export const replayDataToStats = async (
 
     scoreHistory.unshift(score)
 
+    const RoyaleMode = 1
+    const TrialMode = 2
+
     let result: Partial<PlayfabUserStats> = {
         BestPosition: position,
         BirdsPast: opponents - position,
-        Crashes: position === 0 && mode === GameMode.Royale ? 0 : 1,
+        Crashes: position === 0 && mode === RoyaleMode ? 0 : 1,
         FirstPipeFails: score < 1 ? 1 : 0,
         Flaps: actions.filter(a => a.action === "flap").length,
         Score: score,
@@ -257,9 +266,9 @@ export const replayDataToStats = async (
         TotalTimeInGame: time || 0
     }
 
-    if (mode === GameMode.Trial) {
+    if (mode === TrialMode) {
         result["DailyTrial-1"] = data.score
-    } else if (mode === GameMode.Royale) {
+    } else if (mode === RoyaleMode) {
         result.RoyaleGamesPlayed = 1
         if (position === 0 && opponents > 0) {
             winStreak += 1
@@ -269,7 +278,13 @@ export const replayDataToStats = async (
         }
     }
 
-    return { stats: result, userData: { scoreHistory, winStreak } }
+    return {
+        stats: result,
+        userData: {
+            scoreHistory: JSON.stringify(scoreHistory),
+            winStreak
+        }
+    }
 }
 
 /**

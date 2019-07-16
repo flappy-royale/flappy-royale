@@ -20,7 +20,6 @@ import {
     getHighScore,
     setHighScore,
     livesExtensionStateForSeed,
-    getUserStatistics,
     saveDailyTrialRun
 } from "../user/userManager"
 import { Bird } from "../user/UserSettingsTypes"
@@ -715,16 +714,7 @@ export class BattleScene extends Phaser.Scene {
         this.analytics.finishRecording({ score: this.score, position })
         const stats = this.analytics.getResults()
 
-        const userStats = getUserStatistics()
-        const won = position === 0 && this.hasOpponents()
-        const playFabSubmission = PlayFab.playedGame({
-            mode: this.mode,
-            score: this.score,
-            flaps: stats.flaps,
-            won,
-            winStreak: userStats.royaleStreak,
-            birdsPast: stats.totalBirds
-        })
+        let uploadPromise: Promise<any> | undefined = undefined
 
         // Check if they did enough for us to record the run
         // in the future we'll want to show the death animation etc
@@ -733,9 +723,7 @@ export class BattleScene extends Phaser.Scene {
             recordGamePlayed(stats)
             analyticsEvent("game_played", stats)
 
-            const settings = getUserSettings()
-
-            uploadReplayForSeed({
+            uploadPromise = uploadReplayForSeed({
                 seed: this.seed,
                 version: constants.APIVersion,
                 mode: this.mode,
@@ -750,6 +738,8 @@ export class BattleScene extends Phaser.Scene {
                 opponents: this.seedData.replays.length,
                 time: Date.now() - this.startTimestamp!
             })
+
+            uploadPromise
                 .then(a => a.json())
                 .then((response: ReplayUploadResponse) => {
                     if ("error" in response) {
@@ -838,9 +828,11 @@ export class BattleScene extends Phaser.Scene {
                     // We're showing leaderboard results from PlayFab.
                     // After submitting our latest score, it takes some time (anecdotally ~500ms) for PlayFab to register the new score.
                     // Let's awkwardly wait.
-                    playFabSubmission.then(() => {
-                        setTimeout(showOverlay, 500)
-                    })
+                    if (uploadPromise) {
+                        uploadPromise.then(() => {
+                            setTimeout(showOverlay, 500)
+                        })
+                    }
                 } else {
                     showOverlay()
                 }
