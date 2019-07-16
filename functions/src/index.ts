@@ -100,45 +100,33 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
 
         // So we can do dev-specific code
         let userName = ""
+        let user: PlayfabUser | undefined
 
         if (playfabId) {
-            const user: PlayfabUser | undefined = await new Promise((resolve, reject) => {
-                PlayFabServer.GetPlayerProfile(
-                    {
-                        PlayFabId: playfabId,
-                        ProfileConstraints: ({
-                            ShowAvatarUrl: true,
-                            ShowDisplayName: true
-                        } as unknown) as number // This is a bug in PlayFab's typings
-                    },
-                    (error: any, result: any) => {
-                        if (error) {
-                            resolve(undefined)
-                        }
-                        if (!(result && result.data)) reject("No result or data")
-
-                        const profile = result.data.PlayerProfile
-                        if (!profile) {
-                            console.log("No profile found")
-                            resolve(undefined)
-                        } else {
-                            if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
-                                userName = profile.DisplayName
-
-                                resolve({
-                                    name: profile.DisplayName,
-                                    playfabId: profile.PlayerId,
-                                    avatarUrl: profile.AvatarUrl
-                                })
-                            } else {
-                                console.log("Could not find display name, avatar, or profileId")
-                                console.log(profile)
-                                resolve(undefined)
-                            }
-                        }
-                    }
-                )
+            const result = await playfabPromisify(PlayFabServer.GetPlayerProfile)({
+                PlayFabId: playfabId,
+                ProfileConstraints: ({
+                    ShowAvatarUrl: true,
+                    ShowDisplayName: true
+                } as unknown) as number // This is a bug in PlayFab's typings
             })
+            // if (!(result && result.data)) reject("No result or data")
+
+            if (result && result.data && result.data.PlayerProfile) {
+                const profile = result.data.PlayerProfile
+                if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
+                    userName = profile.DisplayName
+
+                    user = {
+                        name: profile.DisplayName,
+                        playfabId: profile.PlayerId,
+                        avatarUrl: profile.AvatarUrl
+                    }
+                } else {
+                    console.log("Could not find display name, avatar, or profileId")
+                    console.log(profile)
+                }
+            }
 
             if (user) {
                 console.log("Fetched PlayFab user:", user)
