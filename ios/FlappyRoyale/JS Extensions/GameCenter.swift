@@ -25,8 +25,8 @@ class GameCenterAuth : NSObject, WebViewInteropProvider {
 
     var webView: WKWebView?
     var authData: GameCenterAuthData?
-    var loginWasValid: Bool = false
 
+    var loginWasValid: Bool?
     var waitingOnData: Bool = false
 
     func inject(_ controller: WKUserContentController) {
@@ -40,7 +40,7 @@ class GameCenterAuth : NSObject, WebViewInteropProvider {
     }
 
     func sendData() {
-        if (!self.loginWasValid) {
+        if (self.loginWasValid == false) {
             self.waitingOnData = false
             webView?.evaluateJavaScript("window.dispatchEvent(new Event('gameCenterLogin'))", completionHandler: nil)
             return
