@@ -26,8 +26,6 @@ const randPercent = (perc: 50 | 25 | 12.5 | 5 | 2.5 | 1.5 | 1 | 0.5) => {
 const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 
 export const tierForScore = (score: number): LootboxTier | undefined => {
-    return 0
-
     if (score > 30) {
         // 5% chance tier 3
         if (randPercent(5)) return 3

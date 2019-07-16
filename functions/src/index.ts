@@ -3,7 +3,7 @@ import * as admin from "firebase-admin"
 import * as pako from "pako"
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
-import { PlayFabServer, PlayFabClient } from "playfab-sdk"
+import { PlayFabServer } from "playfab-sdk"
 
 import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest } from "./api-contracts"
 import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"

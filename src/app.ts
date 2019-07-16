@@ -29,7 +29,6 @@ import { isAndroidApp } from "./nativeComms/deviceDetection"
 import { Prompt, showPrompt } from "./menus/Prompt"
 import { showBackgroundScene } from "./menus/BackgroundScene"
 import { PlayerData } from "./firebaseTypes"
-import { updateAllAttireCatalogue } from "./scripts/uploadAttireCatalog"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean
@@ -418,5 +417,3 @@ window.onload = async () => {
         // testTrialDeathScreen(game, 7)
     }
 }
-
-// updateAllAttireCatalogue()
