@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 import * as constants from "../constants"
 import { getUserSettings } from "../user/userManager"
-import { UserSettings } from "../user/UserSettingsTypes";
+import { UserSettings } from "../user/UserSettingsTypes"
 import { preloadBirdSprites, setupBirdAnimations, BirdSprite } from "../battle/BirdSprite"
 import { launchMainMenu } from "./MainMenuScene"
 import { becomeButton } from "./utils/becomeButton"
@@ -67,7 +67,7 @@ export class AppLaunchScene extends Phaser.Scene {
             settings: getUserSettings()
         })
         bird.setOpacity(1)
-        bird.setScale(2)
+        bird.setScale(1.5)
         bird.flap()
         bird.startMovingLeft(constants.pipeSpeed * 0.85)
 
