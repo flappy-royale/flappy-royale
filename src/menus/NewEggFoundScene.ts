@@ -51,7 +51,7 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.load.image("egg-top", require("../../assets/menu/EggGoldTop.png"))
         this.load.image("egg-bottom", require("../../assets/menu/EggGoldBottom.png"))
         this.load.image("button-bg", require("../../assets/menu/ButtonBG.png"))
-        this.load.image("egg-exit", require("../../assets/menu/x.png"))
+        this.load.image("egg-exit", require("../../assets/menu/white-x.png"))
 
         this.load.bitmapFont(
             "fipps-bit",
