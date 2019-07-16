@@ -28,6 +28,8 @@ import _ = require("lodash")
 import { Prompt, showPrompt, PromptOptions } from "../../menus/Prompt"
 import { isAndroidApp } from "../../nativeComms/deviceDetection"
 
+declare const DEMO: boolean
+
 export interface TrialDeathProps {
     lives: number
     battle: BattleScene
@@ -137,9 +139,15 @@ export class TrialDeath extends Phaser.Scene {
 
         const outOfLives = this.props.lives <= 0
         if (outOfLives) {
-            againText = livesExtensionsButtonTitleForState(this.props.livesState)
-            const adID = livesExtensionsButtonToAdID(this.props.livesState)
-            prepareModalAd(adID)
+            if (DEMO) {
+                againText = "OUT OF LIVES"
+                this.againButton.disableInteractive()
+                this.againButton.setAlpha(0.5)
+            } else {
+                againText = livesExtensionsButtonTitleForState(this.props.livesState)
+                const adID = livesExtensionsButtonToAdID(this.props.livesState)
+                prepareModalAd(adID)
+            }
         }
 
         const newGameText = this.add.bitmapText(GameWidth / 2, GameHeight - 27, "fipps-bit", againText, 8)
