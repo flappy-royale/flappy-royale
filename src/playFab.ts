@@ -60,6 +60,7 @@ export const login = async (): Promise<string | undefined> => {
                     ...request
                 })
                 console.log(result)
+                cache.setNativeAuthID((request as PlayFabClientModels.LoginWithGameCenterRequest).PlayerId!)
                 return handleLoginResponse(result)
             }
         }
@@ -105,6 +106,9 @@ export const login = async (): Promise<string | undefined> => {
                     ...request
                 })
                 console.log(result)
+                if (request.AndroidDeviceId) {
+                    cache.setNativeAuthID(request.AndroidDeviceId)
+                }
                 return handleLoginResponse(result)
             }
         }
