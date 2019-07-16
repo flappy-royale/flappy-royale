@@ -61,8 +61,7 @@ export const defaultSettings: UserSettings = {
         seedIndex: -1
     },
     hasAskedAboutTutorial: false,
-    unlockedAttire: [],
-    unopenedEggIDs: []
+    unlockedAttire: []
 }
 
 // localStorage only works with text, so we need to marshall
@@ -82,8 +81,7 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
     if ("royale" in settings) existingSettings.royale = settings.royale!
     if ("hasAskedAboutTutorial" in settings) existingSettings.hasAskedAboutTutorial = settings.hasAskedAboutTutorial!
     if ("unlockedAttire" in settings) existingSettings.unlockedAttire = settings.unlockedAttire!
-    if ("unopenedEggIDs" in settings) existingSettings.unopenedEggIDs = settings.unopenedEggIDs!
-
+\
     if (settings.aesthetics) {
         const base = settings.aesthetics!.attire.filter(a => a.base)
         if (base.length !== 1) {

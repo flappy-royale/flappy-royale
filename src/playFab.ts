@@ -190,8 +190,7 @@ const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContaine
             const attire = payload.UserInventory.filter(i => i.ItemId && !i.ItemId.startsWith("egg-"))
 
             changeSettings({
-                unlockedAttire: attire.map(i => i.ItemId!),
-                unopenedEggIDs: eggs.map(i => i.ItemInstanceId!)
+                unlockedAttire: attire.map(i => i.ItemId!)
             })
         }
 
