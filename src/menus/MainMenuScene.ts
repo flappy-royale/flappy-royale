@@ -11,8 +11,9 @@ import {
     getUserStatistics,
     hasAskedAboutTutorial,
     hasName,
-    getSyncedUserSettings} from "../user/userManager"
-import { UserSettings } from "../user/UserSettingsTypes";
+    getSyncedUserSettings
+} from "../user/userManager"
+import { UserSettings } from "../user/UserSettingsTypes"
 import { preloadBackgroundBlobImages } from "./utils/backgroundColors"
 import { preloadBirdSprites, BirdSprite } from "../battle/BirdSprite"
 import { becomeButton } from "./utils/becomeButton"
@@ -145,7 +146,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         const youButton = this.add.image(32, c.GameHeight - 22, "you-button")
 
-        const player = new BirdSprite(this, 8, c.GameHeight - 26, {
+        const player = new BirdSprite(this, 14, c.GameHeight - 22, {
             isPlayer: false,
             isImage: true,
             settings: settings

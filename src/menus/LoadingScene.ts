@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 import * as constants from "../constants"
 import { getUserSettings } from "../user/userManager"
-import { UserSettings } from "../user/UserSettingsTypes";
+import { UserSettings } from "../user/UserSettingsTypes"
 import * as appCache from "../appCache"
 import { preloadBirdSprites, setupBirdAnimations, BirdSprite, preloadBirdAttire } from "../battle/BirdSprite"
 import { dog, hedgehog, sheep } from "../attire"
@@ -94,7 +94,7 @@ export class LoadingScene extends Phaser.Scene {
                 const bird = new BirdSprite(this, 20, vCenter, { isPlayer: false, settings: attire })
                 bird.startMovingLeft()
                 bird.setOpacity(1)
-                bird.setScale(2)
+                bird.setScale(1.5)
                 this.birds.push(bird)
             },
             callbackScope: this,

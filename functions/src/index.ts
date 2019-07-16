@@ -3,7 +3,7 @@ import * as admin from "firebase-admin"
 import * as pako from "pako"
 import { File } from "@google-cloud/storage"
 import _ = require("lodash")
-import { PlayFabServer, PlayFabClient } from "playfab-sdk"
+import { PlayFabServer } from "playfab-sdk"
 
 import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest } from "./api-contracts"
 import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
@@ -154,7 +154,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 await file.save(json)
             }
 
-            if (!userName.startsWith("ort") || !userName.startsWith("laz")) {
+            if (!userName.startsWith("ort")) {
                 return response.status(200).send({ success: true })
             }
 
@@ -162,15 +162,17 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             const tier = won ? 3 : tierForScore(data.score)
             if (tier !== undefined) {
                 // Give the consumable egg
-                const eggInstance = await playfabPromisify(PlayFabClient.PurchaseItem)({
-                    // PlayFabId: playfabId
-                    ItemId: `egg-${tier}`,
-                    Price: 0,
-                    VirtualCurrency: "RM"
+                const eggInstance = await playfabPromisify(PlayFabServer.GrantItemsToUser)({
+                    PlayFabId: playfabId,
+                    ItemIds: [`egg-${tier}`]
                 })
 
-                if (eggInstance.data && eggInstance.data.Items && eggInstance.data.Items.length > 0) {
-                    const itemInstanceId = eggInstance.data.Items[0].ItemInstanceId
+                if (
+                    eggInstance.data &&
+                    eggInstance.data.ItemGrantResults &&
+                    eggInstance.data.ItemGrantResults.length > 0
+                ) {
+                    const itemInstanceId = eggInstance.data.ItemGrantResults[0].ItemInstanceId
                     return response.status(200).send({ egg: tier, itemInstanceId })
                 } else {
                     return response.status(400).send({ error: "Could not get an egg for the player" })
@@ -345,7 +347,11 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
                 .send({ error: "Could not find an item with the sent itemInstanceId in player's inventory" })
         }
 
-        const consumeResult = await playfabPromisify(PlayFabClient.ConsumeItem)({ itemInstanceId, ConsumeCount: 1 })
+        const consumeResult = await playfabPromisify(PlayFabServer.ConsumeItem)({
+            itemInstanceId,
+            ConsumeCount: 1,
+            PlayFabId: playfabId
+        })
         if (consumeResult.data.error) {
             return response.status(400).send({ error: "Could not consume itemInstanceId" })
         }
@@ -354,7 +360,7 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         ////  Step 4, grab all of the loot tables which are sets of tiered loot
         ////
         const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
-            TableIDs: [Object.values(lookupBoxesForTiers)]
+            TableIDs: Object.values(lookupBoxesForTiers)
         })
 
         if (!lootTables.data.Tables) {

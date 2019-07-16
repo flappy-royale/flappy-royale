@@ -742,11 +742,12 @@ export class BattleScene extends Phaser.Scene {
                             console.error(response)
                         } else if ("itemInstanceId" in response) {
                             if (response.itemInstanceId) {
+                                analyticsEvent("egg_found", { tier: response.egg })
                                 const egg = new NewEggFoundScene({
                                     eggItemInstanceId: response.itemInstanceId,
                                     tier: response.egg
                                 })
-                                this.game.scene.start("won-egg", egg)
+                                this.game.scene.add("won-egg", egg, true, {})
                             }
                         }
                         // Otherwise it's just a success NOOP

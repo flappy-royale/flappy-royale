@@ -4,9 +4,9 @@ import { JsonSeedData } from "./firebaseTypes"
 import _ = require("lodash")
 import * as uuid from "uuid/v4"
 
-// For now, the API returns at most 50 royale seeds, plus one daily
+// For now, the API returns at most 30 royale seeds, plus one daily
 // (a comment is a promise waiting to be broken, etc)
-const maxRecordingCount = 51
+const maxRecordingCount = 31
 
 export const cache = {
     setRecordings: (seed: string, data: JsonSeedData) => {
@@ -44,8 +44,11 @@ export const cache = {
             diff.forEach(d => localStorage.removeItem(d[0]))
             localStorage.allRecordings = JSON.stringify(list)
         }
-
-        localStorage[`replays-${seed}`] = JSON.stringify(data)
+        try {
+            localStorage[`replays-${seed}`] = JSON.stringify(data)
+        } catch (error) {
+            console.log("Ran out of local storage space")
+        }
     },
 
     getRecordings: (seed: String): JsonSeedData | undefined => {

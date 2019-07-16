@@ -141,11 +141,7 @@ export const consumeEgg = async (itemInstanceId: string): Promise<ConsumeEggResp
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openConsumableEgg`, {
         method: "POST",
         body: JSON.stringify(request)
-    })
-        .then(r => r.json() as Promise<string>)
-        .then((json: any) => {
-            return json.item
-        })
+    }).then(r => r.json())
 }
 
 /** Used in training */

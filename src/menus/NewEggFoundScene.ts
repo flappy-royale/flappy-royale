@@ -10,6 +10,7 @@ import { allAttireInGame } from "../attire/attireSets"
 import { PresentationAttire, LootboxTier } from "../attire"
 import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
+import { analyticsEvent } from "../nativeComms/analytics"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -27,7 +28,7 @@ export class NewEggFoundScene extends Phaser.Scene {
     particles!: Phaser.GameObjects.Particles.ParticleEmitterManager
     egg!: Phaser.GameObjects.Image
     eggWings!: Phaser.GameObjects.Sprite
-    assetSetLogo!: Phaser.GameObjects.Image
+
     seenAd: boolean = false
     bottomLabel!: Phaser.GameObjects.BitmapText
     buttonLabel!: Phaser.GameObjects.BitmapText
@@ -300,7 +301,7 @@ export class NewEggFoundScene extends Phaser.Scene {
 
     vibrateEgg() {
         this.add.tween({
-            targets: [this.egg, this.eggWings, this.assetSetLogo],
+            targets: [this.egg, this.eggWings],
             scaleX: 1,
             scaleY: 1,
             x: "+= 1",
@@ -308,7 +309,7 @@ export class NewEggFoundScene extends Phaser.Scene {
             angle: "5",
             _ease: "Sine.easeInOut",
             ease: "Power2",
-            duration: 50,
+            duration: 150,
             repeat: -1,
             yoyo: true
         })
@@ -336,6 +337,8 @@ export class NewEggFoundScene extends Phaser.Scene {
             return
         }
 
+        analyticsEvent("egg_found", { tier: this.props.tier, id: attire.id })
+
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)
         this.load.on("filecomplete", this.openEgg, this)
@@ -346,7 +349,6 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.bottomLabel.setText(`${this.unlockedItem!.name}`)
         this.buttonLabel.setText("Cool")
 
-        this.assetSetLogo.destroy()
         this.eggWings.destroy()
 
         const unlockedItem = this.add.image(this.egg.x, this.egg.y, "unlocked")
@@ -372,12 +374,12 @@ export class NewEggFoundScene extends Phaser.Scene {
         })
 
         this.add.tween({
-            targets: [eggTop, this.assetSetLogo, this.eggWings],
+            targets: [eggTop, this.eggWings],
             angle: -270
         })
 
         this.add.tween({
-            targets: [eggTop, this.assetSetLogo, this.eggWings],
+            targets: [eggTop, this.eggWings],
             x: "-=20",
             y: "-=30",
             ease: "Cubic.easeIn",
