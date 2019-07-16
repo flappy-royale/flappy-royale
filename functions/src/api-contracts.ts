@@ -38,8 +38,27 @@ export interface ReplayUploadRequest {
     version: string
     seed: string
     mode: number
-    won: boolean
+    position: number
+    opponents: number
     data: PlayerData
+    time: number // Delta in ms
+}
+
+export interface PlayfabUserStats {
+    BestPosition: number
+    BirdsPast: number
+    Crashes: number
+    CurrentRoyaleStreak: number
+    "DailyTrial-1": number // TODO: Bump this when you bump APIVersion
+    FirstPipeFails: number
+    Flaps: number
+    RoyaleGamesPlayed: number
+    RoyaleGamesWon: number
+    RoyaleWinStreak: number
+    Score: number // Highest score
+    TotalGamesPlayed: number
+    TotalScore: number
+    TotalTimeInGame: number // In ms
 }
 
 /** Potential responses from the addReplayToSeed */

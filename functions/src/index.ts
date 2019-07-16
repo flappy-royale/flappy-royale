@@ -5,7 +5,7 @@ import { File } from "@google-cloud/storage"
 import _ = require("lodash")
 import { PlayFabServer } from "playfab-sdk"
 
-import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest } from "./api-contracts"
+import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest, PlayfabUserStats } from "./api-contracts"
 import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
 
 /// Careful with any ../ - you need to make sure they don't make contact with game-code
@@ -20,7 +20,8 @@ export const lookupBoxesForTiers = {
 }
 
 import { LootboxTier } from "../../src/attire"
-import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
+import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData, PlayerEvent } from "../../src/firebaseTypes"
+import { GameMode } from "../../src/battle/utils/gameMode"
 
 const cors = require("cors")({
     origin: true
@@ -81,7 +82,9 @@ export const seeds = functions.https.onRequest((request, response) => {
 
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
-        const { seed, uuid, version, data, mode, playfabId, won } = JSON.parse(request.body) as ReplayUploadRequest
+        const replay = JSON.parse(request.body) as ReplayUploadRequest
+        const { seed, uuid, version, data, mode, position, opponents, playfabId } = replay
+        const won = position === 0 && opponents > 0
 
         if (!version) {
             return response.status(400).send({ error: "Needs a version in request" })
@@ -164,6 +167,15 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 return response.status(200).send({ success: true })
             }
 
+            // Upload stats
+            const stats = replayDataToStats(replay)
+            if (stats) {
+                await playfabPromisify(PlayFabServer.UpdatePlayerStatistics)({
+                    PlayFabId: playfabId,
+                    Statistics: stats
+                })
+            }
+
             // Give them a run through the lootbox check
             const tier = won ? 3 : tierForScore(data.score)
             if (tier !== undefined) {
@@ -192,6 +204,40 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         }
     })
 })
+
+export const replayDataToStats = (replay: ReplayUploadRequest): Partial<PlayfabUserStats> | undefined => {
+    // Guard against old clients without valid stats data
+    if (!replay.opponents || !replay.time || !replay.position) return undefined
+
+    const { position, data, opponents, mode, time } = replay
+    const { actions, score } = data
+
+    let result: Partial<PlayfabUserStats> = {
+        BestPosition: position,
+        BirdsPast: opponents - position,
+        Crashes: position === 0 && mode === GameMode.Royale ? 0 : 1,
+        FirstPipeFails: score < 1 ? 1 : 0,
+        Flaps: actions.filter(a => a.action === "flap").length,
+        Score: score,
+        TotalGamesPlayed: 1,
+        TotalScore: score,
+        TotalTimeInGame: time || 0
+    }
+
+    if (mode === GameMode.Trial) {
+        result["DailyTrial-1"] = data.score
+    } else if (mode === GameMode.Royale) {
+        result.RoyaleGamesPlayed = 1
+        if (position === 0 && opponents > 0) {
+            result.RoyaleGamesWon = 1
+            // Sort out win streak
+            // result.RoyaleWinStreak: 0,
+            // CurrentRoyaleStreak: 0
+        }
+    }
+
+    return result
+}
 
 /**
  * Converts from the db representation where the seed data is gzipped into

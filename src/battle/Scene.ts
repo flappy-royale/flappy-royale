@@ -163,6 +163,9 @@ export class BattleScene extends Phaser.Scene {
     /** An array containing implied FPS numbers for each discrete update call */
     private runningFpsTally: number[] = []
 
+    /** When the game started, for tracking time in game */
+    private startTimestamp: number | undefined
+
     constructor(opts: BattleSceneSettings) {
         super(
             Object.assign(
@@ -419,6 +422,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Keep track of stats for using later
         this.analytics.startRecording({ totalBirds: this.ghostBirds.length, mode: this.mode })
+        this.startTimestamp = Date.now()
 
         if (devSettings.showUI && this.mode !== game.GameMode.Menu) {
             const back = this.add.image(16, constants.GameHeight - 20, "back-button").setInteractive()
@@ -704,8 +708,6 @@ export class BattleScene extends Phaser.Scene {
 
         this.userInput.push({ action: "died", timestamp })
 
-        const hasJumped = this.userInput.filter(ui => ui.action === "flap").length > 2
-
         // Loop through all the seed data to find out the actual position based on when the bird died
 
         this.analytics.finishRecording({ score: this.score, position })
@@ -732,12 +734,18 @@ export class BattleScene extends Phaser.Scene {
             const settings = getUserSettings()
 
             uploadReplayForSeed({
-                won,
                 seed: this.seed,
                 version: constants.APIVersion,
                 mode: this.mode,
                 playfabId: PlayFab.getPlayfabId(),
-                data: { actions: this.userInput, timestamp: Date.now(), score: this.score }
+                data: {
+                    actions: this.userInput,
+                    timestamp: Date.now(),
+                    score: this.score
+                },
+                position: this.userPositionAgainstGhosts(),
+                opponents: this.seedData.replays.length,
+                time: Date.now() - this.startTimestamp!
             })
                 .then(a => a.json())
                 .then((response: ReplayUploadResponse) => {
