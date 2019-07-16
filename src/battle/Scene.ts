@@ -39,6 +39,8 @@ import { NewEggFoundScene } from "../menus/NewEggFoundScene"
 import { ReplayUploadResponse } from "../../functions/src/api-contracts"
 import { SeedData, PlayerEvent } from "../firebaseTypes"
 
+declare const DEMO: boolean
+
 export interface BattleSceneSettings {
     /** The string representation for the level */
     seed: string
@@ -731,6 +733,7 @@ export class BattleScene extends Phaser.Scene {
                 uploadReplayForSeed({
                     won,
                     seed: this.seed,
+                    demo: DEMO,
                     version: constants.APIVersion,
                     mode: this.mode,
                     playfabId: PlayFab.getPlayfabId(),

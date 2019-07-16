@@ -36,6 +36,7 @@ export interface ReplayUploadRequest {
     uuid?: string
     playfabId?: string
     version: string
+    demo: boolean
     seed: string
     mode: number
     won: boolean

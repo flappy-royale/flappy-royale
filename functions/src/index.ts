@@ -81,7 +81,9 @@ export const seeds = functions.https.onRequest((request, response) => {
 
 export const addReplayToSeed = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
-        const { seed, uuid, version, data, mode, playfabId, won } = JSON.parse(request.body) as ReplayUploadRequest
+        const { seed, uuid, version, data, mode, playfabId, won, demo } = JSON.parse(
+            request.body
+        ) as ReplayUploadRequest
 
         if (!version) {
             return response.status(400).send({ error: "Needs a version in request" })
@@ -166,7 +168,8 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 await file.save(json)
             }
 
-            if (!userName.startsWith("ort")) {
+            // Web folks can never earn eggs
+            if (demo) {
                 return response.status(200).send({ success: true })
             }
 
