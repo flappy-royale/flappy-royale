@@ -746,7 +746,7 @@ export class BattleScene extends Phaser.Scene {
                                     eggItemInstanceId: response.itemInstanceId,
                                     tier: response.egg
                                 })
-                                this.game.scene.start("won-egg", egg)
+                                this.game.scene.add("won-egg", egg, true, {})
                             }
                         }
                         // Otherwise it's just a success NOOP

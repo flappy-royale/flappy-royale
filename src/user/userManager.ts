@@ -86,7 +86,8 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
     if (settings.aesthetics) {
         const base = settings.aesthetics!.attire.filter(a => a.base)
         if (base.length !== 1) {
-            throw `Must be exactly one base, but there were ${base.length}.`
+            debugger
+            console.log(`Must be exactly one base, but there were ${base.length}.`)
         }
 
         existingSettings.aesthetics = settings.aesthetics!

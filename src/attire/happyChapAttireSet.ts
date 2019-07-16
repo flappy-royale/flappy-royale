@@ -16,7 +16,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Alt_Default.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-cthulu_bird",
@@ -25,7 +25,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Cthulu_Bird.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-baby_chick",
@@ -34,7 +34,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Baby_Chick.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-big_beak",
@@ -43,7 +43,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Big_Beak.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-black_cat",
@@ -52,7 +52,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Black_Cat.png"),
             free: false,
-            tier: 2
+            tier: 1
         },
         {
             id: "happy-chap-bluechog",
@@ -61,7 +61,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/BlueChog.png"),
             free: false,
-            tier: 1
+            tier: 0
         },
         {
             id: "happy-chap-blue_chick",
@@ -79,7 +79,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Brainbow.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-bubblegum",
@@ -106,7 +106,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Cooked 2.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-cooked",
@@ -115,7 +115,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Cooked.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-dog",
@@ -124,7 +124,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Dog.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-earth",
@@ -151,7 +151,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Elephant.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-evil_brain_2",
@@ -160,7 +160,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Evil_Brain 2.png"),
             free: false,
-            tier: 1
+            tier: 0
         },
         {
             id: "happy-chap-evil_brain",
@@ -169,7 +169,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Evil_Brain.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-evil_eye",
@@ -196,7 +196,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Eye 3.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-eye",
@@ -214,7 +214,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Fox.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-ginger_cat",
@@ -223,7 +223,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Ginger_Cat.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-good_brain",
@@ -241,7 +241,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Happy_Bird.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-hound_dog",
@@ -259,7 +259,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Little_Chicken.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-mars",
@@ -268,7 +268,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Mars.png"),
             free: false,
-            tier: 1
+            tier: 0
         },
         {
             id: "happy-chap-moono_brow",
@@ -277,7 +277,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Moono_Brow.png"),
             free: false,
-            tier: 1
+            tier: 0
         },
         {
             id: "happy-chap-penguin",
@@ -295,7 +295,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Pigeon.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-pink_chick",
@@ -331,7 +331,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Punk_Racer.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-purple_chick_3",
@@ -376,7 +376,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Rage_Bird.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-rainbow_cat",
@@ -385,7 +385,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Rainbow_Cat.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-rainbow_chick",
@@ -457,7 +457,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Saber_Tooth.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-seagull_eyebrow_bird",
@@ -466,7 +466,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Seagull_Eyebrow_Bird.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-shy_bird",
@@ -475,7 +475,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Shy_Bird.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-sketchnook_mascot_freebie",
@@ -484,7 +484,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Sketchnook_Mascot_Freebie.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-skull_bird",
@@ -493,7 +493,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Skull_Bird.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-snow_fox",
@@ -502,7 +502,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Snow_Fox.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-standard_cat",
@@ -520,7 +520,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Sun.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-tortoiseshell",
@@ -532,22 +532,13 @@ export const happyChapAttireSet: AttireSet = {
             tier: 3
         },
         {
-            id: "happy-chap-torture",
-            description: "TBD",
-            fit: "tight",
-            base: true,
-            href: require("../../assets/bases/happy-chap/Torture.png"),
-            free: false,
-            tier: 3
-        },
-        {
             id: "happy-chap-tough_bird",
             description: "TBD",
             fit: "tight",
             base: true,
             href: require("../../assets/bases/happy-chap/Tough_Bird.png"),
             free: false,
-            tier: 1
+            tier: 2
         },
         {
             id: "happy-chap-turkey",
@@ -583,7 +574,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/Zombie_Alien_Llama.png"),
             free: false,
-            tier: 1
+            tier: 2
         },
         {
             id: "happy-chap-ball",
@@ -610,7 +601,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/dino.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-globe",
@@ -619,7 +610,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/globe.png"),
             free: false,
-            tier: 1
+            tier: 2
         },
         {
             id: "happy-chap-moon",
@@ -628,7 +619,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/moon.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-rockrhino",
@@ -646,7 +637,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/tea-mug.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-toaster",
@@ -655,7 +646,7 @@ export const happyChapAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/happy-chap/toaster.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
 
         {
@@ -665,7 +656,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/2_Eye_Shades.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-bandit_mask",
@@ -703,33 +694,33 @@ export const happyChapAttireSet: AttireSet = {
             free: false,
             tier: 3
         },
-        {
-            id: "happy-chap-brolly_2",
-            description: "TBD",
-            fit: "tight",
-            base: false,
-            href: require("../../assets/attire/happy-chap/Brolly 2.png"),
-            free: false,
-            tier: 3
-        },
-        {
-            id: "happy-chap-brolly_3",
-            description: "TBD",
-            fit: "tight",
-            base: false,
-            href: require("../../assets/attire/happy-chap/Brolly 3.png"),
-            free: false,
-            tier: 3
-        },
-        {
-            id: "happy-chap-brolly",
-            description: "TBD",
-            fit: "tight",
-            base: false,
-            href: require("../../assets/attire/happy-chap/Brolly.png"),
-            free: false,
-            tier: 3
-        },
+        // {
+        //     id: "happy-chap-brolly_2",
+        //     description: "TBD",
+        //     fit: "tight",
+        //     base: false,
+        //     href: require("../../assets/attire/happy-chap/Brolly 2.png"),
+        //     free: false,
+        //     tier: 3
+        // },
+        // {
+        //     id: "happy-chap-brolly_3",
+        //     description: "TBD",
+        //     fit: "tight",
+        //     base: false,
+        //     href: require("../../assets/attire/happy-chap/Brolly 3.png"),
+        //     free: false,
+        //     tier: 3
+        // },
+        // {
+        //     id: "happy-chap-brolly",
+        //     description: "TBD",
+        //     fit: "tight",
+        //     base: false,
+        //     href: require("../../assets/attire/happy-chap/Brolly.png"),
+        //     free: false,
+        //     tier: 3
+        // },
         {
             id: "happy-chap-chicken_hair",
             description: "TBD",
@@ -737,7 +728,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Chicken_Hair.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-crown",
@@ -746,7 +737,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Crown.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-deep_blue_mask",
@@ -755,7 +746,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Deep_Blue_Mask.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-disguise",
@@ -764,7 +755,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Disguise.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-face_scar",
@@ -782,7 +773,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Flame_Aura.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-great_hair",
@@ -791,7 +782,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Great_Hair.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-green_mask",
@@ -800,7 +791,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Green_Mask.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-holiday_hat",
@@ -818,7 +809,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Magic_Hat.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-mask",
@@ -827,7 +818,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Mask.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-meat_leg",
@@ -845,7 +836,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Mustachio_.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-one_eye_shades",
@@ -863,7 +854,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Open_Beak.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-pixel_spangled_banner",
@@ -872,7 +863,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Pixel_Spangled_Banner.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-rabbit_ears",
@@ -881,7 +872,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Rabbit_Ears.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-rainbow_bird_2",
@@ -929,22 +920,13 @@ export const happyChapAttireSet: AttireSet = {
             tier: 3
         },
         {
-            id: "happy-chap-rainbrolly",
-            description: "TBD",
-            fit: "tight",
-            base: false,
-            href: require("../../assets/attire/happy-chap/Rainbrolly.png"),
-            free: false,
-            tier: 3
-        },
-        {
             id: "happy-chap-rainfro_",
             description: "TBD",
             fit: "tight",
             base: false,
             href: require("../../assets/attire/happy-chap/Rainfro_.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-sentient_baseball_cap",
@@ -953,7 +935,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Sentient_Baseball_Cap.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-sik_hat",
@@ -962,7 +944,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Sik_Hat.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-sparkle_aura",
@@ -971,7 +953,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Sparkle_Aura.png"),
             free: false,
-            tier: 3
+            tier: 0
         },
         {
             id: "happy-chap-stilts",
@@ -980,7 +962,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Stilts.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-unicorn_horn",
@@ -989,7 +971,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Unicorn_Horn.png"),
             free: false,
-            tier: 3
+            tier: 2
         },
         {
             id: "happy-chap-war_spoon",
@@ -998,7 +980,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/War_Spoon.png"),
             free: false,
-            tier: 3
+            tier: 1
         },
         {
             id: "happy-chap-yellow_mask",
@@ -1007,7 +989,7 @@ export const happyChapAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/happy-chap/Yellow_Mask.png"),
             free: false,
-            tier: 3
+            tier: 2
         }
     ]
 }
