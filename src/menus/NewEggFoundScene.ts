@@ -10,6 +10,7 @@ import { allAttireInGame } from "../attire/attireSets"
 import { PresentationAttire, LootboxTier } from "../attire"
 import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
+import { analyticsEvent } from "../nativeComms/analytics"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -335,6 +336,8 @@ export class NewEggFoundScene extends Phaser.Scene {
             console.log("Could not find item ", response.item)
             return
         }
+
+        analyticsEvent("egg_found", { tier: this.props.tier, id: attire.id })
 
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)

@@ -16,7 +16,7 @@ import {
     DailyTrialRun,
     livesExtensionsButtonToAdID
 } from "../../user/userManager"
-import { Bird } from "../../user/UserSettingsTypes";
+import { Bird } from "../../user/UserSettingsTypes"
 
 import { requestModalAd, prepareModalAd } from "../../nativeComms/requestModalAd"
 import { centerAlignTextLabel } from "../utils/alignTextLabel"
@@ -320,7 +320,7 @@ export class TrialDeath extends Phaser.Scene {
 
         // TODO: Generate birdSprite UserSettings from leaderboard
         const leaderboardBird: Bird = { name: data.name, aesthetics: { attire: data.attire } }
-        const bird = new BirdSprite(this, offset - 2, config.y - 6, {
+        const bird = new BirdSprite(this, offset + 2, config.y - 2, {
             isPlayer: false,
             isImage: true,
             settings: leaderboardBird
