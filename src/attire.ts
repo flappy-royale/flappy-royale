@@ -6,7 +6,7 @@ export const allLootBoxTiers = [0, 1, 2, 3] as const
 
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {
-    name?: string
+    name: string
     description: string
     free: boolean
     /**
@@ -32,6 +32,7 @@ export interface Attire {
 
 export const hedgehog: PresentationAttire = {
     id: "hedgehog",
+    name: "Chog",
     description: "Whole hedgehog",
     fit: "tight",
     base: true,
@@ -42,6 +43,7 @@ export const hedgehog: PresentationAttire = {
 
 export const dog: PresentationAttire = {
     id: "dog-1",
+    name: "Dog",
     description: "Woof woof",
     fit: "tight",
     base: true,
@@ -51,6 +53,7 @@ export const dog: PresentationAttire = {
 }
 
 export const sheep: PresentationAttire = {
+    name: "Sheepo",
     id: "sheep",
     description: "Bird got punk'd",
     fit: "tight",

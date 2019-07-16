@@ -297,15 +297,31 @@ export class NewEggFoundScene extends Phaser.Scene {
             this.vibrateEgg()
 
             if (c.isInDevMode) {
-                this.time.delayedCall(510, this.adsHaveBeenUnlocked, [], this)
+                this.time.delayedCall(100, this.adsHaveBeenUnlocked, [], this)
             } else {
-                this.time.delayedCall(510, requestModalAd, [eggAdID], this)
+                this.time.delayedCall(300, requestModalAd, [eggAdID], this)
             }
         }
     }
 
     exit() {
-        this.game.scene.remove(this)
+        if (this.seenAd) {
+            this.game.scene.remove(this)
+        } else {
+            if (this.egg && this.eggWings) {
+                this.seenAd = true
+                this.add.tween({
+                    targets: [this.egg, this.eggWings],
+                    delay: 700,
+                    x: "+=300",
+                    ease: "Sine.easeInOut",
+                    onComplete: this.exit,
+                    onCompleteScope: this
+                })
+            } else {
+                this.game.scene.remove(this)
+            }
+        }
     }
 
     vibrateEgg() {
@@ -346,7 +362,7 @@ export class NewEggFoundScene extends Phaser.Scene {
             return
         }
 
-        analyticsEvent("egg_found", { tier: this.props.tier, id: attire.id })
+        analyticsEvent("egg_opened", { tier: this.props.tier, id: attire.id })
 
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)
@@ -357,6 +373,8 @@ export class NewEggFoundScene extends Phaser.Scene {
     openEgg() {
         this.bottomLabel.setText(`${this.unlockedItem!.name}`)
         this.buttonLabel.setText("Cool")
+        centerAlignTextLabel(this.buttonLabel)
+        centerAlignTextLabel(this.bottomLabel)
 
         this.eggWings.destroy()
 

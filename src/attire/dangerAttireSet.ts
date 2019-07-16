@@ -10,6 +10,7 @@ export const dangerAttireSet: AttireSet = {
     darkHexColor: "#547846",
     attire: [
         {
+            name: "Tie",
             id: "danger-tie",
             description: "TBD",
             fit: "tight",
@@ -19,6 +20,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Antlers",
             id: "danger-antlers",
             description: "TBD",
             fit: "tight",
@@ -28,6 +30,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "A backpack",
             id: "danger-backpack",
             description: "TBD",
             fit: "tight",
@@ -37,6 +40,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "A bike?!",
             id: "danger-bike",
             description: "TBD",
             fit: "tight",
@@ -46,6 +50,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Black Hair",
             id: "danger-black-hair",
             description: "TBD",
             fit: "tight",
@@ -55,6 +60,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Blonde Hair",
             id: "danger-blone-haior",
             description: "TBD",
             fit: "tight",
@@ -64,6 +70,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Brown Hair",
             id: "danger-brown-hair",
             description: "TBD",
             fit: "tight",
@@ -73,6 +80,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "High Heels",
             id: "danger-shoe-two",
             description: "TBD",
             fit: "tight",
@@ -82,6 +90,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Shoeses",
             id: "danger-shoes",
             description: "TBD",
             fit: "tight",
@@ -91,6 +100,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "A Skateboard",
             id: "danger-skateboard",
             description: "TBD",
             fit: "tight",
@@ -100,6 +110,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Specs",
             id: "danger-specs",
             description: "TBD",
             fit: "tight",
@@ -109,6 +120,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Some Wheels",
             id: "danger-wheels",
             description: "TBD",
             fit: "tight",
@@ -119,6 +131,7 @@ export const dangerAttireSet: AttireSet = {
         },
 
         {
+            name: "An Alient",
             id: "danger-alien",
             description: "TBD",
             fit: "tight",
@@ -128,6 +141,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Bee",
             id: "danger-bee",
             description: "TBD",
             fit: "tight",
@@ -137,6 +151,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Boar",
             id: "danger-boar",
             description: "TBD",
             fit: "tight",
@@ -146,6 +161,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "A Boat",
             id: "danger-boat",
             description: "TBD",
             fit: "tight",
@@ -155,6 +171,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "A Broome",
             id: "danger-broome",
             description: "TBD",
             fit: "tight",
@@ -164,6 +181,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "A Cape",
             id: "danger-cape",
             description: "TBD",
             fit: "tight",
@@ -173,6 +191,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Cross Bones",
             id: "danger-crossbones",
             description: "TBD",
             fit: "tight",
@@ -182,6 +201,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Crow",
             id: "danger-crow",
             description: "TBD",
             fit: "tight",
@@ -191,6 +211,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Mini-Bus",
             id: "danger-cute-bus",
             description: "TBD",
             fit: "tight",
@@ -200,6 +221,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "An Egg",
             id: "danger-egg",
             description: "TBD",
             fit: "tight",
@@ -209,6 +231,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Elephant",
             id: "danger-elephant",
             description: "TBD",
             fit: "tight",
@@ -218,6 +241,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Fawn",
             id: "danger-fawn",
             description: "TBD",
             fit: "tight",
@@ -227,6 +251,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Fish",
             id: "danger-fish",
             description: "TBD",
             fit: "tight",
@@ -236,6 +261,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Friend Egg",
             id: "danger-fried-egg",
             description: "TBD",
             fit: "tight",
@@ -245,6 +271,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Ginger Hair",
             id: "danger-ginger-hair",
             description: "TBD",
             fit: "tight",
@@ -254,6 +281,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Big Heart",
             id: "danger-heart",
             description: "TBD",
             fit: "tight",
@@ -263,6 +291,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Chopper",
             id: "danger-helicopter",
             description: "TBD",
             fit: "tight",
@@ -272,6 +301,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Horse",
             id: "danger-horse",
             description: "TBD",
             fit: "tight",
@@ -281,6 +311,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Kangaroo",
             id: "danger-kangaroo",
             description: "TBD",
             fit: "tight",
@@ -290,6 +321,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "A Light Bulb",
             id: "danger-lightbulp",
             description: "TBD",
             fit: "tight",
@@ -299,6 +331,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Lion",
             id: "danger-lion",
             description: "TBD",
             fit: "tight",
@@ -308,6 +341,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Mandarin Duck",
             id: "danger-mandarin-duck",
             description: "TBD",
             fit: "tight",
@@ -317,6 +351,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Mole",
             id: "danger-mole",
             description: "TBD",
             fit: "tight",
@@ -326,6 +361,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Mouse",
             id: "danger-mouse",
             description: "TBD",
             fit: "tight",
@@ -335,6 +371,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Narwhal",
             id: "danger-narwhal",
             description: "TBD",
             fit: "tight",
@@ -344,6 +381,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Octopus",
             id: "danger-octopus",
             description: "TBD",
             fit: "tight",
@@ -353,6 +391,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Panda",
             id: "danger-panda",
             description: "TBD",
             fit: "tight",
@@ -362,6 +401,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Paperclippo",
             id: "danger-paperclip",
             description: "TBD",
             fit: "tight",
@@ -371,6 +411,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Parokeet",
             id: "danger-parokeet",
             description: "TBD",
             fit: "tight",
@@ -380,6 +421,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Parrot",
             id: "danger-parrot",
             description: "TBD",
             fit: "tight",
@@ -389,6 +431,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Painguin",
             id: "danger-penguin",
             description: "TBD",
             fit: "tight",
@@ -398,6 +441,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Danger Pig",
             id: "danger-pig",
             description: "TBD",
             fit: "tight",
@@ -407,6 +451,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Racoon",
             id: "danger-racoon",
             description: "TBD",
             fit: "tight",
@@ -416,6 +461,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Rainbow Bird",
             id: "danger-rainbow-bird",
             description: "TBD",
             fit: "tight",
@@ -425,6 +471,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Rat",
             id: "danger-rat",
             description: "TBD",
             fit: "tight",
@@ -434,6 +481,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Red Panda",
             id: "danger-red-panda",
             description: "TBD",
             fit: "tight",
@@ -443,6 +491,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Rubber Duck",
             id: "danger-rubber-duck",
             description: "TBD",
             fit: "tight",
@@ -452,6 +501,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Seal",
             id: "danger-seal",
             description: "TBD",
             fit: "tight",
@@ -461,6 +511,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 0
         },
         {
+            name: "Snail",
             id: "danger-snail",
             description: "TBD",
             fit: "tight",
@@ -470,6 +521,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Snow Person",
             id: "danger-snowman",
             description: "TBD",
             fit: "tight",
@@ -479,6 +531,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Squid",
             id: "danger-squid",
             description: "TBD",
             fit: "tight",
@@ -488,6 +541,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Tiger",
             id: "danger-tiger",
             description: "TBD",
             fit: "tight",
@@ -497,6 +551,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Whale",
             id: "danger-whale",
             description: "TBD",
             fit: "tight",
@@ -506,6 +561,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "White Rabbit",
             id: "danger-white-rabbit",
             description: "TBD",
             fit: "tight",
@@ -515,6 +571,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 1
         },
         {
+            name: "Wolf!",
             id: "danger-wolf",
             description: "TBD",
             fit: "tight",
@@ -524,6 +581,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 2
         },
         {
+            name: "Worm",
             id: "danger-worm",
             description: "TBD",
             fit: "tight",
@@ -533,6 +591,7 @@ export const dangerAttireSet: AttireSet = {
             tier: 3
         },
         {
+            name: "Zebra",
             id: "danger-zebra",
             description: "TBD",
             fit: "tight",

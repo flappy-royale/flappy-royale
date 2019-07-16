@@ -2,6 +2,7 @@ import { PresentationAttire } from "../attire"
 import { AttireSet } from "./attireSets"
 
 export const hedgehog: PresentationAttire = {
+    name: "Chog",
     id: "hedgehog",
     description: "Whole hedgehog",
     fit: "tight",
@@ -12,6 +13,7 @@ export const hedgehog: PresentationAttire = {
 }
 
 export const dog: PresentationAttire = {
+    name: "Dog",
     id: "dog-1",
     description: "Woof woof",
     fit: "tight",
@@ -22,6 +24,7 @@ export const dog: PresentationAttire = {
 }
 
 export const sheep: PresentationAttire = {
+    name: "Sheep",
     id: "sheep",
     description: "Bird got punk'd",
     fit: "tight",
@@ -42,6 +45,7 @@ export const defaultAttireSet: AttireSet = {
     attire: [
         hedgehog,
         {
+            name: "n/a",
             id: "turtle-shell",
             description: "Flapping in a half-shell",
             fit: "tight",
@@ -51,6 +55,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "banana",
             description: "It's a banana or A COISS, kk",
             fit: "tight",
@@ -61,6 +66,7 @@ export const defaultAttireSet: AttireSet = {
         },
         dog,
         {
+            name: "n/a",
             id: "default-body",
             description: "It flaps",
             fit: "tight",
@@ -70,6 +76,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "flat-cap1",
             description: "A good old flat cap",
             fit: "loose",
@@ -79,6 +86,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "crown1",
             description: "We can all be royale-ty",
             fit: "loose",
@@ -88,6 +96,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "crown2",
             description: "We can all be royale-ty",
             fit: "loose",
@@ -97,6 +106,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "baseball-1",
             description: "Going to a generic game",
             fit: "loose",
@@ -106,6 +116,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "bobble-1",
             description: "Keeping your noggin wawrm",
             fit: "loose",
@@ -115,6 +126,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "sunnies-1",
             description: "Going to a generic game",
             fit: "tight",
@@ -124,6 +136,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "tophat-1",
             description: "Going to a generic game",
             fit: "loose",
@@ -133,6 +146,8 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
+
             id: "straw-1",
             description: "Going to a generic game",
             fit: "loose",
@@ -142,6 +157,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "mohawk-1",
             description: "Bird got punk'd",
             fit: "tight",
@@ -151,6 +167,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "bandana1",
             description: "Bird got punk'd",
             fit: "tight",
@@ -160,6 +177,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "zen",
             description: "See no evil",
             fit: "tight",
@@ -169,6 +187,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "nervous",
             description: ":|",
             fit: "tight",
@@ -178,6 +197,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "nimbus",
             description: "TBD",
             fit: "tight",
@@ -187,6 +207,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "tired",
             description: "Bird got punk'd",
             fit: "tight",
@@ -196,6 +217,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "paranoid",
             description: "Bird got punk'd",
             fit: "tight",
@@ -205,6 +227,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "halo",
             description: "Bird got punk'd",
             fit: "tight",
@@ -214,6 +237,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "big-mouth",
             description: "Bird got punk'd",
             fit: "tight",
@@ -223,6 +247,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "drool",
             description: "Bird got punk'd",
             fit: "tight",
@@ -232,6 +257,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "tiny-eye",
             description: "Bird got punk'd",
             fit: "tight",
@@ -241,6 +267,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "ghost",
             description: "Bird got punk'd",
             fit: "tight",
@@ -250,6 +277,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "fantasy",
             description: "Bird got punk'd",
             fit: "tight",
@@ -259,6 +287,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "sheep",
             description: "Bird got punk'd",
             fit: "tight",
@@ -268,6 +297,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "pug",
             description: "Bird got punk'd",
             fit: "tight",
@@ -277,6 +307,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "robin",
             description: "Bird got punk'd",
             fit: "tight",
@@ -286,6 +317,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "mallard-duck",
             description: "Bird got punk'd",
             fit: "tight",
@@ -295,6 +327,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "white-rabbit",
             description: "Bird got punk'd",
             fit: "tight",
@@ -304,6 +337,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "rocket",
             description: "Bird got punk'd",
             fit: "tight",
@@ -313,6 +347,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "dm-fox",
             description: "Bird got punk'd",
             fit: "tight",
@@ -322,6 +357,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "flag_trans",
             description: "TBD",
             fit: "tight",
@@ -331,6 +367,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "pride_hunter",
             description: "TBD",
             fit: "tight",
@@ -340,6 +377,7 @@ export const defaultAttireSet: AttireSet = {
             tier: -1
         },
         {
+            name: "n/a",
             id: "finish_flag",
             description: "TBD",
             fit: "tight",

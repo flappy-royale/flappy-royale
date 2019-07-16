@@ -45,6 +45,8 @@ export class MainMenuScene extends Phaser.Scene {
     playerNameText!: Phaser.GameObjects.BitmapText
     winsLabel!: Phaser.GameObjects.BitmapText
 
+    eggButton: Phaser.GameObjects.Image | undefined
+
     constructor() {
         super("MainMenu")
     }
@@ -57,6 +59,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("question-mark", require("../../assets/menu/question-mark.png"))
         this.load.image("stats-button", require("../../assets/menu/stats.png"))
         this.load.image("you-button", require("../../assets/menu/you.png"))
+        this.load.image("egg-button-menu", require("../../assets/menu/EggGold.png"))
 
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
@@ -84,7 +87,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.setUpMenu()
 
         // After the user has logged in, we decide whether to show onboarding.
-        // If there's no internet access, we fall back to localStorage esttings
+        // If there's no internet access, we fall back to localStorage settings
         getSyncedUserSettings()
             .then(this.showOnboardingIfAppropriate)
             .catch(() => {
@@ -159,7 +162,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         checkToShowRatingPrompt()
 
-        // For working on the Egg ATM
+        // Uncomment to test egg scenes
         // addScene(this.game, AppSettingsKey, new NewEggFoundScene({ eggItemInstanceId: "123" }), true)
     }
 
