@@ -1,5 +1,5 @@
 import { BattleScene } from "../Scene"
-import { getUserSettings, getRoyales } from "../../user/userManager"
+import { getUserSettings } from "../../user/userManager"
 
 export const setupDeveloperKeyboardShortcuts = (scene: BattleScene) => {
     // Press E to print the current event stream
@@ -14,8 +14,6 @@ export const setupDeveloperKeyboardShortcuts = (scene: BattleScene) => {
     const logLocalStorage = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
     logLocalStorage.on("up", () => {
         console.log("User Settings", getUserSettings())
-        console.log("Royale Scores")
-        console.table(getRoyales())
     })
 
     // Press A to randomly change your attire

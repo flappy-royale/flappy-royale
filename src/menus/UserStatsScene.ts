@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import { getUserStatistics, getRoyales } from "../user/userManager"
+import { getUserStatistics } from "../user/userManager"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
@@ -103,7 +103,7 @@ function setUpStatsHTML() {
         statsElement.appendChild(document.createElement("hr"))
     })
 
-    const runs = getRoyales().sort((r1, r2) => r1.startTimestamp - r2.startTimestamp)
+    const runs = stats.scoreHistory
     const runsContainer = document.getElementById("runs-graph")!
 
     const topScore = document.createElement("div")
@@ -128,7 +128,7 @@ function setUpStatsHTML() {
         const run = r[index]
 
         const height = 60 / stats.bestScore
-        const relativeHeight = (run.score && Math.round(height * run.score)) || 0
+        const relativeHeight = (run && Math.round(height * run)) || 0
         console.log(height)
         const bottomScore = document.createElement("div")
         bottomScore.className = "column"

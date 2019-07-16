@@ -6,7 +6,7 @@ import { titleId } from "../assets/config/playfabConfig"
 import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
 import { allAttireInGame } from "./attire/attireSets"
-import { changeSettings, syncedSettingsKeys } from "./user/userManager"
+import { changeSettings, syncedSettingsKeys, PlayerStats, setUserStatistics } from "./user/userManager"
 import { UserSettings } from "./user/UserSettingsTypes"
 import playfabPromisify from "./playfabPromisify"
 import { firebaseConfig } from "../assets/config/firebaseConfig"
@@ -189,6 +189,45 @@ const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContaine
             })
         }
 
+        // Stats
+        let userStatistics: Partial<PlayerStats> = {}
+
+        if (payload.PlayerStatistics) {
+            const statsMap: any = {
+                BestPosition: "bestPosition",
+                BirdsPast: "birdsBeaten",
+                Crashes: "crashes",
+                CurrentRoyaleStreak: "royaleStreak",
+                FirstPipeFails: "instaDeaths",
+                Flaps: "totalFlaps",
+                RoyaleGamesWon: "royaleWins",
+                RoyaleWinStreak: "bestRoyaleStreak",
+                Score: "bestScore",
+                TotalGamesPlayed: "gamesPlayed",
+                TotalScore: "totalScore",
+                TotalTimeInGame: "totalTime"
+            }
+            payload.PlayerStatistics.forEach(stat => {
+                const key = statsMap[stat.StatisticName!]
+                if (key) {
+                    ;(userStatistics as any)[key] = stat.Value
+                }
+            })
+        }
+
+        if (payload.UserData && payload.UserData.scoreHistory && payload.UserData.scoreHistory.Value) {
+            const scoreHistory: number[] = JSON.parse(payload.UserData.scoreHistory.Value!)
+            userStatistics.scoreHistory = scoreHistory
+        }
+
+        if (payload.UserData && payload.UserData.winStreak && payload.UserData.winStreak.Value) {
+            const winStreak = parseInt(payload.UserData.winStreak.Value!)
+            userStatistics.royaleStreak = winStreak
+        }
+
+        setUserStatistics(userStatistics)
+
+        // Attire unlocks
         if (payload.UserInventory) {
             const eggs = payload.UserInventory.filter(i => i.ItemId && i.ItemId.startsWith("egg-"))
             const attire = payload.UserInventory.filter(i => i.ItemId && !i.ItemId.startsWith("egg-"))

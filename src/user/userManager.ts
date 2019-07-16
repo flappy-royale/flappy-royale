@@ -6,6 +6,7 @@ import { getSeeds } from "../firebase"
 import { APIVersion } from "../constants"
 import * as PlayFab from "../playFab"
 import { UserSettings } from "./UserSettingsTypes"
+import { PlayfabUserStats } from "../../functions/src/api-contracts"
 
 export interface GameResults {
     // When the game started
@@ -45,6 +46,9 @@ export interface PlayerStats {
 
     /** The user's all-time highest royale streak */
     bestRoyaleStreak: number
+
+    // Array of final scores, most recent first
+    scoreHistory: number[]
 }
 
 // Which user settings keys — other than 'name' and 'aesthetics' – we want to sync on PlayFab
@@ -99,29 +103,6 @@ export const changeSettings = (settings: Partial<UserSettings>) => {
 export const getSyncedUserSettings = async (): Promise<UserSettings> => {
     await PlayFab.loginPromise
     return getUserSettings()
-}
-
-// The royales are separated from the settings because they can get pretty big
-// just felt a bit naff passing them around for no reason
-//
-export const getRoyales = (): GameResults[] => {
-    const existingData = localStorage.getItem("royales")
-    if (!existingData) return []
-    try {
-        return unzip(existingData) || []
-    } catch (error) {
-        console.log("empty")
-        return []
-    }
-}
-
-/**  For the end of a run */
-export const recordGamePlayed = (results: GameResults) => {
-    const existingRoyales = getRoyales()
-    existingRoyales.push(results)
-
-    const zippedRoyales = zippedObj(existingRoyales)
-    localStorage.setItem("royales", zippedRoyales)
 }
 
 /** Daily trial runs when you're lower than your previous best */
@@ -182,74 +163,37 @@ export const getAndBumpUserCycleSeed = async (): Promise<string> => {
 }
 
 /** The stats from all your runs */
+
+const emptyStats: PlayerStats = {
+    gamesPlayed: 0,
+    bestScore: 0,
+    bestPosition: 0,
+    royaleWins: 0,
+    trialWins: 0,
+    birdsBeaten: 0,
+    crashes: 0,
+    totalTime: 0,
+    instaDeaths: 0,
+    totalFlaps: 0,
+    totalScore: 0,
+    royaleStreak: 0,
+    bestRoyaleStreak: 0,
+    scoreHistory: []
+}
+
+export const setUserStatistics = (stats: Partial<PlayerStats>) => {
+    localStorage["stats"] = JSON.stringify({ ...emptyStats, ...stats })
+
+    // This is a convenient place to make sure the user doesn't have royales floating around
+    localStorage.removeItem("royales")
+}
+
 export const getUserStatistics = (): PlayerStats => {
-    // Sorted ascending by time so we can easily calculate royale streak
-    const runs = getRoyales().sort((r1, r2) => r1.startTimestamp - r2.startTimestamp)
-
-    const stats = {
-        gamesPlayed: runs.length,
-        bestScore: 0,
-        bestPosition: 500,
-        royaleWins: 0,
-        trialWins: 0,
-        birdsBeaten: 0,
-        crashes: 0,
-        totalTime: 0,
-        instaDeaths: 0,
-        totalFlaps: 0,
-        royaleStreak: 0,
-        bestRoyaleStreak: 0,
-        totalScore: 0
+    const rawStats = localStorage["stats"]
+    if (rawStats) {
+        return JSON.parse(rawStats) as PlayerStats
     }
-
-    let currentRoyaleStreak = 0
-
-    runs.forEach(run => {
-        // Highest score
-        if (run.score > stats.bestScore) stats.bestScore = run.score
-
-        // Lowest position
-        if (run.position < stats.bestPosition && run.totalBirds > 0) stats.bestPosition = run.position
-
-        // Position = 0, is a win
-        if (run.position === 0 && run.mode === GameMode.Royale && run.totalBirds > 0) stats.royaleWins += 1
-
-        // So we can separately say how many trial wins you have
-        if (run.position === 0 && run.mode == GameMode.Trial) stats.trialWins += 1
-
-        if (run.mode === GameMode.Royale) {
-            if (run.position === 0 && run.totalBirds > 0) {
-                currentRoyaleStreak += 1
-                if (currentRoyaleStreak > stats.bestRoyaleStreak) {
-                    stats.bestRoyaleStreak = currentRoyaleStreak
-                }
-            } else {
-                currentRoyaleStreak = 0
-            }
-        }
-
-        // Birds you've gone past
-        stats.birdsBeaten += run.totalBirds - run.position
-
-        // when you didn't get past one pipe
-        if (run.score === 0) stats.instaDeaths += 1
-
-        // All time played
-        stats.totalTime += run.endTimestamp - run.startTimestamp
-
-        // How many time did you flap
-        stats.totalFlaps += run.flaps
-
-        // "You have score 2000 points"
-        stats.totalScore += run.score
-    })
-
-    stats.royaleStreak = currentRoyaleStreak
-
-    // how many times did you not win
-    stats.crashes = stats.gamesPlayed - (stats.royaleWins + stats.trialWins)
-
-    return stats
+    return { ...emptyStats }
 }
 
 const defaultLives = 10

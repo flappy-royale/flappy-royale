@@ -13,7 +13,6 @@ import { createBus, busCrashed, preloadBusImages } from "./utils/createBus"
 import { setupDeveloperKeyboardShortcuts } from "./debugging/keyboardShortcut"
 import { BattleAnalytics } from "./utils/battleAnalytics"
 import {
-    recordGamePlayed,
     getUserSettings,
     subtractALife,
     getLives,
@@ -720,7 +719,6 @@ export class BattleScene extends Phaser.Scene {
         // in the future we'll want to show the death animation etc
         if (this.isRecording()) {
             // Store what happened
-            recordGamePlayed(stats)
             analyticsEvent("game_played", stats)
 
             uploadPromise = uploadReplayForSeed({
