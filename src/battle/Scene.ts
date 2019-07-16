@@ -322,8 +322,12 @@ export class BattleScene extends Phaser.Scene {
                         name: input.playfabUser.name,
                         aesthetics: { attire: PlayFab.avatarUrlToAttire(input.playfabUser.avatarUrl) }
                     }
-                } else {
+                } else if (input.user) {
+                    // Anyone who isn't a playfab user should have a UserSettings object
+                    // Also, we shouldn't ever be getting these users sent down as replays, so we probably can/should kill this
                     settings = input.user
+                } else {
+                    return
                 }
                 const ghost = new BirdSprite(
                     this,
@@ -734,7 +738,7 @@ export class BattleScene extends Phaser.Scene {
                     version: constants.APIVersion,
                     mode: this.mode,
                     playfabId: PlayFab.getPlayfabId(),
-                    data: { user: settings, actions: this.userInput, timestamp: Date.now(), score: this.score }
+                    data: { actions: this.userInput, timestamp: Date.now(), score: this.score }
                 })
                     .then(a => a.json())
                     .then((response: ReplayUploadResponse) => {

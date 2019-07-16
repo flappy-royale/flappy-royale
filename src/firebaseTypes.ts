@@ -24,7 +24,7 @@ export interface PlayfabUser {
 }
 
 export interface PlayerData {
-    user: UserSettings
+    user?: UserSettings
     playfabUser?: PlayfabUser
 
     /** User input actions */

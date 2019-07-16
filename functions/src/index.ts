@@ -130,6 +130,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
 
             if (user) {
                 console.log("Fetched PlayFab user:", user)
+                delete data.user
                 data.playfabUser = user
                 userIdentifier = user.playfabId
             }
