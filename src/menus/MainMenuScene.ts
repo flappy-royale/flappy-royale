@@ -29,6 +29,9 @@ import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 import { NewEggFoundScene } from "./NewEggFoundScene"
 import { loginPromise, fetchLatestPlayerInfo } from "../playFab"
+import { showDemoScene } from "./DemoScene"
+
+declare const DEMO: boolean
 
 /** Used on launch, and when you go back to the main menu */
 export const launchMainMenu = (game: Phaser.Game): MainMenuScene => {
@@ -58,6 +61,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("question-mark", require("../../assets/menu/question-mark.png"))
         this.load.image("stats-button", require("../../assets/menu/stats.png"))
         this.load.image("you-button", require("../../assets/menu/you.png"))
+        this.load.image("demo-button", require("../../assets/menu/demo.png"))
 
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)
@@ -137,6 +141,11 @@ export class MainMenuScene extends Phaser.Scene {
 
         const settings = getUserSettings()
 
+        if (DEMO) {
+            const demoButton = this.add.image(116, 80 + c.NotchOffset, "demo-button")
+            becomeButton(demoButton, this.showDemoInfo, this)
+        }
+
         const royaleButton = this.add.image(84, 110 + c.NotchOffset, "royale-button")
         becomeButton(royaleButton, this.loadRoyale, this)
 
@@ -162,6 +171,11 @@ export class MainMenuScene extends Phaser.Scene {
 
         // Uncomment to test egg scenes
         // addScene(this.game, AppSettingsKey, new NewEggFoundScene({ eggItemInstanceId: "123" }), true)
+    }
+
+    showDemoInfo() {
+        this.removeMenu()
+        showDemoScene(this.game)
     }
 
     loadSettings() {
