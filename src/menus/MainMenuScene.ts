@@ -58,7 +58,6 @@ export class MainMenuScene extends Phaser.Scene {
         this.load.image("question-mark", require("../../assets/menu/question-mark.png"))
         this.load.image("stats-button", require("../../assets/menu/stats.png"))
         this.load.image("you-button", require("../../assets/menu/you.png"))
-        this.load.image("egg-button-menu", require("../../assets/menu/EggGold.png"))
 
         preloadBackgroundBlobImages(this)
         preloadBirdSprites(this)

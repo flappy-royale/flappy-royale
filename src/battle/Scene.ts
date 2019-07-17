@@ -747,7 +747,7 @@ export class BattleScene extends Phaser.Scene {
                             analyticsEvent("egg_found", { tier: response.egg })
                             const egg = new NewEggFoundScene({
                                 eggItemInstanceId: response.itemInstanceId,
-                                tier: response.egg
+                                tier: response.egg!
                             })
                             this.game.scene.add("won-egg", egg, true, {})
                         }

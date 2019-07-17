@@ -19,11 +19,12 @@ const eggAdID = "Hatch-an-Egg"
 
 interface EggProps {
     eggItemInstanceId: string
-    tier?: LootboxTier
+    tier: LootboxTier
 }
 
 export class NewEggFoundScene extends Phaser.Scene {
     props: EggProps
+    eggName: string
 
     particles!: Phaser.GameObjects.Particles.ParticleEmitterManager
     egg!: Phaser.GameObjects.Image
@@ -38,6 +39,23 @@ export class NewEggFoundScene extends Phaser.Scene {
     constructor(props: EggProps) {
         super(NewEggFoundSceneKey)
         this.props = props
+
+        switch (this.props.tier) {
+            case 0:
+                this.eggName = "neon"
+                break
+            case 1:
+                this.eggName = "gold"
+                break
+            case 2:
+                this.eggName = "silver"
+                break
+            case 3:
+                this.eggName = "bronze"
+                break
+            default:
+                throw new Error()
+        }
     }
 
     preload() {
@@ -47,9 +65,34 @@ export class NewEggFoundScene extends Phaser.Scene {
         this.load.image("flap1", require("../../assets/battle/Flap1.png"))
         this.load.image("flap2", require("../../assets/battle/Flap2.png"))
         this.load.image("flap3", require("../../assets/battle/Flap3.png"))
-        this.load.image("egg", require("../../assets/menu/EggGold.png"))
-        this.load.image("egg-top", require("../../assets/menu/EggGoldTop.png"))
-        this.load.image("egg-bottom", require("../../assets/menu/EggGoldBottom.png"))
+
+        switch (this.props.tier) {
+            case 0: {
+                this.load.image("neon-egg", require("../../assets/menu/eggs/EggEpic.png"))
+                this.load.image("neon-egg-top", require("../../assets/menu/eggs/EggEpicTop.png"))
+                this.load.image("neon-egg-bottom", require("../../assets/menu/eggs/EggEpicBottom.png"))
+                break
+            }
+            case 1: {
+                this.load.image("gold-egg", require("../../assets/menu/eggs/EggGold.png"))
+                this.load.image("gold-egg-top", require("../../assets/menu/eggs/EggGoldTop.png"))
+                this.load.image("gold-egg-bottom", require("../../assets/menu/eggs/EggGoldBottom.png"))
+                break
+            }
+            case 2: {
+                this.load.image("silver-egg", require("../../assets/menu/eggs/EggSilver.png"))
+                this.load.image("silver-egg-top", require("../../assets/menu/eggs/EggSilverTop.png"))
+                this.load.image("silver-egg-bottom", require("../../assets/menu/eggs/EggSilverBottom.png"))
+                break
+            }
+            case 3: {
+                this.load.image("bronze-egg", require("../../assets/menu/eggs/EggBronze.png"))
+                this.load.image("bronze-egg-top", require("../../assets/menu/eggs/EggBronzeTop.png"))
+                this.load.image("bronze-egg-bottom", require("../../assets/menu/eggs/EggBronzeBottom.png"))
+                break
+            }
+        }
+
         this.load.image("button-bg", require("../../assets/menu/ButtonBG.png"))
         this.load.image("egg-exit", require("../../assets/menu/white-x.png"))
 
@@ -95,7 +138,7 @@ export class NewEggFoundScene extends Phaser.Scene {
             tint: 0x221199
         })
 
-        const egg = this.add.image(c.GameWidth / 2 - 200, c.GameHeight / 2, "egg")
+        const egg = this.add.image(c.GameWidth / 2 - 200, c.GameHeight / 2, this.eggName + "-egg")
         egg.setAngle(20)
         this.egg = egg
 
@@ -123,7 +166,6 @@ export class NewEggFoundScene extends Phaser.Scene {
 
     private setupPipes() {
         // These go down!
-
         const movement = 60
 
         const pipeBottomLeft = this.createPipe(35 - movement, 200) // bottom
@@ -271,7 +313,7 @@ export class NewEggFoundScene extends Phaser.Scene {
     }
 
     showText() {
-        const text = this.add.bitmapText(0, c.GameHeight - 68, "fipps-bit", `You found an egg!`, 8)
+        const text = this.add.bitmapText(0, c.GameHeight - 68, "fipps-bit", `You found a ${this.eggName} egg!`, 8)
         centerAlignTextLabel(text)
 
         const buttonBG = this.add.image(c.GameWidth / 2, c.GameHeight - 30, "button-bg")
@@ -386,9 +428,9 @@ export class NewEggFoundScene extends Phaser.Scene {
             duration: 300
         })
 
-        const eggTop = this.add.image(this.egg.x, this.egg.y, "egg-top")
+        const eggTop = this.add.image(this.egg.x, this.egg.y, this.eggName + "-egg-top")
         eggTop.setAngle(20)
-        const eggBottom = this.add.image(this.egg.x, this.egg.y, "egg-bottom")
+        const eggBottom = this.add.image(this.egg.x, this.egg.y, this.eggName + "-egg-bottom")
         eggBottom.setAngle(20)
 
         this.egg.destroy()
