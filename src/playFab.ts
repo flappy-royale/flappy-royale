@@ -55,13 +55,12 @@ export const login = async (): Promise<string | undefined> => {
             console.log("Just logging in with game center")
             const request = await gameCenterRequest()
             if (request) {
-                const result = await playfabPromisify(PlayFabClient.LoginWithGameCenter)({
+                loginPromise = playfabPromisify(PlayFabClient.LoginWithGameCenter)({
                     ...loginRequest(),
                     ...request
-                })
-                console.log(result)
+                }).then(handleLoginResponse)
                 cache.setNativeAuthID((request as PlayFabClientModels.LoginWithGameCenterRequest).PlayerId!)
-                return handleLoginResponse(result)
+                return await loginPromise
             }
         }
     } else if (isAndroidApp() && window.GooglePlayGames) {
@@ -101,15 +100,16 @@ export const login = async (): Promise<string | undefined> => {
             console.log("Just logging in with google")
             const request = await googlePlayGamesRequest()
             if (request) {
-                const result = await playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
+                loginPromise = playfabPromisify(PlayFabClient.LoginWithAndroidDeviceID)({
                     ...loginRequest(),
                     ...request
-                })
-                console.log(result)
+                }).then(handleLoginResponse)
+                console.log(loginPromise)
                 if (request.AndroidDeviceId) {
                     cache.setNativeAuthID(request.AndroidDeviceId)
                 }
-                return handleLoginResponse(result)
+
+                return await loginPromise
             }
         }
     }
