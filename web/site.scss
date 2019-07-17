@@ -127,7 +127,8 @@ nav a.disabled {
     }
 }
 
-.container a {
+.container a,
+.large a {
     color: white;
     &:hover {
         color: rgb(223, 164, 63);
