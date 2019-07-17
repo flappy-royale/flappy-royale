@@ -124,10 +124,30 @@ export class YouScene extends Phaser.Scene {
 
             const img = document.createElement("img")
             img.src = attire.href
+            img.className = "item"
             div.appendChild(img)
 
             if (!canWearAttire(settings, attire)) {
                 li.classList.add("locked")
+
+                const lock = document.createElement("img")
+                lock.className = "lock"
+                switch (attire.tier) {
+                    case 0:
+                        lock.src = require("../../assets/menu/eggs/lock.png")
+                        break
+                    case 1:
+                        lock.src = require("../../assets/menu/eggs/lock-gold.png")
+                        break
+                    case 2:
+                        lock.src = require("../../assets/menu/eggs/lock-silver.png")
+                        break
+                    case 3:
+                        lock.src = require("../../assets/menu/eggs/lock-bronze.png")
+                        break
+                }
+
+                li.appendChild(lock)
             }
 
             element.appendChild(li)

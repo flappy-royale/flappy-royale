@@ -36,5 +36,5 @@ button {
 
 @font-face {
     font-family: "Fipps";
-    src: url("./assets/fonts/Fipps-Regular.otf") format("opentype");
+    src: url("./assets/fonts/Fipps-Regular.ttf") format("truetype");
 }
