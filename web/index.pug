@@ -3,6 +3,7 @@ head
   script(async, src='./site.ts')
 
 include includes/sky.pug
+//- include demo.pug
 
 
 #ground
@@ -22,62 +23,55 @@ include includes/sky.pug
 
 #underground
   .container
-    h3 Flappy Bootcamp
-    #phone
-      #projected
-        video(playsinline, muted, loop, autoplay, width='248', height='360')
-          source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.webm?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/webm')
-          source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.mp4?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/mp4')
-          | Sorry, your browser doesn't support embedded videos.
-      
-      img#player(src='./assets/SheepOnPhone.png', style='transform:  scale(4) ')
+    //- iframe(width="560" height="600" src="https://flappyroyale.io/demo-web" frameborder="0" style='display: none;')
+    #intro
+      h3 Flappy Bootcamp
+      #phone
+        #projected
+          video(playsinline, muted, loop, autoplay, width='248', height='360')
+            source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.webm?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/webm')
+            source(src="https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/winner.mp4?alt=media&token=87ba3546-d298-4d2a-9ce0-93ec8e6b81c1", type='video/mp4')
+            | Sorry, your browser doesn't support embedded videos.
+        
+        img#player(src='./assets/SheepOnPhone.png', style='transform:  scale(4) ')
 
-    #seating
-      ul.seats
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-      ul.seats
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-      ul.seats(style='margin-top: 120px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-      ul.seats
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-        li
-          img(src='./assets/chair.png', style='left: 10px;')
-
-
-    .testimonial
-      li
-        p 
-          | Due to the popularity of our beta, we ran out of tokens for people to join,
-          | unfortunately making it a closed beta :(
-        p 
-          | We're working on getting it into the stores ASAP!
+      #seating
+        ul.seats
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+        ul.seats
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+        ul.seats(style='margin-top: 120px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+        ul.seats
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
+          li
+            img(src='./assets/chair.png', style='left: 10px;')
 
     .testimonial
       li
@@ -114,13 +108,19 @@ include includes/sky.pug
         span
           | -
           a(href='https://twitter.com/germormal/status/1144391254417055745') @germormal
+      li
+        | I really wish I liked other mobile games. But everything else I’ve tried feels dulled compared to 
+        | [...] Flappy Royale.
+        span
+          | -
+          a(href='https://venturebeat.com/2019/07/15/5-years-later-flappy-bird-is-still-the-best-mobile-game//') Venture Beat
 
 #call-to-action
   nav
-    a.disabled iOS
-    a.disabled Android
+    a(href="https://itunes.apple.com/us/app/flappyroyale/id1469168509") iOS
+    a(href="https://play.google.com/store/apps/details?id=com.lazerwalker.flappyroyale") Android
   nav
-    a(href='./demo') Web Demo
+    a(href='/#show-demo') Web Demo
     a(href='./media.pug') Media Pack
   nav
     a(href='/privacy.pug') Privacy

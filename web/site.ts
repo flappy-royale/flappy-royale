@@ -1,7 +1,30 @@
 import { defaultAttire, Attire } from "../src/attire"
 import { defaultAttireSet } from "../src/attire/defaultAttireSet"
 
+const showDemo = () => {
+    const intro = document.getElementById("intro")!
+    intro.style.display = "none"
+
+    const iframe = document.createElement("iframe")
+    iframe.width = "660"
+    iframe.height = "800"
+    iframe.src = "https://flappyroyale.io/demo-web"
+    iframe.frameBorder = "0"
+
+    const wrapper = document.getElementById("underground")!.firstChild!
+    wrapper.insertBefore(iframe, wrapper.firstChild)
+
+    iframe.scrollIntoView({ behavior: "smooth" })
+}
+
+// @ts-ignore
+window.showDemo = showDemo
+
 const addSomeButtsToThoseSeats = () => {
+    // If you're showing the demo
+    if (!document.getElementById("intro")) return
+    if (document.getElementById("intro")!.style.display === "none") return
+
     const bases = defaultAttireSet.attire.filter(a => a.base)
     const hatsIsh = defaultAttireSet.attire.filter(a => !a.base)
 
@@ -69,6 +92,17 @@ const addSomeButtsToThoseSeats = () => {
 
 document.onreadystatechange = e => {
     addSomeButtsToThoseSeats()
+
+    if (document.location.href.includes("demo")) {
+        showDemo()
+    }
+
+    window.addEventListener("hashchange", () => {
+        if (document.location.href.includes("demo")) {
+            showDemo()
+        }
+    })
+
     setInterval(() => {
         addSomeButtsToThoseSeats()
     }, 10000)

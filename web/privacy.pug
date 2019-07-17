@@ -6,6 +6,7 @@ include includes/sky.pug
 #ground
   .container
     h2(style='color:white; font-size: 40px;') Privacy Policy
+
 #underground
   .container
     div(style="width:600px;color:#fff;margin:0 auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif")
@@ -106,7 +107,17 @@ include includes/sky.pug
         | us 
         a(href='mailto:team@flappyroyale.io') via email
         | .
-  
+
+
+      h2(style='color:white; font-size: 40px;') Loot Boxes
+      p
+        | Flappy Royale has loot boxes based on your performance in-game. You can see the odds for 
+        | winning inside <a href="https://github.com/flappy-royale/flappy-royale/blob/master/functions/src/getItemFromLootBox.ts">/functions/src/getItemFromLootBox.ts<code></a>
+        br
+      p
+        | The contents of a loot box are always 100% from the tier which they appear in. If you collect all items of a tier
+        | the game will look at another box until you've unlocked everything. There are no ways to purchase items.
+
   #call-to-action(style='margin-top: 180px;')
     nav
       a(href='./index.pug') Back

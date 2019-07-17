@@ -11,7 +11,7 @@ const common = require("./webpack.common.js")
 module.exports = merge(common, {
     output: {
         filename: "app.[contenthash].js",
-        path: path.resolve(__dirname, "dist", "demo")
+        path: path.resolve(__dirname, "dist", "demo-web")
     },
     mode: "production",
     plugins: [
