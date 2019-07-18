@@ -1,12 +1,10 @@
 import { defaultAttire } from "../attire"
-import { unzip, zippedObj } from "../zip"
 import _ = require("lodash")
 import { GameMode } from "../battle/utils/gameMode"
 import { getSeeds } from "../firebase"
 import { APIVersion } from "../constants"
 import * as PlayFab from "../playFab"
 import { UserSettings } from "./UserSettingsTypes"
-import { PlayfabUserStats } from "../../functions/src/api-contracts"
 
 export interface GameResults {
     // When the game started
@@ -202,7 +200,6 @@ export const updateUserStatisticsFromPlayFab = (data: {
         TotalScore: "totalScore",
         TotalTimeInGame: "totalTime"
     }
-
     ;(data.statistics || []).forEach(stat => {
         const key = statsMap[stat.StatisticName!]
         if (key) {
@@ -238,7 +235,7 @@ export const getUserStatistics = (): PlayerStats => {
     return { ...emptyStats }
 }
 
-const defaultLives = 10
+const defaultLives = 5
 
 export const getLives = (seed: string): number => {
     const livesData = localStorage.getItem("lives")
