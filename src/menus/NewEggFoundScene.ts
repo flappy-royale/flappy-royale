@@ -13,6 +13,8 @@ import { consumeEgg } from "../firebase"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { showPrompt, Prompt } from "./Prompt"
 import * as _ from "lodash"
+import { RoyaleDeathSceneKey } from "../battle/overlays/RoyaleDeathScene"
+import { launchMainMenu } from "./MainMenuScene"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -365,6 +367,14 @@ export class NewEggFoundScene extends Phaser.Scene {
             } else {
                 this.game.scene.remove(this)
             }
+        }
+
+        const deathOverlayScene = this.game.scene.getScene(RoyaleDeathSceneKey)
+        if (deathOverlayScene) {
+            this.game.scene.resume(RoyaleDeathSceneKey)
+        } else {
+            this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
+            launchMainMenu(this.game)
         }
     }
 

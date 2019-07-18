@@ -23,7 +23,7 @@ import {
 } from "../user/userManager"
 import { Bird } from "../user/UserSettingsTypes"
 import { launchMainMenu } from "../menus/MainMenuScene"
-import { RoyaleDeath, deathPreload } from "./overlays/RoyaleDeathScene"
+import { RoyaleDeath, deathPreload, RoyaleDeathSceneKey } from "./overlays/RoyaleDeathScene"
 import { becomeButton } from "../menus/utils/becomeButton"
 import { rightAlignTextLabel, centerAlignTextLabel } from "./utils/alignTextLabel"
 import { TrialDeath } from "./overlays/TrialDeathScene"
@@ -36,6 +36,7 @@ import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from ".
 import { NewEggFoundScene } from "../menus/NewEggFoundScene"
 import { ReplayUploadResponse } from "../../functions/src/api-contracts"
 import { SeedData, PlayerEvent } from "../firebaseTypes"
+import { showBackgroundScene } from "../menus/BackgroundScene"
 
 declare const DEMO: boolean
 
@@ -749,6 +750,19 @@ export class BattleScene extends Phaser.Scene {
                                 eggItemInstanceId: response.itemInstanceId,
                                 tier: response.egg!
                             })
+
+                            const deathOverlayScene = this.game.scene.getScene(RoyaleDeathSceneKey)
+                            if (deathOverlayScene) {
+                                // If there's a death overlay on screen, make it not-tappable
+                                // (The egg scene is responsible for resuming it)
+                                this.game.scene.pause(RoyaleDeathSceneKey)
+                            } else {
+                                // If †here isn't a death overlay (e.g. the player has already started a new game),
+                                // let's kick 'em to a faux main menu
+                                this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
+                                showBackgroundScene(this.game)
+                            }
+
                             this.game.scene.add("won-egg", egg, true, {})
                         }
                     }
@@ -798,20 +812,20 @@ export class BattleScene extends Phaser.Scene {
             if (this.backButton) this.backButton.destroy()
 
             if (this.mode === game.GameMode.Royale) {
-                const deathOverlay = new RoyaleDeath("death", {
+                const deathOverlay = new RoyaleDeath(RoyaleDeathSceneKey, {
                     score: this.score,
                     position,
                     battle: this,
                     totalPlayers: this.seedData.replays.length + 1
                 })
-                this.scene.add("deathoverlay", deathOverlay, true)
+                this.scene.add(RoyaleDeathSceneKey, deathOverlay, true)
             } else if (this.mode === game.GameMode.Trial) {
                 saveDailyTrialRun(this.score, this.seed)
 
                 const isHighScore = this.score === this.highScore
 
                 const showOverlay = () => {
-                    const deathOverlay = new TrialDeath("death", {
+                    const deathOverlay = new TrialDeath(RoyaleDeathSceneKey, {
                         lives: getLives(this.seed),
                         livesState: livesExtensionStateForSeed(this.seed),
                         battle: this,
@@ -819,7 +833,7 @@ export class BattleScene extends Phaser.Scene {
                         score: this.score,
                         isHighScore
                     })
-                    this.scene.add("deathoverlay", deathOverlay, true)
+                    this.scene.add(RoyaleDeathSceneKey, deathOverlay, true)
                 }
 
                 if (isHighScore) {
