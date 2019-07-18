@@ -185,8 +185,8 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             }
 
             // Web folks can never earn eggs
-            // if (demo) {
-            if (true) {
+            if (demo) {
+                // if (true) {
                 return response.status(200).send({ success: true })
             }
 
