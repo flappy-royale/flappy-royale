@@ -1,0 +1,14 @@
+head
+  include includes/head.pug
+
+#ground
+
+#underground
+
+    div(style='width: 300px; margin:  0 auto;')
+      h2 News
+      div.large
+        ul
+        each val in posts
+          li.post
+            | !{val}

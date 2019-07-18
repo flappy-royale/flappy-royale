@@ -296,3 +296,17 @@ ul.seats {
         }
     }
 }
+
+.news {
+    ul {
+        padding: 0;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    & > div > ul li {
+        list-style: none;
+    }
+}

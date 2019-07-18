@@ -1,0 +1,66 @@
+[//]: # "Making changes to a post? To preview: restart the server, and invalidate the cache for the news page"
+
+## Hello World!
+
+#### Orta & Em - July 18th
+
+We've launched! Wow, it has been a bit of a whirlwind of a beta. We weren't quite prepared for the level of popularity
+Flappy Royale received.
+
+The Flappy Royale beta stood stable at **30 games per second** at peak, and over the course of the last three weeks over
+**10 million games** were played. We opened with many platforms - but eventually cut that down to just the web demo when
+we flew through the limit of testers on iOS.
+
+During the beta we re-created the networking from scratch twice to handle the load, we think this current approach is
+scalable for the long term now. We also built out a **new system for getting new characters and attire by finding
+eggs**.
+
+![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/egg.gif?alt=media&token=5a6fb60e-51ce-47ff-95c0-a8bea65bfe75](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/egg.gif?alt=media&token=5a6fb60e-51ce-47ff-95c0-a8bea65bfe75)
+
+Right now we've got about 200 new unlockables, you can win them by playing Royale mode - the better you do the more
+likely you are to get a better egg. All of the different unlockables have the same physics boxes, so picking a smaller
+character doesn't make the game easier.
+
+![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/attire.gif?alt=media&token=665480a0-95b1-4712-af2d-9068ba3ceafc](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/attire.gif?alt=media&token=665480a0-95b1-4712-af2d-9068ba3ceafc)
+
+We also shipped a night mode for when you're playing in the evenings, if Mario Maker 2 and iOS are doing it we think
+it's time for us too.
+
+![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/night.gif?alt=media&token=95355ab2-7626-4546-b316-c45002743991](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/night.gif?alt=media&token=95355ab2-7626-4546-b316-c45002743991)
+
+### Flappy Stats
+
+Because we regularly are asked what is a good score:
+
+-   20% of games don't make it past the first pipe.
+-   27% make it past one pipe.
+-   18% past the 2nd.
+
+So basically, get past 2 pipes and you're 2/3rds of the way towards winning!
+
+In the daily trial, we are seeing getting past 100 as being about the amount to get in the top 10. Here's a video of
+Lucie getting to [95 pipes](https://www.youtube.com/watch?v=1H_nKIagcpM) if you think that's impossible.
+
+### Thanks
+
+We want to thank everyone who emailed or tweeted feedback and bugs, we might not have been able to get back to all of
+you but it's been an overwhelming few weeks.
+
+-   [Zach Gage](https://twitter.com/helvetica) from letting us co-work at his space in the first few days, handling
+    advice on ads, to being an impartial third person in many system debates - Zach's influence is everywhere.
+
+-   [Danger](https://www.instagram.com/gemmamcshane/), Orta's wife and an artist in the game - she started with play
+    testing but eventually created her own suite of unlockables.
+
+-   [Ethan Gach](https://kotaku.com/there-s-a-flappy-bird-battle-royale-game-now-and-it-s-1835918626),
+    [Treesicle](https://www.youtube.com/watch?v=DA8ttZBvXzc&t=5s),
+    [Jeff Grubb](https://venturebeat.com/2019/07/15/5-years-later-flappy-bird-is-still-the-best-mobile-game/),
+    [Smash JT](https://www.youtube.com/watch?v=vuPNSVj161Q) you all get it.
+
+### What's next?
+
+Well, for now it'll be nice to chill out. Both of us have just got new jobs and it's kinda important we get that right.
+We're open for ideas on what do do next with the game, and where you'd like to see it go to. We'll definitely be
+shipping more unlockables
+
+You can email us ideas at [team@flappyroyale.io](mailto:team@flappyroyale.io)!

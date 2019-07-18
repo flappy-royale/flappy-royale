@@ -1,0 +1,20 @@
+//- Making changes to a post? You need to invalidate the cache for this page in dev time and restart the server
+//- Maybe change this comment 
+
+head
+  include includes/head.pug
+
+include includes/sky.pug
+
+#ground
+  .container
+    h2(style='color:white; font-size: 40px;') News
+
+#underground
+  .container.news
+    div(style="width:600px;color:#fff;margin:0 auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif")
+      ul
+        each val in posts
+          li.post
+            | !{val}
+
