@@ -12,6 +12,7 @@ import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
 import { analyticsEvent } from "../nativeComms/analytics"
 import { showPrompt, Prompt } from "./Prompt"
+import * as _ from "lodash"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -425,8 +426,12 @@ export class NewEggFoundScene extends Phaser.Scene {
     }
 
     openEgg() {
-        this.bottomLabel.setText(`${this.unlockedItem!.name}`)
-        this.buttonLabel.setText("Cool")
+        const article = _.includes(["a", "e", "i", "o", "u", "h"], this.unlockedItem!.name![0].toLowerCase())
+            ? "an"
+            : "a"
+
+        this.bottomLabel.setText(`It's ${article} ${this.unlockedItem!.name}!`)
+        this.buttonLabel.setText("cool!")
         centerAlignTextLabel(this.buttonLabel)
         centerAlignTextLabel(this.bottomLabel)
 
