@@ -23,11 +23,6 @@ character doesn't make the game easier.
 
 ![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/attire.gif?alt=media&token=665480a0-95b1-4712-af2d-9068ba3ceafc](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/attire.gif?alt=media&token=665480a0-95b1-4712-af2d-9068ba3ceafc)
 
-We also shipped a night mode for when you're playing in the evenings, if Mario Maker 2 and iOS are doing it we think
-it's time for us too.
-
-![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/night.gif?alt=media&token=95355ab2-7626-4546-b316-c45002743991](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/night.gif?alt=media&token=95355ab2-7626-4546-b316-c45002743991)
-
 ### Flappy Stats
 
 Because we regularly are asked what is a good score:
