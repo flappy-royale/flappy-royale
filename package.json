@@ -23,7 +23,7 @@
         "build-web": "rm -rf dist && yarn danger-prepush && yarn webpack-prod && yarn webpack-demo && yarn webpack-site",
         "webpack-prod": "webpack -p --progress --config=webpack.prod-full.js --mode production",
         "webpack-demo": "webpack -p --progress --config=webpack.prod-demo.js --mode production",
-        "webpack-site": "yarn parcel build web/index.pug; cp web/apple-app-site-association web/manifest.json dist",
+        "webpack-site": "yarn parcel build web/index.pug; cp web/apple-app-site-association web/manifest.json web/ads.txt dist",
         "webpack-dev": "webpack -p --progress --config=webpack.dev.js --mode development",
         "danger-prepush": "yarn ts-node dangerfile.lite.ts"
     },

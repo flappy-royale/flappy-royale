@@ -191,7 +191,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             }
 
             // Give them a run through the lootbox check
-            const tier = won ? 3 : tierForScore(data.score)
+            const tier = won ? 0 : tierForScore(data.score)
             if (tier !== undefined) {
                 // Give the consumable egg
                 const eggInstance = await playfabPromisify(PlayFabServer.GrantItemsToUser)({
