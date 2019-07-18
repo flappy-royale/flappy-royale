@@ -238,8 +238,13 @@ const handleCombinedPayload = (payload: PlayFabClientModels.GetPlayerCombinedInf
     if (payload) {
         let settings: Partial<UserSettings> = {}
         if (payload.PlayerProfile) {
-            settings.name = payload.PlayerProfile.DisplayName
-            settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl!) }
+            if (payload.PlayerProfile.DisplayName) {
+                settings.name = payload.PlayerProfile.DisplayName
+            }
+
+            if (payload.PlayerProfile.AvatarUrl) {
+                settings.aesthetics = { attire: avatarUrlToAttire(payload.PlayerProfile.AvatarUrl) }
+            }
         }
 
         if (payload.UserData && payload.UserData.userSettings && payload.UserData.userSettings.Value) {
@@ -393,7 +398,11 @@ export const fetchLatestPlayerInfo = async () => {
             GetUserData: true,
             GetPlayerProfile: true,
             GetPlayerStatistics: true,
-            GetUserInventory: true
+            GetUserInventory: true,
+            ProfileConstraints: ({
+                ShowAvatarUrl: true,
+                ShowDisplayName: true
+            } as unknown) as number
         }
     })
     const payload = result.data.InfoResultPayload
