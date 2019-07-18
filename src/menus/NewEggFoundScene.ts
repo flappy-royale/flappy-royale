@@ -11,6 +11,7 @@ import { PresentationAttire, LootboxTier } from "../attire"
 import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
 import { analyticsEvent } from "../nativeComms/analytics"
+import { showPrompt, Prompt } from "./Prompt"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -405,11 +406,22 @@ export class NewEggFoundScene extends Phaser.Scene {
         }
 
         analyticsEvent("egg_opened", { tier: this.props.tier, id: attire.id })
-
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)
-        this.load.on("filecomplete", this.openEgg, this)
         this.load.start()
+
+        showPrompt(
+            {
+                title: "The egg is hatching!",
+                yes: "open",
+                drawBgLayer: true,
+                completion: (response: boolean, prompt: Prompt) => {
+                    this.scene.remove(prompt)
+                    this.openEgg()
+                }
+            },
+            this.game
+        )
     }
 
     openEgg() {
