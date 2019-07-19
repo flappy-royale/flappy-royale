@@ -15,6 +15,24 @@ const showDemo = () => {
     wrapper.insertBefore(iframe, wrapper.firstChild)
 
     iframe.scrollIntoView({ behavior: "smooth" })
+
+    if ("adsbygoogle" in window === false) {
+        setupAdsense()
+    }
+}
+
+const setupAdsense = () => {
+    const script = document.createElement("script")
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+    script.async = true
+    script.onload = () => {
+        //@ts-ignore
+        ;(adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-5844650361408353",
+            enable_page_level_ads: true
+        })
+    }
+    document.getElementsByTagName("head")[0].appendChild(script)
 }
 
 // @ts-ignore
