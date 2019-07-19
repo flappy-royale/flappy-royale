@@ -26,60 +26,28 @@ const randPercent = (perc: 50 | 25 | 12.5 | 5 | 2.5 | 1.5 | 1 | 0.5) => {
 const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 
 export const tierForScore = (score: number): LootboxTier | undefined => {
-    if (score > 30) {
-        // 5% chance tier 3
-        if (randPercent(5)) return 3
-
-        // 50% fallback to 2
-        if (randPercent(50)) return 2
-
-        // 12.5% for 1
-        if (randPercent(12.5)) return 1
-
-        // 5% for 1
-        if (randPercent(5)) return 0
-    }
-
-    if (score > 29) {
-        // 0.5% chance tier 3
-        if (randPercent(0.5)) return 3
-
-        // 50%
-        if (randPercent(50)) return 2
-
-        // 12.5
-        if (randPercent(12.5)) return 1
-
-        // 5%
-        if (randPercent(5)) return 0
-    }
-
-    if (score > 19) {
-        // 1% chance tier 3
-        if (randPercent(0.5)) return 3
-
-        // 50%
-        if (randPercent(1.5)) return 2
-
-        // 12.5
-        if (randPercent(12.5)) return 1
-
-        // 5%
-        if (randPercent(5)) return 0
-    }
-
-    if (score > 9) {
-        // 1% chance tier 3
-        if (randPercent(0.5)) return 3
-
-        // 50%
-        if (randPercent(1)) return 2
-
-        // 12.5
-        if (randPercent(2.5)) return 1
-
-        // 5%
-        if (randPercent(5)) return 0
+    if (score >= 30) {
+        if (rand(1, 100) <= 10) return 3
+        if (rand(1, 100) <= 80) return 2
+        if (rand(1, 100) <= 25) return 1
+        if (rand(1, 100) <= 10) return 0
+    } else if (score >= 20) {
+        if (rand(1, 100) <= 1) return 3
+        if (rand(1, 100) <= 50) return 2
+        if (rand(1, 100) <= 25) return 1
+        if (rand(1, 100) <= 10) return 0
+    } else if (score >= 10) {
+        if (rand(1, 100) <= 1) return 3
+        if (rand(1, 100) <= 3) return 2
+        if (rand(1, 100) <= 25) return 1
+        if (rand(1, 100) <= 10) return 0
+    } else if (score >= 2) {
+        if (rand(1, 100) <= 1) return 3
+        if (rand(1, 100) <= 2) return 2
+        if (rand(1, 100) <= 5) return 1
+        if (rand(1, 100) <= 10) return 0
+    } else if (score >= 1) {
+        if (rand(1, 100) <= 5) return 0
     }
 
     return undefined
