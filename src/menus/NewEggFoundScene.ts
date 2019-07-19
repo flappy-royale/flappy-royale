@@ -11,6 +11,10 @@ import { PresentationAttire, LootboxTier } from "../attire"
 import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
 import { analyticsEvent } from "../nativeComms/analytics"
+import { showPrompt, Prompt } from "./Prompt"
+import * as _ from "lodash"
+import { RoyaleDeathSceneKey } from "../battle/overlays/RoyaleDeathScene"
+import { launchMainMenu } from "./MainMenuScene"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -364,6 +368,14 @@ export class NewEggFoundScene extends Phaser.Scene {
                 this.game.scene.remove(this)
             }
         }
+
+        const deathOverlayScene = this.game.scene.getScene(RoyaleDeathSceneKey)
+        if (deathOverlayScene) {
+            this.game.scene.resume(RoyaleDeathSceneKey)
+        } else {
+            this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
+            launchMainMenu(this.game)
+        }
     }
 
     vibrateEgg() {
@@ -405,16 +417,31 @@ export class NewEggFoundScene extends Phaser.Scene {
         }
 
         analyticsEvent("egg_opened", { tier: this.props.tier, id: attire.id })
-
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)
-        this.load.on("filecomplete", this.openEgg, this)
         this.load.start()
+
+        showPrompt(
+            {
+                title: "The egg is hatching!",
+                yes: "open",
+                drawBgLayer: true,
+                completion: (response: boolean, prompt: Prompt) => {
+                    this.scene.remove(prompt)
+                    this.openEgg()
+                }
+            },
+            this.game
+        )
     }
 
     openEgg() {
-        this.bottomLabel.setText(`${this.unlockedItem!.name}`)
-        this.buttonLabel.setText("Cool")
+        const article = _.includes(["a", "e", "i", "o", "u", "h"], this.unlockedItem!.name![0].toLowerCase())
+            ? "an"
+            : "a"
+
+        this.bottomLabel.setText(`It's ${article} ${this.unlockedItem!.name}!`)
+        this.buttonLabel.setText("cool!")
         centerAlignTextLabel(this.buttonLabel)
         centerAlignTextLabel(this.bottomLabel)
 

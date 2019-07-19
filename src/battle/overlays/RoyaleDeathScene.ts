@@ -39,6 +39,8 @@ export const deathPreload = (game: Phaser.Scene) => {
     )
 }
 
+export const RoyaleDeathSceneKey = "death"
+
 export class RoyaleDeath extends Phaser.Scene {
     seed!: string
     seedData!: SeedData
@@ -53,7 +55,7 @@ export class RoyaleDeath extends Phaser.Scene {
     shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
 
     constructor(id: string, public props: RoyaleDeathProps) {
-        super(id)
+        super(RoyaleDeathSceneKey)
     }
 
     preload() {
