@@ -27,27 +27,27 @@ const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min
 
 export const tierForScore = (score: number): LootboxTier | undefined => {
     if (score >= 30) {
+        if (rand(1, 100) <= 10) return 0
+        if (rand(1, 100) <= 80) return 1
+        if (rand(1, 100) <= 25) return 2
         if (rand(1, 100) <= 10) return 3
-        if (rand(1, 100) <= 80) return 2
-        if (rand(1, 100) <= 25) return 1
-        if (rand(1, 100) <= 10) return 0
     } else if (score >= 20) {
-        if (rand(1, 100) <= 1) return 3
-        if (rand(1, 100) <= 50) return 2
-        if (rand(1, 100) <= 25) return 1
-        if (rand(1, 100) <= 10) return 0
+        if (rand(1, 100) <= 1) return 0
+        if (rand(1, 100) <= 50) return 1
+        if (rand(1, 100) <= 25) return 2
+        if (rand(1, 100) <= 10) return 3
     } else if (score >= 10) {
-        if (rand(1, 100) <= 1) return 3
-        if (rand(1, 100) <= 3) return 2
-        if (rand(1, 100) <= 25) return 1
-        if (rand(1, 100) <= 10) return 0
+        if (rand(1, 100) <= 1) return 0
+        if (rand(1, 100) <= 3) return 1
+        if (rand(1, 100) <= 25) return 2
+        if (rand(1, 100) <= 10) return 3
     } else if (score >= 2) {
-        if (rand(1, 100) <= 1) return 3
-        if (rand(1, 100) <= 2) return 2
-        if (rand(1, 100) <= 5) return 1
-        if (rand(1, 100) <= 10) return 0
+        if (rand(1, 100) <= 1) return 0
+        if (rand(1, 100) <= 2) return 1
+        if (rand(1, 100) <= 5) return 2
+        if (rand(1, 100) <= 10) return 3
     } else if (score >= 1) {
-        if (rand(1, 100) <= 5) return 0
+        if (rand(1, 100) <= 5) return 3
     }
 
     return undefined
