@@ -104,15 +104,6 @@ export class MainMenuScene extends Phaser.Scene {
             })
             .then(() => {
                 // Replace UI elements that may have changed in response to new server data
-                const settings = getUserSettings()
-
-                this.playerIcon.destroy()
-                this.playerIcon = new BirdSprite(this, 14, c.GameHeight - 22, {
-                    isPlayer: false,
-                    isImage: true,
-                    settings: settings
-                })
-
                 const stats = getUserStatistics()
                 if (stats.royaleStreak > 0) {
                     this.winsLabel.setText(`streak: ${stats.royaleStreak}`)
