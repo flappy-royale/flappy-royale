@@ -48,6 +48,7 @@ export class MainMenuScene extends Phaser.Scene {
     winsLabel!: Phaser.GameObjects.BitmapText
 
     eggButton: Phaser.GameObjects.Image | undefined
+    playerIcon!: BirdSprite
 
     constructor() {
         super("MainMenu")
@@ -97,9 +98,29 @@ export class MainMenuScene extends Phaser.Scene {
                 this.showOnboardingIfAppropriate(settings)
             })
 
-        loginPromise.then(() => {
-            fetchLatestPlayerInfo()
-        })
+        loginPromise
+            .then(() => {
+                return fetchLatestPlayerInfo()
+            })
+            .then(() => {
+                // Replace UI elements that may have changed in response to new server data
+                const settings = getUserSettings()
+
+                this.playerIcon.destroy()
+                this.playerIcon = new BirdSprite(this, 14, c.GameHeight - 22, {
+                    isPlayer: false,
+                    isImage: true,
+                    settings: settings
+                })
+
+                const stats = getUserStatistics()
+                if (stats.royaleStreak > 0) {
+                    this.winsLabel.setText(`streak: ${stats.royaleStreak}`)
+                } else {
+                    this.winsLabel.setText(`wins: ${stats.royaleWins}`)
+                }
+                rightAlignTextLabel(this.winsLabel, 3)
+            })
 
         // This is just used for taking snapshots
         window.dispatchEvent(new Event("gameloaded"))
@@ -157,7 +178,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         const youButton = this.add.image(32, c.GameHeight - 22, "you-button")
 
-        const player = new BirdSprite(this, 14, c.GameHeight - 22, {
+        this.playerIcon = new BirdSprite(this, 14, c.GameHeight - 22, {
             isPlayer: false,
             isImage: true,
             settings: settings
