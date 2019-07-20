@@ -108,7 +108,8 @@ export class RoyaleDeath extends Phaser.Scene {
         }
 
         if (won) {
-            const streak = settings.royaleStreak
+            // This stats data is from the server, and is old. We need to manually increase the streak for display if the user won
+            const streak = settings.royaleStreak + 1
             const streakText = this.add.bitmapText(0, 1 + NotchOffset, "fipps-bit", `win streak: ${streak}`, 8)
 
             let streakRecord: string =
