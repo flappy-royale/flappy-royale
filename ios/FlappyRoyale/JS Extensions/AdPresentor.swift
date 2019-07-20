@@ -9,6 +9,7 @@ class AdPresentor : NSObject, WebViewInteropProvider, ISRewardedVideoDelegate, I
     public var bannerView: ISBannerView?
 
     private var didReceiveReward: Bool = false
+    private var adCompleted: Bool = false
     
     var webView: WKWebView?
 
@@ -80,7 +81,14 @@ class AdPresentor : NSObject, WebViewInteropProvider, ISRewardedVideoDelegate, I
     func didReceiveReward(forPlacement placementInfo: ISPlacementInfo!) {
         print("Got reward")
 
-        didReceiveReward = true
+        if (adCompleted) {
+            adCompleted = false
+            guard let adWebView = webView else { return }
+            adWebView.evaluateJavaScript("window.currentGame.adsHaveBeenUnlocked()", completionHandler: nil)
+        } else {
+            didReceiveReward = true
+        }
+
     }
     
     func rewardedVideoDidFailToShowWithError(_ error: Error!) {
@@ -89,14 +97,19 @@ class AdPresentor : NSObject, WebViewInteropProvider, ISRewardedVideoDelegate, I
     
     func rewardedVideoDidOpen() {
         print("Reward video opened")
+        didReceiveReward = false
+        adCompleted = false
     }
     
     func rewardedVideoDidClose() {
         print("Reward video closed")
 
         if (didReceiveReward) {
+            didReceiveReward = false
             guard let adWebView = webView else { return }
             adWebView.evaluateJavaScript("window.currentGame.adsHaveBeenUnlocked()", completionHandler: nil)
+        } else {
+            adCompleted = true
         }
 
     }
