@@ -11,7 +11,7 @@ target 'FlappyRoyale' do
   pod 'IronSourceSDK', '~> 6'
 
   pod 'IronSourceUnityAdsAdapter'
-  pod 'IronSourceAdMobAdapter'
+
   pod 'IronSourceAdMobAdapter'
   pod 'IronSourceFacebookAdapter'
   pod 'IronSourceVungleAdapter'

@@ -660,7 +660,7 @@ export const happyChapAttireSet: AttireSet = {
             tier: 3
         },
         {
-            name: "Ding",
+            name: "Dino",
             id: "happy-chap-dino",
             description: "TBD",
             fit: "tight",

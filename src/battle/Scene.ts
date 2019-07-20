@@ -735,6 +735,8 @@ export class BattleScene extends Phaser.Scene {
                 demo: DEMO,
                 position: this.userPositionAgainstGhosts(),
                 opponents: this.seedData.replays.length,
+                // position: 0, // this.userPositionAgainstGhosts(),
+                // opponents: 20, //this.seedData.replays.length,
                 time: Date.now() - this.startTimestamp!
             })
 

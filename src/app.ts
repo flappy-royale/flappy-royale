@@ -93,7 +93,9 @@ enum StartupScreen {
 
 function newGame(): FlappyGame {
     const isSafariRenderer = window.isAppleApp || "safari" in window
-    const renderMode = isSafariRenderer ? Phaser.CANVAS : Phaser.AUTO
+    const isFirefoxRenderer = navigator.userAgent.toLowerCase().indexOf("firefox") > -1
+
+    const renderMode = isSafariRenderer || isFirefoxRenderer ? Phaser.CANVAS : Phaser.AUTO
 
     const config: Phaser.Types.Core.GameConfig = {
         title: "Flappy Royale",

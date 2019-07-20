@@ -1,4 +1,4 @@
-import { PresentationAttire, LootboxTier, allLootBoxTiers } from "../attire"
+import { PresentationAttire, allLootBoxTiers } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
 import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
 import { titleId, lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
@@ -6,6 +6,7 @@ import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
 import _ = require("lodash")
 import { hedgehog } from "../attire/defaultAttireSet"
+import { LootboxTier } from "../../functions/src/LootboxTier"
 
 PlayFabAdmin.settings.developerSecretKey = playfabFirebaseProdSecretKey
 PlayFabAdmin.settings.titleId = titleId
