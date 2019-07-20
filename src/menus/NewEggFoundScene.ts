@@ -7,7 +7,7 @@ import { random } from "lodash"
 import { centerAlignTextLabel } from "../battle/utils/alignTextLabel"
 import { becomeButton } from "./utils/becomeButton"
 import { allAttireInGame } from "../attire/attireSets"
-import { PresentationAttire, LootboxTier } from "../attire"
+import { PresentationAttire } from "../attire"
 import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
 import { analyticsEvent } from "../nativeComms/analytics"
@@ -15,6 +15,7 @@ import { showPrompt, Prompt } from "./Prompt"
 import * as _ from "lodash"
 import { RoyaleDeathSceneKey } from "../battle/overlays/RoyaleDeathScene"
 import { launchMainMenu } from "./MainMenuScene"
+import { LootboxTier } from "../../functions/src/LootboxTier"
 export const NewEggFoundSceneKey = "NewEggFoundScene"
 
 // TODO: haptics!
@@ -35,6 +36,7 @@ export class NewEggFoundScene extends Phaser.Scene {
     eggWings!: Phaser.GameObjects.Sprite
 
     seenAd: boolean = false
+    openedEgg: boolean = false
     bottomLabel!: Phaser.GameObjects.BitmapText
     buttonLabel!: Phaser.GameObjects.BitmapText
 
@@ -336,9 +338,11 @@ export class NewEggFoundScene extends Phaser.Scene {
     tappedButton = async () => {
         this.particles.destroy()
 
-        if (this.seenAd) {
+        if (this.seenAd && this.openedEgg) {
             // remove the scene
             this.exit()
+        } else if (this.unlockedItem) {
+            this.openEgg()
         } else {
             this.vibrateEgg()
 
@@ -354,6 +358,8 @@ export class NewEggFoundScene extends Phaser.Scene {
         if (this.seenAd) {
             this.game.scene.remove(this)
         } else {
+            analyticsEvent("egg_skipped", { tier: this.props.tier })
+
             if (this.egg && this.eggWings) {
                 this.seenAd = true
                 this.add.tween({
@@ -410,6 +416,8 @@ export class NewEggFoundScene extends Phaser.Scene {
             return alert("You have unlocked everything, congrats!")
         }
 
+        this.buttonLabel.text = ""
+
         const attire = allAttireInGame.find(a => a.id === response.item)
         if (!attire) {
             console.log("Could not find item ", response.item)
@@ -417,25 +425,19 @@ export class NewEggFoundScene extends Phaser.Scene {
         }
 
         analyticsEvent("egg_opened", { tier: this.props.tier, id: attire.id })
+
         this.unlockedItem = attire
         this.load.image("unlocked", attire.href)
         this.load.start()
 
-        showPrompt(
-            {
-                title: "The egg is hatching!",
-                yes: "open",
-                drawBgLayer: true,
-                completion: (response: boolean, prompt: Prompt) => {
-                    this.scene.remove(prompt)
-                    this.openEgg()
-                }
-            },
-            this.game
-        )
+        this.bottomLabel.text = "The egg is hatching!"
+        centerAlignTextLabel(this.bottomLabel)
+        this.buttonLabel.text = "Open Egg"
+        centerAlignTextLabel(this.buttonLabel)
     }
 
     openEgg() {
+        this.openedEgg = true
         const article = _.includes(["a", "e", "i", "o", "u", "h"], this.unlockedItem!.name![0].toLowerCase())
             ? "an"
             : "a"

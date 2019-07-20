@@ -19,7 +19,7 @@ export const lookupBoxesForTiers = {
     3: "c-tier-lootbox"
 }
 
-import { LootboxTier } from "../../src/attire"
+import { LootboxTier } from "./LootboxTier"
 import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
 
 const cors = require("cors")({
@@ -105,8 +105,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
         // If playfabId exists, we'll use their playfabId instead of their name/uuid.
         let userIdentifier = uuid
 
-        // So we can do dev-specific code
-        let userName = ""
         let user: PlayfabUser | undefined
 
         if (playfabId) {
@@ -121,8 +119,6 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
             if (result && result.data && result.data.PlayerProfile) {
                 const profile = result.data.PlayerProfile
                 if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
-                    userName = profile.DisplayName
-
                     user = {
                         name: profile.DisplayName,
                         playfabId: profile.PlayerId,
@@ -186,13 +182,12 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
 
             // Web folks can never earn eggs
             if (demo) {
-                // if (true) {
                 return response.status(200).send({ success: true })
             }
 
             // Give them a run through the lootbox check
             const tier = won ? 0 : tierForScore(data.score)
-            if (tier !== undefined) {
+            if (tier !== null) {
                 // Give the consumable egg
                 const eggInstance = await playfabPromisify(PlayFabServer.GrantItemsToUser)({
                     PlayFabId: playfabId,

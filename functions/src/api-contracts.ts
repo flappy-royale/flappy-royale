@@ -1,7 +1,7 @@
 // Careful with imports - this gets included in functions, and importing game code into here
 // will make it complex to build the game
 
-import { LootboxTier } from "../../src/attire"
+import { LootboxTier } from "./LootboxTier"
 import { PlayerData } from "../../src/firebaseTypes"
 
 export interface SeedsResponse {

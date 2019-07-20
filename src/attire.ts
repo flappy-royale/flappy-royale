@@ -1,11 +1,10 @@
-// Careful now! Please don't import the game code into this module
-// so that site's webpack run only imports our code
+import { LootboxTier } from "../functions/src/LootboxTier"
 
-export type LootboxTier = -1 | 0 | 1 | 2 | 3
 export const allLootBoxTiers = [0, 1, 2, 3] as const
 
 /** Things that are needed for showing stuff to a user */
 export interface PresentationAttire extends Attire {
+    /** This is shown when you acquire the egg  */
     name: string
     description: string
     free: boolean
