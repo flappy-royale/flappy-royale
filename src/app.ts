@@ -136,10 +136,8 @@ export class FlappyGame extends Phaser.Game {
     }
 
     adsHaveBeenUnlocked() {
-        const adUnlocker = this.scene.scenes.find(s => !!s.adsHaveBeenUnlocked)
-        if (adUnlocker) {
-            adUnlocker.adsHaveBeenUnlocked()
-        }
+        const adUnlocker = this.scene.scenes.filter(s => !!s.adsHaveBeenUnlocked)
+        adUnlocker.forEach(s => s.adsHaveBeenUnlocked())
     }
 }
 
