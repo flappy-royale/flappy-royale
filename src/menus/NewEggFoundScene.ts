@@ -350,7 +350,7 @@ export class NewEggFoundScene extends Phaser.Scene {
                 this.time.delayedCall(100, this.adsHaveBeenUnlocked, [], this)
             } else {
                 this.time.delayedCall(300, requestModalAd, [eggAdID], this)
-                this.time.delayedCall(400, this.adsHaveBeenUnlocked, [], this)
+                this.adsHaveBeenUnlocked()
             }
         }
     }
