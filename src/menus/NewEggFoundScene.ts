@@ -430,9 +430,6 @@ export class NewEggFoundScene extends Phaser.Scene {
         analyticsEvent("egg_opened", { tier: this.props.tier, id: attire.id })
 
         this.unlockedItem = attire
-        this.load.image(attire.id, attire.href)
-        this.load.start()
-
         this.bottomLabel.text = "The egg is hatching!"
         centerAlignTextLabel(this.bottomLabel)
         this.buttonLabel.text = "Open Egg"
@@ -452,13 +449,17 @@ export class NewEggFoundScene extends Phaser.Scene {
 
         this.eggWings.destroy()
 
-        const unlockedItem = this.add.image(this.egg.x, this.egg.y, this.unlockedItem!.id)
-        this.add.tween({
-            targets: [unlockedItem],
-            y: "-= 20",
-            delay: 400,
-            duration: 300
+        this.load.on("complete", () => {
+            const unlockedItem = this.add.image(this.egg.x, this.egg.y, this.unlockedItem!.id)
+            this.add.tween({
+                targets: [unlockedItem],
+                y: "-= 20",
+                delay: 400,
+                duration: 300
+            })
         })
+        this.load.image(this.unlockedItem!.id, this.unlockedItem!.href)
+        this.load.start()
 
         const eggTop = this.add.image(this.egg.x, this.egg.y, this.eggName + "-egg-top")
         eggTop.setAngle(20)
