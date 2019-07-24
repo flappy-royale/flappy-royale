@@ -227,7 +227,7 @@ export const replayDataToStats = async (
     userData?: { scoreHistory: string; winStreak: number }
 }> => {
     // Guard against old clients without valid stats data
-    if (!replay.opponents || !replay.time || !replay.position) return {}
+    if (_.isUndefined(replay.opponents) || _.isUndefined(replay.time) || _.isUndefined(replay.position)) return {}
 
     const { position, data, opponents, mode, time } = replay
     const { actions, score } = data
