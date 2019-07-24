@@ -185,6 +185,11 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 return response.status(200).send({ success: true })
             }
 
+            // Trial mode shouldn't return eggs either
+            if (mode === 2) {
+                return response.status(200).send({ success: true })
+            }
+
             // Give them a run through the lootbox check
             const tier = won ? 0 : tierForScore(data.score)
             if (tier !== null) {
