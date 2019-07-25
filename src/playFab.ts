@@ -174,7 +174,7 @@ const handleLoginResponse = async (result: PlayFabModule.IPlayFabSuccessContaine
     // TODO: We should eventually merge this more intelligently, in case the user edited their attire while offline
     const payload = result.data.InfoResultPayload
     if (payload) {
-        handleCombinedPayload(payload)
+        await handleCombinedPayload(payload)
     }
 
     playfabUserId = result.data.PlayFabId
@@ -234,7 +234,7 @@ const loginRequest = (): PlayFabClientModels.LoginWithCustomIDRequest => {
     }
 }
 
-const handleCombinedPayload = (payload: PlayFabClientModels.GetPlayerCombinedInfoResultPayload) => {
+const handleCombinedPayload = async (payload: PlayFabClientModels.GetPlayerCombinedInfoResultPayload) => {
     if (payload) {
         let settings: Partial<UserSettings> = {}
         if (payload.PlayerProfile) {
@@ -267,13 +267,28 @@ const handleCombinedPayload = (payload: PlayFabClientModels.GetPlayerCombinedInf
             winStreak
         })
 
-        // Attire unlocks
-        if (payload.UserInventory) {
+        if (payload.UserData && payload.UserData.unlockedAttire && payload.UserData.unlockedAttire.Value) {
+            const attire = payload.UserData.unlockedAttire.Value.split(",")
+            changeSettings({
+                unlockedAttire: attire
+            })
+        } else if (payload.UserInventory && payload.UserInventory.length > 0) {
+            // We used to store items in PlayFab Inventory, rather than UserData JSON
+            // If a user as Inventory but not a user data blob, let's migrate them over!
             const eggs = payload.UserInventory.filter(i => i.ItemId && i.ItemId.startsWith("egg-"))
             const attire = payload.UserInventory.filter(i => i.ItemId && !i.ItemId.startsWith("egg-"))
+            const attireIds = attire.map(i => i.ItemId!)
+
+            await playfabPromisify(PlayFabClient.UpdateUserData)({
+                Data: { unlockedAttire: attireIds.join(",") }
+            })
+
+            // TODO: PlayFab does not give us a way to delete user inventory on the client.
+            // After this has been in prod for a while, probably want to write a script to manually delete everyone's inventory
+            // Might want to manually migrate people who are already over the limit
 
             changeSettings({
-                unlockedAttire: attire.map(i => i.ItemId!)
+                unlockedAttire: attireIds
             })
         }
 
@@ -407,7 +422,7 @@ export const fetchLatestPlayerInfo = async () => {
     })
     const payload = result.data.InfoResultPayload
     if (payload) {
-        handleCombinedPayload(payload)
+        await handleCombinedPayload(payload)
     }
 }
 export const event = async (name: string, params: any) => {

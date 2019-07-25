@@ -376,14 +376,15 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
             return response.status(500).send({ error: "Could not find at least one item" })
         }
 
-        const rawInventory = (await playfabPromisify(PlayFabServer.GetUserInventory)({
+        const data = (await playfabPromisify(PlayFabServer.GetUserData)({
             PlayFabId: playfabId
-        })).data.Inventory
-        if (!rawInventory) {
+        })).data.Data
+
+        if (!data && data!.userInventory && data!.userInventory.Value) {
             return response.status(500).send({ error: "Could not fetch player inventory" })
         }
 
-        const playerInventory = rawInventory.map(i => i.ItemId)
+        const playerInventory = data!.userInventory.Value!.split(",")
 
         let allAttireIsValid = true
 
