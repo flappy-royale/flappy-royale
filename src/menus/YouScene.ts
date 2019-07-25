@@ -240,6 +240,10 @@ export class YouScene extends Phaser.Scene {
                 if (!canWearAttire(settings, clickedAttire)) {
                     // TO DO: Tell the user this attire hasn't been unlocked
                     console.log("Can't click this!")
+
+                    alert(
+                        `You haven't unlocked the ${clickedAttire.name}! You can find it in eggs you earn by playing.`
+                    )
                     return
                 }
 
