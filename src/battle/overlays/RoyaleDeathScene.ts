@@ -14,6 +14,8 @@ import { GameTheme } from "../theme"
 import { setupLogoCornerImages } from "../../menus/utils/backgroundColors"
 import { isAndroidApp } from "../../nativeComms/deviceDetection"
 import { SeedData } from "../../firebaseTypes"
+import { shouldGrantLootbox } from "../../shouldGrantLootbox"
+import { NewEggFoundScene } from "../../menus/NewEggFoundScene"
 
 export interface RoyaleDeathProps {
     score: number
@@ -154,6 +156,16 @@ export class RoyaleDeath extends Phaser.Scene {
                 becomeButton(share, this.shareStats, this, [shareIcon])
             }
         }, 200)
+
+        // Try to grant lootbox
+        const lootboxTier = shouldGrantLootbox(this.props.score, won)
+        if (lootboxTier !== null) {
+            const egg = new NewEggFoundScene({
+                tier: lootboxTier
+            })
+            this.game.scene.pause(RoyaleDeathSceneKey)
+            this.game.scene.add("won-egg", egg, true, {})
+        }
     }
 
     private shareStats() {

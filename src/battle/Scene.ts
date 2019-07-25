@@ -735,41 +735,8 @@ export class BattleScene extends Phaser.Scene {
                 demo: DEMO,
                 position: this.userPositionAgainstGhosts(),
                 opponents: this.seedData.replays.length,
-                // position: 0, // this.userPositionAgainstGhosts(),
-                // opponents: 20, //this.seedData.replays.length,
                 time: Date.now() - this.startTimestamp!
             })
-
-            uploadPromise
-                .then(a => a.json())
-                .then((response: ReplayUploadResponse) => {
-                    if ("error" in response) {
-                        console.error(response)
-                    } else if ("itemInstanceId" in response) {
-                        if (response.itemInstanceId) {
-                            analyticsEvent("egg_found", { tier: response.egg })
-                            const egg = new NewEggFoundScene({
-                                eggItemInstanceId: response.itemInstanceId,
-                                tier: response.egg!
-                            })
-
-                            const deathOverlayScene = this.game.scene.getScene(RoyaleDeathSceneKey)
-                            if (deathOverlayScene) {
-                                // If there's a death overlay on screen, make it not-tappable
-                                // (The egg scene is responsible for resuming it)
-                                this.game.scene.pause(RoyaleDeathSceneKey)
-                            } else {
-                                // If †here isn't a death overlay (e.g. the player has already started a new game),
-                                // let's kick 'em to a faux main menu
-                                this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
-                                showBackgroundScene(this.game)
-                            }
-
-                            this.game.scene.add("won-egg", egg, true, {})
-                        }
-                    }
-                    // Otherwise it's just a success NOOP
-                })
         }
 
         if (game.usesLives(this.mode)) {

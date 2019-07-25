@@ -23,7 +23,6 @@ export const NewEggFoundSceneKey = "NewEggFoundScene"
 const eggAdID = "Hatch-an-Egg"
 
 interface EggProps {
-    eggItemInstanceId: string
     tier: LootboxTier
 }
 

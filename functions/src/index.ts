@@ -6,7 +6,7 @@ import _ = require("lodash")
 import { PlayFabServer } from "playfab-sdk"
 
 import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest, PlayfabUserStats } from "./api-contracts"
-import { getItemFromLootBoxStartingWith, tierForScore } from "./getItemFromLootBox"
+import { getItemFromLootBoxStartingWith } from "./getItemFromLootBox"
 
 /// Careful with any ../ - you need to make sure they don't make contact with game-code
 
@@ -19,7 +19,6 @@ export const lookupBoxesForTiers = {
     3: "c-tier-lootbox"
 }
 
-import { LootboxTier } from "./LootboxTier"
 import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
 
 const cors = require("cors")({
@@ -180,38 +179,7 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
                 })
             }
 
-            // Web folks can never earn eggs
-            if (demo) {
-                return response.status(200).send({ success: true })
-            }
-
-            // Trial mode shouldn't return eggs either
-            if (mode === 2) {
-                return response.status(200).send({ success: true })
-            }
-
-            // Give them a run through the lootbox check
-            const tier = won ? 0 : tierForScore(data.score)
-            if (tier !== null) {
-                // Give the consumable egg
-                const eggInstance = await playfabPromisify(PlayFabServer.GrantItemsToUser)({
-                    PlayFabId: playfabId,
-                    ItemIds: [`egg-${tier}`]
-                })
-
-                if (
-                    eggInstance.data &&
-                    eggInstance.data.ItemGrantResults &&
-                    eggInstance.data.ItemGrantResults!.length > 0
-                ) {
-                    const itemInstanceId = eggInstance.data.ItemGrantResults![0].ItemInstanceId
-                    return response.status(200).send({ egg: tier, itemInstanceId })
-                } else {
-                    return response.status(400).send({ error: "Could not get an egg for the player" })
-                }
-            }
-            const responseJSON = { egg: tier }
-            return response.status(200).send(responseJSON)
+            return response.status(200).send()
         } else {
             const responseJSON = { success: true }
             return response.status(200).send(responseJSON)
