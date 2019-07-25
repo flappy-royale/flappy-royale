@@ -26,7 +26,7 @@ export interface LootBoxRequest {
     playfabId: string
 }
 
-export type ConsumeEggRequest = { itemInstanceId: string; playfabId: string }
+export type ConsumeEggRequest = { tier: LootboxTier; playfabId: string }
 
 export type ConsumeEggResponse =
     | { error: string } // uh oh

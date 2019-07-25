@@ -410,7 +410,7 @@ export class NewEggFoundScene extends Phaser.Scene {
     }
 
     async unlockEgg() {
-        const response = await consumeEgg(this.props.eggItemInstanceId)
+        const response = await consumeEgg(this.props.tier)
         if ("error" in response) {
             return alert("Sorry, there was a problem unlocking your egg")
         }

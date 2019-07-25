@@ -423,43 +423,26 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
 
 export const openConsumableEgg = functions.https.onRequest(async (request, response) => {
     cors(request, response, async () => {
-        const { itemInstanceId, playfabId } = JSON.parse(request.body) as ConsumeEggRequest
+        const { tier, playfabId } = JSON.parse(request.body) as ConsumeEggRequest
 
         ////
         ////  Step 1, grab all of the inventory - this is used in 2 ways
         ////    - Confirming you have an egg to consume
         ////    - Filtering out taken options for the lootbox
         ////
-        const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({ PlayFabId: playfabId })
-        const inventory = inventoryResult.data.Inventory
-        if (!inventory) {
-            return response.status(400).send({ error: "Could not fetch inventory for player" })
-        }
 
-        const inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
-
-        ////
-        ////  Step 2, consume the hopefully existing egg
-        ////
-
-        const itemToConsume = inventory.find(i => i.ItemInstanceId === itemInstanceId)
-        if (!itemToConsume) {
-            return response
-                .status(400)
-                .send({ error: "Could not find an item with the sent itemInstanceId in player's inventory" })
-        }
-
-        const consumeResult = await playfabPromisify(PlayFabServer.ConsumeItem)({
-            itemInstanceId,
-            ConsumeCount: 1,
+        const inventoryData = (await playfabPromisify(PlayFabServer.GetUserData)({
             PlayFabId: playfabId
-        })
-        if (consumeResult.data.error) {
-            return response.status(400).send({ error: "Could not consume itemInstanceId" })
+        })).data.Data
+
+        if (!inventoryData && inventoryData!.userInventory && inventoryData!.userInventory.Value) {
+            return response.status(500).send({ error: "Could not fetch player inventory" })
         }
 
+        const inventoryIds = inventoryData!.userInventory.Value!.split(",")
+
         ////
-        ////  Step 4, grab all of the loot tables which are sets of tiered loot
+        ////  Step 2, grab all of the loot tables which are sets of tiered loot
         ////
         const lootTables = await playfabPromisify(PlayFabServer.GetRandomResultTables)({
             TableIDs: Object.values(lookupBoxesForTiers)
@@ -470,11 +453,11 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         }
 
         ////
-        ////  Step 5, roll the dice
+        ////  Step 3, roll the dice
         ////
 
         // "egg-3".split("egg-") > [ '', '3' ]
-        const initialTier = (itemToConsume.ItemId!.split("egg-")[1] as any) as LootboxTier
+        const initialTier = tier
         const rewardedItem = getItemFromLootBoxStartingWith(
             initialTier,
             Object.values(lootTables.data.Tables),
@@ -491,10 +474,9 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         ////  Step 6, Grant the new item
         ////
 
-        await playfabPromisify(PlayFabServer.GrantItemsToUser)({
-            Annotation: "Loot box",
+        await playfabPromisify(PlayFabServer.UpdateUserData)({
             PlayFabId: playfabId,
-            ItemIds: [rewardedItem.ResultItem]
+            Data: { userInventory: [...inventoryIds, rewardedItem.ResultItem].join(",") }
         }).catch(e => {
             return response.status(400).send({ error: "Could not grant item to user" })
         })

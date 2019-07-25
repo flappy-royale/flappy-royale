@@ -14,6 +14,7 @@ import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 import _ = require("lodash")
 import { loginPromise, getPlayfabId } from "./playFab"
 import { SeedData, JsonSeedData, SeedDataZipped } from "./firebaseTypes"
+import { LootboxTier } from "../functions/src/LootboxTier"
 
 firebase.initializeApp(firebaseConfig)
 
@@ -131,12 +132,12 @@ export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
     })
 }
 
-export const consumeEgg = async (itemInstanceId: string): Promise<ConsumeEggResponse> => {
+export const consumeEgg = async (tier: LootboxTier): Promise<ConsumeEggResponse> => {
     await loginPromise
     const playfabId = getPlayfabId()
     if (!playfabId) return Promise.reject("No playfabId")
 
-    const request: ConsumeEggRequest = { playfabId, itemInstanceId }
+    const request: ConsumeEggRequest = { playfabId, tier }
 
     return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openConsumableEgg`, {
         method: "POST",
