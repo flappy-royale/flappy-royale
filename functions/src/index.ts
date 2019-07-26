@@ -403,11 +403,31 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
             PlayFabId: playfabId
         })).data.Data
 
-        if (!inventoryData && inventoryData!.userInventory && inventoryData!.userInventory.Value) {
-            return response.status(500).send({ error: "Could not fetch player inventory" })
+        console.log("INVENTORY DATA", playfabId, inventoryData)
+
+        let inventoryIds: string[]
+
+        if (inventoryData && inventoryData!.unlockedAttire && inventoryData!.unlockedAttire!.Value) {
+            console.log("InventoryData exists!")
+            inventoryIds = inventoryData!.unlockedAttire!.Value!.split(",")
+            console.log(inventoryIds)
+        } else {
+            // Temporary (or "temporary", lol) support for older clients that haven't backfilled user inventory in userData
+            // Eventually, we won't care about supporting UserInventory items
+            // and can fall straight back to 500-ing if userData lookup fails.
+
+            const inventoryResult = await playfabPromisify(PlayFabServer.GetUserInventory)({ PlayFabId: playfabId })
+            const inventory = inventoryResult.data.Inventory
+            if (!inventory) {
+                return response.status(400).send({ error: "Could not fetch inventory for player" })
+            }
+
+            inventoryIds = inventory.map(i => i.ItemId).filter(Boolean) as string[]
         }
 
-        const inventoryIds = inventoryData!.userInventory.Value!.split(",")
+        if (!inventoryIds) {
+            return response.status(500).send({ error: "Could not fetch player inventory" })
+        }
 
         ////
         ////  Step 2, grab all of the loot tables which are sets of tiered loot
