@@ -24,7 +24,7 @@ export function setDeviceSize() {
     console.log(screen.width, window.innerWidth)
     const scale = GameWidth / screen.width
 
-    GameHeight = window.innerHeight * scale
+    GameHeight = Math.min(screen.height, window.innerHeight) * scale
     GameAreaTopOffset = NotchOffset && (GameHeight - GameAreaHeight) / 2
 
     if ((window as any).notchOffset) {
