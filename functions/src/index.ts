@@ -348,11 +348,11 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
             PlayFabId: playfabId
         })).data.Data
 
-        if (!data && data!.userInventory && data!.userInventory.Value) {
+        if (!data && data!.unlockedAttire && data!.unlockedAttire.Value) {
             return response.status(500).send({ error: "Could not fetch player inventory" })
         }
 
-        const playerInventory = data!.userInventory.Value!.split(",")
+        const playerInventory = data!.unlockedAttire.Value!.split(",")
 
         let allAttireIsValid = true
 
@@ -464,7 +464,7 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
 
         await playfabPromisify(PlayFabServer.UpdateUserData)({
             PlayFabId: playfabId,
-            Data: { userInventory: [...inventoryIds, rewardedItem.ResultItem].join(",") }
+            Data: { unlockedAttire: [...inventoryIds, rewardedItem.ResultItem].join(",") }
         }).catch(e => {
             return response.status(400).send({ error: "Could not grant item to user" })
         })
