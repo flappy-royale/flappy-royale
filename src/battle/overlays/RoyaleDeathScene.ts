@@ -16,6 +16,7 @@ import { isAndroidApp } from "../../nativeComms/deviceDetection"
 import { SeedData } from "../../firebaseTypes"
 import { shouldGrantLootbox } from "../../shouldGrantLootbox"
 import { NewEggFoundScene } from "../../menus/NewEggFoundScene"
+import { LootboxTier } from "../../../functions/src/LootboxTier"
 
 export interface RoyaleDeathProps {
     score: number
@@ -55,6 +56,8 @@ export class RoyaleDeath extends Phaser.Scene {
 
     footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
     shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
+
+    lootboxTier: LootboxTier | null | undefined
 
     constructor(id: string, public props: RoyaleDeathProps) {
         super(RoyaleDeathSceneKey)
@@ -158,14 +161,7 @@ export class RoyaleDeath extends Phaser.Scene {
         }, 200)
 
         // Try to grant lootbox
-        const lootboxTier = shouldGrantLootbox(this.props.score, won)
-        if (lootboxTier !== null) {
-            const egg = new NewEggFoundScene({
-                tier: lootboxTier
-            })
-            this.game.scene.pause(RoyaleDeathSceneKey)
-            this.game.scene.add("won-egg", egg, true, {})
-        }
+        this.lootboxTier = shouldGrantLootbox(this.props.score, won)
     }
 
     private shareStats() {
@@ -200,6 +196,10 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     private backToMainMenu() {
+        if (this.lootboxTier !== null && this.lootboxTier !== undefined) {
+            return this.showLootbox()
+        }
+
         _.defer(() => {
             this.game.scene.remove(this)
             this.game.scene.remove(this.props.battle)
@@ -224,7 +224,25 @@ export class RoyaleDeath extends Phaser.Scene {
         }
     }
 
+    private showLootbox() {
+        if (this.lootboxTier === null || this.lootboxTier === undefined) {
+            return
+        }
+
+        const egg = new NewEggFoundScene({
+            tier: this.lootboxTier
+        })
+        this.game.scene.pause(RoyaleDeathSceneKey)
+        this.game.scene.add("won-egg", egg, true, {})
+
+        this.lootboxTier = undefined
+    }
+
     private async startNewRound() {
+        if (this.lootboxTier !== null && this.lootboxTier !== undefined) {
+            return this.showLootbox()
+        }
+
         if (!(this.seed && this.seedData)) return
 
         _.defer(() => {
