@@ -249,6 +249,8 @@ export const replayDataToStats = async (
             result.RoyaleGamesWon = 1
             result.RoyaleWinStreak = winStreak
             result.CurrentRoyaleStreak = winStreak
+        } else {
+            result.CurrentRoyaleStreak = 0
         }
     }
 
