@@ -117,11 +117,11 @@ export const addReplayToSeed = functions.https.onRequest(async (request, respons
 
             if (result && result.data && result.data.PlayerProfile) {
                 const profile = result.data.PlayerProfile
-                if (profile.DisplayName && profile.AvatarUrl && profile.PlayerId) {
+                if (profile.DisplayName && profile.PlayerId) {
                     user = {
                         name: profile.DisplayName,
                         playfabId: profile.PlayerId,
-                        avatarUrl: profile.AvatarUrl
+                        avatarUrl: profile.AvatarUrl || ""
                     }
                 } else {
                     console.log("Could not find display name, avatar, or profileId")

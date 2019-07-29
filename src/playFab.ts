@@ -561,5 +561,8 @@ export const avatarUrlToAttire = (url: string): Attire[] => {
     if (keys.length === 0) {
         return [defaultAttire]
     }
+    if (keys.length === 1 && keys[0] === "") {
+        return [defaultAttire]
+    }
     return keys.map(key => attireMap[key]).filter(a => !_.isUndefined(a))
 }
