@@ -251,6 +251,7 @@ export const replayDataToStats = async (
             result.CurrentRoyaleStreak = winStreak
         } else {
             result.CurrentRoyaleStreak = 0
+            winStreak = 0
         }
     }
 

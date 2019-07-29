@@ -259,7 +259,8 @@ const handleCombinedPayload = async (payload: PlayFabClientModels.GetPlayerCombi
         // Stats
         const scoreHistory =
             payload.UserData && payload.UserData.scoreHistory ? payload.UserData.scoreHistory.Value : undefined
-        const winStreak = payload.UserData && payload.UserData.winStreak ? payload.UserData.winStreak.Value : undefined
+        const winStreak =
+            payload.UserData && payload.UserData.winStreak !== undefined ? payload.UserData.winStreak.Value : undefined
 
         updateUserStatisticsFromPlayFab({
             statistics: payload.PlayerStatistics,
