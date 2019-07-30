@@ -221,6 +221,9 @@ export class RoyaleDeath extends Phaser.Scene {
             this.newGameText.setText(`one sec...`)
             this.newGameBG.setAlpha(0.3)
             centerAlignTextLabel(this.newGameText, -9)
+        } else {
+            this.newGameText = this.add.bitmapText(71, GameHeight - 27, "fipps-bit", "READY", 8)
+            this.newGameBG.setAlpha(1.0)
         }
     }
 
@@ -236,6 +239,9 @@ export class RoyaleDeath extends Phaser.Scene {
         this.game.scene.add("won-egg", egg, true, {})
 
         this.lootboxTier = undefined
+
+        this.hasReadied = false
+        this.updateCounterLabel()
     }
 
     private async startNewRound() {
