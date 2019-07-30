@@ -57,7 +57,11 @@ export class RoyaleDeath extends Phaser.Scene {
     footerObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText | Phaser.GameObjects.Rectangle)[] = []
     shareLogoObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.BitmapText)[] = []
 
+    /** If this is defined when the user readies up or exits, we show an egg prompt. Or after a few seconds of no input */
     lootboxTier: LootboxTier | null | undefined
+
+    /** The timer to count a bit before showing an egg prompt */
+    lootboxTimer: number | undefined
 
     constructor(id: string, public props: RoyaleDeathProps) {
         super(RoyaleDeathSceneKey)
@@ -162,6 +166,12 @@ export class RoyaleDeath extends Phaser.Scene {
 
         // Try to grant lootbox
         this.lootboxTier = shouldGrantLootbox(this.props.score, won)
+
+        if (this.lootboxTier !== undefined) {
+            this.lootboxTimer = (setTimeout(() => {
+                this.showLootbox()
+            }, 2000) as unknown) as number
+        }
     }
 
     private shareStats() {
@@ -228,6 +238,8 @@ export class RoyaleDeath extends Phaser.Scene {
     }
 
     private showLootbox() {
+        clearTimeout(this.lootboxTimer)
+
         if (this.lootboxTier === null || this.lootboxTier === undefined) {
             return
         }
