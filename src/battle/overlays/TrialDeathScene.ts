@@ -263,7 +263,9 @@ export class TrialDeath extends Phaser.Scene {
 
         this.footerObjects.push(this.add.image(20, GameHeight - 48, "red-sash"))
         const lives = getLives(this.props.seed)
-        this.footerObjects.push(this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8))
+        this.footerObjects.push(
+            this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${this.livesLeftString(lives)}`, 8)
+        )
     }
 
     private didntComeTopThree(leaderboard: Leaderboard) {
@@ -312,7 +314,9 @@ export class TrialDeath extends Phaser.Scene {
 
         this.footerObjects.push(this.add.image(20, GameHeight - 48, "red-sash"))
         const lives = getLives(this.props.seed)
-        this.footerObjects.push(this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${lives} lives left`, 8))
+        this.footerObjects.push(
+            this.add.bitmapText(8, GameHeight - 56, "fipps-bit", `${this.livesLeftString(lives)}`, 8)
+        )
     }
 
     private drawPlayerRow(config: { white: boolean; opacity: number; x: number; y: number }, data: LeaderboardResult) {
@@ -522,5 +526,10 @@ export class TrialDeath extends Phaser.Scene {
 
         console.log(shrunkResults, player)
         return { results: shrunkResults, player }
+    }
+
+    private livesLeftString(livesLeft: number): string {
+        const livesText = livesLeft === 1 ? "life" : "lives"
+        return `${livesLeft} ${livesText} left`
     }
 }
