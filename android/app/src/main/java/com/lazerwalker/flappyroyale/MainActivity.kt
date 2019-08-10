@@ -80,9 +80,9 @@ class MainActivity : AppCompatActivity() {
         IronSource.shouldTrackNetworkState(this, true);
 
         IronSource.init(this, AdConstants.ironsrcAppKey, IronSource.AD_UNIT.REWARDED_VIDEO, IronSource.AD_UNIT.BANNER);
-        loadIronSourceBanner()
+//        loadIronSourceBanner()
 
-        bannerAdView.setBackgroundColor(Color.parseColor("#482305"))
+//        bannerAdView.setBackgroundColor(Color.parseColor("#482305"))
         // This verifies IronSource is set up, including mediation integrations
 //         IntegrationHelper.validateIntegration(this);
 
@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadIronSourceBanner() {
         this.banner = IronSource.createBanner(this, ISBannerSize.BANNER);
-        bannerAdView.addView(banner)
+//        bannerAdView.addView(banner)
 
         val bannerListener = object : BannerListener {
             override fun onBannerAdLoaded() {
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                 Log.i("IronSource", "Banner ad load failed")
                 Log.i("IronSource", error.errorMessage)
 
-                runOnUiThread({ bannerAdView.removeAllViews() })
+//                runOnUiThread({ bannerAdView.removeAllViews() })
             }
 
             override fun onBannerAdClicked()
