@@ -113,17 +113,25 @@ export class AppSettingsScene extends Phaser.Scene {
                 saveSettings({ quality })
             }
         )
-        // this.makeButton("dark-mode-button", settings.darkMode, darkMode => saveSettings({ darkMode }))
 
-        // this.makeButton("auto-dark-mode-button", settings.autoDarkMode, autoDarkMode => {
-        //     const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
-        //     this.setButtonState(otherButton, getSettings().darkMode, autoDarkMode)
-        //     saveSettings({ autoDarkMode })
-        // })
+        this.makeButton("dark-mode-button", { initialValue: settings.darkMode, states: BooleanStates }, darkMode =>
+            saveSettings({ darkMode })
+        )
 
-        // // Set initial dark mode disabled state
-        // const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
-        // this.setButtonState(otherButton, settings.darkMode, settings.autoDarkMode)
+        this.makeButton(
+            "auto-dark-mode-button",
+            { initialValue: settings.autoDarkMode, states: BooleanStates },
+
+            autoDarkMode => {
+                const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
+                this.setButtonEnabled(otherButton, !autoDarkMode)
+                saveSettings({ autoDarkMode })
+            }
+        )
+
+        // Set initial dark mode disabled state
+        const darkModeButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
+        this.setButtonEnabled(darkModeButton, !settings.autoDarkMode)
 
         document.getElementById("reset")!.addEventListener("click", () => {
             this.game.scene.remove(this)
@@ -200,6 +208,11 @@ export class AppSettingsScene extends Phaser.Scene {
     setButtonState<T>(el: HTMLButtonElement, state: ButtonState<T>) {
         el.innerText = state.text
         el.style.backgroundImage = `url(${state.bgImage})`
+    }
+
+    setButtonEnabled(el: HTMLButtonElement, enabled: boolean) {
+        el.disabled = !enabled
+        el.style.opacity = enabled ? "1" : "0.3"
     }
 
     makeButton<T>(id: string, opts: EnumButtonOptions<T>, onChange: (newValue: T) => void) {

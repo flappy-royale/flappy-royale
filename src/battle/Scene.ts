@@ -32,11 +32,8 @@ import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
-import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode } from "../gameSettings"
-import { NewEggFoundScene } from "../menus/NewEggFoundScene"
-import { ReplayUploadResponse } from "../../functions/src/api-contracts"
+import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode, getSettings } from "../gameSettings"
 import { SeedData, PlayerEvent } from "../firebaseTypes"
-import { showBackgroundScene } from "../menus/BackgroundScene"
 
 declare const DEMO: boolean
 
@@ -188,20 +185,16 @@ export class BattleScene extends Phaser.Scene {
         if (opts.theme) {
             this.theme = opts.theme
         } else {
-            // // Auto dark mode should take precedence over a manually-set one.
-            // // TODO: This logic shouldn't live here
-            // if (getSettings().autoDarkMode) {
-            //     const now = new Date()
-            //     // 8pm-8am.
-            //     // We could manually tweak this, we could also try to grab user's local sunrise/sunset
-            //     let darkMode = now.getHours() > 20 || now.getHours() < 8
-            //     saveSettings({ darkMode })
-            //     this.theme = darkMode ? GameTheme.night : GameTheme.default
-            // }
-
-            // this.theme = getSettings().darkMode ? GameTheme.night : GameTheme.default
-
-            this.theme = GameTheme.default
+            const settings = getSettings()
+            if (settings.autoDarkMode) {
+                const now = new Date()
+                // 8pm-8am.
+                // We could manually tweak this, we could also try to grab user's local sunrise/sunset
+                let darkMode = now.getHours() > 20 || now.getHours() < 7
+                this.theme = darkMode ? GameTheme.night : GameTheme.default
+            } else {
+                this.theme = settings.darkMode ? GameTheme.night : GameTheme.default
+            }
         }
     }
 
