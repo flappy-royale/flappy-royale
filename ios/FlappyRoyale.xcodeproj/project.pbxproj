@@ -698,7 +698,7 @@
 				CODE_SIGN_ENTITLEMENTS = FlappyRoyale/FlappyRoyale.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = DL8L9H58NG;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -726,7 +726,7 @@
 				CODE_SIGN_ENTITLEMENTS = FlappyRoyale/FlappyRoyale.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = DL8L9H58NG;
 				INFOPLIST_FILE = FlappyRoyale/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
