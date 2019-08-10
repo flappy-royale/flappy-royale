@@ -1,38 +1,7 @@
-import { PresentationAttire } from "../attire"
+import { hedgehog, dog } from "../attire"
 import { AttireSet } from "./attireSets"
 
-export const hedgehog: PresentationAttire = {
-    name: "Chog",
-    id: "hedgehog",
-    description: "Whole hedgehog",
-    fit: "tight",
-    base: true,
-    href: require("../../assets/bases/default/Hedgehog.png"),
-    free: true,
-    tier: -1
-}
-
-export const dog: PresentationAttire = {
-    name: "Dog",
-    id: "dog-1",
-    description: "Woof woof",
-    fit: "tight",
-    base: true,
-    href: require("../../assets/bases/default/Dog1.png"),
-    free: true,
-    tier: -1
-}
-
-export const sheep: PresentationAttire = {
-    name: "Sheep",
-    id: "sheep",
-    description: "Bird got punk'd",
-    fit: "tight",
-    base: true,
-    href: require("../../assets/bases/default/Sheep.png"),
-    free: true,
-    tier: -1
-}
+export { hedgehog, dog, sheep } from "../attire"
 
 export const defaultAttireSet: AttireSet = {
     name: "Starter pack",
@@ -52,7 +21,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Turtle.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 4
         },
         {
             name: "n/a",
@@ -62,7 +32,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Banana.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 4
         },
         dog,
         {
@@ -73,7 +44,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/BirdBody.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 5
         },
         {
             name: "n/a",
@@ -83,7 +55,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/FlatCap.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 6
         },
         {
             name: "n/a",
@@ -93,7 +66,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Crown1.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 7
         },
         {
             name: "n/a",
@@ -103,7 +77,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Crown2.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 8
         },
         {
             name: "n/a",
@@ -113,7 +88,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Baseball-Whiteblue.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 9
         },
         {
             name: "n/a",
@@ -123,7 +99,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/BobbleHat.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 10
         },
         {
             name: "n/a",
@@ -133,7 +110,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Sunnies.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 11
         },
         {
             name: "n/a",
@@ -143,7 +121,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/TopHat.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 12
         },
         {
             name: "n/a",
@@ -154,7 +133,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/SummerHat.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 13
         },
         {
             name: "n/a",
@@ -164,7 +144,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Mohawk.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 14
         },
         {
             name: "n/a",
@@ -174,7 +155,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/bad-dana.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 15
         },
         {
             name: "n/a",
@@ -184,7 +166,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/zen.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 16
         },
         {
             name: "n/a",
@@ -194,7 +177,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/nervous.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 17
         },
         {
             name: "n/a",
@@ -204,7 +188,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Nimbus.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 18
         },
         {
             name: "n/a",
@@ -214,7 +199,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/tired.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 19
         },
         {
             name: "n/a",
@@ -224,7 +210,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Paranoid.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 20
         },
         {
             name: "n/a",
@@ -234,7 +221,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/halo.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 21
         },
         {
             name: "n/a",
@@ -244,7 +232,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/bigmouth.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 22
         },
         {
             name: "n/a",
@@ -254,7 +243,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/drool.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 23
         },
         {
             name: "n/a",
@@ -264,7 +254,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Tiny_eyes.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 24
         },
         {
             name: "n/a",
@@ -274,7 +265,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Ghost.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 25
         },
         {
             name: "n/a",
@@ -284,7 +276,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Fantasy.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 26
         },
         {
             name: "n/a",
@@ -294,7 +287,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Sheep.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 27
         },
         {
             name: "n/a",
@@ -304,7 +298,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Pug.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 28
         },
         {
             name: "n/a",
@@ -314,7 +309,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Robin.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 29
         },
         {
             name: "n/a",
@@ -324,7 +320,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Duck.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 30
         },
         {
             name: "n/a",
@@ -334,7 +331,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/WhiteRabbit.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 31
         },
         {
             name: "n/a",
@@ -344,7 +342,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/Rocket.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 32
         },
         {
             name: "n/a",
@@ -354,7 +353,8 @@ export const defaultAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/default/DMFox.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 33
         },
         {
             name: "n/a",
@@ -364,7 +364,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Flag_Trans.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 34
         },
         {
             name: "n/a",
@@ -374,7 +375,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Pride_Hunter.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 35
         },
         {
             name: "n/a",
@@ -384,7 +386,8 @@ export const defaultAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/default/Finish_Flag.png"),
             free: true,
-            tier: -1
+            tier: -1,
+            uuid: 36
         }
     ]
 }
