@@ -387,7 +387,7 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
             return response.status(403).send({ error: "Player tried to wear attire they did not have access to" })
         }
 
-        // TODO: How do we verify that the given user actually made this request themself?
+        // TODO: How do we verify that the given user actually made this request themselves?
         await playfabPromisify(PlayFabServer.UpdateAvatarUrl)({
             ImageUrl: attire.map(a => a.ItemId).join(","),
             PlayFabId: playfabId
