@@ -25,6 +25,7 @@ const attireToCatalogItem = (item: PresentationAttire): PlayFabAdminModels.Catal
         Tags: tags,
         Description: item.description,
         ItemClass: itemClass,
+        DisplayName: item.uuid.toString(),
 
         CanBecomeCharacter: false,
         InitialLimitedEditionCount: 0,
