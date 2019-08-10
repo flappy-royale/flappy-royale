@@ -96,22 +96,24 @@ window.buildVersion = '\(bundleVersion)';
             webView.topAnchor.constraint(equalTo: self.view.topAnchor),
             webView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
             webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            webView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+
         ])
 
         let adViewContainer = UIView()
         view.addSubview(adViewContainer)
         view.backgroundColor = view.backgroundColor
         
-        adPresentor.startUpBannerIntoContainer(container: adViewContainer)
+//        adPresentor.startUpBannerIntoContainer(container: adViewContainer)
 
-        adViewContainer.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            adViewContainer.heightAnchor.constraint(equalToConstant: 56),
-            adViewContainer.widthAnchor.constraint(equalToConstant: 320),
-            adViewContainer.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            adViewContainer.topAnchor.constraint(equalTo: webView.bottomAnchor),
-            adViewContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-        ])
+//        adViewContainer.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            adViewContainer.heightAnchor.constraint(equalToConstant: 56),
+//            adViewContainer.widthAnchor.constraint(equalToConstant: 320),
+//            adViewContainer.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+//            adViewContainer.topAnchor.constraint(equalTo: webView.bottomAnchor),
+//            adViewContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+//        ])
         
         self.webView = webView
         pushNotifs.webView = webView
