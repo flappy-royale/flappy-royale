@@ -16,6 +16,7 @@ export interface PresentationAttire extends Attire {
      *  3 = everywhere
      */
     tier: LootboxTier
+    uuid: number
 }
 
 export interface Attire {
@@ -37,7 +38,8 @@ export const hedgehog: PresentationAttire = {
     base: true,
     href: require("../assets/bases/default/Hedgehog.png"),
     free: true,
-    tier: -1
+    tier: -1,
+    uuid: 1
 }
 
 export const dog: PresentationAttire = {
@@ -48,7 +50,8 @@ export const dog: PresentationAttire = {
     base: true,
     href: require("../assets/bases/default/Dog1.png"),
     free: true,
-    tier: -1
+    tier: -1,
+    uuid: 2
 }
 
 export const sheep: PresentationAttire = {
@@ -59,7 +62,8 @@ export const sheep: PresentationAttire = {
     base: true,
     href: require("../assets/bases/default/Sheep.png"),
     free: true,
-    tier: -1
+    tier: -1,
+    uuid: 3
 }
 
 export const defaultAttire = hedgehog

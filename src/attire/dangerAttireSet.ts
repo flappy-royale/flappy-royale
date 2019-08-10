@@ -17,7 +17,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/Tie.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 37
         },
         {
             name: "Antlers",
@@ -27,7 +28,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/antlers.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 38
         },
         {
             name: "A backpack",
@@ -37,7 +39,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/backpack.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 39
         },
         {
             name: "A bike?!",
@@ -47,7 +50,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/bike.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 40
         },
         {
             name: "Black Hair",
@@ -57,7 +61,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/black-hair.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 41
         },
         {
             name: "Blonde Hair",
@@ -67,7 +72,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/blone-haior.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 42
         },
         {
             name: "Brown Hair",
@@ -77,7 +83,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/brown-hair.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 43
         },
         {
             name: "High Heels",
@@ -87,7 +94,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/shoe-two.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 44
         },
         {
             name: "Shoeses",
@@ -97,7 +105,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/shoes.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 45
         },
         {
             name: "A Skateboard",
@@ -107,7 +116,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/skateboard.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 46
         },
         {
             name: "Specs",
@@ -117,7 +127,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/specs.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 47
         },
         {
             name: "Some Wheels",
@@ -127,7 +138,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/attire/danger/wheels.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 48
         },
 
         {
@@ -138,7 +150,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/alien.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 49
         },
         {
             name: "Bee",
@@ -148,7 +161,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/bee.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 50
         },
         {
             name: "Boar",
@@ -158,7 +172,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/boar.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 51
         },
         {
             name: "A Boat",
@@ -168,7 +183,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/boat.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 52
         },
         {
             name: "A Broome",
@@ -178,7 +194,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/broome.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 53
         },
         {
             name: "A Cape",
@@ -188,7 +205,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/bases/danger/cape.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 54
         },
         {
             name: "Cross Bones",
@@ -198,7 +216,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/crossbones.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 55
         },
         {
             name: "Crow",
@@ -208,7 +227,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/crow.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 56
         },
         {
             name: "Mini-Bus",
@@ -218,7 +238,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/cute-bus.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 57
         },
         {
             name: "An Egg",
@@ -228,7 +249,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/egg.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 58
         },
         {
             name: "Elephant",
@@ -238,7 +260,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/elephant.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 59
         },
         {
             name: "Fawn",
@@ -248,7 +271,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/fawn.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 60
         },
         {
             name: "Fish",
@@ -258,7 +282,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/fish.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 61
         },
         {
             name: "Friend Egg",
@@ -268,7 +293,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/fried-egg.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 62
         },
         {
             name: "Ginger Hair",
@@ -278,7 +304,8 @@ export const dangerAttireSet: AttireSet = {
             base: false,
             href: require("../../assets/bases/danger/ginger-hair.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 63
         },
         {
             name: "Big Heart",
@@ -288,7 +315,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/heart.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 64
         },
         {
             name: "Chopper",
@@ -298,7 +326,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/helicopter.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 65
         },
         {
             name: "Horse",
@@ -308,7 +337,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/horse.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 66
         },
         {
             name: "Kangaroo",
@@ -318,7 +348,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/kangaroo.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 67
         },
         {
             name: "A Light Bulb",
@@ -328,7 +359,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/lightbulp.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 68
         },
         {
             name: "Lion",
@@ -338,7 +370,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/lion.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 69
         },
         {
             name: "Mandarin Duck",
@@ -348,7 +381,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/mandarin-duck.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 70
         },
         {
             name: "Mole",
@@ -358,7 +392,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/mole.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 71
         },
         {
             name: "Mouse",
@@ -368,7 +403,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/mouse.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 72
         },
         {
             name: "Narwhal",
@@ -378,7 +414,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/narwhal.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 73
         },
         {
             name: "Octopus",
@@ -388,7 +425,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/octopus.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 74
         },
         {
             name: "Panda",
@@ -398,7 +436,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/panda.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 75
         },
         {
             name: "Paperclippo",
@@ -408,7 +447,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/paperclip.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 76
         },
         {
             name: "Parokeet",
@@ -418,7 +458,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/parokeet.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 77
         },
         {
             name: "Parrot",
@@ -428,7 +469,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/parrot.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 78
         },
         {
             name: "Painguin",
@@ -438,7 +480,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/penguin.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 79
         },
         {
             name: "Danger Pig",
@@ -448,7 +491,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/pig.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 80
         },
         {
             name: "Racoon",
@@ -458,7 +502,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/racoon.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 81
         },
         {
             name: "Rainbow Bird",
@@ -468,7 +513,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/rainbow-bird.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 82
         },
         {
             name: "Rat",
@@ -478,7 +524,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/rat.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 83
         },
         {
             name: "Red Panda",
@@ -488,7 +535,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/red-panda.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 84
         },
         {
             name: "Rubber Duck",
@@ -498,7 +546,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/rubber-duck.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 85
         },
         {
             name: "Seal",
@@ -508,7 +557,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/seal.png"),
             free: false,
-            tier: 0
+            tier: 0,
+            uuid: 86
         },
         {
             name: "Snail",
@@ -518,7 +568,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/snail.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 87
         },
         {
             name: "Snow Person",
@@ -528,7 +579,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/snowman.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 88
         },
         {
             name: "Squid",
@@ -538,7 +590,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/squid.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 89
         },
         {
             name: "Tiger",
@@ -548,7 +601,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/tiger.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 90
         },
         {
             name: "Whale",
@@ -558,7 +612,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/whale.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 91
         },
         {
             name: "White Rabbit",
@@ -568,7 +623,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/white-rabbit.png"),
             free: false,
-            tier: 1
+            tier: 1,
+            uuid: 92
         },
         {
             name: "Wolf!",
@@ -578,7 +634,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/wolf.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 93
         },
         {
             name: "Worm",
@@ -588,7 +645,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/worm.png"),
             free: false,
-            tier: 3
+            tier: 3,
+            uuid: 94
         },
         {
             name: "Zebra",
@@ -598,7 +656,8 @@ export const dangerAttireSet: AttireSet = {
             base: true,
             href: require("../../assets/bases/danger/zebra.png"),
             free: false,
-            tier: 2
+            tier: 2,
+            uuid: 95
         }
     ]
 }
