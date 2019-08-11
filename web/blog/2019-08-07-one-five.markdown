@@ -26,6 +26,10 @@ unlocking eggs.
 
 ![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/transform.png?alt=media&token=fedc934c-e022-49df-8ef6-241b51ceadfc](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/transform.png?alt=media&token=fedc934c-e022-49df-8ef6-241b51ceadfc)
 
+If we were making flappy millions, maybe it'd be worth it - but we're not and that's OK. So let's make the game feel
+like the best it could. This also applies to the ads we were trying with the web demo, they ended up de-valuing the feel
+of the game much more and all the ads are dropped outright for web.
+
 :tada:
 
 You can email us ideas at [team@flappyroyale.io](mailto:team@flappyroyale.io)!
