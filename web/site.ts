@@ -17,7 +17,7 @@ const showDemo = () => {
     iframe.scrollIntoView({ behavior: "smooth" })
 
     if ("adsbygoogle" in window === false) {
-        setupAdsense()
+        // setupAdsense()
     }
 }
 
