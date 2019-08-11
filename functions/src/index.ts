@@ -1,6 +1,3 @@
-// So we can import the attire data-models
-require.extensions[".png"] = function(_module, _filename) {}
-
 import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
 import * as pako from "pako"
@@ -13,8 +10,6 @@ import { getItemFromLootBoxStartingWith } from "./getItemFromLootBox"
 
 /// Careful with any ../ - you need to make sure they don't make contact with game-code
 
-import { allAttireInGame, convertAttireUUIDToID, convertAttireIDToUUID } from "../../src/attire/attireSets"
-
 // This is duped in playfabConfig
 export const lookupBoxesForTiers = {
     "-1": "loot-box-tier-unknown",
@@ -25,6 +20,7 @@ export const lookupBoxesForTiers = {
 }
 
 import { PlayfabUser, SeedDataZipped, SeedData, PlayerData, JsonSeedData } from "../../src/firebaseTypes"
+import { attireIDToUUIDMap } from "./attireIDToUUID.derived"
 
 const cors = require("cors")({
     origin: true
@@ -477,16 +473,15 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
 
         // If the inventory isn't handled as numbers yet, convert it
         if (inventoryIds[0] && !isNaN(Number(inventoryIds[0]))) {
-            inventoryIds = inventoryIds.map(convertAttireIDToUUID).map(toString)
+            inventoryIds = inventoryIds.map(id => attireIDToUUIDMap[id]).map(toString)
         }
 
         // Get the new UUID
-        const unlockedAttireUUID = allAttireInGame.find(a => a.id === rewardedItem.ResultItem)!.uuid.toString(0)
+        const unlockedAttireUUID = attireIDToUUIDMap[rewardedItem.ResultItem].toString()
 
         ////
         ////  Step 5, Grant the new item
         ////
-
         await playfabPromisify(PlayFabServer.UpdateUserData)({
             PlayFabId: playfabId,
             Data: { unlockedAttire: [...inventoryIds, unlockedAttireUUID].join(",") }

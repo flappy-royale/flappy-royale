@@ -1,7 +1,7 @@
 {
     "name": "functions",
     "scripts": {
-        "build": "yarn tsc && mv lib/functions/src/* lib; rm  -r lib/functions lib/src",
+        "build": "yarn tsc && mv lib/functions/src/* lib; rm  -r lib/functions lib/src; yarn ts-node ../src/scripts/sync-attire.ts",
         "type-check": "yarn tsc --noEmit",
         "serve": "yarn build && yarn firebase serve --only functions",
         "shell": "yarn build && yarn firebase functions:shell",
@@ -28,6 +28,7 @@
         "firebase-tools": "^7.0.2",
         "jest": "^24.8.0",
         "ts-jest": "^24.0.2",
+        "ts-node": "^8.3.0",
         "typescript": "^3.2.2"
     },
     "private": true
