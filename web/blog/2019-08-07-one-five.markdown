@@ -1,0 +1,31 @@
+[//]: # "Making changes to a post? To preview: restart the server, and invalidate the cache for the news page"
+
+## One Point Five!
+
+#### Orta & Em - Aug 12th
+
+Heyo everyone!
+
+We're happy to be shipping Flappy Royale 1.5 - currently in App Store review. It's got two major changes, one you'll
+love and another which should make life a bit easier.
+
+## Night Mode
+
+![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/night-mode.gif?alt=media&token=e022e77a-f095-4455-9b2b-5473b7c91ac2](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/night-mode.gif?alt=media&token=e022e77a-f095-4455-9b2b-5473b7c91ac2)
+
+We have been beefing up the ability to create game themes, and to experiment with that we've created a day & night mode
+for the flappers to play in. You can switch between day or night in the settings, or have it automatically change
+according to what your current time is.
+
+## Bye-bye Banner
+
+We ran the maths on the bottom banner which we've been showing in-game, and opted to pull the banner completely. This
+change doesn't move the ad anywhere else, or increase the frequency of ads elsewhere. Our policy has been to only show
+an ad if there's something worthwhile on the other side. That's still the same: getting extra lives for trial and
+unlocking eggs.
+
+![https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/transform.png?alt=media&token=fedc934c-e022-49df-8ef6-241b51ceadfc](https://firebasestorage.googleapis.com/v0/b/flappy-royale-3377a.appspot.com/o/transform.png?alt=media&token=fedc934c-e022-49df-8ef6-241b51ceadfc)
+
+:tada:
+
+You can email us ideas at [team@flappyroyale.io](mailto:team@flappyroyale.io)!

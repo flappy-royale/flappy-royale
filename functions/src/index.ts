@@ -472,8 +472,8 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         ////
 
         // If the inventory isn't handled as numbers yet, convert it
-        if (inventoryIds[0] && !isNaN(Number(inventoryIds[0]))) {
-            inventoryIds = inventoryIds.map(id => attireIDToUUIDMap[id]).map(toString)
+        if (inventoryIds[0] && isNaN(Number(inventoryIds[0]))) {
+            inventoryIds = inventoryIds.map(id => attireIDToUUIDMap[id] || id).map(toString)
         }
 
         // Get the new UUID
