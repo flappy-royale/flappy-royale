@@ -16,6 +16,7 @@ export interface PresentationAttire extends Attire {
      *  3 = everywhere
      */
     tier: LootboxTier
+    /** A UUID number which is used to represent the attire on playfab to save disk space */
     uuid: number
 }
 

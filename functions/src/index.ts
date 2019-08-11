@@ -1,3 +1,6 @@
+// So we can import the attire data-models
+require.extensions[".png"] = function(_module, _filename) {}
+
 import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
 import * as pako from "pako"
@@ -9,6 +12,8 @@ import { SeedsResponse, ReplayUploadRequest, ConsumeEggRequest, PlayfabUserStats
 import { getItemFromLootBoxStartingWith } from "./getItemFromLootBox"
 
 /// Careful with any ../ - you need to make sure they don't make contact with game-code
+
+import { allAttireInGame, convertAttireUUIDToID, convertAttireIDToUUID } from "../../src/attire/attireSets"
 
 // This is duped in playfabConfig
 export const lookupBoxesForTiers = {
@@ -467,12 +472,24 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         }
 
         ////
-        ////  Step 6, Grant the new item
+        ////  Step 4, Get the UUID for the item, and migrate to uuids if we need to
+        ////
+
+        // If the inventory isn't handled as numbers yet, convert it
+        if (inventoryIds[0] && !isNaN(Number(inventoryIds[0]))) {
+            inventoryIds = inventoryIds.map(convertAttireIDToUUID).map(toString)
+        }
+
+        // Get the new UUID
+        const unlockedAttireUUID = allAttireInGame.find(a => a.id === rewardedItem.ResultItem)!.uuid.toString(0)
+
+        ////
+        ////  Step 5, Grant the new item
         ////
 
         await playfabPromisify(PlayFabServer.UpdateUserData)({
             PlayFabId: playfabId,
-            Data: { unlockedAttire: [...inventoryIds, rewardedItem.ResultItem].join(",") }
+            Data: { unlockedAttire: [...inventoryIds, unlockedAttireUUID].join(",") }
         }).catch(e => {
             return response.status(400).send({ error: "Could not grant item to user" })
         })

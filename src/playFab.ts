@@ -3,9 +3,8 @@ import { Attire, defaultAttire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
-import { GameMode } from "./battle/utils/gameMode"
 import { APIVersion } from "./constants"
-import { allAttireInGame } from "./attire/attireSets"
+import { allAttireInGame, convertAttireUUIDToID } from "./attire/attireSets"
 import { changeSettings, syncedSettingsKeys, updateUserStatisticsFromPlayFab } from "./user/userManager"
 import { UserSettings } from "./user/UserSettingsTypes"
 import playfabPromisify from "./playfabPromisify"
@@ -269,7 +268,14 @@ const handleCombinedPayload = async (payload: PlayFabClientModels.GetPlayerCombi
         })
 
         if (payload.UserData && payload.UserData.unlockedAttire && payload.UserData.unlockedAttire.Value) {
-            const attire = payload.UserData.unlockedAttire.Value.split(",")
+            let attire = payload.UserData.unlockedAttire.Value.split(",")
+            if (attire[0]) {
+                // Basically if it's an array of numbers as strings, which are the
+                // attire UUIDs, all new code works this way
+                if (!isNaN(Number(attire[0]))) {
+                    attire = attire.map(convertAttireUUIDToID)
+                }
+            }
             changeSettings({
                 unlockedAttire: attire
             })

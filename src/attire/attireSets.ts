@@ -15,6 +15,8 @@ export interface AttireSet {
 
     /** Who should we say built this */
     attributedTo: string
+
+    /** Provide a link back to them */
     attributedURL: string
 
     lightHexColor: string
@@ -29,3 +31,24 @@ export const allAttireSets = [defaultAttireSet, dangerAttireSet, happyChapAttire
 
 /** All of the attire available in the game ATM */
 export const allAttireInGame = [...defaultAttireSet.attire, ...dangerAttireSet.attire, ...happyChapAttireSet.attire]
+
+const allAttireKeyedByUUID = {} as { [index: number]: PresentationAttire }
+const allAttireKeyedByID = {} as { [index: string]: PresentationAttire }
+
+allAttireInGame.forEach(attire => {
+    allAttireKeyedByUUID[attire.uuid] = attire
+    allAttireKeyedByID[attire.id] = attire
+})
+
+// > let a = {}
+// undefined
+// > a[1] = "123"
+// '123'
+// > a["1"]
+// '123'
+// > a[1]
+// '123'
+/** Quickly goes from 1 -> "hedgehog" */
+export const convertAttireUUIDToID = (uuid: string | number) => allAttireKeyedByUUID[uuid as any].id
+/** Quickly goes from hedgehog -> 1 */
+export const convertAttireIDToUUID = (id: string) => allAttireKeyedByID[id].uuid
