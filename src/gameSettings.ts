@@ -3,8 +3,7 @@ import _ = require("lodash")
 interface GameSettings {
     sound: boolean
     haptics: boolean
-    darkMode: boolean
-    autoDarkMode: boolean
+    darkMode: DarkMode
     quality: GameQuality
 }
 
@@ -14,11 +13,16 @@ export enum GameQuality {
     High
 }
 
+export enum DarkMode {
+    Auto = 0,
+    On,
+    Off
+}
+
 const defaultSettings: GameSettings = {
     sound: true,
     haptics: true,
-    darkMode: false,
-    autoDarkMode: false,
+    darkMode: DarkMode.Auto,
     quality: GameQuality.Auto
 }
 

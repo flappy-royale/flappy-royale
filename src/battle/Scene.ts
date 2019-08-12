@@ -32,7 +32,7 @@ import { GameTheme, themeMap } from "./theme"
 import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
-import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode, getSettings } from "../gameSettings"
+import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode, getSettings, DarkMode } from "../gameSettings"
 import { SeedData, PlayerEvent } from "../firebaseTypes"
 
 declare const DEMO: boolean
@@ -186,14 +186,16 @@ export class BattleScene extends Phaser.Scene {
             this.theme = opts.theme
         } else {
             const settings = getSettings()
-            if (settings.autoDarkMode) {
+            if (settings.darkMode === DarkMode.Auto) {
                 const now = new Date()
                 // 8pm-8am.
                 // We could manually tweak this, we could also try to grab user's local sunrise/sunset
                 let darkMode = now.getHours() > 20 || now.getHours() < 7
                 this.theme = darkMode ? GameTheme.night : GameTheme.default
+            } else if (settings.darkMode === DarkMode.On) {
+                this.theme = GameTheme.night
             } else {
-                this.theme = settings.darkMode ? GameTheme.night : GameTheme.default
+                this.theme = GameTheme.default
             }
         }
     }
