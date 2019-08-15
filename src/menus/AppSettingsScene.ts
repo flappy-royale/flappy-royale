@@ -3,7 +3,7 @@ import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
 import { preloadBackgroundBlobImages, setupBackgroundBlobImages } from "./utils/backgroundColors"
 import { resizeToFullScreen } from "./utils/resizeToFullScreen"
-import { saveSettings, getSettings, GameQuality } from "../gameSettings"
+import { saveSettings, getSettings, GameQuality, DarkMode } from "../gameSettings"
 import { launchTutorial } from "../battle/TutorialScene"
 import _ = require("lodash")
 import { openURL } from "../nativeComms/openURL"
@@ -114,24 +114,32 @@ export class AppSettingsScene extends Phaser.Scene {
             }
         )
 
-        this.makeButton("dark-mode-button", { initialValue: settings.darkMode, states: BooleanStates }, darkMode =>
-            saveSettings({ darkMode })
-        )
-
-        this.makeButton(
-            "auto-dark-mode-button",
-            { initialValue: settings.autoDarkMode, states: BooleanStates },
-
-            autoDarkMode => {
-                const otherButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
-                this.setButtonEnabled(otherButton, !autoDarkMode)
-                saveSettings({ autoDarkMode })
+        this.makeButton<DarkMode>(
+            "dark-mode-button",
+            {
+                initialValue: settings.darkMode,
+                states: [
+                    {
+                        value: DarkMode.Auto,
+                        text: "auto",
+                        bgImage: require("../../assets/menu/SettingsButton-Purple.png")
+                    },
+                    {
+                        value: DarkMode.Off,
+                        text: "off",
+                        bgImage: require("../../assets/menu/SettingsButton-Red.png")
+                    },
+                    {
+                        value: DarkMode.On,
+                        text: "on",
+                        bgImage: require("../../assets/menu/SettingsButton-Green.png")
+                    }
+                ]
+            },
+            darkMode => {
+                saveSettings({ darkMode })
             }
         )
-
-        // Set initial dark mode disabled state
-        const darkModeButton = document.getElementById("dark-mode-button")! as HTMLButtonElement
-        this.setButtonEnabled(darkModeButton, !settings.autoDarkMode)
 
         document.getElementById("reset")!.addEventListener("click", () => {
             this.game.scene.remove(this)
