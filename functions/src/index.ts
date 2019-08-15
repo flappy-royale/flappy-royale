@@ -477,7 +477,7 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         if (inventoryIds[0] && isNaN(Number(inventoryIds[0]))) {
             inventoryIds = inventoryIds.map(id => {
                 if (id === "[object Undefined]") {
-                    return Math.floor(Math.random() * 250).toString()
+                    return Math.floor(Math.random() * 200).toString()
                 }
                 return id
             })
