@@ -1,7 +1,6 @@
 import * as firebase from "firebase/app"
 import "firebase/firestore"
 
-import { UserSettings } from "./user/UserSettingsTypes"
 import {
     SeedsResponse,
     ReplayUploadRequest,
@@ -100,7 +99,9 @@ export const getSeeds = async (
  * app opens up offline you've got something to work with.
  */
 const getSeedsFromAPI = (apiVersion: string) => {
-    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/seeds?version=${apiVersion}`)
+    return fetchWithRetry(
+        `https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/seeds?version=${apiVersion}`
+    )
         .then(r => r.json() as Promise<SeedsResponse | undefined>)
         .then(seeds => {
             if (!seeds) {
@@ -155,5 +156,26 @@ export const emptySeedData: SeedData = { replays: [] }
 export const unzipSeedData = (seed: SeedDataZipped | JsonSeedData): SeedData => {
     return {
         replays: unzip(seed.replaysZipped)
+    }
+}
+
+const fetchWithRetry = async (
+    url: RequestInfo,
+    opts?: RequestInit & { retry?: number; retryCallback?: (times: number) => void }
+    // @ts-ignore
+): Promise<Response> => {
+    let retry = (opts && opts.retry) || 3
+    while (retry > 0) {
+        try {
+            return await fetch(url, opts)
+        } catch (e) {
+            if (opts && opts.retryCallback) {
+                opts.retryCallback(retry)
+            }
+            retry = retry - 1
+            if (retry == 0) {
+                throw e
+            }
+        }
     }
 }

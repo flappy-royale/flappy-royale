@@ -103,6 +103,7 @@ window.buildVersion = '\(bundleVersion)';
         let adViewContainer = UIView()
         view.addSubview(adViewContainer)
         view.backgroundColor = view.backgroundColor
+    
         
 //        adPresentor.startUpBannerIntoContainer(container: adViewContainer)
 

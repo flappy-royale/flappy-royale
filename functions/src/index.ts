@@ -471,7 +471,18 @@ export const openConsumableEgg = functions.https.onRequest(async (request, respo
         ////  Step 4, Get the UUID for the item, and migrate to uuids if we need to
         ////
 
-        // If the inventory isn't handled as numbers yet, convert it
+        // Handle case where migration went wrong:
+        //
+        // e.g. [object Undefined],[object Undefined],[object Undefined],[object Undefined],[object Undefined],[object Undefined],[object Undefined]
+        if (inventoryIds[0] && isNaN(Number(inventoryIds[0]))) {
+            inventoryIds = inventoryIds.map(id => {
+                if (id === "[object Undefined]") {
+                    return Math.floor(Math.random() * 250).toString()
+                }
+                return id
+            })
+        }
+
         if (inventoryIds[0] && isNaN(Number(inventoryIds[0]))) {
             inventoryIds = inventoryIds.map(id => attireIDToUUIDMap[id] || id).map(toString)
         }

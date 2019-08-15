@@ -27,7 +27,6 @@ import { UserStatsScene, UserStatsKey } from "./UserStatsScene"
 import { AppSettingsScene, AppSettingsKey } from "./AppSettingsScene"
 import { checkToShowRatingPrompt } from "../util/checkToShowRating"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
-import { NewEggFoundScene } from "./NewEggFoundScene"
 import { loginPromise, fetchLatestPlayerInfo } from "../playFab"
 import { showDemoScene } from "./DemoScene"
 
