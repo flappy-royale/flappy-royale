@@ -35,6 +35,13 @@ const defaultOptions = (): PromptOptions => {
     }
 }
 
+const defaultHtmlOptions = (): HtmlPromptOptions => {
+    return {
+        drawBgLayer: true,
+        y: (1 / 3) * GameHeight
+    }
+}
+
 /** Normal `Prompt` objects are Phaser scenes.
  * We can't overlay those on top of HTML forms, so this is a simple HTML representation
  * for when we need to show these on HTML pages.
@@ -50,7 +57,7 @@ export function showHtmlPrompt(options: HtmlPromptOptions, scene: Phaser.Scene) 
     const prompt = document.createElement("div")
     prompt.id = "prompt"
 
-    const opts = { ...defaultOptions(), ...options } as HtmlPromptOptions
+    const opts = { ...defaultHtmlOptions(), ...options }
     prompt.style.top = `${opts.y!}px`
 
     const screen = document.getElementsByClassName("screen")[0]

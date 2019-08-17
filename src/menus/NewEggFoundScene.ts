@@ -11,7 +11,7 @@ import { PresentationAttire } from "../attire"
 import { prepareModalAd, requestModalAd } from "../nativeComms/requestModalAd"
 import { consumeEgg } from "../firebase"
 import { analyticsEvent } from "../nativeComms/analytics"
-import { showPrompt, Prompt } from "./Prompt"
+import { showPrompt, Prompt, showHtmlPrompt } from "./Prompt"
 import * as _ from "lodash"
 import { RoyaleDeathSceneKey } from "../battle/overlays/RoyaleDeathScene"
 import { launchMainMenu } from "./MainMenuScene"
@@ -411,11 +411,26 @@ export class NewEggFoundScene extends Phaser.Scene {
     async unlockEgg() {
         const response = await consumeEgg(this.props.tier)
         if ("error" in response) {
-            return alert("Sorry, there was a problem unlocking your egg")
+            showHtmlPrompt(
+                {
+                    title: "Sorry, there was a problem unlocking your egg",
+                    yes: "ok",
+                    drawBgLayer: true
+                },
+                this
+            )
+            return
         }
 
         if (!response.item) {
-            return alert("You have unlocked everything, congrats!")
+            showHtmlPrompt(
+                {
+                    title: "You have unlocked everything, congrats!",
+                    yes: "ok",
+                    drawBgLayer: true
+                },
+                this
+            )
         }
 
         this.buttonLabel.text = ""

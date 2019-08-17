@@ -247,8 +247,7 @@ export class YouScene extends Phaser.Scene {
                         {
                             subtitle: `Unlock the ${clickedAttire.name} by opening eggs you earn by playing!`,
                             yes: "ok",
-                            drawBgLayer: true,
-                            y: (1 / 3) * GameHeight
+                            drawBgLayer: true
                         },
                         this
                     )
