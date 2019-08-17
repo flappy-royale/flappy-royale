@@ -34,6 +34,46 @@ button {
     user-select: none;
 }
 
+#prompt {
+    background-color: #8991eb;
+    color: white;
+    font-size: 8px;
+    position: absolute;
+    text-align: center;
+    transform: translateZ(100px);
+    width: 100%;
+}
+
+#prompt-shade {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    height: 100%;
+    top: 0;
+    transform: translateZ(99px);
+    width: 100%;
+}
+
+#prompt div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#prompt #no-button,
+#prompt #yes-button {
+    height: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50px;
+
+    image-rendering: optimizeSpeed;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: pixelated;
+}
+
 @font-face {
     font-family: "Fipps";
     src: url("./assets/fonts/Fipps-Regular.ttf") format("truetype");

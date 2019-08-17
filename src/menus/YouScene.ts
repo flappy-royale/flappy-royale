@@ -10,6 +10,8 @@ import { AttireSet, allAttireSets } from "../attire/attireSets"
 import { canWearAttire } from "../user/canWearAttire"
 import * as PlayFab from "../playFab"
 import { openURL } from "../nativeComms/openURL"
+import { showHtmlPrompt } from "./Prompt"
+import { GameHeight } from "../constants"
 
 export const YouKey = "YouScene"
 
@@ -241,9 +243,16 @@ export class YouScene extends Phaser.Scene {
                     // TO DO: Tell the user this attire hasn't been unlocked
                     console.log("Can't click this!")
 
-                    alert(
-                        `You haven't unlocked the ${clickedAttire.name}! You can find it in eggs you earn by playing.`
+                    showHtmlPrompt(
+                        {
+                            subtitle: `Unlock the ${clickedAttire.name} by opening eggs you earn by playing!`,
+                            yes: "ok",
+                            drawBgLayer: true,
+                            y: (1 / 3) * GameHeight
+                        },
+                        this
                     )
+
                     return
                 }
 
