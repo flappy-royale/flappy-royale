@@ -752,8 +752,6 @@ export class BattleScene extends Phaser.Scene {
             if (this.bird && this.bird.isDead) return
             console.log("not in a loop")
 
-            // Stop everything!
-            this.cameras.main.shake(20, 0.1)
             // No more new pipes
             if (this.newPipeTimer) this.newPipeTimer.destroy()
             // Stop the pipes and scores from scrolling
