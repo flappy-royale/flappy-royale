@@ -357,12 +357,13 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
             PlayFabId: playfabId
         })).data.Data
 
-        if (!data && data!.unlockedAttire && data!.unlockedAttire.Value) {
+        if (!data) {
             return response.status(500).send({ error: "Could not fetch player inventory" })
         }
 
         // This is a string of attireIDs as numbers (but they're strings)
-        const playerInventory = data!.unlockedAttire.Value!.split(",")
+        const externalInventory = data && data.unlockedAttire && data.unlockedAttire.Value
+        const playerInventory = (externalInventory || "").split(",")
 
         let allAttireIsValid = true
 
