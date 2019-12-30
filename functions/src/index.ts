@@ -361,6 +361,7 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
             return response.status(500).send({ error: "Could not fetch player inventory" })
         }
 
+        // This is a string of attireIDs as numbers (but they're strings)
         const playerInventory = data!.unlockedAttire.Value!.split(",")
 
         let allAttireIsValid = true

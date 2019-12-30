@@ -11,7 +11,6 @@ import { canWearAttire } from "../user/canWearAttire"
 import * as PlayFab from "../playFab"
 import { openURL } from "../nativeComms/openURL"
 import { showHtmlPrompt } from "./Prompt"
-import { GameHeight } from "../constants"
 
 export const YouKey = "YouScene"
 
@@ -344,7 +343,7 @@ export class YouScene extends Phaser.Scene {
             const newAttireIDs = this.currentAttire.map(a => a.id)
             if (!isEqual(newAttireIDs, attireIDsWhenOpening)) {
                 analyticsEvent("new_attire", { ids: newAttireIDs })
-                PlayFab.updateAttire(this.currentAttire, getUserSettings().aesthetics.attire)
+                PlayFab.updateAttire(this.currentAttire as PresentationAttire[], getUserSettings().aesthetics.attire)
                 changeSettings({ aesthetics: { attire: this.currentAttire } })
             }
 

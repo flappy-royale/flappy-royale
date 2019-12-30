@@ -1,5 +1,5 @@
 import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
-import { Attire, defaultAttire } from "./attire"
+import { Attire, defaultAttire, PresentationAttire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
 import { titleId } from "../assets/config/playfabConfig"
@@ -384,14 +384,14 @@ export const updateName = async (
     return playfabPromisify(PlayFabClient.UpdateUserTitleDisplayName)({ DisplayName: name })
 }
 
-export const updateAttire = async (attire: Attire[], oldAttire: Attire[]) => {
+export const updateAttire = async (attire: PresentationAttire[], oldAttire: Attire[]) => {
     await loginPromise
 
     const response = await fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/updateAttire`, {
         method: "POST",
         body: JSON.stringify({
             playfabId: playfabUserId,
-            attireIds: attire.map(a => a.id)
+            attireIds: attire.map(a => a.uuid + "")
         })
     })
 
