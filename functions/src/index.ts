@@ -368,6 +368,14 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
         let allAttireIsValid = true
 
         for (const a of attire) {
+            // This is suspicious, so let's leave some logs for debugging
+            if (!a) {
+                console.error("There was a missing attire from the lookup:")
+                console.error(`Originals: ${attireIds} `)
+                console.error(`Mapped: ${attire} `)
+                continue
+            }
+
             // Let's assume anything with no price set is free
             if (!a.VirtualCurrencyPrices) {
                 continue
