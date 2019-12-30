@@ -377,7 +377,11 @@ export const updateAttire = functions.https.onRequest(async (request, response) 
             }
 
             // If it is a loot box item, the user might own it!
-            if (_.includes(playerInventory, a.ItemId)) {
+            // Check for both the old school "banana" and the new-school "4"
+            if (
+                _.includes(playerInventory, a.ItemId) ||
+                _.includes(playerInventory, String(attireIDToUUIDMap[a.ItemId]))
+            ) {
                 continue
             }
 
