@@ -6,14 +6,14 @@ import {
     ReplayUploadRequest,
     ConsumeEggResponse,
     ConsumeEggRequest
-} from "../functions/src/api-contracts"
+} from "../functions_firebase/src/api-contracts"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
 import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 import _ = require("lodash")
 import { loginPromise, getPlayfabId } from "./playFab"
 import { SeedData, JsonSeedData, SeedDataZipped } from "./firebaseTypes"
-import { LootboxTier } from "../functions/src/LootboxTier"
+import { LootboxTier } from "../functions_firebase/src/LootboxTier"
 
 firebase.initializeApp(firebaseConfig)
 
@@ -99,9 +99,7 @@ export const getSeeds = async (
  * app opens up offline you've got something to work with.
  */
 const getSeedsFromAPI = (apiVersion: string) => {
-    return fetchWithRetry(
-        `https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/seeds?version=${apiVersion}`
-    )
+    return fetchWithRetry(`https://flappyroyale.azurewebsites.net/api/seeds?version=${apiVersion}`)
         .then(r => r.json() as Promise<SeedsResponse | undefined>)
         .then(seeds => {
             if (!seeds) {

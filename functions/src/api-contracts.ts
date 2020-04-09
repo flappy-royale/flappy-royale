@@ -2,7 +2,7 @@
 // will make it complex to build the game
 
 import { LootboxTier } from "./LootboxTier"
-import { PlayerData } from "../../src/firebaseTypes"
+import { PlayerData } from "firebaseTypes"
 
 export interface SeedsResponse {
     royale: string[]

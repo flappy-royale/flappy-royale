@@ -1,35 +1,26 @@
 {
     "name": "functions",
+    "version": "1.0.0",
+    "description": "",
     "scripts": {
-        "build": "yarn tsc && mv lib/functions/src/* lib; rm  -r lib/functions lib/src; yarn ts-node ../src/scripts/sync-attire.ts",
-        "type-check": "yarn tsc --noEmit",
-        "serve": "yarn build && yarn firebase serve --only functions",
-        "shell": "yarn build && yarn firebase functions:shell",
-        "start": "yarn serve",
-        "deploy": "yarn firebase deploy --only functions",
-        "logs": "yarn firebase functions:log"
+        "build": "tsc; ts-node ../src/scripts/sync-attire.ts",
+        "watch": "tsc -w",
+        "prestart": "yarn build",
+        "start": "func start",
+        "test": "echo \"No tests yet...\""
     },
-    "engines": {
-        "node": "8"
-    },
-    "main": "lib/index.js",
     "dependencies": {
-        "cors": "^2.8.5",
-        "firebase-admin": "^8.2.0",
-        "firebase-functions": "^3.0.2",
-        "pako": "^1.0.10",
-        "playfab-sdk": "^2.30.190625"
+        "@azure/identity": "^1.0.2",
+        "@azure/keyvault-secrets": "^4.0.2",
+        "@azure/storage-blob": "^12.1.1",
+        "azure-storage": "^2.10.3",
+        "lodash": "^4.17.15",
+        "pako": "^1.0.11",
+        "playfab-sdk": "^2.45.200402",
+        "ts-node": "^8.8.2"
     },
     "devDependencies": {
-        "@types/jest": "^24.0.14",
-        "@types/pako": "^1.0.1",
-        "firebase": "^6.0.2",
-        "firebase-functions-test": "^0.1.6",
-        "firebase-tools": "^7.0.2",
-        "jest": "^24.8.0",
-        "ts-jest": "^24.0.2",
-        "ts-node": "^8.3.0",
-        "typescript": "^3.2.2"
-    },
-    "private": true
+        "@azure/functions": "^1.0.2-beta2",
+        "typescript": "^3.3.3"
+    }
 }

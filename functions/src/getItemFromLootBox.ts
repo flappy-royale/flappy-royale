@@ -1,6 +1,6 @@
-import { lookupBoxesForTiers } from "./index"
 import { LootboxTier } from "./LootboxTier"
 import _ = require("lodash")
+import lookupBoxesForTiers from "./lookupBoxesForTiers"
 
 export const getItemFromLootBoxStartingWith = (
     initialTier: LootboxTier,
