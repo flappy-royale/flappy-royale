@@ -17,8 +17,7 @@ const uploadText = async (content: string, filename: string, containerClient: Co
 }
 
 const httpTrigger: AzureFunction = async function(context: Context, req: HttpRequest): Promise<void> {
-    const replay = JSON.parse(context.req.body) as ReplayUploadRequest
-    const { seed, uuid, version, data, mode, position, opponents, playfabId, demo } = replay
+    const { seed, uuid, version, data, mode, playfabId } = context.req.body
 
     if (!version) {
         context.res = {
