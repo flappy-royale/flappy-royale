@@ -1,11 +1,11 @@
 import { AzureFunction, Context } from "@azure/functions"
-import { ContainerClient, StorageSharedKeyCredential, BlobServiceClient, BlobClient } from "@azure/storage-blob"
+import { StorageSharedKeyCredential, BlobServiceClient, BlobClient } from "@azure/storage-blob"
 import _ = require("lodash")
 
-import getSeeds from "src/getSeeds"
-import { APIVersion, numberOfReplaysPerSeed, RecordingContainerName } from "src/constants"
-import { PlayerData, JsonSeedData, SeedDataZipped, SeedData } from "firebaseTypes"
-import { zippedObj, unzip } from "src/compression"
+import getSeeds from "../src/getSeeds"
+import { APIVersion, numberOfReplaysPerSeed, RecordingContainerName } from "../src/constants"
+import { PlayerData, JsonSeedData, SeedDataZipped, SeedData } from "../../src/firebaseTypes"
+import { zippedObj, unzip } from "../src/compression"
 
 const unzipSeedData = (seed: SeedDataZipped): SeedData => {
     return {

@@ -124,7 +124,7 @@ const getSeedsFromAPI = (apiVersion: string) => {
 }
 
 export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
-    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/addReplayToSeed`, {
+    return fetch(`https://flappyroyale.azurewebsites.net/api/addReplayToSeed`, {
         // return fetch(`http://localhost:5000/${firebaseConfig.projectId}/us-central1/addReplayToSeed`, {
         method: "POST",
         body: JSON.stringify(replay)
@@ -138,7 +138,7 @@ export const consumeEgg = async (tier: LootboxTier): Promise<ConsumeEggResponse>
 
     const request: ConsumeEggRequest = { playfabId, tier }
 
-    return fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/openConsumableEgg`, {
+    return fetch(`https://flappyroyale.azurewebsites.net/api//openConsumableEgg`, {
         method: "POST",
         body: JSON.stringify(request)
     }).then(r => r.json())

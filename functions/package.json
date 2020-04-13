@@ -7,20 +7,18 @@
         "watch": "tsc -w",
         "prestart": "yarn build",
         "start": "func start",
-        "test": "echo \"No tests yet...\""
+        "test": "echo \"No tests yet...\"",
+        "postinstall": "mkdir playfab-sdk; cd playfab-sdk; git init; git remote add -f origin https://github.com/PlayFab/NodeSDK.git; git config core.sparseCheckout true; echo \"PlayFabSDK\" >> .git/info/sparse-checkout; git pull --depth=1 origin master; cd ..; npm i ./playfab-sdk/PlayFabSDK/"
     },
     "dependencies": {
-        "@azure/identity": "^1.0.2",
-        "@azure/keyvault-secrets": "^4.0.2",
+        "@azure/functions": "^1.0.2-beta2",
         "@azure/storage-blob": "^12.1.1",
-        "azure-storage": "^2.10.3",
         "lodash": "^4.17.15",
         "pako": "^1.0.11",
-        "playfab-sdk": "^2.45.200402",
-        "ts-node": "^8.8.2"
+        "playfab-sdk": "file:playfab-sdk/PlayFabSDK"
     },
     "devDependencies": {
-        "@azure/functions": "^1.0.2-beta2",
-        "typescript": "^3.3.3"
+        "typescript": "^3.3.3",
+        "ts-node": "^8.8.2"
     }
 }

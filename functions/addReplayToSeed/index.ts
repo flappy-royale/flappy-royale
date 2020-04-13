@@ -3,12 +3,12 @@ import { PlayFabServer } from "playfab-sdk"
 import _ = require("lodash")
 import { ContainerClient, StorageSharedKeyCredential, BlobServiceClient } from "@azure/storage-blob"
 
-import { ReplayUploadRequest, PlayfabUserStats } from "src/api-contracts"
-import { PlayfabUser } from "firebaseTypes"
-import { numberOfReplaysPerSeed, FirehoseRecordingContainerName, RecordingContainerName } from "src/constants"
-import playfabPromisify from "src/playfabPromisify"
-import { zippedObj } from "src/compression"
-import setUpPlayfab from "src/setUpPlayfab"
+import { ReplayUploadRequest, PlayfabUserStats } from "../src/api-contracts"
+import { PlayfabUser } from "../../src/firebaseTypes"
+import { numberOfReplaysPerSeed, FirehoseRecordingContainerName, RecordingContainerName } from "../src/constants"
+import playfabPromisify from "../src/playfabPromisify"
+import { zippedObj } from "../src/compression"
+import setUpPlayfab from "../src/setUpPlayfab"
 
 const uploadText = async (content: string, filename: string, containerClient: ContainerClient) => {
     const blobClient = containerClient.getBlockBlobClient(filename)

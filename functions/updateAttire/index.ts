@@ -1,8 +1,10 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+
 import _ = require("lodash")
-import playfabPromisify from "src/playfabPromisify"
 import { PlayFabServer } from "playfab-sdk"
-import setUpPlayfab from "src/setUpPlayfab"
+
+import playfabPromisify from "../src/playfabPromisify"
+import setUpPlayfab from "../src/setUpPlayfab"
 
 export interface AttireChangeRequest {
     playfabId: string

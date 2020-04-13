@@ -1,20 +1,17 @@
 {
-  "bindings": [
-    {
-      "authLevel": "anonymous",
-      "type": "httpTrigger",
-      "direction": "in",
-      "name": "req",
-      "methods": [
-        "get",
-        "post"
-      ]
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "res"
-    }
-  ],
-  "scriptFile": "../dist/openConsumableEgg/index.js"
+    "bindings": [
+        {
+            "authLevel": "anonymous",
+            "type": "httpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": ["get", "post"]
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "res"
+        }
+    ],
+    "scriptFile": "../dist/functions/openConsumableEgg/index.js"
 }
