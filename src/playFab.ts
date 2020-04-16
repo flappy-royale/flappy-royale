@@ -8,7 +8,6 @@ import { allAttireInGame, convertAttireUUIDToID } from "./attire/attireSets"
 import { changeSettings, syncedSettingsKeys, updateUserStatisticsFromPlayFab } from "./user/userManager"
 import { UserSettings } from "./user/UserSettingsTypes"
 import playfabPromisify from "./playfabPromisify"
-import { firebaseConfig } from "../assets/config/firebaseConfig"
 import { isAppleApp, isAndroidApp } from "./nativeComms/deviceDetection"
 import { registerForPushNotifications } from "./registerForPushNotifications"
 
@@ -387,7 +386,7 @@ export const updateName = async (
 export const updateAttire = async (attire: Attire[], oldAttire: Attire[]) => {
     await loginPromise
 
-    const response = await fetch(`https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/updateAttire`, {
+    const response = await fetch(updateAttireUrl, {
         method: "POST",
         body: JSON.stringify({
             playfabId: playfabUserId,

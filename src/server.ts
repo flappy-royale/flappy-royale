@@ -5,16 +5,14 @@ import {
     ReplayUploadRequest,
     ConsumeEggResponse,
     ConsumeEggRequest
-} from "../functions_firebase/src/api-contracts"
+} from "../functions/src/api-contracts"
 import { cache } from "./localCache"
 import { unzip } from "./zip"
-import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
+import { replayJsonUrl, seedsUrl, openConsumableEggUrl, addReplayForSeedUrl } from "../assets/config/serverUrls"
 import _ = require("lodash")
 import { loginPromise, getPlayfabId } from "./playFab"
 import { SeedData, JsonSeedData, SeedDataZipped } from "./serverTypes"
 import { LootboxTier } from "../functions/src/LootboxTier"
-
-firebase.initializeApp(firebaseConfig)
 
 /** Returns replay data for a given seed.
  * If not-expired cached data exists, it will prioritize that.
@@ -98,7 +96,7 @@ export const getSeeds = async (
  * app opens up offline you've got something to work with.
  */
 const getSeedsFromAPI = (apiVersion: string) => {
-    return fetchWithRetry(`https://flappyroyale.azurewebsites.net/api/seeds?version=${apiVersion}`)
+    return fetchWithRetry(seedsUrl(apiVersion))
         .then(r => r.json() as Promise<SeedsResponse | undefined>)
         .then(seeds => {
             if (!seeds) {
@@ -123,8 +121,7 @@ const getSeedsFromAPI = (apiVersion: string) => {
 }
 
 export const uploadReplayForSeed = (replay: ReplayUploadRequest) => {
-    return fetch(`https://flappyroyale.azurewebsites.net/api/addReplayToSeed`, {
-        // return fetch(`http://localhost:5000/${firebaseConfig.projectId}/us-central1/addReplayToSeed`, {
+    return fetch(addReplayForSeedUrl, {
         method: "POST",
         body: JSON.stringify(replay)
     })
@@ -137,7 +134,7 @@ export const consumeEgg = async (tier: LootboxTier): Promise<ConsumeEggResponse>
 
     const request: ConsumeEggRequest = { playfabId, tier }
 
-    return fetch(`https://flappyroyale.azurewebsites.net/api/openConsumableEgg`, {
+    return fetch(openConsumableEggUrl, {
         method: "POST",
         body: JSON.stringify(request)
     }).then(r => r.json())
