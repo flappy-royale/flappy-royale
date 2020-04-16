@@ -5,5 +5,5 @@
         "removeComments": true,
         "strict": true
     },
-    "exclude": ["functions/__tests__"]
+    "exclude": ["functions"]
 }
