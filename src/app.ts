@@ -2,7 +2,7 @@ import * as Phaser from "phaser"
 
 import * as constants from "./constants"
 import { launchMainMenu } from "./menus/MainMenuScene"
-import { emptySeedData, fetchRecordingsForSeed } from "./firebase"
+import { emptySeedData, fetchRecordingsForSeed } from "./server"
 
 import { BattleScene } from "./battle/Scene"
 import { GameMode } from "./battle/utils/gameMode"
@@ -28,7 +28,7 @@ import { versionIsCurrent, downloadURL } from "./detectVersion"
 import { isAndroidApp } from "./nativeComms/deviceDetection"
 import { Prompt, showPrompt } from "./menus/Prompt"
 import { showBackgroundScene } from "./menus/BackgroundScene"
-import { PlayerData } from "./firebaseTypes"
+import { PlayerData } from "./serverTypes"
 
 declare const PRODUCTION: boolean
 declare const DEMO: boolean

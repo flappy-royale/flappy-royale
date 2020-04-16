@@ -1,7 +1,7 @@
 import { defaultAttire } from "../attire"
 import _ = require("lodash")
 import { GameMode } from "../battle/utils/gameMode"
-import { getSeeds } from "../firebase"
+import { getSeeds } from "../server"
 import { APIVersion } from "../constants"
 import * as PlayFab from "../playFab"
 import { UserSettings } from "./UserSettingsTypes"

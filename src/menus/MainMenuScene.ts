@@ -1,6 +1,6 @@
 import * as Phaser from "phaser"
 import { YouScene, YouKey } from "./YouScene"
-import { getSeeds } from "../firebase"
+import { getSeeds } from "../server"
 import * as c from "../constants"
 import { SeedsResponse } from "../../functions/src/api-contracts"
 import { TrialLobby } from "./TrialLobby"

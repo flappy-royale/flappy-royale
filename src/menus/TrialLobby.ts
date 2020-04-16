@@ -20,7 +20,7 @@ import { analyticsEvent } from "../nativeComms/analytics"
 import { GameTheme } from "../battle/theme"
 import { getTrialLobbyLeaderboard } from "../playFab"
 import { Attire, defaultAttire } from "../attire"
-import { emptySeedData } from "../firebase"
+import { emptySeedData } from "../server"
 import { Prompt, showPrompt } from "./Prompt"
 import { BackgroundScene, showBackgroundScene } from "./BackgroundScene"
 

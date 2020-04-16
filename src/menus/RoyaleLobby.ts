@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 import { GameWidth, GameHeight } from "../constants"
 import { launchMainMenu } from "./MainMenuScene"
-import { fetchRecordingsForSeed } from "../firebase"
+import { fetchRecordingsForSeed } from "../server"
 import { preloadBirdAttire } from "../battle/BirdSprite"
 import { BattleScene } from "../battle/Scene"
 import { GameMode } from "../battle/utils/gameMode"
@@ -12,7 +12,7 @@ import { addScene } from "./utils/addScene"
 import { GameTheme } from "../battle/theme"
 import { defaultAttire, Attire } from "../attire"
 import { avatarUrlToAttire } from "../playFab"
-import { SeedData } from "../firebaseTypes"
+import { SeedData } from "../serverTypes"
 
 export const RoyaleLobbyKey = "RoyaleLobby"
 

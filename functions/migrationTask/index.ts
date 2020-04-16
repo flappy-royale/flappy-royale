@@ -4,7 +4,7 @@ import _ = require("lodash")
 
 import getSeeds from "../src/getSeeds"
 import { APIVersion, numberOfReplaysPerSeed, RecordingContainerName } from "../src/constants"
-import { PlayerData, JsonSeedData, SeedDataZipped, SeedData } from "../../src/firebaseTypes"
+import { PlayerData, JsonSeedData, SeedDataZipped, SeedData } from "../../src/serverTypes"
 import { zippedObj, unzip } from "../src/compression"
 
 const unzipSeedData = (seed: SeedDataZipped): SeedData => {

@@ -3,7 +3,7 @@ import * as Seed from "seed-random"
 import * as constants from "../constants"
 import * as game from "./utils/gameMode"
 
-import { uploadReplayForSeed, emptySeedData } from "../firebase"
+import { uploadReplayForSeed, emptySeedData } from "../server"
 import { preloadBackgroundSprites, bgUpdateTick, createBackgroundSprites } from "./Background"
 import { preloadPipeSprites, pipeOutOfBoundsCheck, nudgePipesOntoPixelGrid, addRowOfPipes } from "./PipeManager"
 import { BirdSprite, preloadBirdSprites, setupBirdAnimations, preloadAllBirdAttire } from "./BirdSprite"
@@ -33,7 +33,7 @@ import _ = require("lodash")
 import * as PlayFab from "../playFab"
 import { playSound } from "../playSound"
 import { useLowQuality, shouldMeasureQuality, enableAutoLowQualityMode, getSettings, DarkMode } from "../gameSettings"
-import { SeedData, PlayerEvent } from "../firebaseTypes"
+import { SeedData, PlayerEvent } from "../serverTypes"
 
 declare const DEMO: boolean
 

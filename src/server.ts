@@ -1,5 +1,4 @@
 import * as firebase from "firebase/app"
-import "firebase/firestore"
 
 import {
     SeedsResponse,
@@ -12,8 +11,8 @@ import { unzip } from "./zip"
 import { firebaseConfig, replayJsonUrl } from "../assets/config/firebaseConfig"
 import _ = require("lodash")
 import { loginPromise, getPlayfabId } from "./playFab"
-import { SeedData, JsonSeedData, SeedDataZipped } from "./firebaseTypes"
-import { LootboxTier } from "../functions_firebase/src/LootboxTier"
+import { SeedData, JsonSeedData, SeedDataZipped } from "./serverTypes"
+import { LootboxTier } from "../functions/src/LootboxTier"
 
 firebase.initializeApp(firebaseConfig)
 
@@ -138,7 +137,7 @@ export const consumeEgg = async (tier: LootboxTier): Promise<ConsumeEggResponse>
 
     const request: ConsumeEggRequest = { playfabId, tier }
 
-    return fetch(`https://flappyroyale.azurewebsites.net/api//openConsumableEgg`, {
+    return fetch(`https://flappyroyale.azurewebsites.net/api/openConsumableEgg`, {
         method: "POST",
         body: JSON.stringify(request)
     }).then(r => r.json())
