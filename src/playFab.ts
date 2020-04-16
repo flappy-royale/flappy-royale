@@ -1,4 +1,4 @@
-import { PlayFabClient, PlayFabEvents } from "PlayFab-sdk"
+import { PlayFabClient, PlayFabEvents } from "playfab-sdk"
 import { Attire, defaultAttire } from "./attire"
 import _ = require("lodash")
 import { cache } from "./localCache"
@@ -10,6 +10,7 @@ import { UserSettings } from "./user/UserSettingsTypes"
 import playfabPromisify from "./playfabPromisify"
 import { isAppleApp, isAndroidApp } from "./nativeComms/deviceDetection"
 import { registerForPushNotifications } from "./registerForPushNotifications"
+import { updateAttireUrl } from "../assets/config/serverUrls"
 
 export let isLoggedIn: boolean = false
 

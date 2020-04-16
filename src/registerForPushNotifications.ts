@@ -1,6 +1,6 @@
 import { isAppleApp, isAndroidApp } from "./nativeComms/deviceDetection"
 import playfabPromisify from "./playfabPromisify"
-import { PlayFabClient } from "PlayFab-sdk"
+import { PlayFabClient } from "playfab-sdk"
 import { loginPromise } from "./playFab"
 
 export const registerForPushNotifications = async (): Promise<boolean> => {
