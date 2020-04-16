@@ -29,7 +29,8 @@ To grok the codebase entirely, you'll see:
 -   Phaser 3
 -   TypeScript
 -   Webpack
--   Firebase (DB/Functions/Hosting)
+-   Microsoft Azure (storage/functions)
+-   Firebase (hosting)
 
 ## Deploy
 
