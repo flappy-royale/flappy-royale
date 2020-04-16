@@ -5,5 +5,5 @@
         "removeComments": true,
         "strict": true
     },
-    "exclude": ["functions"]
+    "include": ["src/**/*"]
 }
