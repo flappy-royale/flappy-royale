@@ -17,7 +17,8 @@ const uploadText = async (content: string, filename: string, containerClient: Co
 }
 
 const httpTrigger: AzureFunction = async function(context: Context, req: HttpRequest): Promise<void> {
-    const { seed, uuid, version, data, mode, playfabId } = context.req.body
+    const replay = context.req.body as ReplayUploadRequest
+    const { seed, uuid, version, data, mode, playfabId } = replay
 
     if (!version) {
         context.res = {
@@ -106,16 +107,18 @@ const httpTrigger: AzureFunction = async function(context: Context, req: HttpReq
     const filename = `${seed}/${userIdentifier}-${new Date()}.json`
 
     const firehoseContainerClient = blobService.getContainerClient(FirehoseRecordingContainerName)
-    const createContainerResponse = await firehoseContainerClient.create()
-    console.log(createContainerResponse)
+    if (!(await firehoseContainerClient.exists())) {
+        await firehoseContainerClient.create()
+    }
 
     uploadText(json, filename, firehoseContainerClient)
 
     // Non-Playfab users can still get shoved in the firehose bucket, but they can't show up in others' games.
     if (data.playfabUser && playfabId) {
         const containerClient = blobService.getContainerClient(RecordingContainerName)
-        const createContainerResponse = await containerClient.create()
-        console.log(createContainerResponse)
+        if (!(await containerClient.exists())) {
+            await containerClient.create()
+        }
 
         // Only the first N seeds per hour get collated into real in-game ghost data
         const blobs = await containerClient.listBlobsFlat()

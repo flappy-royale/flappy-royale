@@ -6,13 +6,8 @@ import { PlayFabServer } from "playfab-sdk"
 import playfabPromisify from "../src/playfabPromisify"
 import setUpPlayfab from "../src/setUpPlayfab"
 
-export interface AttireChangeRequest {
-    playfabId: string
-    attireIds: string[] // Attire IDs
-}
-
 const httpTrigger: AzureFunction = async function(context: Context, req: HttpRequest): Promise<void> {
-    const { playfabId, attireIds } = JSON.parse(context.req.body) as AttireChangeRequest
+    const { playfabId, attireIds } = context.req.body
 
     setUpPlayfab()
 
@@ -41,15 +36,19 @@ const httpTrigger: AzureFunction = async function(context: Context, req: HttpReq
         PlayFabId: playfabId
     })).data.Data
 
-    if (!data && data!.unlockedAttire && data!.unlockedAttire.Value) {
+    if (!data) {
         context.res = {
             status: 500,
-            body: { error: "Could not fetch player inventory" }
+            body: "Could not fetch User Data"
         }
         return
     }
 
-    const playerInventory = data!.unlockedAttire.Value!.split(",")
+    // If a user has not unlocked any attire, it's likely their unlockedAttire attribute will be empty and this will error out
+    // The issue is that, on updating attire on the client, we fire off this API request and a PlayFab request to update the user settings in parallel, so this code fires before PlayFab has had an empty array set.
+    // Let's just manually set that here for now. If a user's data isn't coming through properly, it's probably safer to assume they have nothing unlocked than to error out silently.
+    const attireString = data.unlockedAttire && data.unlockedAttire!.Value ? data.unlockedAttire.Value : ""
+    const playerInventory = attireString.split(",")
 
     let allAttireIsValid = true
 

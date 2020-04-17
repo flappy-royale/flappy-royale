@@ -8,7 +8,7 @@
         "prestart": "yarn build",
         "start": "func start",
         "test": "echo \"No tests yet...\"",
-        "postinstall": "mkdir playfab-sdk; cd playfab-sdk; git init; git remote add -f origin https://github.com/PlayFab/NodeSDK.git; git config core.sparseCheckout true; echo \"PlayFabSDK\" >> .git/info/sparse-checkout; git pull --depth=1 origin master; cd ..; npm i ./playfab-sdk/PlayFabSDK/"
+        "postinstall": "rm -rf playfab-sdk; rm -rf node_modules/playfab-sdk; mkdir playfab-sdk; cd playfab-sdk; git init; git remote add -f origin https://github.com/PlayFab/NodeSDK.git; git config core.sparseCheckout true; echo \"PlayFabSDK\" >> .git/info/sparse-checkout; git pull --depth=1 origin master; cd ..; npm i ./playfab-sdk/PlayFabSDK/"
     },
     "dependencies": {
         "@azure/functions": "^1.0.2-beta2",

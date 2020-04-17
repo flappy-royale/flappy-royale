@@ -1,7 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import { PlayFabServer } from "playfab-sdk"
 
-import { ConsumeEggRequest } from "../src/api-contracts"
 import playfabPromisify from "../src/playfabPromisify"
 import { getItemFromLootBoxStartingWith } from "../src/getItemFromLootBox"
 import { attireIDToUUIDMap } from "../src/attireIDToUUID.derived"
@@ -9,7 +8,7 @@ import setUpPlayfab from "../src/setUpPlayfab"
 import lookupBoxesForTiers from "../src/lookupBoxesForTiers"
 
 const httpTrigger: AzureFunction = async function(context: Context, req: HttpRequest): Promise<void> {
-    const { tier, playfabId } = JSON.parse(context.req.body) as ConsumeEggRequest
+    const { tier, playfabId } = context.req.body
 
     setUpPlayfab()
 
