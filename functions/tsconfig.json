@@ -8,5 +8,6 @@
         "strict": false
 
         // "baseUrl": "."
-    }
+    },
+    "exclude": ["__tests__"]
 }
