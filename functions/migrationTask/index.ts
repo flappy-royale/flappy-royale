@@ -3,7 +3,12 @@ import { StorageSharedKeyCredential, BlobServiceClient, BlobClient } from "@azur
 import _ = require("lodash")
 
 import getSeeds from "../src/getSeeds"
-import { APIVersion, numberOfReplaysPerSeed, RecordingContainerName } from "../src/constants"
+import {
+    APIVersion,
+    numberOfReplaysPerSeed,
+    RecordingContainerName,
+    PublicRecordingContainerName
+} from "../src/constants"
 import { PlayerData, JsonSeedData, SeedDataZipped, SeedData } from "../../src/serverTypes"
 import { zippedObj, unzip } from "../src/compression"
 
@@ -57,11 +62,12 @@ const timerTrigger: AzureFunction = async function(context: Context, myTimer: an
         sharedKeyCredential
     )
     const container = blobService.getContainerClient(RecordingContainerName)
+    const publicContainer = blobService.getContainerClient(PublicRecordingContainerName)
 
     for (const seed of allSeeds) {
         const collatedName = `${seed}.json`
 
-        const replayFile = await container.getBlobClient(collatedName)
+        const replayFile = await publicContainer.getBlobClient(collatedName)
         let replays: PlayerData[] = await getReplayJsonFromBlobClient(replayFile)
 
         const fileIter = await container.listBlobsFlat({ prefix: `${seed}/` })
@@ -85,7 +91,7 @@ const timerTrigger: AzureFunction = async function(context: Context, myTimer: an
         const newData: JsonSeedData = { replaysZipped: zippedObj(replays), expiry: expiry.toJSON() }
         const newDataString = JSON.stringify(newData)
 
-        const uploadBlobClient = container.getBlockBlobClient(collatedName)
+        const uploadBlobClient = publicContainer.getBlockBlobClient(collatedName)
         await uploadBlobClient.upload(newDataString, newDataString.length)
 
         for await (const name of replayNames) {

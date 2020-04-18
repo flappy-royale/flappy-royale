@@ -11,6 +11,7 @@ export const numberOfRoyaleSeeds = 50
 export const numberOfReplaysPerSeed = 200
 
 // Magic strings for our Storage buckets
-// "Firehose" = all recordings ever, regular = just the current batch to be collated
+// "Firehose" = all recordings ever, regular = just the current batch to be collated, public = the ones people can download
 export const RecordingContainerName = "flappy-royale-replay-uploads"
 export const FirehoseRecordingContainerName = "flappy-royale-replay-firehose"
+export const PublicRecordingContainerName = "flappy-royale-replays"
