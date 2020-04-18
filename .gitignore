@@ -5,3 +5,4 @@ dist
 .DS_Store
 .cache
 functions/lib/
+functions/playfab-sdk
