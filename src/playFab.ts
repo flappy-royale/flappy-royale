@@ -219,7 +219,24 @@ const loginRequest = (): PlayFabClientModels.LoginWithCustomIDRequest => {
             GetUserInventory: true,
             ProfileConstraints: {
                 ShowAvatarUrl: true,
-                ShowDisplayName: true
+                ShowDisplayName: true,
+
+                // These are required due to a PlayFab type bug. Upstream issue: https://github.com/PlayFab/API_Specs/issues/99
+                ShowBannedUntil: false,
+                ShowCampaignAttributions: false,
+                ShowContactEmailAddresses: false,
+                ShowCreated: false,
+                ShowExperimentVariants: false,
+                ShowLastLogin: false,
+                ShowLinkedAccounts: false,
+                ShowLocations: false,
+                ShowMemberships: false,
+                ShowOrigination: false,
+                ShowPushNotificationRegistrations: false,
+                ShowStatistics: false,
+                ShowTags: false,
+                ShowTotalValueToDateInUsd: false,
+                ShowValuesToDate: false
             },
 
             // These are all marked as "required" but also "false by default". The typings say we need them /shrug
