@@ -424,7 +424,7 @@ export const fetchLatestPlayerInfo = async () => {
             ProfileConstraints: ({
                 ShowAvatarUrl: true,
                 ShowDisplayName: true
-            } as unknown) as number
+            }
         }
     })
     const payload = result.data.InfoResultPayload
