@@ -7307,10 +7307,10 @@ pkginfo@0.3.x:
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.3.1.tgz#5b29f6a81f70717142e09e765bbeab97b4f81e21"
   integrity sha1-Wyn2qB9wcXFC4J52W76rl7T4HiE=
 
-playfab-sdk@2.30.190625:
-  version "2.30.190625"
-  resolved "https://registry.yarnpkg.com/playfab-sdk/-/playfab-sdk-2.30.190625.tgz#59410644d008406df6808c5d16daa7bd8e71efcb"
-  integrity sha512-LgncjW0Gu+HfVEP8Mo1JO47e31GxWh3gnm0RQL4E/wUACFM5hEV8qbezMOG0cDerBDe/E9nBF85ibvOK30/KCg==
+playfab-sdk@2.46.200422:
+  version "2.46.200422"
+  resolved "https://registry.yarnpkg.com/playfab-sdk/-/playfab-sdk-2.46.200422.tgz#25dc2b5cfca16cb259e83f91e13620bb0cf9b2d2"
+  integrity sha512-WLi0OLa4E5E7m/jCRtSyrjtGSfvDQ5RmjHtMfYVE5cabK7bmh9/mrMUskmak3SP3pDL/7NIOjUEqgrLitSoFnA==
 
 please-upgrade-node@^3.1.1:
   version "3.1.1"

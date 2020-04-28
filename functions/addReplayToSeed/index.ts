@@ -62,10 +62,10 @@ const httpTrigger: AzureFunction = async function(context: Context, req: HttpReq
         setUpPlayfab()
         const result = await playfabPromisify(PlayFabServer.GetPlayerProfile)({
             PlayFabId: playfabId,
-            ProfileConstraints: ({
+            ProfileConstraints: {
                 ShowAvatarUrl: true,
                 ShowDisplayName: true
-            } as unknown) as number // This is a bug in PlayFab's typings
+            }
         })
 
         if (result && result.data && result.data.PlayerProfile) {

@@ -217,10 +217,10 @@ const loginRequest = (): PlayFabClientModels.LoginWithCustomIDRequest => {
             GetPlayerProfile: true,
             GetPlayerStatistics: true,
             GetUserInventory: true,
-            ProfileConstraints: ({
+            ProfileConstraints: {
                 ShowAvatarUrl: true,
                 ShowDisplayName: true
-            } as unknown) as number,
+            },
 
             // These are all marked as "required" but also "false by default". The typings say we need them /shrug
             GetCharacterInventories: false,
@@ -421,7 +421,7 @@ export const fetchLatestPlayerInfo = async () => {
             GetPlayerProfile: true,
             GetPlayerStatistics: true,
             GetUserInventory: true,
-            ProfileConstraints: ({
+            ProfileConstraints: {
                 ShowAvatarUrl: true,
                 ShowDisplayName: true
             }
@@ -529,10 +529,10 @@ const convertPlayFabLeaderboardData = (entry: PlayFabClientModels.PlayerLeaderbo
 
 const asyncGetLeaderboard = async (opts: PlayFabClientModels.GetLeaderboardRequest): Promise<LeaderboardResult[]> => {
     const defaultOpts = {
-        ProfileConstraints: ({
+        ProfileConstraints: {
             ShowAvatarUrl: true,
             ShowDisplayName: true
-        } as unknown) as number // sigh, the PlayFab TS typings are wrong
+        }
     }
 
     const result = await playfabPromisify(PlayFabClient.GetLeaderboard)({ ...defaultOpts, ...opts })
@@ -547,10 +547,10 @@ const asyncGetLeaderboardAroundPlayer = async (
     opts: PlayFabClientModels.GetLeaderboardAroundPlayerRequest
 ): Promise<LeaderboardResult[]> => {
     const defaultOpts = {
-        ProfileConstraints: ({
+        ProfileConstraints: {
             ShowAvatarUrl: true,
             ShowDisplayName: true
-        } as unknown) as number // sigh, the PlayFab TS typings are wrong
+        }
     }
 
     const result = await playfabPromisify(PlayFabClient.GetLeaderboardAroundPlayer)({ ...defaultOpts, ...opts })

@@ -33,7 +33,7 @@
         "lodash.clonedeep": "^4.5.0",
         "pako": "^1.0.10",
         "phaser": "^3.17.0",
-        "playfab-sdk": "2.30.190625",
+        "playfab-sdk": "2.46.200422",
         "seed-random": "^2.2.0",
         "uuid": "^3.3.2"
     },
