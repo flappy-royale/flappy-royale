@@ -29,17 +29,16 @@ To grok the codebase entirely, you'll see:
 -   Phaser 3
 -   TypeScript
 -   Webpack
--   Microsoft Azure (storage/functions)
--   Firebase (hosting)
+-   Microsoft Azure (storage/functions/web hosting)
 
 ## Deploy
 
 1. Running `yarn build` will create a `dist` folder, which is the game statically compiled.
 2. Running `yarn deploy` will:
 
--   Update all functions
+-   Update all server-side Azure Functions
 -   Compile your app in webpack
--   Ship the webpack build to firebase hosting
+-   Ship the webpack build to Azure static site hosting
 
 ## Microsite
 
