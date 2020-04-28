@@ -4,6 +4,7 @@
     "description": "",
     "scripts": {
         "build": "tsc; ts-node ../src/scripts/sync-attire.ts",
+        "deploy": "func azure functionapp publish flappyroyale",
         "watch": "tsc -w",
         "prestart": "yarn build",
         "start": "func start",
@@ -12,6 +13,7 @@
     "dependencies": {
         "@azure/functions": "^1.0.2-beta2",
         "@azure/storage-blob": "^12.1.1",
+        "azure-functions-core-tools": "^3.0.2245",
         "lodash": "^4.17.15",
         "pako": "^1.0.11",
         "playfab-sdk": "2.46.200422"
