@@ -1,8 +1,5 @@
 node_modules
 *.log
 dist
-.firebase
 .DS_Store
 .cache
-functions/lib/
-functions/playfab-sdk

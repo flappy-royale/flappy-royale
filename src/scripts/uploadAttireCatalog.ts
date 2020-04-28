@@ -1,6 +1,6 @@
 import { PresentationAttire, allLootBoxTiers } from "../attire"
 import { PlayFabAdmin } from "playfab-sdk"
-import { playfabFirebaseProdSecretKey } from "../../assets/config/playfabServerConfig"
+import { playfabServerProdSecretKey } from "../../assets/config/playfabServerConfig"
 import { titleId, lootboxTiers, lookupBoxesForTiers } from "../../assets/config/playfabConfig"
 import playfabPromisify from "../playfabPromisify"
 import { AttireSet, allAttireSets } from "../attire/attireSets"
@@ -8,7 +8,7 @@ import _ = require("lodash")
 import { hedgehog } from "../attire/defaultAttireSet"
 import { LootboxTier } from "../../functions/src/LootboxTier"
 
-PlayFabAdmin.settings.developerSecretKey = playfabFirebaseProdSecretKey
+PlayFabAdmin.settings.developerSecretKey = playfabServerProdSecretKey
 PlayFabAdmin.settings.titleId = titleId
 
 const attireToCatalogItem = (item: PresentationAttire): PlayFabAdminModels.CatalogItem => {
