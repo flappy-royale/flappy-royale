@@ -33,6 +33,10 @@ To grok the codebase entirely, you'll see:
 
 ## Deploy
 
+In order to deploy, you will need to have the
+[Azure CLI](https://docs.microsoft.com/en-ca/cli/azure/install-azure-cli?view=azure-cli-latest) installed, and be logged
+in.
+
 1. Running `yarn build` will create a `dist` folder, which is the game statically compiled.
 2. Running `yarn deploy` will:
 
