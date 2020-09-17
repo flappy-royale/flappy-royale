@@ -39,7 +39,7 @@ jobs:
           app_location: "/src" # App source code path
           app_artifact_location: "/dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-      - name: Build
+      - name: Post-Deploy
         run: yarn post-deploy   
 
   close_pull_request_job:

@@ -280,7 +280,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/danger/fish.png"),
+            href: require("../../assets/bases/danger/Fish.png"),
             free: false,
             tier: 2,
             uuid: 61
@@ -489,7 +489,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/danger/pig.png"),
+            href: require("../../assets/bases/danger/Pig.png"),
             free: false,
             tier: 0,
             uuid: 80
@@ -610,7 +610,7 @@ export const dangerAttireSet: AttireSet = {
             description: "TBD",
             fit: "tight",
             base: true,
-            href: require("../../assets/bases/danger/whale.png"),
+            href: require("../../assets/bases/danger/Whale.png"),
             free: false,
             tier: 1,
             uuid: 91
