@@ -18,7 +18,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Build And Deploy
+          token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v0.0.1-preview
         with:
