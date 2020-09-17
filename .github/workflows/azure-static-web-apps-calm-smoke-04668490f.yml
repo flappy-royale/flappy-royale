@@ -19,6 +19,9 @@ jobs:
         with:
           submodules: true
           token: ${{ secrets.ACCESS_TOKEN }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '8'          
       - name: Build
         run: |
           yarn build-web
