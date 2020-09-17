@@ -22,11 +22,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '8'          
-      - name: Build
-        run: |
-          yarn install
-          yarn build-web
-          yarn pre-deploy
       - name: Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v0.0.1-preview
