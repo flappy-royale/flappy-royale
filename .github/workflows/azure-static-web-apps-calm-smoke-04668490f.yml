@@ -24,6 +24,7 @@ jobs:
           node-version: '8'          
       - name: Build
         run: |
+          yarn install
           yarn build-web
           yarn pre-deploy
       - name: Deploy
