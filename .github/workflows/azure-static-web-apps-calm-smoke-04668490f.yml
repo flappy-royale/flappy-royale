@@ -34,7 +34,7 @@ jobs:
           app_artifact_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
       - name: Post-Deploy
-        run: yarn post-deploy   
+        run: yarn install && yarn post-deploy   
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
