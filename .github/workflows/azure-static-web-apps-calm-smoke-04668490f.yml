@@ -20,9 +20,9 @@ jobs:
           submodules: true
           token: ${{ secrets.ACCESS_TOKEN }}
       - name: Build
-          run: |
-            yarn build-web
-            yarn pre-deploy
+        run: |
+          yarn build-web
+          yarn pre-deploy
       - name: Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v0.0.1-preview
@@ -36,7 +36,7 @@ jobs:
           app_artifact_location: "/dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
       - name: Build
-          run: yarn post-deploy   
+        run: yarn post-deploy   
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
