@@ -353,7 +353,7 @@ export const googlePlayGamesRequest = async (): Promise<
             window.GooglePlayGames.auth()
 
             window.addEventListener("googlePlayLogin", (e: any) => {
-                console.log("MEssage returned", e.detail)
+                console.log("Message returned", e.detail)
                 // if (e.detail.serverAuthCode) {
                 //     resolve({ ServerAuthCode: e.detail.serverAuthCode })
                 if (e.detail.googleId) {

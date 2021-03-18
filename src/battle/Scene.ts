@@ -254,15 +254,21 @@ export class BattleScene extends Phaser.Scene {
 
         this.load.image("back-button", require("../../assets/menu/Back2.png"))
 
-        this.load.audio("flap", require("../../assets/audio/flap.wav"))
-        this.load.audio("hit", require("../../assets/audio/hit.wav"))
-        this.load.audio("point", require("../../assets/audio/point.wav"))
+        this.load.audio("flap", [require("../../assets/audio/flap.mp3"), require("../../assets/audio/flap.wav")])
+        this.load.audio("hit", [require("../../assets/audio/hit.mp3"), require("../../assets/audio/hit.wav")])
+        this.load.audio("point", [require("../../assets/audio/point.mp3"), require("../../assets/audio/point.wav")])
 
-        this.load.audio("other_flap", require("../../assets/audio/other_flap.wav"))
-        this.load.audio("other_hit", require("../../assets/audio/other_hit.wav"))
+        this.load.audio("other_flap", [
+            require("../../assets/audio/other_flap.mp3"),
+            require("../../assets/audio/other_flap.wav")
+        ])
+        this.load.audio("other_hit", [
+            require("../../assets/audio/other_hit.mp3"),
+            require("../../assets/audio/other_hit.wav")
+        ])
 
-        this.load.audio("crash", require("../../assets/audio/crash.wav"))
-        this.load.audio("win", require("../../assets/audio/win.wav"))
+        this.load.audio("crash", [require("../../assets/audio/crash.mp3"), require("../../assets/audio/crash.wav")])
+        this.load.audio("win", [require("../../assets/audio/win.mp3"), require("../../assets/audio/win.wav")])
 
         this.load.image("heart", require("../../assets/battle/heart.png"))
     }
@@ -432,7 +438,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     private goBackToMainMenu() {
-        this.game.scene.remove(this)
+        this.game.scene.remove(this.key)
         launchMainMenu(this.game)
     }
 

@@ -35,7 +35,10 @@ export class LoadingScene extends Phaser.Scene {
 
         this.load.image("underground", require("../../assets/battle/themes/default/ground-under.png"))
         this.load.image("pipe-end", require("../../assets/battle/themes/default/PipeBottom.png"))
-        this.load.audio("other_flap", require("../../assets/audio/silence.wav"))
+        this.load.audio("other_flap", [
+            require("../../assets/audio/silence.wav"),
+            require("../../assets/audio/silence.mp3")
+        ])
 
         this.load.bitmapFont(
             "nokia16",

@@ -15,7 +15,7 @@ import { setupLogoCornerImages } from "../../menus/utils/backgroundColors"
 import { isAndroidApp } from "../../nativeComms/deviceDetection"
 import { SeedData } from "../../firebaseTypes"
 import { shouldGrantLootbox } from "../../shouldGrantLootbox"
-import { NewEggFoundScene } from "../../menus/NewEggFoundScene"
+import { EggFoundSceneKey, NewEggFoundScene } from "../../menus/NewEggFoundScene"
 import { LootboxTier } from "../../../functions/src/LootboxTier"
 
 export interface RoyaleDeathProps {
@@ -248,7 +248,7 @@ export class RoyaleDeath extends Phaser.Scene {
             tier: this.lootboxTier
         })
         this.game.scene.pause(RoyaleDeathSceneKey)
-        this.game.scene.add("won-egg", egg, true, {})
+        this.game.scene.add(EggFoundSceneKey, egg, true, {})
 
         this.lootboxTier = undefined
 

@@ -21,6 +21,7 @@ export const NewEggFoundSceneKey = "NewEggFoundScene"
 // TODO: haptics!
 
 const eggAdID = "Hatch-an-Egg"
+export const EggFoundSceneKey = "won-egg"
 
 interface EggProps {
     tier: LootboxTier
@@ -379,7 +380,8 @@ export class NewEggFoundScene extends Phaser.Scene {
         if (deathOverlayScene) {
             this.game.scene.resume(RoyaleDeathSceneKey)
         } else {
-            this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
+            // this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
+            this.sys.game.destroy(false)
             launchMainMenu(this.game)
         }
     }

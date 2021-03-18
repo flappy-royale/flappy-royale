@@ -64,6 +64,8 @@ export const deathPreload = (game: Phaser.Scene) => {
     )
 }
 
+export const DeathSceneKey = "TrialDeath"
+
 export class TrialDeath extends Phaser.Scene {
     constructor(id: string, public props: TrialDeathProps) {
         super(id)

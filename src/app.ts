@@ -12,7 +12,7 @@ import { YouKey, YouScene } from "./menus/YouScene"
 import { RoyaleLobby } from "./menus/RoyaleLobby"
 import { TrialLobby } from "./menus/TrialLobby"
 import { addScene } from "./menus/utils/addScene"
-import { TrialDeath } from "./battle/overlays/TrialDeathScene"
+import { DeathSceneKey, TrialDeath } from "./battle/overlays/TrialDeathScene"
 import { getUserSettings } from "./user/userManager"
 import { GameTheme } from "./battle/theme"
 import { wait } from "./battle/utils/wait"
@@ -218,7 +218,7 @@ const testTrialDeathScreen = (game: FlappyGame, position: number) => {
             isHighScore: false
         })
 
-        game.scene.add("over", deathOverlay, true)
+        game.scene.add(DeathSceneKey, deathOverlay, true)
     }, 300)
 }
 
