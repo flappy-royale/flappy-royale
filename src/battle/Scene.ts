@@ -438,7 +438,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     private goBackToMainMenu() {
-        this.game.scene.remove(this.key)
+        this.game.scene.remove(this)
         launchMainMenu(this.game)
     }
 

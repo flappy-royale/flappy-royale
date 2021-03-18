@@ -229,7 +229,7 @@ export class TrialLobby extends Phaser.Scene {
 
         const goButton = document.getElementById("button")!
         goButton.onclick = () => {
-            this.game.scene.remove(RoyaleLobbyKey)
+            this.game.scene.remove(this)
 
             const scene = new BattleScene({
                 seed: this.seed,

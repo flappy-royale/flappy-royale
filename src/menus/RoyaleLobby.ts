@@ -82,7 +82,7 @@ export class RoyaleLobby extends Phaser.Scene {
         buttonBG.src = require("../../assets/menu/ButtonBG.png")
 
         document.getElementById("back")!.onclick = () => {
-            this.game.scene.remove(RoyaleLobbyKey)
+            this.game.scene.remove(this)
             launchMainMenu(this.game)
         }
 

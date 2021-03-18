@@ -380,8 +380,7 @@ export class NewEggFoundScene extends Phaser.Scene {
         if (deathOverlayScene) {
             this.game.scene.resume(RoyaleDeathSceneKey)
         } else {
-            // this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
-            this.sys.game.destroy(false)
+            this.game.scene.getScenes().forEach(scene => this.game.scene.remove(scene))
             launchMainMenu(this.game)
         }
     }

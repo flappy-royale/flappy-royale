@@ -94,7 +94,7 @@ export class AppLaunchScene extends Phaser.Scene {
                         showLoadingScreen(this.game)
                     }
                 } else {
-                    this.game.scene.remove("launcher")
+                    this.game.scene.remove(this)
                     launchMainMenu(this.game)
                 }
             },
