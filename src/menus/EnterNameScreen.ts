@@ -101,21 +101,20 @@ export class EnterNameScreen extends Phaser.Scene {
 
             loader.style.display = "inline-block"
             ok.textContent = ""
-            const result = await PlayFab.updateName(nameToTry).catch(inputIsBad)
             loader.style.display = "none"
             ok.textContent = "Ok"
 
-            if (!result) {
-                usernameInput.focus()
-                return
-            }
+            // if (!result) {
+            //     usernameInput.focus()
+            //     return
+            // }
 
-            if (result.code !== 200) {
-                inputIsBad()
-                usernameInput.focus()
-            }
+            // if (result.code !== 200) {
+            //     inputIsBad()
+            //     usernameInput.focus()
+            // }
 
-            const name = result.data.DisplayName
+            const name = usernameInput.value
             if (!name) {
                 usernameInput.focus()
                 return

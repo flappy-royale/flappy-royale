@@ -21,6 +21,7 @@ export const NewEggFoundSceneKey = "NewEggFoundScene"
 // TODO: haptics!
 
 const eggAdID = "Hatch-an-Egg"
+export const EggFoundSceneKey = "won-egg"
 
 interface EggProps {
     tier: LootboxTier

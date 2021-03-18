@@ -12,7 +12,13 @@ export const addRowOfPipes = (x: number, scene: BattleScene, theme: GameTheme): 
     return addRowOfPipesManual(x, scene, gapHeight, holeSlot, theme)
 }
 
-export const addRowOfPipesManual = (x: number, scene: Phaser.Scene, gapHeight: number, holeSlot: number, theme: GameTheme): Phaser.Physics.Arcade.Group => {
+export const addRowOfPipesManual = (
+    x: number,
+    scene: Phaser.Scene,
+    gapHeight: number,
+    holeSlot: number,
+    theme: GameTheme
+): Phaser.Physics.Arcade.Group => {
     const sprites = themeMap[theme]
 
     // Randomly pick a number between 1 and 7
@@ -27,23 +33,22 @@ export const addRowOfPipesManual = (x: number, scene: Phaser.Scene, gapHeight: n
     // Distance from the bottom
     const floorAvoidanceHeight = 40
 
-
     // get the distance between each potential interval
     const pipeIntervals = (windowHeight - pipeEdgeBuffer / 2 - gapHeight / 2) / slots
 
     const holeTop = Math.round(
         pipeIntervals * holeSlot +
-        pipeEdgeBuffer / 2 -
-        gapHeight / 2 -
-        floorAvoidanceHeight +
-        constants.GameAreaTopOffset
+            pipeEdgeBuffer / 2 -
+            gapHeight / 2 -
+            floorAvoidanceHeight +
+            constants.GameAreaTopOffset
     )
     const holeBottom = Math.round(
         pipeIntervals * holeSlot +
-        pipeEdgeBuffer / 2 +
-        gapHeight / 2 -
-        floorAvoidanceHeight +
-        constants.GameAreaTopOffset
+            pipeEdgeBuffer / 2 +
+            gapHeight / 2 -
+            floorAvoidanceHeight +
+            constants.GameAreaTopOffset
     )
 
     const pipeTop = createSprite(x, holeTop, sprites.top[0], scene)

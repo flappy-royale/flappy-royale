@@ -104,7 +104,7 @@ export class DemoScene extends Phaser.Scene {
     }
 
     goBackToMainMenu() {
-        this.scene.remove()
+        this.scene.remove(this)
         launchMainMenu(this.game)
     }
 }

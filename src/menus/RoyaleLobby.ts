@@ -206,6 +206,7 @@ export class RoyaleLobby extends Phaser.Scene {
             gameMode: GameMode.Royale,
             theme: GameTheme.default
         })
+
         addScene(this.game, "BattleScene" + this.seed, scene, true, {})
         scene.playBusCrash()
     }
